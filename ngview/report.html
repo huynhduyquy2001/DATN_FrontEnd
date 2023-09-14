@@ -1,0 +1,218 @@
+<div ng-controller="ReportController">
+    <div class="row">
+        <div class="col-lg-8 d-flex align-items-strech">
+            <div class="card w-100">
+                <div class="card-body">
+                    <div
+                        class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                        <div class="mb-3 mb-sm-0">
+                            <h5 class="card-title fw-semibold">Số lượt bài viết bị tố cáo & vi
+                                phạm</h5>
+                        </div>
+                        <div>
+                            <select class="form-select border-white" ng-model="selectedYear"
+                                ng-options="y.years for y in listYear" ng-change="onYear()">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div id="chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Yearly Breakup -->
+                    <div class="card overflow-hidden">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-9 fw-semibold">Độ tuổi sử dụng</h5>
+                            <div class="row align-items-center">
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-center">
+                                        <div id="breakup"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row alig n-items-start">
+                                <div class="col-10">
+                                    <div class="d-flex align-items-center pb-1">
+                                        <b>Tài khoản mới tạo 7 ngày gần nhất</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="earning"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h5 class="card-title fw-semibold">Tài khoản có bài viết
+                            nhiều nhất</h5>
+                    </div>
+                    <ul class="timeline-widget mb-0 position-relative mt-5">
+                        <li ng-repeat="t in totalPosts"
+                            class="timeline-item d-flex position-relative overflow-hidden mb-3">
+                            <a> <img ng-src="images/{{t.avatar}}" alt=""
+                                width="45" height="45" class="rounded-circle"
+                                style="object-fit: cover;">
+                        </a>
+                            <div class="timeline-desc fs-5 text-dark mt-2 ms-3"
+                                style="max-width: 170px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                <a>{{t.username}}</a>
+                            </div>
+                            <div
+                                class="timeline-time text-dark flex-shrink-0 mt-2 ms-5 fs-5">
+                                <i class="fa-regular fa-memo-pad"></i> <span>{{t.totalPosts}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-semibold mb-4">Top 5 bài viết có
+                        lượt thích nhiều nhất</h5>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap mb-0 align-middle">
+                            <thead class="text-dark fs-4">
+                                <tr>
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Top</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Tiêu đề bài viết</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Người đăng</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Ngày đăng</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Số lượt thích</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Chi tiết</h6>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="t in topPostsLikes">
+                                    <td class="border-bottom-0">
+                                        <p class="mb-0 fw-normal text-center">{{t.stt}}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0"
+                                            style="max-width: 140px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                            {{t.content}}</h6>
+                                    </td>
+                                    <td class="border-bottom-0"
+                                        style="max-width: 150px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                        <span class="fw-normal">{{t.userPost}}</span>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="mb-0 fw-normal">{{ t.postDate |
+                                            date:'dd/MM/yyyy' }}</p>
+                                    </td>
+                                    <td class="border-bottom-0 text-center"><b>{{t.likeCount}}</b>
+                                        <i class="fas fa-thumbs-up" style="color: #5d87ff"></i></td>
+                                    <td class="border-bottom-0 text-center">
+                                        <a data-bs-placement="top" ng-click="detail(t.postId)" style="cursor: pointer;"
+                                            title="Xem chi tiết bài viết"
+                                            class="nav-link">
+                                            <i class="fa-solid fa-eye"  style="color: #5d87ff;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div
+						style="margin-bottom: 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
+						<a href="#!/profile/{{posts.user.userId}}" target="_blank" class="image-link"> <img
+							src="images/{{posts.user.avatar}}" alt="" width="55" height="55"
+							class="rounded-circle mt-3" style="margin-left: 15px; object-fit: cover;">
+							<div class="content mt-3">
+								<span class="name">{{posts.user.username}}</span> <small>{{
+									posts.postDate | date:'dd/MM/yyyy' }}</small>
+							</div>
+						</a> 
+						<div style="margin-top: 15px; margin-left: 25px;">
+							{{posts.content}} 
+							<center style="margin-right: 20px; margin-top: 10px;">
+								<div id="carouselExampleFade"
+									class="carousel slide carousel-fade carousel-dark">
+									<div class="carousel-inner">
+										<div ng-if="posts.images.length > 1" class="carousel-item" ng-repeat="image in posts.images track by $index"
+													ng-class="{ 'active': $index === 0 }">
+											<img width="75%" src="images/{{ image.imageUrl }}" class="d-block w-100"
+                                           >
+										</div>
+										<div ng-if="posts.images.length === 1" class="carousel-item active">
+											<img width="75%" src="images/{{posts.images[0].imageUrl}}" class="d-block w-100"
+												>
+										</div>
+									</div>
+									<button ng-if="posts.images.length > 1"
+										class="carousel-control-prev" type="button"
+										data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									</button>
+									<button ng-if="posts.images.length > 1"
+										class="carousel-control-next" type="button"
+										data-bs-target="#carouselExampleFade" data-bs-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									</button>
+								</div>
+							</center>
+							<div class="post-reaction mt-3">
+								<div class="activity-icons d-flex justify-content">
+									<div>
+										<i class="fa-regular fa-thumbs-up"></i> &nbsp;
+										{{posts.likeCount}}
+									</div>
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									<div>
+										<i class="fa-regular fa-comment"></i>&nbsp;
+										{{posts.commentCount}}
+									</div>
+								</div>
+							</div>
+							<br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

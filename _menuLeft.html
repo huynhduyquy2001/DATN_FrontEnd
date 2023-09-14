@@ -1,0 +1,136 @@
+<aside class="left-sidebar animate__animated animate__backInLeft"
+	style="z-index: 100; position: fixed; top: 0; left: 0;">
+	<div>
+		<div class="brand-logo d-flex align-items-center justify-content-between">
+			<a class=" logo" style="color: black;"> <img src="images/chimLac.png" height="30px" alt=""> VIE_<b>SONET</b>
+			</a>
+		</div>
+
+		<nav class="sidebar-nav scroll-sidebar" data-simplebar="init">
+			<div class="simplebar-wrapper" style="margin: 0px -24px;">
+				<div class="simplebar-height-auto-observer-wrapper">
+					<div class="simplebar-height-auto-observer"></div>
+				</div>
+
+				<div class="simplebar-mask">
+					<div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+						<div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden;">
+							<div class="simplebar-content" style="padding: 0px 24px;">
+
+								<div id="sidebar" style="max-height: 600px; overflow-y: auto;">
+									<ul class="nav flex-column">
+										<li class="nav-item">
+											<a class="nav-link" data-bs-toggle="collapse" href="#general" role="button"
+												style="padding-left: 0;" aria-expanded="true" aria-controls="general">
+												<b>Chung</b>
+												<i class="fas fa-chevron-right rotate-icon"></i>
+											</a>
+											<ul class="sub-nav collapse show" id="general">
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!/">
+														<i class="fas fa-house"></i>
+														<span>{{ 'home' | translate }}</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!/shopping">
+														<i class="fas fa-bag-shopping"></i>
+														<span>Mua sắm</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!/search">
+														<i class="fas fa-magnifying-glass"></i>
+														<span>{{ 'TK' | translate }}</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!recommend">
+														<i class="fas fa-handshake"></i>
+														<span>{{ 'GY' | translate }}</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!message">
+														<i class="fas fa-messages"></i>
+														<span>{{ 'TN' | translate }}</span>
+														<span class="badge" ng-show="check"
+															style="background: red">{{unseenmess}}</span>
+													</a>
+												</li>
+											</ul>
+										</li>
+										<li class="nav-item mt-3">
+											<a class="nav-link" data-bs-toggle="collapse" href="#individual"
+												style="padding-left: 0;" role="button" aria-expanded="false"
+												aria-controls="individual">
+												<b>Cá nhân</b>
+												<i class="fas fa-chevron-right rotate-icon"></i>
+											</a>
+											<ul class="sub-nav collapse" id="individual">
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!/profile/{{myAccount.user.userId}}">
+														<i class="fas fa-address-card"></i>
+														<span>Trang cá nhân</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!/mystore">
+														<i class="fas fa-store"></i>
+														<span>Cửa hàng</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="/">
+														<i class="fas fa-clipboard-list"></i>
+														<span>Đơn hàng</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" href="#!/favouriteProduct">
+														<i class="fa-solid fa-heart"></i>
+														<span>Yêu thích</span>
+													</a>
+												</li>
+											</ul>
+										</li>
+										<li class="nav-item mt-3">
+											<a class="nav-link" data-bs-toggle="collapse" href="#manager" role="button"
+												style="padding-left: 0;" aria-expanded="false" aria-controls="manager">
+												<b>Quản lý</b>
+												<i class="fas fa-chevron-right rotate-icon"></i>
+											</a>
+											<ul class="sub-nav collapse" id="manager">
+												<li class="sidebar-item">
+													<a class="sidebar-link" ng-click="handleLinkClick('')"
+														href="#!/admin/report">
+														<i class="fas fa-chart-line"></i>
+														<span>Thống kê</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" ng-click="handleLinkClick('')"
+														href="#!/admin/usermanager">
+														<i class="fas fa-users"></i>
+														<span>Người dùng</span>
+													</a>
+												</li>
+												<li class="sidebar-item">
+													<a class="sidebar-link" ng-click="handleLinkClick('')"
+														href="#!/admin/postsviolation">
+														<i class="fas fa-square-list"></i>
+														<span>Bài viết vi phạm</span>
+													</a>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</div>
+</aside>

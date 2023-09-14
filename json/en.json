@@ -1,0 +1,61 @@
+{
+	"home": "Home",
+	"chung": "Shared",
+	"TK": "Search",
+	"GY": "Recommend",
+	"QL": "Manage",
+	"TN": "Message",
+	"ND": "User",
+	"BV": "Infringing post",
+	"BVVP": "Statistical",
+	
+	"HEADER": "HEADER",
+	
+	"DMK": "Change Password",
+	"DK": "Terms Information",
+	"NC": "Upgrade",
+	"DX": "Log out",
+	
+	"DBV": "Post an article",
+	
+	"HV": "Write something for today...",
+	"NTD": "Followers",
+	"DTD": "Following",
+	"XTCN": "View personal page",
+	
+	"TP": "City",
+	"NDD": "Temperature",
+	"MT": "Description",
+	"DA": "Moisture",
+	"TDG": "Wind speed",
+	
+	"DHD": "Active",
+	"BDNG": "What are you thinking?",
+	"KEO": "Select or drag and drop to load image/video.",
+	"HAVD": "Photos and videos",
+	"DB": "Post",
+	
+	"BCVP":"Report Violation",
+	
+	"BLCB":"Your comment",
+	"BL":"Comment",
+	
+	"TB":"Notice",
+	"CD":"Unread",
+	"TC":"All",
+	
+	"NDTC":"Denunciation content",
+	"D":"Close",
+	"BC":"Report",
+	
+  	
+  	"ST":"Living at",
+  	"MQH":"Relationship",
+  	
+  	"LSTK":"Search History",
+  	
+	"GYTD":"Recommend",
+	
+	"NN":"Language"
+	
+}

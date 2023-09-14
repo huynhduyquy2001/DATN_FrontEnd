@@ -1,0 +1,142 @@
+<div class="row" ng-controller="MessController">
+	<div class="col-md-8" style="z-index: 10; border: 1px solid #ebf1f6; padding: 0; max-height: 89vh;">
+		<center>
+			<h4 ng-show="isEmptyObject" id="isEmptyObject" ng-cloak>Hãy chọn người nào đó để
+				trò chuyện ngay nào</h4>
+		</center>
+		<div ng-show="!isEmptyObject" ng-cloak class="msger "
+			style="width: 100%; text-align: left; margin-left: 0; border-radius: 5px">
+			<header class="msger-header animate__animated animate__fadeIn">
+
+				<div class="msger-header-title">
+					<a href="#!/profile/{{userMess.userId}}" style="font-weight: 600; color: #212529"><img
+							ng-src="images/{{ userMess.avatar }}"
+							style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;" alt=""> {{
+						userMess.username }}</a> &nbsp; <small style="font-size: 0.7rem;">Hoạt động:
+						{{getFormattedTimeAgo(userMess.accessTime)}}</small>
+				</div>
+				<a href="#!message">
+					<button style="border: none; background-color: transparent;"><i
+							class="fa-solid fa-arrow-left"></i></button>
+				</a>
+
+			</header>
+			<main class="msger-chat" id="boxChat" ng-drop="onDrop($event)"
+				style="padding-top: 1rem; border-top: 1px solid #dee2e6 !important;">
+				<div class="msg"
+					ng-class="{'left-msg animate__animated animate__backInLeft': mess.sender.userId !== myAccount.user.userId, 'right-msg animate__animated animate__backInRight': mess.sender.userId === myAccount.user.userId}"
+					ng-repeat="mess in ListMess">
+					<!-- <div class="msg-img"
+						style="background-image: url(images/{{mess.sender.avatar}}); border: 1px solid #ebf1f6;"></div> -->
+					<div class="msg-bubble" ng-style="{'background-color': mess.image ? 'transparent' : ''}">
+						<div class="msg-info">
+							<!-- Hiển thị nút "Thu hồi" -->
+							<button class="btn-revoke btn btn-outline-danger py-1 px-2 ms-auto ng-scope"
+								ng-show="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
+								ng-cloak ng-click="revokeMessage(mess.messId)"><b>Thu hồi</b></button>
+						</div>
+						<div class="msg-text mess" ng-show="mess.status != 'Đã ẩn' && mess.content!=''" ng-cloak>
+							{{mess.content}}
+						</div>
+						<div class="msg-text" ng-show="mess.status == 'Đã ẩn'" style="color: #adb5bd" ng-cloak>Tin nhắn
+							đã được thu hồi</div>
+						<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " ng-cloak src="images/{{mess.image}}"
+							style="max-width: 20rem; border-radius: 5px">
+
+						<div class="msg-info-time">{{getFormattedTimeAgo(mess.sendDate)}}</div>
+					</div>
+
+				</div>
+			</main>
+			<form class="msger-inputarea" style="background: transparent; border-top: 1px solid #ebf1f6;">
+				<input ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
+					placeholder="Nhập tin nhắn của bạn...">
+				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
+					href="#exampleModalToggle"><i style="margin: 0; padding: 0;"
+						class="fa-regular fa-camera-retro"></i></span>
+				<button type="submit" class="msger-send-btn"
+					style="background: transparent; padding: 0; border-radius: 10px; border: none; color: #3a57e8; height: 0;"
+					ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">
+					<i class="fa-regular fa-paper-plane" style="padding-top: 0; padding-bottom: 0;"></i>
+				</button>
+
+			</form>
+		</div>
+	</div>
+	<div class="col-md-4" id="menuMessLeft"
+		style="border: 1px solid #ebf1f6; padding-top: 0.5rem; background-color: #fff; height: 89vh; overflow: scroll;">
+		<h4><b>Tin Nhắn</b></h4>
+		<input class="form-control" placeholder="{{ 'TK' | translate }}">
+		<br>
+		<ul class="list-unstyled mb-0">
+			<li ng-repeat="UsersMess in ListUsersMess" class="hver"
+				style="padding: 0.7rem!important; padding-right: 1.5rem!important; transition: 0.3s;"
+				ng-style="{'background-color': UsersMess[2] === itemSelected ? 'rgba(93, 135, 255, 0.1)' : 'transparent'}">
+				<div class="user-profile" ng-click="getmess(UsersMess[0] , UsersMess[9], UsersMess[8])">
+					<!-- Nội dung khi UsersMess[0] = 'UI010' -->
+					<a href="#!/message/{{UsersMess[2]}}"><img ng-src="images/{{ UsersMess[5] }}"
+							class="animate__animated animate__fadeIn"
+							style="border-radius: 100%; border: 1px solid #ebf1f6; width: 3.5rem; height: 3.5rem; max-width: none;"
+							alt=""></a>
+					<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
+						<div style="display: flex;">
+							<b class="ng-binding" style=" color: #393e41; font-size: 14px;">{{
+								UsersMess[3] }} <span class="badge" ng-show="
+									UsersMess[11]>0" style=" padding: 0.2rem;font-size: 12px; background-color: red;">{{
+									UsersMess[11] }}</span></b>
+						</div>
+						<br>
+						<div style="display: flex; justify-content: space-between;">
+							<small
+								style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">{{
+								UsersMess[6] }} </small>
+							<!-- <small ng-if="UsersMess[8] === 'Đã ẩn'"
+								style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">Tin
+								nhắn đã được thu hồi </small> -->
+							<small style="font-size: 12px; color: #65676b"
+								class="ng-binding">{{getFormattedTimeAgo(UsersMess[7]) }}</small>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+		tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content" style="background-color: rgba(246, 245, 244, 1);">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalToggleLabel">
+						<b>Chọn ảnh</b>
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="postForm" enctype="multipart/form-data">
+
+						<div id="dropArea" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);"
+							ondragleave="dragLeaveHandler(event);">
+							<i class="fa-light fa-download" style="font-size: 4rem;"></i>
+
+						</div>
+
+						<div hidden class="input-group mb-3">
+							<label class="input-group-text" for="inputGroupFile01"> <i
+									class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
+							</label> <input type="file" class="form-control" name="mediaFiles" id="inputGroupFile01"
+								multiple>
+						</div>
+
+						<div id="mediaList"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button ng-click="uploadFile()" style="width: 500px; border: none; background-color: #007ACC ;"
+						class="btn-blue" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+						data-bs-dismiss="modal">Gửi ảnh</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

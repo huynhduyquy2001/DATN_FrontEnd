@@ -1,0 +1,345 @@
+<div class="container" style="width: 100%; padding: 0;">
+	<!-- Navbar của Bootstrap -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-light " id="menuLeft-toggle">
+		<div class="container" style="box-shadow: none;">
+			<!-- Nút toggle menu cho thiết bị di động -->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavLeft"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Các mục điều hướng -->
+			<div class="collapse navbar-collapse" id="navbarNavLeft">
+				<div id="sidebar" style="max-height: 600px; overflow-y: auto;">
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<a class="nav-link" data-bs-toggle="collapse" href="#general" role="button"
+								style="padding-left: 0;" aria-expanded="true" aria-controls="general">
+								<b>Chung</b>
+								<i class="fas fa-chevron-right rotate-icon"></i>
+							</a>
+							<ul class="sub-nav collapse show" id="general">
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
+										<i class="fas fa-house"></i>
+										<span>{{ 'home' | translate }}</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('/message')" href="#!shopping">
+										<i class="fas fa-bag-shopping"></i>
+										<span>Mua sắm</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('/search')" href="#!/search">
+										<i class="fas fa-magnifying-glass"></i>
+										<span>{{ 'TK' | translate }}</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('recommend')" href="#!recommend">
+										<i class="fas fa-handshake"></i>
+										<span>{{ 'GY' | translate }}</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('/message')" href="#!message">
+										<i class="fas fa-messages"></i>
+										<span>{{ 'TN' | translate }}</span>
+										<span class="badge" ng-show="check"
+											style="background: red">{{unseenmess}}</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li class="nav-item mt-3">
+							<a class="nav-link" data-bs-toggle="collapse" href="#individual" style="padding-left: 0;"
+								role="button" aria-expanded="false" aria-controls="individual">
+								<b>Cá nhân</b>
+								<i class="fas fa-chevron-right rotate-icon"></i>
+							</a>
+							<ul class="sub-nav collapse" id="individual">
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')"
+										href="#!/profile/{{myAccount.user.userId}}">
+										<i class="fas fa-address-card"></i>
+										<span>Trang cá nhân</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')" href="#!/mystore">
+										<i class="fas fa-store"></i>
+										<span>Cửa hàng</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
+										<i class="fas fa-clipboard-list"></i>
+										<span>Đơn hàng</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li class="nav-item mt-3">
+							<a class="nav-link" data-bs-toggle="collapse" href="#manager" role="button"
+								style="padding-left: 0;" aria-expanded="false" aria-controls="manager">
+								<b>Quản lý</b>
+								<i class="fas fa-chevron-right rotate-icon"></i>
+							</a>
+							<ul class="sub-nav collapse" id="manager">
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
+										<i class="fas fa-chart-line"></i>
+										<span>Thống kê</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
+										<i class="fas fa-users"></i>
+										<span>Người dùng</span>
+									</a>
+								</li>
+								<li class="sidebar-item">
+									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
+										<i class="fas fa-square-list"></i>
+										<span>Bài viết vi phạm</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<div id="collapsibleNavId">
+		<ul class="navbar-nav me-auto mt-2 mt-lg-0">
+		</ul>
+		<div class="body-wrapper" style="position: absolute; right: 0">
+			<header class="app-header">
+				<nav class="navbar navbar-expand-lg navbar-light">
+					<div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+						<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+							<li class="nav-item">
+								<a class="nav-link nav-icon-hover" ng-click="handleLinkClick('/shoppingcart')"
+									href="#!/shoppingcart">
+									<i class="fa-regular fa-cart-shopping"></i>
+									<div class="circle-shop">
+
+										<span>5</span>
+									</div>
+								</a>
+							</li>
+							<li class="nav-item dropdown"><a data-bs-toggle="offcanvas" ng-click="hideNotification()"
+									data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+									class="nav-link nav-icon-hover" href="#">
+									<div class="notification-icon">
+										<i class="fa-regular fa-bell"></i>
+										<div class="circle" ng-if="hasNewNotification == true">
+											<!-- Hiển thị tối đa 5 thông báo -->
+											<span ng-if="hasNewNotification == true && notificationNumber.length <=5">{{
+												notificationNumber.length}}</span>
+											<!-- Hiển thị "5+" nếu số lượng thông báo lớn hơn 5 -->
+											<span
+												ng-if="hasNewNotification == true && notificationNumber.length > 5">5+</span>
+										</div>
+									</div>
+								</a></li>
+							<li class="nav-item dropdown"><a class="nav-link nav-icon-hover">
+									<div id="toggle-menu" ng-click="toggleMenu($event)">
+										<i class="fa-regular fa-messages"></i>
+										<div class="circle-shop" ng-show="check" style="background-color: #ff3f40 ;">
+											<span>{{unseenmess}}</span>
+										</div>
+									</div>
+								</a></li>
+							<div class="menu" style="box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px;">
+								<div class="menu-content">
+									<h4><b>Tin Nhắn</b></h4>
+									<ul class="list-unstyled mb-0">
+										<li ng-repeat="UsersMess in ListUsersMess" class="p-2 listMess hver">
+											<div ng-click="getMess(UsersMess[2])" style="cursor: pointer;"
+												class="user-profile" ng-if="UsersMess[0] === myAccount.user.userId"
+												ng-click="getmess2(UsersMess[0] , UsersMess[9], UsersMess[8])">
+												<!-- Nội dung khi UsersMess[0] = 'UI010' -->
+												<img ng-src="images/{{ UsersMess[5] }}"
+													style="border-radius: 100%; border: 1px solid #ebf1f6;" alt="">
+												<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
+													<div style="display: flex;">
+														<label class="ng-binding"
+															style="font-weight: 500; color: #393e41; font-size: 14px;">{{
+															UsersMess[3] }}</label>
+														<div ng-show="UsersMess[8] == 'Đã gửi' && UsersMess[0] != myAccount.user.userId"
+															class="circle mb-2"
+															style="margin-left: 2rem; font-size: 14px"></div>
+													</div>
+													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
+													<br>
+													<div style="display: flex; justify-content: space-between;">
+														<small ng-if="UsersMess[8] !== 'Đã ẩn'"
+															style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">
+															{{ UsersMess[6] }} </small> <small
+															ng-if="UsersMess[8] === 'Đã ẩn'"
+															style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">
+															Tin nhắn đã được thu hồi </small> <small
+															style="font-size: 12px; color: #65676b" class="ng-binding">
+															{{getFormattedTimeAgo(UsersMess[7]) }} </small>
+													</div>
+												</div>
+											</div>
+
+											<div ng-click="getMess(UsersMess[0])" style="cursor: pointer;"
+												class="user-profile" ng-if="UsersMess[0] !== myAccount.user.userId"
+												ng-click="getmess2(UsersMess[2], -1)">
+												<!-- Nội dung khi UsersMess[0] khác 'UI010' -->
+												<img ng-src="images/{{ UsersMess[4] }}"
+													style="border-radius: 100%; width: 4rem; height: 4rem;" alt="">
+												<div style="width: 100%; line-height: 0.7rem">
+													<div style="display: flex;">
+														<label class="ng-binding"
+															style="font-weight: 500; color: #393e41; font-size: 14px;">{{
+															UsersMess[1] }}</label>
+														<div ng-show="UsersMess[8] == 'Đã gửi'" class="circle2 mb-2"
+															style="margin-left: 2rem; font-size: 14px"></div>
+													</div>
+													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
+													<br>
+													<div style="display: flex; justify-content: space-between;">
+														<small ng-if="UsersMess[8] !== 'Đã ẩn'"
+															style="font-size: 13px;">{{UsersMess[6]}}</small>
+														<small ng-if="UsersMess[8] === 'Đã ẩn'"
+															style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">
+															Tin nhắn đã được thu hồi </small> <small
+															style="font-size: 12px; color: #65676b" class="ng-binding">
+															{{getFormattedTimeAgo(UsersMess[7]) }} </small>
+													</div>
+
+												</div>
+											</div>
+
+										</li>
+
+									</ul>
+								</div>
+							</div>
+							<li class="nav-item dropdown"><a class="nav-link nav-icon-hover" href="#" id="drop2"
+									data-bs-toggle="dropdown" aria-expanded="false"> <img
+										src="images/{{myAccount.user.avatar}}" alt="" width="35" height="35"
+										class="rounded-circle" style="object-fit: cover;">
+								</a>
+								<div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+									aria-labelledby="drop2">
+									<div class="message-body">
+										<a href="#!/profile/{{myAccount.user.userId}}"
+											class="d-flex align-items-center gap-2 dropdown-item">
+											<i class="ti ti-user fs-6"></i>
+											<p class="mb-0 fs-3"><b>Trang cá nhân</b></p>
+										</a>
+										<a href="/changepassword" class="d-flex align-items-center gap-2 dropdown-item">
+											<i class="ti ti-user fs-6"></i>
+											<p class="mb-0 fs-3">{{ 'DMK' | translate }}</p>
+										</a> <a href="#" class="d-flex align-items-center gap-2 dropdown-item"> <i
+												class="ti ti-mail fs-6"></i>
+											<p class="mb-0 fs-3">{{ 'DK' | translate }}</p>
+										</a> <a href="#" class="d-flex align-items-center gap-2 dropdown-item"> <i
+												class="ti ti-list-check fs-6"></i>
+											<p class="mb-0 fs-3">{{ 'NC' | translate }}</p>
+										</a>
+										<hr>
+										<p style="margin-left: 20px">{{ 'NN' | translate }}</p>
+										<div style="display: flex;">
+
+											<a href="#" style="margin-left: 65px" ng-click="changeLanguage('vie')"
+												class="colorful-link" onclick="toggleColor(this)"
+												class="d-flex align-items-center gap-2 dropdown-item"> <i
+													class="ti ti-list-check fs-6"></i>
+												<p class="mb-0 fs-3">Tiếng Việt</p>
+											</a>
+											<p href="#" class="separator"></p>
+											<a href="#" ng-click="changeLanguage('en')" class="colorful-link"
+												onclick="toggleColor(this)"
+												class="d-flex align-items-center gap-2 dropdown-item"> <i
+													class="ti ti-list-check fs-6"></i>
+												<p class="mb-0 fs-3">English</p>
+											</a>
+										</div>
+										<a href="/logout" class="btn btn-outline-primary mx-3 mt-2 d-block">{{ 'DX' |
+											translate }}
+										</a>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</header>
+		</div>
+	</div>
+</div>
+
+<div class="msger " id="boxchatMini"
+	style="width: 100%; text-align: left; margin-left: 0; border-radius: 5px; position: fixed; right: 0; width: 400px; height: 70vh;box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px; transition: bottom 0.3s ease;">
+	<header class="msger-header">
+		<div class="msger-header-title">
+			<a href="#" style="font-weight: 600; color: #212529" class="ng-binding"><img
+					style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;" alt=""
+					ng-src="images/avatar2.jpg" src="images/avatar2.jpg"> Hồng Thắm</a> &nbsp; <small
+				style="font-size: 0.7rem;" class="ng-binding">Hoạt động:
+				18-8-2023 01:16</small>
+		</div>
+		<div id="closeBoxchat" ng-click="closeBoxchat($event)" style="cursor: pointer;">
+			x
+		</div>
+	</header>
+	<main class="msger-chat" ng-drop="onDrop($event)" id="messMini"
+		style="padding-top: 1rem; border-top: 1px solid #dee2e6 !important;">
+		<div class="msg"
+			ng-class="{'left-msg animate__animated animate__backInLeft': mess.sender.userId !== myAccount.user.userId, 'right-msg animate__animated animate__backInRight': mess.sender.userId === myAccount.user.userId}"
+			ng-repeat="mess in ListMess">
+			<div class="msg-bubble" ng-style="{'background-color': mess.image ? 'transparent' : ''}">
+				<div class="msg-info">
+
+					<button class="btn-revoke btn btn-outline-danger py-1 px-2 ms-auto ng-scope"
+						ng-if="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
+						ng-click="revokeMessage(mess.messId)"><b>Thu hồi</b></button>
+				</div>
+				<div class="msg-text mess" ng-if="mess.status != 'Đã ẩn' && mess.content!=''">{{mess.content}}
+				</div>
+				<div class="msg-text" ng-if="mess.status == 'Đã ẩn'" style="color: #adb5bd">Tin nhắn đã được thu
+					hồi</div>
+
+				<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " src="images/{{mess.image}}"
+					style="max-width: 9rem; border-radius: 5px">
+
+				<div class="msg-info-time">{{getFormattedTimeAgo(mess.sendDate)}}</div>
+			</div>
+
+		</div>
+	</main>
+	<form class="msger-inputarea ng-pristine ng-valid" style="background: transparent; border-top: 1px solid #ebf1f6;">
+		<input ng-model="newMessMini" id="newMessMini" style="padding: 0;" type="text"
+			class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Nhập tin nhắn của bạn...">
+
+		<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
+			href="#exampleModalToggle"><svg style="margin: 0; padding: 0;" class="svg-inline--fa fa-camera-retro"
+				aria-hidden="true" focusable="false" data-prefix="far" data-icon="camera-retro" role="img"
+				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+				<path fill="currentColor"
+					d="M192 112H64c-8.8 0-16 7.2-16 16v64H156.1c23.5-29.3 59.5-48 99.9-48s76.5 18.7 99.9 48H464V96c0-8.8-7.2-16-16-16H271.1c-2.5 0-4.9 .6-7.2 1.7l-50.5 25.2c-6.7 3.3-14 5.1-21.5 5.1zM48 240V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V240H380c2.6 10.2 4 21 4 32c0 70.7-57.3 128-128 128s-128-57.3-128-128c0-11 1.4-21.8 4-32H48zM0 416V128C0 92.7 28.7 64 64 64l0-16c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16V64h32l50.5-25.2c8.9-4.4 18.7-6.8 28.6-6.8H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64zM336 272a80 80 0 1 0 -160 0 80 80 0 1 0 160 0z">
+				</path>
+			</svg></span>
+		<button type="submit" class="msger-send-btn"
+			style="background: transparent; padding: 0; border-radius: 10px; border: none; color: #3a57e8; height: 0;"
+			ng-click="sendMessage(newMessMini)">
+			<svg class="svg-inline--fa fa-paper-plane" style="padding-top: 0; padding-bottom: 0;" aria-hidden="true"
+				focusable="false" data-prefix="far" data-icon="paper-plane" role="img"
+				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+				<path fill="currentColor"
+					d="M16.1 260.2c-22.6 12.9-20.5 47.3 3.6 57.3L160 376V479.3c0 18.1 14.6 32.7 32.7 32.7c9.7 0 18.9-4.3 25.1-11.8l62-74.3 123.9 51.6c18.9 7.9 40.8-4.5 43.9-24.7l64-416c1.9-12.1-3.4-24.3-13.5-31.2s-23.3-7.5-34-1.4l-448 256zm52.1 25.5L409.7 90.6 190.1 336l1.2 1L68.2 285.7zM403.3 425.4L236.7 355.9 450.8 116.6 403.3 425.4z">
+				</path>
+			</svg>
+		</button>
+
+	</form>
+</div>

@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Insert title here</title>
+</head>
+<link rel="stylesheet" href="/css/styles.min.css" />
+<style>
+	body {
+		font-family: 'Plus Jakarta Sans', sans-serif;
+	}
+
+	.notification {
+		border-radius: 10px;
+		background-color: rgba(93, 135, 255, 0.1);
+	}
+
+	.modal-backdrop {
+		z-index: 0;
+	}
+
+	.content p {
+		margin-bottom: 0;
+	}
+
+	.btnuf:hover {
+		color: red;
+	}
+
+	.msg-img {
+		width: 50px;
+		height: 50px;
+		margin-right: 10px;
+		background: #ddd;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		border-radius: 50%;
+		transform: translateY(-70%);
+	}
+
+	.msg:last-of-type {
+		margin: 0;
+	}
+
+	.msg {
+		display: flex;
+		align-items: flex-end;
+		margin-bottom: 10px;
+	}
+
+	.left-msg .msg-bubble {
+		border-bottom-left-radius: 0;
+		background-color: #EFF2F6 !important;
+	}
+
+	.btnf:hover {
+		color: blue;
+	}
+
+	.circle {
+		width: 7px;
+		height: 7px;
+		background-color: rgb(225, 15, 15);
+		border-radius: 50%;
+	}
+
+	/* CSS */
+	.sidebar-scrollable {
+		max-height: 550px;
+		/* Đặt chiều cao tối đa của vùng cuộn */
+		overflow-y: auto;
+		/* Tạo thanh cuộn dọc */
+	}
+
+	#dropArea {
+		height: 200px;
+		border: 2px dashed #ccc;
+		text-align: center;
+		line-height: 200px;
+		font-size: 16px;
+		color: #666;
+		margin: 20px auto;
+	}
+
+	::-webkit-scrollbar {
+		display: none;
+		/* Độ rộng của thanh cuộn */
+	}
+
+	.sidebar-scrollable::-webkit-scrollbar-thumb {
+		background-color: #888;
+		/* Màu sắc của thanh cuộn */
+		border-radius: 4px;
+		/* Bo tròn viền thanh cuộn */
+	}
+
+	.sidebar-scrollable::-webkit-scrollbar-track {
+		background-color: #f5f5f5;
+		/* Màu sắc của vùng di chuyển thanh cuộn */
+	}
+
+	#mediaList img {
+		width: 100% !;
+		box-sizing: border-box;
+		padding: 0.1rem;
+		border-radius: 6px;
+		border: 1px solid gray;
+	}
+
+	#mediaList video {
+		width: 50%;
+		box-sizing: border-box;
+		padding: 0.1rem;
+		border-radius: 6px;
+	}
+
+	#mediaList {
+		flex-wrap: wrap;
+		display: flex;
+	}
+
+	.previewMediaContainer {
+		width: 30%;
+		height: auto;
+		margin: 5px;
+		border-radius: 5px;
+		position: relative;
+	}
+
+	.previewMediaContainer button {
+		position: absolute;
+		top: 0;
+		right: 0;
+		border-radius: 3px;
+		background-color: red;
+		color: white;
+		border: none;
+		padding: 3px;
+	}
+
+	.follow {
+		color: #222;
+	}
+
+	.follow:hover {
+		color: #222;
+	}
+
+	.linear-gradient {
+		background-image: linear-gradient(#50b2fc, #f44c66);
+	}
+
+	.red-heart {
+		color: red !important;
+		/* Màu đỏ cho trái tim đã thích */
+	}
+
+	.gray-heart {
+		color: gray !important;
+		/* Màu xám cho trái tim chưa thích */
+	}
+
+	div.dropdown-menu.baoCao {
+		transform: translate(-80%, 39px);
+	}
+
+	.container,
+	.container-lg,
+	.container-md,
+	.container-sm,
+	.container-xl {
+		max-width: 100%;
+	}
+
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-content {
+		display: none;
+		opacity: 0;
+		position: absolute;
+		background-color: #f9f9f9;
+		min-width: 17rem;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+		z-index: 1;
+		padding-right: 10px;
+		border-radius: 3px;
+		transition: 0.5s ease-in-out;
+	}
+
+	.dropdown-content a {
+		color: black;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+	}
+
+	#mediaList img {
+		max-width: 100%;
+		box-sizing: border-box;
+		padding: 0.1rem;
+		border-radius: 6px;
+	}
+
+	#mediaList video {
+		max-width: 50%;
+		box-sizing: border-box;
+		padding: 0.1rem rem;
+		border-radius: 6px;
+	}
+
+	video {
+		object-fit: contain;
+		overflow-clip-margin: content-box;
+		overflow: clip;
+	}
+
+	.dropdown:hover .dropdown-content {
+		display: block;
+		transition: 0.5s ease-in-out;
+		opacity: 1;
+	}
+
+	.uploaded-image {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		margin-bottom: 7px;
+	}
+
+	.activity-icons div span:hover {
+		transform: scale(1.2);
+		cursor: pointer;
+	}
+
+	.activity-icons div span {
+		display: inline-block;
+		transition: transform 0.5s;
+	}
+
+	.circle {
+		position: absolute;
+		/* Đảm bảo thẻ con có vị trí tuyệt đối */
+		top: 14px;
+		/* Điều chỉnh vị trí theo chiều dọc để đặt số chính giữa chuông */
+		right: 1px;
+		/* Điều chỉnh vị trí theo chiều ngang để đặt số chính giữa chuông */
+		background-color: red;
+		/* Màu nền của hình tròn */
+		color: white;
+		/* Màu chữ số */
+		width: 20px;
+		/* Kích thước chiều rộng của hình tròn */
+		height: 20px;
+		/* Kích thước chiều cao của hình tròn */
+		border-radius: 50%;
+		/* Đảm bảo hình dạng là hình tròn */
+		text-align: center;
+		/* Căn giữa chữ số trong hình tròn */
+		font-size: 13px;
+		/* Kích thước chữ số */
+		line-height: 19px;
+		/* Đảm bảo chữ số được căn giữa theo chiều dọc */
+	}
+
+	.image-link {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		color: #5a5957;
+		display: flex;
+	}
+
+	.notification {
+		border-radius: 10px;
+		background-color: rgba(93, 135, 255, 0.1);
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		margin-left: 10px;
+		display: flex;
+		width: 270px;
+	}
+
+	.content p {
+		margin-bottom: 0;
+	}
+
+	.modal-backdrop.fade {
+
+		z-index: 123;
+	}
+
+	.circle2 {
+		/* Đảm bảo thẻ con có vị trí tuyệt đối */
+		top: 14px;
+		/* Điều chỉnh vị trí theo chiều dọc để đặt số chính giữa chuông */
+		right: -16px;
+		/* Điều chỉnh vị trí theo chiều ngang để đặt số chính giữa chuông */
+		background-color: green;
+		/* Màu nền của hình tròn */
+		color: white;
+		/* Màu chữ số */
+		width: 10px;
+		/* Kích thước chiều rộng của hình tròn */
+		height: 10px;
+		/* Kích thước chiều cao của hình tròn */
+		border-radius: 50%;
+		/* Đảm bảo hình dạng là hình tròn */
+		text-align: center;
+		/* Căn giữa chữ số trong hình tròn */
+		font-size: 13px;
+		/* Kích thước chữ số */
+		line-height: 19px;
+		/* Đảm bảo chữ số được căn giữa theo chiều dọc */
+	}
+</style>
+
+<body>
+	<div ng-controller="ProfileController">
+		<div class="" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6">
+
+			<div class="body-wrapper">
+				<div class="container-fluid" style="margin-left: 0; padding-left: 0; margin-top: 0; padding-top: 0">
+
+					<div class="card overflow-hidden" style="border-radius: 15px 15px 15px 15px;">
+						<div class="card-body p-0">
+							<div style="position: relative;">
+								<img ng-src="/images/{{UserInfo.background}}" alt="" height="300" width="1440"
+									style="object-fit: cover;">
+								<button data-bs-toggle="modal" ng-if=" myAccount.user.userId == UserInfo.userId"
+									data-bs-target="#ChinhSuaAnhBia"
+									style="position: absolute; bottom: 10px; right: 10px; border: none; background: transparent; width: 180px;">
+									<div style="background-color: black; opacity: 0.7; border-radius: 10px">
+										<i class="far fa-camera fa-2x" style="color: white;"> </i> <span
+											class="text-center" style="color: white;"> &nbsp;
+											Chỉnh sửa ảnh bìa</span>
+									</div>
+							</div>
+							</button>
+							<div class="row align-items-center">
+								<div class="col-lg-4 order-lg-1 order-2">
+									<div class="d-flex align-items-center justify-content-around m-4">
+										<div class="text-center">
+											<i class="fa-regular fa-memo-pad"></i>
+											<h4 class="mb-0 fw-semibold lh-1">{{ sumPost }}</h4>
+											<p class="mb-0 fs-4">Bài viết</p>
+										</div>
+										<div class="text-center">
+											<i class="fas fa-users fa-sm"></i>
+											<h4 class="mb-0 fw-semibold lh-1">{{totalFollower}}</h4>
+											<p class="mb-0 fs-4">Người theo dõi</p>
+										</div>
+										<div class="text-center">
+											<i class="fa-solid fa-user-group-crown fa-sm"></i>
+											<h4 class="mb-0 fw-semibold lh-1">{{totalFollowing}}</h4>
+											<p class="mb-0 fs-4">Theo dõi</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 mt-n3 order-lg-2 order-1">
+									<div class="mt-n5">
+										<div class="d-flex align-items-center justify-content-center mb-2">
+											<div class="d-flex align-items-center justify-content-center rounded-circle"
+												style="width: 155px; height: 155px; position: relative; background-color: gray;">
+												<div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
+													style="width: 150px; height: 150px;">
+													<a href="#"> <img ng-src="/images/{{UserInfo.avatar}}" alt=""
+															class="w-100 h-100" style="object-fit: cover;">
+
+													</a>
+												</div>
+												<button data-bs-toggle="modal"
+													ng-if=" myAccount.user.userId == UserInfo.userId"
+													data-bs-target="#ChinhSuaAnhDaiDien"
+													style="position: absolute; bottom: 0; right: 0; border: none; background: transparent;">
+													<i class="fas fa-camera"></i>
+												</button>
+
+											</div>
+										</div>
+										<div class="text-center">
+											<h5 class="fs-5 mb-0 fw-semibold">{{UserInfo.username}}</h5>
+
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 order-last">
+									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
+										ng-if=" myAccount.user.userId == UserInfo.userId">
+										<li><button class="btn btn-primary text-end" data-bs-toggle="modal"
+												data-bs-target="#exampleModal1">
+												<i class="fa-light fa-pen-to-square"></i> Thông tin
+											</button></li>
+										<li><button class="btn btn-secondary text-end" data-bs-toggle="modal"
+												data-bs-target="#exampleModal2">
+												<i class="fa-light fa-pen-to-square"></i> Tài khoản
+											</button></li>
+
+									</ul>
+
+									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
+										ng-if="myAccount.user.userId != UserInfo.userId">
+										<button class="btn btn-outline-primary py-1 px-2 ms-auto"
+											ng-if="!isFollowing(UserInfo.userId)"
+											ng-click="followUser(UserInfo.userId)">
+											<span>Follow</span>
+										</button>
+										<button class="btn btn-outline-danger py-1 px-2 ms-auto"
+											ng-if="isFollowing(UserInfo.userId)"
+											ng-click="unfollowUser(UserInfo.userId)">
+
+											<span>Unfollow</span>
+										</button>
+									</ul>
+								</div>
+							</div>
+							<ul class="nav nav-pills user-profile-tab justify-content mt-2 rounded-2 text-dark"
+								id="pills-tab" role="tablist" style="background-color: #ebf3fe;">
+								<li class="nav-item flex-fill active" role="presentation">
+									<button
+										class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 active"
+										id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile"
+										type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+										<div class="d-flex align-items-center justify-content-center">
+											<i class="fa-regular fa-square-user" style="color: #5d87ff;"></i>
+											<span class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
+												Hồ sơ</span>
+										</div>
+									</button>
+								</li>
+								<li class="nav-item flex-fill" role="presentation">
+									<button
+										class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+										id="pills-followers-tab" data-bs-toggle="pill" data-bs-target="#pills-followers"
+										type="button" role="tab" aria-controls="pills-followers" aria-selected="false"
+										tabindex="-1">
+										<i class="fa-light fa-heart" style="color: #5d87ff;"></i> <span
+											class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
+											Người theo dõi</span>
+									</button>
+								</li>
+								<li class="nav-item flex-fill" role="presentation">
+									<button
+										class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+										id="pills-friends-tab" data-bs-toggle="pill" data-bs-target="#pills-friends"
+										type="button" role="tab" aria-controls="pills-friends" aria-selected="false"
+										tabindex="-1">
+										<i class="fa-regular fa-square-user" style="color: #5d87ff;"></i>
+										<span class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
+											Theo dõi</span>
+									</button>
+								</li>
+								<li class="nav-item flex-fill" role="presentation">
+									<button
+										class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+										id="pills-gallery-tab" data-bs-toggle="pill" data-bs-target="#pills-gallery"
+										type="button" role="tab" aria-controls="pills-gallery" aria-selected="false"
+										tabindex="-1">
+										<i class="fa-solid fa-rectangle-vertical-history" style="color: #5d87ff;"></i>
+										<span class="d-none d-md-block" style="color: #5D87FF;">&nbsp; Bộ sưu tập</span>
+									</button>
+								</li>
+								<li class="nav-item " role="presentation">
+									<button
+										class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+										id="pills-video-tab" data-bs-toggle="pill" data-bs-target="#pills-video"
+										type="button" role="tab" aria-controls="pills-video" aria-selected="false"
+										tabindex="-1">
+										<i class="fa-solid fa-video" style="color: #5d87ff;"></i> <span
+											class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
+											Video</span>
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tab-content" id="pills-tabContent">
+						<div class="tab-pane fade active show" id="pills-profile" role="tabpanel"
+							aria-labelledby="pills-profile-tab" tabindex="0">
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="card shadow-none border">
+										<div class="card-body" style="padding: 15px;">
+											<h4 class="fw-semibold mb-3">&nbsp; Giới thiệu</h4>
+											<p style="padding-left: 15px;">{{UserInfo.introduction}}</p>
+											<ul class="list-unstyled mb-0">
+												<li class="d-flex align-items-center gap-3 mb-4">&nbsp;
+													<i class="fa-solid fa-location-dot"></i>
+													<h6 class="fs-4 fw-semibold mb-0">&nbsp; Địa chỉ:
+														{{UserInfo.address}}</h6>
+												</li>
+												<li class="d-flex align-items-center gap-3 mb-4">&nbsp;
+													<i class="fa-solid fa-at"></i>
+													<h6 class="fs-4 fw-semibold mb-0">&nbsp; Email:
+														{{AccInfo.email}}</h6>
+												</li>
+												<li class="d-flex align-items-center gap-3 mb-4">&nbsp;
+													<i class="fa-sharp fa-solid fa-cake-candles"></i>
+													<h6 class="fs-4 fw-semibold mb-0">&nbsp; Ngày sinh: {{
+														UserInfo.birthday | date:'dd-MM-yyyy' }}</h6>
+												</li>
+												<li class="d-flex align-items-center gap-3 mb-2">&nbsp;
+													<i class="fa-sharp fa-light fa-heart-pulse"></i>
+													<h6 class="fs-4 fw-semibold mb-0">&nbsp; Mối quan hệ:
+														{{UserInfo.relationship}}</h6>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div class="card shadow-none border">
+										<div class="card-body" style="padding: 15px;">
+											<h4 class="fw-semibold mb-3">Hình ảnh</h4>
+											<div class="row">
+												<div class="col-4 mb-2" ng-repeat="img in displayedImages">
+													<img src="/images/{{img.imageUrl}}"
+														ng-click="showImageModal(img.imageUrl)" width="100" height="120"
+														class="rounded-2" style="object-fit: cover;">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-8">
+									<div class="card shadow-none border"
+										ng-if=" myAccount.user.userId == UserInfo.userId">
+										<div class="card-body">
+											<div class="mb-3">
+												<textarea class="form-control" placeholder=" Bạn muốn đăng gì?"
+													style="height: 137px" data-bs-toggle="modal"
+													href="#exampleModalToggle"></textarea>
+
+											</div>
+											<div class="d-flex align-items-center gap-2">
+												<div class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle"
+													href="javascript:void(0)">
+													<i class="fa-solid fa-image fa-xs"></i>
+												</div>
+												<a href="javascript:void(0)" class="text-dark py-2 nav-link">Chọn
+													ảnh</a> <a href="javascript:void(0)"
+													class="d-flex align-items-center gap-2">
+													<div
+														class="text-white d-flex align-items-center justify-content-center bg-secondary p-2 fs-4 rounded-circle">
+														<i class="fa-solid fa-shop fa-xs"></i>
+													</div> <a href="javascript:void(0)"
+														class="text-dark py-2 nav-link">Cửa hàng</a>
+												</a>
+
+											</div>
+										</div>
+									</div>
+									<div class="post" style="margin-bottom: 20px" ng-repeat="myPost in myPosts">
+										<div class="card">
+											<div class="card-body border-bottom">
+												<div class="d-flex align-items-center gap-3" style="padding: 10px;">
+													<img src="/images/{{myPost.user.avatar}}" alt=""
+														class="rounded-circle" width="40" height="40"
+														style="object-fit: cover;">
+													<h6 class="fw-semibold mb-0 fs-4">{{myPost.user.username}}</h6>
+													<span class="fs-2"><span
+															class="p-1 bg-light rounded-circle d-inline-block"></span>
+														{{ getFormattedTimeAgo(myPost.postDate) }}</span>
+													<div class="dropdown ms-auto">
+														<a class="dropdown-toggle" href="#" role="button"
+															id="dropdownMenuLink" data-bs-toggle="dropdown"
+															aria-expanded="false" style="color: black;"> </a>
+														<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"
+															ng-if="myPost.user.userId == myUserId ">
+															<li><a class="dropdown-item"
+																	ng-click="hidePost(myPost.postId)">Xóa bài viết</a>
+															</li>
+															<li><a class="dropdown-item"
+																	ng-click="openEditModal(myPost)">Chỉnh sửa bài
+																	viết</a></li>
+														</ul>
+														<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink"
+															ng-if="myPost.user.userId != myUserId ">
+															<li><a class="dropdown-item"
+																	ng-click="openModalBaoCao(myPost.postId)"
+																	style="color: #E53F31; font-size: 13px">Báo cáo vi
+																	phạm</a></li>
+														</ul>
+
+													</div>
+												</div>
+												<p class="text-dark my-3" style="padding-left: 10px;">
+													{{myPost.content}}</p>
+												<center>
+													<div ng-if="myPost.images.length > 1">
+														<!-- Carousel HTML code -->
+														<div id="carouselId{{myPost.postId}}" class="carousel slide"
+															data-bs-ride="carousel">
+															<!-- Carousel indicators -->
+															<ol class="carousel-indicators">
+																<li data-bs-target="#carouselId{{myPost.postId}}"
+																	ng-repeat="image in myPost.images track by $index"
+																	ng-class="{ 'active': $index === 0 }"
+																	data-bs-slide-to="{{$index}}"
+																	aria-current="{{$index === 0}}"
+																	aria-label="Slide {{$index + 1}}"></li>
+															</ol>
+															<!-- Carousel items -->
+															<div class="carousel-inner" role="listbox">
+																<div class="carousel-item"
+																	style="background-color: #313131; height: 90vh;"
+																	ng-repeat="image in myPost.images track by $index"
+																	ng-class="{ 'active': $index === 0 }">
+
+																	<img ng-click="getPostDetails(myPost.postId)"
+																		ng-if="image.type === true"
+																		ng-src="/images/{{ image.imageUrl }}"
+																		class="w-100 d-block" alt="Slide {{$index + 1}}"
+																		style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
+
+																	<video ng-if="image.type === false" autoplay
+																		controls
+																		style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%; position: absolute;">
+																		<source ng-src="images/{{ image.imageUrl }}"
+																			type="video/mp4">
+																		Your browser does not support the video tag.
+																	</video>
+																</div>
+															</div>
+															<!-- Carousel controls -->
+															<button class="carousel-control-prev" type="button"
+																data-bs-target="#carouselId{{myPost.postId}}"
+																data-bs-slide="prev">
+																<span class="carousel-control-prev-icon"
+																	aria-hidden="true"></span> <span
+																	class="visually-hidden">Previous</span>
+															</button>
+															<button class="carousel-control-next" type="button"
+																data-bs-target="#carouselId{{myPost.postId}}"
+																data-bs-slide="next">
+																<span class="carousel-control-next-icon"
+																	aria-hidden="true"></span> <span
+																	class="visually-hidden">Next</span>
+															</button>
+														</div>
+													</div>
+													<div ng-if="myPost.images.length === 1">
+														<video ng-if="myPost.images[0].type === false"
+															ng-click="getPostDetails(myPost.postId)" autoplay controls
+															style="width: 100%;">
+															<source ng-src="images/{{ myPost.images[0].imageUrl }}"
+																type="video/mp4">
+															Your browser does not support the video tag.
+														</video>
+														<!-- Single image HTML code -->
+														<img ng-if="myPost.images[0].type === true"
+															ng-click="getPostDetails(myPost.postId)"
+															ng-src="/images/{{ myPost.images[0].imageUrl }}"
+															class="w-100" alt="Single image">
+													</div>
+												</center>
+
+												<div class="d-flex align-items-center my-3">
+													<div class="d-flex align-items-center gap-2 ms-4">
+														<span ng-click="likePost(myPost.postId)"
+															ng-if="likedPosts.indexOf(myPost.postId.toString()) !== -1"
+															style="color: #f50000; cursor: pointer;">
+															❤️&nbsp;{{ myPost.likeCount }} </span> <span
+															ng-click="likePost(myPost.postId)" style="cursor: pointer;"
+															ng-if="likedPosts.indexOf(myPost.postId.toString()) === -1">🤍&nbsp;{{
+															myPost.likeCount }}</span>
+														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														<span style="cursor: pointer;"
+															ng-click="getPostDetails(myPost.postId)"> <i
+																class="fa-sharp fa-light fa-comment"></i>&nbsp;
+														</span>{{myPost.commentCount}}
+													</div>
+
+												</div>
+
+											</div>
+
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<!-- Followers-->
+						<div class="tab-pane fade" id="pills-followers" role="tabpanel"
+							aria-labelledby="pills-followers-tab" tabindex="0">
+							<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
+									Người theo dõi <span
+										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{totalFollower}}</span>
+								</h3>
+							</div>
+							<div class="row">
+								<div class=" col-md-6 col-xl-4" ng-repeat="follower in followers"
+									ng-if="follower.userId != myUserId ">
+									<div class="card">
+										<div class="card-body p-4 d-flex align-items-center gap-3">
+											<a href="#!/profile/{{follower.userId}}"><img
+													ng-src="/images/{{follower.avatar}}" class="rounded-circle"
+													width="40" height="40" style="object-fit: cover;"></a>
+											<div>
+												<h5 class="fw-semibold mb-0">{{follower.username}}</h5>
+												<div class="fs-2 d-flex align-items-center">
+													<b>Địa chỉ:</b> &nbsp; {{follower.address}}
+												</div>
+											</div>
+
+											<button class="btn btn-outline-primary py-1 px-2 ms-auto"
+												ng-if="!isFollowing(follower.userId)"
+												ng-click="followUser(follower.userId)">
+												<span>Follow</span>
+											</button>
+											<button class="btn btn-outline-danger py-1 px-2 ms-auto"
+												ng-if="isFollowing(follower.userId)"
+												ng-click="unfollowUser(follower.userId)">
+												<span>Unfollow</span>
+											</button>
+
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+						<div class="tab-pane fade" id="pills-friends" role="tabpanel"
+							aria-labelledby="pills-friends-tab" tabindex="0">
+							<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
+									Theo dõi <span
+										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{totalFollowing}}</span>
+								</h3>
+							</div>
+							<div class="row">
+
+								<div class="col-sm-6 col-lg-4" ng-repeat="following in followings"
+									ng-if="following.userId != myUserId ">
+									<div class="card hover-img">
+										<div class="card-body p-4 text-center border-bottom">
+											<a href="#!/profile/{{following.userId}}"> <img
+													src="/images/{{following.avatar}}" alt=""
+													class="rounded-circle mb-3" width="80" height="80"
+													style="object-fit: cover;">
+												<h5 class="fw-semibold mb-0">{{following.username}}</h5> <span
+													class="text-dark fs-2">{{
+													following.introduction.length > 30 ?
+													(following.introduction | limitTo: 30) + '...' :
+													following.introduction }}</span>
+
+											</a>
+										</div>
+										<div>
+											<div class="btn btn-outline-primary px-2 py-2 list-unstyled d-flex align-items-center justify-content-center mb-0 btnf"
+												style="background-color: #f6f9fc;"
+												ng-if="!isFollowing(following.userId)"
+												ng-click="followUser(following.userId)">
+												<span>Follow</span>
+											</div>
+											<div class="btn btn-outline-danger px-2 py-2 list-unstyled d-flex align-items-center justify-content-center mb-0 btnuf"
+												style="background-color: #f6f9fc;" ng-if="isFollowing(following.userId)"
+												ng-click="unfollowUser(following.userId)">
+												<span>Unfollow</span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-gallery" role="tabpanel"
+							aria-labelledby="pills-gallery-tab" tabindex="0">
+							<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
+									Hình ảnh <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">
+										{{totalImagesCount}}</span>
+								</h3>
+							</div>
+
+							<div class="row">
+								<div class="rounded-2 d-flex flex-wrap">
+									<div class="col-4 d-flex" ng-repeat="img in imageList">
+										<img ng-src="/images/{{img.imageUrl}}" class="img-fluid w-100 me-1"
+											ng-click="showImageModal(img.imageUrl)"
+											style="object-fit: cover; height: 330px; border-radius: 10px; padding: 5px;">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-video" role="tabpanel" aria-labelledby="pills-video-tab"
+							tabindex="0">
+							<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
+									Video<span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">
+										{{totalVideosCount}}</span>
+								</h3>
+							</div>
+							<div class="row">
+								<div class="rounded-2 d-flex flex-wrap">
+									<div class="col-4 d-flex" ng-repeat="vid in videoList">
+										<video controls class="w-100" ng-src="/images/{{vid.imageUrl}}"
+											style="border-radius: 10px; padding: 5px;"> Sorry,
+											your browser doesn't support embedded videos.
+										</video>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+						<!-- <div class="col-3" style="border: 1px solid red;"> </div> -->
+					</div>
+
+
+					<!-- Modal chỉnh sửa bài viết -->
+					<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="editModalLabel">Chỉnh sửa bài
+										viết</h5>
+								</div>
+								<div class="modal-body">
+									<textarea name="content" placeholder="Bạn đang nghĩ gì?" id="content"
+										ng-model="selectedPost.content" cols="30" rows="3"
+										style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
+									<!-- Hiển thị hình ảnh của bài viết -->
+									<div ng-if="selectedPost.images.length > 1">
+										<!-- Carousel HTML code -->
+										<div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+											<!-- Carousel indicators -->
+											<ol class="carousel-indicators">
+												<li data-bs-target="#carouselId"
+													ng-repeat="image in selectedPost.images track by $index"
+													ng-class="{ 'active': $index === 0 }" data-bs-slide-to="{{$index}}"
+													aria-current="{{$index === 0}}" aria-label="Slide {{$index + 1}}">
+												</li>
+											</ol>
+											<!-- Carousel items -->
+											<div ng-click="getPostDetails(selectedPost.postId)" class="carousel-inner"
+												role="listbox">
+												<div class="carousel-item"
+													style="background-color: #313131; height: 90vh;"
+													ng-repeat="image in selectedPost.images track by $index"
+													ng-class="{ 'active': $index === 0 }">
+													<img ng-src="/images/{{ image.imageUrl }}" class="w-100 d-block"
+														alt="Slide {{$index + 1}}"
+														style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
+												</div>
+											</div>
+											<!-- Carousel controls -->
+											<button class="carousel-control-prev" type="button"
+												data-bs-target="#carouselId" data-bs-slide="prev">
+												<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Previous</span>
+											</button>
+											<button class="carousel-control-next" type="button"
+												data-bs-target="#carouselId" data-bs-slide="next">
+												<span class="carousel-control-next-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Next</span>
+											</button>
+										</div>
+									</div>
+									<div ng-if="selectedPost.images.length === 1">
+										<!-- Single image HTML code -->
+										<img ng-if="selectedPost.images[0].type === true"
+											ng-click="getPostDetails(selectedPost.postId)"
+											ng-src="/images/{{ selectedPost.images[0].imageUrl }}" class="w-100"
+											alt="Single image">
+										<video ng-if="selectedPost.images[0].type === false"
+											ng-click="getPostDetails(selectedPost.postId)" autoplay controls
+											style="width: 100%;">
+											<source ng-src="images/{{ selectedPost.images[0].imageUrl }}"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<!-- Hiển thị nội dung của bài viết -->
+									<p></p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button type="button" class="btn btn-primary" data-dismiss="modal"
+										ng-click="updatePost(selectedPost)">Lưu
+										thay đổi</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<!-- Modal hiện ảnh to ra-->
+					<div class="modal fade" id="imageModal" tabindex="-1" role="dialog"
+						aria-labelledby="imageModalLabel">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content" style="background: transparent; border: none;">
+								<div class="modal-body">
+									<!-- Hiển thị ảnh lớn trong modal -->
+									<img id="modalImage" src="" style="width: 100%; height: auto;">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal đăng bài -->
+					<div class="modal fade" id="exampleModalToggle" aria-hidden="true"
+						aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content" style="background-color: rgba(246, 245, 244, 1);">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalToggleLabel">
+										<b style="margin-left: 170px;">Đăng bài viết</b>
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form id="postForm" enctype="multipart/form-data">
+										<div class="user-profile">
+											<img ng-src="images/{{ UserInfo.avatar }}" alt="">
+											<div>
+												<label>{{UserInfo.username}}</label> <br>
+												<div style="display: flex; align-items: center;">
+													<div class="circle2 mb-2"
+														style="margin-bottom: 0 !important; background-color: green">
+													</div>
+													&nbsp; <small style="font-size: 12px"> Đang hoạt
+														động </small>
+												</div>
+											</div>
+										</div>
+										<br>
+										<textarea name="content" placeholder="Bạn đang nghĩ gì?" id="content"
+											ng-model="content" cols="30" rows="3"
+											style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
+										<br>
+										<div id="dropArea" ondrop="dropHandler(event);"
+											ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);">
+											Chọn hoặc kéo
+											thả để tải hình ảnh/video.</div>
+
+										<div class="input-group mb-3">
+											<label class="input-group-text" for="inputGroupFile01">
+												<i class="fa-regular fa-image"></i>Hình ảnh và video
+											</label> <input hidden type="file" class="form-control" name="mediaFiles"
+												id="inputGroupFile01" multiple>
+										</div>
+
+										<div id="mediaList"></div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button ng-click="post()" style="width: 500px; border: none;"
+										class="btn btn-primary" data-bs-target="#exampleModalToggle2"
+										data-bs-toggle="modal" data-bs-dismiss="modal">Đăng
+										bài</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal chỉnh sửa ảnh đại diện -->
+					<div class="modal fade" id="ChinhSuaAnhDaiDien" aria-hidden="true"
+						aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content" style="background-color: rgba(246, 245, 244, 1);">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalToggleLabel">
+										<b style="margin-left: 170px;">Chỉnh sửa ảnh đại diện</b>
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form id="postForm" enctype="multipart/form-data">
+										<div class="user-profile">
+											<img ng-src="images/{{ UserInfo.avatar }}" alt="">
+											<div>
+												<label>{{UserInfo.username}}</label> <br>
+												<div style="display: flex; align-items: center;">
+													<div class="circle2 mb-2"
+														style="margin-bottom: 0 !important; background-color: green">
+													</div>
+													&nbsp; <small style="font-size: 12px"> Đang hoạt
+														động </small>
+												</div>
+											</div>
+										</div>
+										<br>
+										<textarea name="content" placeholder="Bạn đang nghĩ gì?" id="content"
+											ng-model="content" cols="30" rows="3"
+											style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
+										<br>
+										<center>
+											<img id="img" src="" width="45%"
+												style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
+										</center>
+										<div id="imageList"></div>
+										<div class="input-group mb-3">
+											<label class="input-group-text" for="inputGroupFile03">
+												<i class="fa-regular fa-image"></i>Hình ảnh
+											</label> <input type="file" class="form-control" name="photoFiles3"
+												id="inputGroupFile03" accept="image/*" onchange="displayAvatar()">
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button ng-click="changeAvatar()" style="width: 500px; border: none;"
+										class="btn btn-primary" data-bs-target="#exampleModalToggle2"
+										data-bs-toggle="modal" data-bs-dismiss="modal">Đăng</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal chỉnh sửa ảnh bìa -->
+					<div class="modal fade" id="ChinhSuaAnhBia" aria-hidden="true"
+						aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content" style="background-color: rgba(246, 245, 244, 1);">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalToggleLabel">
+										<b style="margin-left: 170px;">Chỉnh sửa ảnh bìa</b>
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form id="postForm" enctype="multipart/form-data">
+										<div class="user-profile">
+											<img ng-src="images/{{ UserInfo.avatar }}" alt="">
+											<div>
+												<label>{{UserInfo.username}}</label> <br>
+												<div style="display: flex; align-items: center;">
+													<div class="circle2 mb-2"
+														style="margin-bottom: 0 !important; background-color: green">
+													</div>
+													&nbsp; <small style="font-size: 12px"> Đang hoạt
+														động </small>
+												</div>
+											</div>
+										</div>
+										<br>
+										<textarea name="content" placeholder="Bạn đang nghĩ gì?" id="content"
+											ng-model="content" cols="30" rows="3"
+											style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;">Đổi ảnh bìa</textarea>
+										<br>
+										<center>
+											<img id="imgBackground" src="" width="100%"
+												style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
+										</center>
+										<br>
+										<div id="imageList"></div>
+										<div class="input-group mb-3">
+											<label class="input-group-text" for="inputGroupFile02">
+												<i class="fa-regular fa-image"></i>Hình ảnh
+											</label> </label> <input type="file" class="form-control" name="photoFiles2"
+												id="inputGroupFile02" accept="image/*" onchange="displayBackground()">
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button ng-click="changeBackground()" style="width: 500px; border: none;"
+										class="btn btn-primary" data-bs-target="#exampleModalToggle2"
+										data-bs-toggle="modal" data-bs-dismiss="modal">Đăng</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal bài viết chi tiết -->
+					<div class="modal fade" id="chiTietBaiViet" tabindex="-1" role="dialog"
+						aria-labelledby="modalTitleId" aria-hidden="true">
+						<div class="modal-dialog modal-xl modal-fullscreen" role="document">
+							<div class="modal-content">
+								<div class="modal-body">
+									<div class="row">
+										<div ng-if="postDetails.images.length > 0" class="col-md-6 trai "
+											style="overflow-y: scroll; max-height: 100vh">
+											<center>
+												<div ng-if="postDetails.images.length > 1">
+													<!-- Carousel HTML code -->
+													<div id="postDetails{{postDetails.postid}}" class="carousel slide"
+														data-bs-ride="carousel">
+														<!-- Carousel indicators -->
+														<ol class="carousel-indicators">
+															<li data-bs-target="#postDetails{{postDetails.postid}}"
+																ng-repeat="image in postDetails.images track by $index"
+																ng-class="{ 'active': $index === 0 }"
+																data-bs-slide-to="{{$index}}"
+																aria-current="{{$index === 0}}"
+																aria-label="Slide {{$index + 1}}"></li>
+														</ol>
+														<!-- Carousel items -->
+														<div class="carousel-inner" role="listbox">
+															<div class="carousel-item"
+																ng-repeat="image in postDetails.images track by $index"
+																ng-class="{ 'active': $index === 0 }">
+																<img ng-src="/images/{{ image.imageUrl }}"
+																	class="w-100 d-block" alt="Slide {{$index + 1}} ">
+															</div>
+														</div>
+														<!-- Carousel controls -->
+														<button class="carousel-control-prev" type="button"
+															data-bs-target="#postDetails{{postDetails.postid}}"
+															data-bs-slide="prev">
+															<span class="carousel-control-prev-icon"
+																aria-hidden="true"></span> <span
+																class="visually-hidden">Previous</span>
+														</button>
+														<button class="carousel-control-next" type="button"
+															data-bs-target="#postDetails{{postDetails.postid}}"
+															data-bs-slide="next">
+															<span class="carousel-control-next-icon"
+																aria-hidden="true"></span> <span
+																class="visually-hidden">Next</span>
+														</button>
+													</div>
+												</div>
+												<div ng-if="postDetails.images.length === 1">
+													<video ng-if="postDetails.images[0].type === false"
+														ng-click="getPostDetails(postDetails.postId)" autoplay controls
+														style="width: 100%;">
+														<source ng-src="images/{{ postDetails.images[0].imageUrl }}"
+															type="video/mp4">
+														Your browser does not support the video tag.
+													</video>
+													<!-- Single image HTML code -->
+													<img ng-if="postDetails.images[0].type === true"
+														ng-src="/images/{{ postDetails.images[0].imageUrl }}"
+														class="w-100" alt="Single image" width="">
+												</div>
+											</center>
+
+										</div>
+										<div class="col-md-6 phai ">
+											<div>
+												<div data-bs-dismiss="modal"
+													style="cursor: pointer; text-align: right;">x</div>
+												<div
+													style="display: flex; align-items: center; justify-content: space-between;">
+													<div class="user-profile ">
+														<a href="/nguoiDung/{{postDetails.user.userId}}"><img
+																ng-src="/images/{{postDetails.user.avatar}}"
+																style="border-radius: 100%;" alt=""></a>
+														<div>
+
+															<span
+																style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+																class="ng-binding">{{postDetails.user.username}}</span>
+															&nbsp;&nbsp; <span><small
+																	style="font-size: 12px; color: #65676b"
+																	class="ng-binding">
+																	{{getFormattedTimeAgo(postDetails.postDate)}}
+																</small></span>
+														</div>
+													</div>
+
+													<div>
+														<div class="btn-group">
+															<span class="btn dropdown-toggle" type="button"
+																id="triggerId" data-bs-toggle="dropdown"
+																aria-haspopup="true" aria-expanded="false"></span>
+															<div class="dropdown-menu" aria-labelledby="triggerId">
+																<li><a class="dropdown-item" href="#"
+																		ng-click="openModalBaoCao(myPost.postId)"
+																		style="color: #E53F31; font-size: 13px">Báo cáo
+																		vi
+																		phạm</a></li>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div style="padding: 10px">{{postDetails.content}}</div>
+												<form>
+													<div style="display: flex;">
+														<input ng-model="myComment" type="text" class="ip form-control"
+															style="width: 80%;" placeholder="Bình luận của bạn"
+															required="">
+														<button class="btn01" type="submit"
+															style="background: #3a57e8; color: white; width: 20%; border-radius: 3px; margin-left: 0.2rem;"
+															ng-click="addComment(postDetails.postId)">Bình
+															luận</button>
+													</div>
+												</form>
+											</div>
+											<center>
+												<hr style="width: 10%; text-align: center;">
+											</center>
+											<div style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
+												<div ng-repeat="comment in postComments | limitTo:numOfCommentsToShow">
+													<div class="msg ng-scope left-msg mb-4" ng-class="left-msg">
+														<div class="msg-img"
+															style="background-image: url(/images/{{comment.user.avatar}}); border: 1px solid #ebf1f6;">
+														</div>
+
+														<div class="msg-bubble" style="border-radius: 15px;">
+
+															<div style="padding: 10px;">
+																<div>
+																	<label class="nhan"
+																		style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{comment.user.username}}</label>
+																</div>
+																<small style="font-size: 12px;"> <svg
+																		class="svg-inline--fa fa-comment"
+																		aria-hidden="true" focusable="false"
+																		data-prefix="far" data-icon="comment" role="img"
+																		xmlns="http://www.w3.org/2000/svg"
+																		viewBox="0 0 512 512" data-fa-i2svg="">
+																		<path fill="currentColor"
+																			d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z">
+																		</path>
+																	</svg> {{comment.content}}
+																</small><br>
+																<div>
+																	<small
+																		style="font-size: 10px;">{{getFormattedTimeAgo(comment.commentDate)}}</small>
+																	&nbsp; <label> <input type="checkbox"
+																			ng-model="o_checkbox" hidden="true"> <small
+																			ng-if="comment.reply.length > 0"
+																			style="font-size: 10px; cursor: pointer;">{{comment.reply.length}}
+																			phản hồi</small>
+																	</label> &nbsp; <small style="font-size: 10px;">
+																		<label style="cursor: pointer;"> <input
+																				type="checkbox" ng-model="o_reply"
+																				hidden="true">
+																			<i class="fa-sharp fa-regular fa-reply"></i>
+																			Trả lời
+																		</label>
+																	</small>
+																</div>
+															</div>
+
+														</div>
+													</div>
+
+													<div ng-show="o_reply"
+														class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
+														style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
+														<img ng-src="/images/{{UserInfo.avatar}}" class="img-thumbnail"
+															alt="">
+														<div style="width: 70%">
+															<small style="font-size: 12px;" class="ng-binding">
+																<i class="fa-regular fa-tag"></i> <label
+																	class="nhan ng-binding"
+																	style="font-size: 13px; color: #313131; font-weight: bolder;"><span
+																		class="nhan">Bạn đang trả lời: </span>
+																	{{comment.user.username}}</label>
+															</small><br>
+															<div>
+																<form>
+																	<div class="input-group">
+																		<input type="text" class="form-control"
+																			ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
+																			placeholder="Nhập nội dung..."
+																			ng-model="replyContent[comment.commentId]">
+																		<div class="input-group-append">
+																			<button class="btn btn-primary"
+																				style="background-color: #007ACC; color: white; border: none"
+																				type="button"
+																				ng-click="sendReplyForComment(comment.user.userId, comment.commentId, replyContent[comment.commentId])">Gửi</button>
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+													<div ng-show="o_checkbox">
+
+														<div
+															ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
+
+															<div class="msg left-msg" style="margin-left: 4rem;">
+																<div class="msg-img"
+																	style="background-image: url(/images/{{obj.responder.avatar}}); border: 1px solid #ebf1f6; transform: translateY(-30%);">
+																</div>
+																<div class="msg-bubble" style="border-radius: 15px;">
+
+																	<div style="padding: 10px;">
+																		<div>
+																			<label class="nhan ng-binding"
+																				style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{obj.responder.username}}</label>
+																		</div>
+																		<small style="font-size: 12px;"
+																			class="ng-binding">
+																			<small style="font-size: 12px;"
+																				class="ng-binding">
+																				<i class="fa-regular fa-comments"></i>
+																				<label class="nhan ng-binding"
+																					style="font-size: 13px; color: #313131; font-weight: bolder;">{{obj.receiver.username}}</label>
+																				{{obj.replyContent}}
+																			</small>
+																		</small><br>
+																		<div>
+																			<small style="font-size: 10px;"
+																				class="ng-binding">{{getFormattedTimeAgo(obj.replyDate)}}</small>
+																			&nbsp; <label> <input type="checkbox"
+																					ng-model="o_checkbox" hidden="true"
+																					class="ng-pristine ng-untouched ng-valid ng-empty">
+																				<!-- ngIf: comment.reply.length > 0 -->
+																			</label> &nbsp; <small
+																				style="font-size: 10px; cursor: pointer;">
+																				<label>
+																					<input type="checkbox"
+																						ng-model="o_reply" hidden="true"
+																						class="ng-pristine ng-untouched ng-valid ng-empty">
+																					<svg class="svg-inline--fa fa-reply"
+																						aria-hidden="true"
+																						focusable="false"
+																						data-prefix="fasr"
+																						data-icon="reply" role="img"
+																						xmlns="http://www.w3.org/2000/svg"
+																						viewBox="0 0 512 512"
+																						data-fa-i2svg="">
+																						<path fill="currentColor"
+																							d="M461.7 427c-35.8 37.4-77.7 53-77.7 53s30.1-30.1 31.9-75.7c.1-1.4 .1-2.8 .1-4.3c0-61.9-50.1-112-112-112H272 224v48 12.2 .9V384H192l-16-14.7L35.5 240.6 0 208l35.5-32.6L176 46.7 192 32h32V66.9v.9V80v48h48 64c97.2 0 176 78.8 176 176c0 54.8-23.5 95-50.3 123zm-5.8-77.6C460.9 336 464 321 464 304c0-70.7-57.3-128-128-128H224 176V128 111.8L71 208l105 96.2V288 240h48 80c70.7 0 130.6 45.8 151.8 109.4z">
+																						</path>
+																					</svg>
+																					<!-- <i class="fa-sharp fa-regular fa-reply"></i> -->
+																					Trả lời
+																				</label>
+																			</small>
+																		</div>
+																	</div>
+
+																</div>
+															</div>
+
+															<div ng-show="o_reply2"
+																class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
+																style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
+																<img ng-src="/images/{{UserInfo.avatar}}"
+																	class="img-thumbnail" alt="">
+																<div style="width: 65%">
+																	<small style="font-size: 12px;" class="ng-binding">
+																		<i class="fa-regular fa-tag"></i> <label
+																			class="nhan ng-binding"
+																			style="font-size: 13px; color: #313131; font-weight: bolder;"><span
+																				class="nhan">Bạn đang trả lời:
+																			</span>{{obj.responder.username}}</label>
+																	</small><br>
+																	<div>
+																		<form>
+																			<div class="input-group">
+																				<input type="text" class="form-control"
+																					placeholder="Nhập nội dung..."
+																					ng-model="replyContent[obj.replyId]"
+																					ng-keydown="handleKeyDown($event, obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">
+
+																				<div class="input-group-append">
+																					<button class="btn btn-primary"
+																						style="background-color: #007ACC; color: white; border: none"
+																						type="button"
+																						ng-click="sendReply(obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">Gửi</button>
+																				</div>
+																			</div>
+																		</form>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<center>
+															<hr style="width: 30%;">
+														</center>
+													</div>
+
+												</div>
+												<button class="form-control"
+													ng-show="numOfCommentsToShow < postComments.length"
+													ng-click="showMoreComments()">Hiển thị thêm bình
+													luận</button>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal chỉnh sửa thông tin -->
+				<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									<i class="fa-light fa-pen-to-square"></i> Chỉnh sửa thông tin
+									cá nhân
+								</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form ng-submit="updateUserInfo()">
+									<p>Họ và tên</p>
+									<input type="text" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Name" value="{{UserInfo.username}}" ng-model="UpdateUser.username">
+									<br>
+									<p>Giới thiệu</p>
+									<input type="text" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Name" value="{{UserInfo.introduction}}"
+										ng-model="UpdateUser.introduction"> <br>
+									<p>Ngày sinh</p>
+									<input type="date" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Name" ng-model="birthday">
+									<br>
+									<p>Giới tính</p>
+									<div class="form-check">
+										<input type="radio" name="radios" class="form-check-input" id="exampleRadio1"
+											ng-value="true" ng-model="UpdateUser.gender"> <label
+											class="form-check-label" for="exampleRadio1">Nam</label>
+									</div>
+									<div class="mb-3 form-check">
+										<input type="radio" name="radios" class="form-check-input" id="exampleRadio2"
+											ng-value="false" ng-model="UpdateUser.gender"> <label
+											class="form-check-label" for="exampleRadio2">Nữ</label>
+									</div>
+									<br>
+									<p>Địa chỉ</p>
+									<input type="text" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Name" value="{{UserInfo.address}}" ng-model="UpdateUser.address">
+									<br>
+									<p>Trạng thái</p>
+									<input type="text" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Name" value="{{UserInfo.relationship}}"
+										ng-model="UpdateUser.relationship"> <br>
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary"
+											data-bs-dismiss="modal">Lưu</button>
+									</div>
+
+								</form>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!-- Thông báo -->
+				<div ng-include="'_notification.html'"></div>
+				<!-- Modal báo cáo -->
+				<div class="modal fade" id="modalBaoCao" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+					aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="modalTitleId">Nội dung tố cáo</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body" style="line-height: 30px">
+								<div ng-repeat="violation in violations">
+									<label> <input type="radio" name="violationOption"
+											ng-model="$parent.selectedViolationType"
+											ng-value="violation.violationTypeId">
+										{{violation.violationDescription}}
+									</label>
+								</div>
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									style="background-color: white; color: gray" data-bs-dismiss="modal">Đóng</button>
+								<button type="button" class="btn btn-primary"
+									style="background-color: #F27323; border: none" ng-click=report(selectedPostId)>Báo
+									cáo</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Modal chỉnh sửa thông tin bảo mật-->
+				<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									<i class="fa-light fa-pen-to-square"></i> Chỉnh sửa thông tin
+									bảo mật
+								</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form ng-submit="updateAccInfo()">
+									<p>Email</p>
+									<input type="email" class="form-control" id="nametext" aria-describedby="name"
+										value="{{AccInfo.email}}" ng-model="AccInfo.email"> <br>
+									<p>Trạng thái tài khoản</p>
+									<select class="form-select" ng-model="AccInfo.accountStatus.statusName">
+										<option value="Công khai">Công khai</option>
+										<option value="Chỉ theo dõi">Chỉ theo dõi</option>
+										<option value="Tạm ẩn">Tạm ẩn</option>
+									</select>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary"
+											data-bs-dismiss="modal">Lưu</button>
+									</div>
+
+								</form>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<script>
+					$(document).ready(function () {
+						$(".nav-pills .nav-link").click(function () {
+							// Xóa class "active" khỏi tất cả các thẻ li
+							$(".nav-pills .nav-item").removeClass("active");
+
+							// Thêm class "active" vào thẻ li được nhấp vào
+							$(this).parent().addClass("active");
+						});
+					});
+				</script>
+				<script type="text/javascript" src="/js/profile.js"></script>
+				<script src="js/addActive.js"></script>
+
+				<script>
+					var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
+
+					document.getElementById('dropArea').addEventListener(
+						'click',
+						function () {
+							document.getElementById('inputGroupFile01')
+								.click();
+						});
+
+					document.getElementById('inputGroupFile01')
+						.addEventListener('change', function () {
+							handleFiles(this.files);
+						});
+
+					function dropHandler(event) {
+						event.preventDefault();
+						var files = event.dataTransfer.files;
+						handleFiles(files);
+					}
+
+					function handleFiles(files) {
+						var mediaType = /^image\//;
+						var videoType = /^video\//;
+						var mediaList = document.getElementById('mediaList');
+
+						for (var i = 0; i < files.length; i++) {
+							var file = files[i];
+							if (mediaType.test(file.type)
+								|| videoType.test(file.type)) {
+								var reader = new FileReader();
+								reader.onload = (function (file) {
+									return function () {
+										if (mediaType.test(file.type)) {
+											var media = new Image();
+											media.src = this.result;
+											media.classList.add('previewMedia');
+											var container = createMediaContainer(
+												media, file);
+											mediaList.appendChild(container);
+										} else if (videoType.test(file.type)) {
+											var media = document
+												.createElement('video');
+											media.src = this.result;
+											media.setAttribute('controls',
+												'controls');
+											media.classList.add('previewMedia');
+											var container = createMediaContainer(
+												media, file);
+											mediaList.appendChild(container);
+										}
+									};
+								})(file);
+								reader.readAsDataURL(file);
+								selectedMedia.push(file);
+							}
+						}
+
+						// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+						var dataTransfer = new DataTransfer();
+						for (var i = 0; i < selectedMedia.length; i++) {
+							dataTransfer.items.add(selectedMedia[i]);
+						}
+						document.getElementById('inputGroupFile01').files = dataTransfer.files;
+					}
+
+					function createMediaContainer(media, file) {
+						var container = document.createElement('div');
+						container.classList.add('previewMediaContainer');
+						container.appendChild(media);
+
+						var deleteButton = document.createElement('button');
+						deleteButton.innerHTML = 'X';
+						deleteButton.classList.add('deleteButton');
+						deleteButton
+							.addEventListener(
+								'click',
+								function () {
+									// Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
+									var index = selectedMedia
+										.indexOf(file);
+									if (index !== -1) {
+										selectedMedia.splice(index, 1);
+									}
+									// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+									var dataTransfer = new DataTransfer();
+									for (var i = 0; i < selectedMedia.length; i++) {
+										dataTransfer.items
+											.add(selectedMedia[i]);
+									}
+									document
+										.getElementById('inputGroupFile01').files = dataTransfer.files;
+
+									container.remove();
+								});
+
+						container.appendChild(deleteButton);
+
+						return container;
+					}
+
+					function dragOverHandler(event) {
+						event.preventDefault();
+						event.target.classList.add('active');
+					}
+
+					function dragLeaveHandler(event) {
+						event.preventDefault();
+						event.target.classList.remove('active');
+					}
+					function displayAvatar() {
+						var input = document.getElementById('inputGroupFile03');
+						var imgElement = document.getElementById('img');
+
+						// Kiểm tra xem người dùng đã chọn ảnh hay chưa
+						if (input.files && input.files[0]) {
+							var reader = new FileReader();
+
+							reader.onload = function (e) {
+								imgElement.src = e.target.result; // Gán đường dẫn của ảnh cho src của thẻ img
+							}
+
+							reader.readAsDataURL(input.files[0]); // Đọc và chuyển đổi ảnh thành đường dẫn dạng Base64
+						}
+					}
+					function displayBackground() {
+						var input = document.getElementById('inputGroupFile02');
+						var imgElement = document
+							.getElementById('imgBackground');
+
+						// Kiểm tra xem người dùng đã chọn ảnh hay chưa
+						if (input.files && input.files[0]) {
+							var reader = new FileReader();
+
+							reader.onload = function (e) {
+								imgElement.src = e.target.result; // Gán đường dẫn của ảnh cho src của thẻ img
+							}
+
+							reader.readAsDataURL(input.files[0]); // Đọc và chuyển đổi ảnh thành đường dẫn dạng Base64
+						}
+					}
+					function displayImagePreview(inputId, imgId) {
+						var input = document.getElementById(inputId);
+						var imgElement = document.getElementById(imgId);
+
+						// Kiểm tra xem người dùng đã chọn ảnh hay chưa
+						if (input.files && input.files[0]) {
+							var reader = new FileReader();
+
+							reader.onload = function (e) {
+								imgElement.src = e.target.result; // Gán đường dẫn của ảnh cho src của thẻ img
+							}
+
+							reader.readAsDataURL(input.files[0]); // Đọc và chuyển đổi ảnh thành đường dẫn dạng Base64
+						}
+					}
+				</script>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

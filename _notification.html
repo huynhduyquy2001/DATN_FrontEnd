@@ -1,0 +1,88 @@
+<!-- Thông báo -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+	<div class="offcanvas-header">
+		<h4 id="offcanvasRightLabel">{{ 'TB' | translate }}</h4>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
+			ng-click="hideNotification()"></button>
+	</div>
+	<div class="offcanvas-body">
+		<div class="bd-example">
+			<ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1"
+						type="button" role="tab" aria-controls="home" aria-selected="true">{{ 'CD' |
+						translate }}</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1"
+						type="button" role="tab" aria-controls="profile" aria-selected="false">{{ 'TC' |
+						translate }}</button>
+				</li>
+			</ul>
+			<div class="tab-content" id="pills-tabContent">
+				<div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
+					aria-labelledby="pills-home-tab1">
+					<ul class="sidebar-scrollable mt-3">
+						<li class="sidebar-item notification mt-1 align-items-center d-flex" style="padding: 10px;"
+							ng-repeat="notify in notification | orderBy:'notificationDate':true">
+							<a ng-click="getPostDetails(notify.post.postId)" data-bs-dismiss="offcanvas"
+								aria-label="Close" class="image-link"> <img ng-src="images/{{notify.receiver.avatar}}"
+									width="55" height="55" style="object-fit: cover;" class="rounded-circle">
+								<div class="content" style="color: black; cursor: pointer;">
+									<b>{{ notify.notificationContent }}</b>
+									<p>{{ getFormattedTimeAgo(notify.notificationDate) }}
+									<p>
+								</div>
+							</a>
+							<div class="ms-auto">
+								<div class="dropdown">
+									<a href="#" class="link" id="dropdownMenuButton" data-bs-toggle="dropdown"
+										aria-expanded="false"> <i class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+									</a>
+									<ul style="background: whitesmoke;" class="dropdown-menu"
+										aria-labelledby="dropdownMenuButton">
+										<li><a class="dropdown-item"
+												ng-click="hideNotificationById(notify.notificationId)"> <i
+													class="fa-solid fa-bell-slash"></i> Ẩn thông báo
+											</a></li>
+						</li>
+					</ul>
+				</div>
+				</li>
+				</ul>
+			</div>
+			<div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
+				<ul class="sidebar-scrollable mt-3">
+					<li class="sidebar-item mt-1 d-flex align-items-center" style="padding: 10px;"
+						ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true">
+						<a data-bs-dismiss="offcanvas" aria-label="Close"
+							ng-click="getPostDetails(allnotify.post.postId)" class="image-link"> <img
+								ng-src="images/{{allnotify.receiver.avatar}}" alt="" width="55" height="55"
+								class="rounded-circle" style="object-fit: cover;">
+							<div class="content" style="color: black; cursor: pointer;">
+								<b>{{ allnotify.notificationContent }}</b>
+								<p>{{ getFormattedTimeAgo(allnotify.notificationDate) }}
+								<p>
+							</div>
+						</a>
+						<div class="ms-auto">
+							<div class="dropdown">
+								<a href="#" class="link" id="dropdownMenuButton" data-bs-toggle="dropdown"
+									aria-expanded="false"> <i class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+								</a>
+								<ul style="background: whitesmoke;" class="dropdown-menu"
+									aria-labelledby="dropdownMenuButton">
+									<li><a class="dropdown-item"
+											ng-click="deleteNotification(allnotify.notificationId)"> <i
+												class="fa-solid fa-bell-slash"></i> Xóa thông báo
+										</a></li>
+					</li>
+				</ul>
+			</div>
+			</li>
+			</ul>
+		</div>
+	</div>
+</div>
+</div>
+</div>

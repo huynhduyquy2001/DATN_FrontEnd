@@ -1,0 +1,95 @@
+<div class="row col-md-11 animate__animated animate__fadeIn" ng-controller="MyStoreController">
+
+    <div class="col-md-12">
+        <div style="display: flex; justify-content: left;">
+            <div data-bs-toggle="modal" href="#exampleModalToggle"
+                style="min-width: 25%; border-radius: 10px; padding: 0; background-color: transparent; background: transparent;">
+                <div class="card ng-scope" style=" border: none; background-color: transparent;">
+                    <div class="card-body d-flex align-items-center gap-3" style="padding: 0;">
+                        <a href="#!/profile/BZOL98493464"><img class="rounded-circle" width="40" height="40"
+                                style="object-fit: cover;" src="images/minhHieu.jpg-20230804_070007.jpg"></a>
+                        <div>
+                            <i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="buy--btn animate__animated animate__fadeInDown"
+                style="margin-top: 1.5rem; display: block !important; margin-top: 0.5rem; padding: 0.2rem; margin-bottom: 0.5rem; margin-right: 0.3rem;">
+                Giá tăng dần</button>
+            <button class="buy--btn animate__animated animate__fadeInDown"
+                style="margin-top: 1.5rem; display: block !important; margin-top: 0.5rem; padding: 0.2rem; margin-bottom: 0.5rem;margin-right: 0.3rem;">
+                Giá giảm dần </button>
+            <button class="buy--btn animate__animated animate__fadeInDown"
+                style="margin-top: 1.5rem; display: block !important; margin-top: 0.5rem; padding: 0.2rem; margin-bottom: 0.5rem;margin-right: 0.3rem;">
+                Bán chạy</button>
+            <button class="buy--btn animate__animated animate__fadeInDown"
+                style="margin-top: 1.5rem; display: block !important; margin-top: 0.5rem; padding: 0.2rem; margin-bottom: 0.5rem;margin-right: 0.3rem;">
+                Mới nhất</button>
+            <button class="buy--btn animate__animated animate__fadeInDown"
+                style="margin-top: 1.5rem; display: block !important; margin-top: 0.5rem; padding: 0.2rem; margin-bottom: 0.5rem;margin-right: 0.3rem;">
+                Cũ nhất</button>
+        </div>
+    </div>
+    <hr>
+    <div class="mb-3" style="display: flex; justify-content: right;">
+        <input type="text" class="form-control" name="" id="" aria-describedby="helpId"
+            style="border-radius: 20px; width: 50%;" placeholder="Nhập sản phẩm cần tìm...">
+    </div>
+    <div class="col-lg-6" style="z-index: 10; margin-bottom: 2rem;">
+        <div class="row">
+            <div class="col-md-6" style="display: flex;
+            justify-content: center;">
+                <a href="#!product"><img class="imghover" width="100%" style="border-radius: 10px;"
+                        src="images/camap4chan.jpg"></a>
+            </div>
+            <div class="col-md-6 frame" style="cursor: pointer;">
+                <div class="product__info">
+                    <div class="title">
+                        <h2 style="font-size: 1.5rem;">Rồng Bông Xanh</h2>
+                    </div>
+                    <div class="description">
+                        <h3>Đánh giá</h3>
+                        <span>
+                            <i class="fa-solid fa-star" style="color: #ffc107!important;"></i>
+                            <i class="fa-solid fa-star" style="color: #ffc107!important;"></i>
+                            <i class="fa-solid fa-star" style="color: #ffc107!important;"></i>
+                            <i class="fa-solid fa-star" style="color: #ffc107!important;"></i>
+                            <i class="fa-solid fa-star" style="color: #ffc107!important;"></i>
+                            <i class="fa-solid fa-star" style="color: #ffc107!important;"></i>
+                        </span>
+                        <small>(5)</small>
+                    </div>
+                    <div class="note">
+                        <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
+                                aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-basket"
+                                role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
+                                </path>
+                            </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->154 lượt đánh
+                            giá</span>
+                        <span class="text-success ms-2">230 đã bán</span>
+                    </div>
+
+                    <div class="price animate__animated animate__fadeInUp">
+                        <span style="font-weight: 600;">Giá
+                            bán:</span> <span>75.000 VND</span>
+                    </div>
+                    <div style="display: flex;">
+                        <button class="buy--btn animate__animated animate__fadeInDown"
+                            style="margin-top: 1.5rem; margin-right: 0.2rem;">
+                            Chỉnh sửa</button>
+                        <button class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
+                            Xóa</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <center><button class="form-control" style="width: 50%;">Hiển thị thêm sản phẩm</button></center>
+
+</div>

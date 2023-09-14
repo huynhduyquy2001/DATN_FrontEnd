@@ -1,0 +1,132 @@
+<div ng-controller="UserManagerController">
+    <div class="row">
+        <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <form class="position-relative">
+                            <input type="search" ng-model="searchValue"
+                                ng-keyup="searchUser()"
+                                class="form-control search-chat py-2 ps-5"
+                                placeholder="Nhập tên người dùng"
+                                style="border: 1px solid #ccc;"> <a href="#"
+                                ng-click="searchClick()"><i
+                                class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+                        </form>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <ul style="max-height: 500px; overflow-y: auto;">
+                            <li ng-if="listUsers.length < 1" class="sidebar-item sidebar-scrollable">
+                                <div class="text-center">
+                                    <h5>
+                                        <i class="fa-solid fa-triangle-exclamation"
+                                            style="color: #e14023;"></i> Không có người dùng này
+                                    </h5>
+                                </div>
+                            </li>
+                            <li ng-if="listUsers.length > 1" ng-repeat="user in listUsers" style="cursor: pointer;"
+                                class="sidebar-item"><a  ng-click="detailUser(user[0])"
+                                class="image-link sidebar-link mb-3">
+                                    <img ng-src="images/{{user[1]}}" alt=""
+                                width="55" height="55" class="rounded-circle"
+                                style="object-fit: cover;">
+                                    <div class="content mt-1">
+                                        <span><span>{{user[2]}}</span> &nbsp; <i
+                                            ng-if="user[4] > 5"
+                                            class="fa-solid fa-circle-exclamation fa-sm mt-1"
+                                            style="color: #e12814;"></i></span> <small>{{user[5]}}</small>
+                                    </div>
+                            </a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-title mt-2">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <div class="navbar-collapse justify-content-start px-0">
+                            <h4>
+                                <b>&nbsp;&nbsp; Thông tin chi tiết</b>
+                            </h4>
+                        </div>
+                        <div class="navbar-collapse justify-content-end px-0">
+                            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end me-3">
+                                <li ng-if="profile.account.role.roleName != 'Admin'" class="nav-item dropdown">
+                                    <a class="me-2" href="#" id="drop2"
+                                    data-bs-toggle="dropdown" aria-expanded="false"> <i
+                                        class="fa-solid fa-user-pen"></i>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+                                        aria-labelledby="drop2">
+                                        <div class="message-body">
+                                            <a ng-click="updateRole(profile.account.phoneNumber, profile.account.role.roleId)"
+                                                class="d-flex align-items-center gap-2 dropdown-item mb-2">
+                                                <i class="fa-solid fa-repeat-1 me-3"></i>
+                                                <p class="mb-0 fs-3">Đổi vai trò</p>
+                                            </a> <a  ng-click="resetViolation(profile.userId, profile.violationCount)"
+                                                class="d-flex align-items-center gap-1 dropdown-item mb-2">
+                                                <i class="fa-sharp fa-regular fa-bug-slash me-3"></i>
+                                                <p class="mb-0 fs-3">Gỡ vi phạm</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a  class="ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm nhân viên"><i class="fa-solid fa-user-plus"></i></a>
+                                    </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+                <div class="card-body p-4">
+                    <div>
+                        <div class="image-link">
+                            <img ng-src="images/{{profile.avatar}}" alt="" width="100"
+                                height="100" class="rounded-circle"
+                                style="object-fit: cover; border: 2px solid #ccc;">
+                            <div class="content mb-2">
+                                <span><h4>
+                                        {{profile.username}} <b></b>
+                                    </h4></span> <small class="mb-2">{{profile.birthday |
+                                    date:'dd/MM/yyyy'}}</small> <small>{{profile.account.email}}</small>
+                            </div>
+                        </div>
+                        <div></div>
+                        <div class="card-footer mt-4" style="line-height: 25px;">
+                            <div class="row" style="max-height: 360px; overflow-y: auto;">
+                                <div class="col-4">
+                                    <small>Số điện thoại</small> <br> <b>{{profile.account.phoneNumber}}</b>
+                                </div>
+                                <div class="col-8">
+                                    <small>Mối quan hệ</small> <br> <b>{{profile.relationship}}</b>
+                                </div>
+                                <div class="col-3 mt-4">
+                                    <small>Vai trò</small> <br> <b>{{profile.account.role.roleName}}</b>
+                                </div>
+                                <div class="col-9 mt-4">
+                                    <small>Địa chỉ</small> <br> <b>{{profile.address}}</b>
+                                </div>
+                                <div class="col-3 mt-4">
+                                    <small>Lượt vi phạm</small> <br> <b>{{profile.violationCount}}</b>
+                                </div>
+                                <div class="col-3 mt-4">
+                                    <small>Trạng thái</small> <br> <b>{{profile.account.accountStatus.statusName}}</b>
+                                </div>
+                                <div class="col-6 mt-4">
+                                    <small>Email</small> <br> <b>{{profile.account.email}}</b>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <small>Mô tả</small> <br>
+                                    <p>{{profile.introduction}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

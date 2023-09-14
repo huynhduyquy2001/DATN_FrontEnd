@@ -1,0 +1,32 @@
+<div class="col-11" ng-controller="RecommendController" style="z-index: 10;">
+	<b style="font-size: 25px; font: bold;">{{ 'GYTD' |
+		translate }}</b>
+	<br> <br>
+	<div class="row">
+		<div class=" col-md-3" style="background: transparent; padding-bottom: 2vh" ng-repeat="user in users"
+			ng-if="followings.indexOf(user.userId.toString())===-1">
+			<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
+				<div class="user-profile" style="display: block;">
+					<div class="username-dt dpbg-1"
+						style="background-image: url(images/{{user.background}}); background-size: cover;">
+						<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
+								ng-src="/images/{{user.avatar}}">
+						</a>
+					</div>
+					<div class="user-main-details" style="padding: 60px 0 2px 0;">
+						<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
+						<!-- <span><i class="feather-map-pin"></i>India</span> -->
+					</div>
+					<center>
+						<a href="" role="button" class="btn btn-primary" ng-if="!isFollowing(follower.userId)"
+							ng-click="followUser(user.userId)"
+							style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem">Follow</a>
+						<a href="" role="button" class="btn btn-primary" ng-if="isFollowing(follower.userId)"
+							ng-click="unfollowUser(user.userId)"
+							style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem">Unfollow</a>
+					</center>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

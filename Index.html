@@ -1,0 +1,597 @@
+<!doctype html>
+<html>
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+	<script src="https://kit.fontawesome.com/f737751420.js"></script>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Inline+One&family=Bangers&family=Chakra+Petch:ital,wght@0,400;1,300;1,400;1,700&family=Grenze&family=Patrick+Hand&family=Playfair+Display+SC&family=Road+Rage&display=swap"
+		rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Inline+One&family=Bangers&family=Chakra+Petch:ital,wght@0,400;1,300;1,400;1,700&family=Grenze&family=Patrick+Hand&family=Roboto&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<!-- Thêm thư viện SockJS và Stomp -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+	<script src="js/translate.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+	<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css'>
+	<link rel="stylesheet" href="css/style.css">
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+	<script>
+		AOS.init();
+	</script>
+	<title>Trang chủ</title>
+	<style type="text/css">
+		body {
+			font-family: 'Plus Jakarta Sans', sans-serif;
+		}
+
+		.dropdown-item {
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+
+		.red-heart {
+			color: red;
+			/* Màu đỏ cho trái tim đã thích */
+		}
+
+		.gray-heart {
+			color: gray;
+			/* Màu xám cho trái tim chưa thích */
+		}
+
+		div.dropdown-menu.baoCao {
+			transform: translate(-80%, 39px);
+		}
+
+		.container,
+		.container-lg,
+		.container-md,
+		.container-sm,
+		.container-xl {
+			max-width: 100%;
+		}
+
+		.dropdown {
+			position: relative;
+			display: block;
+		}
+
+		.dropdown-content {
+			opacity: 0;
+			position: absolute;
+			background-color: #f9f9f9;
+			min-width: 17rem;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+			padding-right: 10px;
+			border-radius: 3px;
+			transition: 0.5s ease-in-out;
+		}
+
+		.dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown:hover .dropdown-content {
+
+			transition: 0.5s ease-in-out;
+			opacity: 1;
+		}
+
+		.uploaded-image {
+			width: 100%;
+			max-width: 100%;
+			height: auto;
+			margin-bottom: 7px;
+		}
+
+		.image-link {
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+			color: #5a5957;
+			display: flex;
+		}
+
+		.notification {
+			border-radius: 10px;
+			background-color: rgba(93, 135, 255, 0.1);
+		}
+
+		.content {
+			display: flex;
+			flex-direction: column;
+			margin-left: 10px;
+			display: flex;
+			width: 270px;
+		}
+
+		.content p {
+			margin-bottom: 0;
+		}
+
+		.sidebar-scrollable {
+			max-height: 550px;
+			/* Đặt chiều cao tối đa của vùng cuộn */
+			overflow-y: auto;
+			/* Tạo thanh cuộn dọc */
+		}
+
+		.sidebar-scrollable::-webkit-scrollbar {
+			display: none;
+		}
+
+		.sidebar-scrollable::-webkit-scrollbar-thumb {
+			background-color: #888;
+			/* Màu sắc của thanh cuộn */
+			border-radius: 4px;
+			/* Bo tròn viền thanh cuộn */
+		}
+
+		.sidebar-scrollable::-webkit-scrollbar-track {
+			background-color: #f5f5f5;
+			/* Màu sắc của vùng di chuyển thanh cuộn */
+		}
+
+		@media screen and (max-width: 1180px) {
+			#menuLeft {
+				display: none;
+			}
+
+			#view.offset-lg-3 {
+				margin-left: 0;
+			}
+
+			#view.col-lg-9 {
+				width: 100%;
+				flex: 0 0 100%;
+				max-width: 100%;
+			}
+
+			#view.col-lg-12 {
+				width: 100%;
+				flex: 0 0 100%;
+				max-width: 100%;
+			}
+		}
+
+		.rotate-icon {
+			transition: transform 0.5s ease-in-out;
+		}
+
+		.nav-link[aria-expanded="true"] .rotate-icon {
+			transform: rotate(90deg);
+		}
+
+		/* Hiện sidebar khi màn hình có chiều rộng dưới 1180px */
+		@media (max-width: 575px) {
+
+			/* Hiện nút menu khi màn hình có chiều rộng dưới 1180px */
+			#menuLeft-toggle {
+				display: block !important;
+			}
+		}
+
+		@media (max-width: 768px) {
+			#isEmptyObject {
+				display: none;
+			}
+		}
+
+		#menuLeft-toggle {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			box-shadow: none;
+		}
+	</style>
+
+
+</head>
+
+<body style="padding-top: 70px;" ng-controller="myCtrl" ng-app="myApp">
+	<div style="transition: 0.5s;">
+		<div class="row ">
+			<div id="menuLeft" ng-include="'_menuLeft.html'"></div>
+			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
+				style="padding: 0; position: fixed; top: 0; z-index: 101">
+				<!-- <div class="container" style="width: 100%; padding: 0;">
+					<div class="collapse navbar-collapse" id="collapsibleNavId">
+						<ul class="navbar-nav me-auto mt-2 mt-lg-0">
+						</ul>
+						<div class="body-wrapper">
+							<header class="app-header">
+								<nav class="navbar navbar-expand-lg navbar-light">
+									<div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+										<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+											<li class="nav-item dropdown"><a data-bs-toggle="offcanvas"
+													data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+													class="nav-link nav-icon-hover" href="#">
+													<div class="notification-icon">
+														<i class="fa-regular fa-bell fa-lg"></i>
+														<div class="circle">
+															<span>5+</span>
+														</div>
+													</div>
+												</a></li>
+											<li class="nav-item dropdown"><a class="nav-link nav-icon-hover" href="#"
+													id="drop2" data-bs-toggle="dropdown" aria-expanded="false"> <img
+														src="images/duyQuy.jpg" alt="" width="35" height="35"
+														class="rounded-circle">
+												</a>
+												<div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
+													<div class="message-body">
+														<a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-user fs-6"></i>
+															<p class="mb-0 fs-3">Đổi mật khẩu</p>
+														</a> <a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-mail fs-6"></i>
+															<p class="mb-0 fs-3">Thông tin điều khoản</p>
+														</a> <a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<p class="mb-0 fs-3">Nâng cấp</p>
+														</a> </a> <a ng-click="logout()"
+															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
+															xuất</a>
+
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</nav>
+							</header>
+							<div class="container-fluid">
+								<div class="row"></div>
+							</div>
+
+						</div>
+					</div>
+				</div> -->
+			</nav>
+			<div ng-view id="view" class="col-lg-9 offset-lg-3"></div>
+		</div>
+	</div>
+
+
+
+
+	<!-- Modal hiện  chi tiêt bài viết và danh sách bình luận -->
+	<div class="modal fade" id="chiTietBaiViet" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+		aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-fullscreen" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div ng-if="postDetails.images.length > 0" class="col-md-6 trai "
+							style="overflow-y: scroll; max-height: 100vh">
+							<center>
+								<center>
+									<div ng-if="postDetails.images.length > 1">
+										<!-- Carousel HTML code -->
+										<div id="postDetails{{postDetails.postid}}" class="carousel slide"
+											data-bs-ride="carousel">
+											<!-- Carousel indicators -->
+											<ol class="carousel-indicators">
+												<li data-bs-target="#postDetails{{postDetails.postid}}"
+													ng-repeat="image in postDetails.images track by $index"
+													ng-class="{ 'active': $index === 0 }" data-bs-slide-to="{{$index}}"
+													aria-current="{{$index === 0}}" aria-label="Slide {{$index + 1}}">
+												</li>
+											</ol>
+											<!-- Carousel items -->
+											<div class="carousel-inner" role="listbox">
+												<div class="carousel-item"
+													ng-repeat="image in postDetails.images track by $index"
+													ng-class="{ 'active': $index === 0 }">
+													<img ng-src="images/{{ image.imageUrl }}" class="w-100 d-block"
+														alt="Slide {{$index + 1}} ">
+												</div>
+											</div>
+											<!-- Carousel controls -->
+											<button class="carousel-control-prev" type="button"
+												data-bs-target="#postDetails{{postDetails.postid}}"
+												data-bs-slide="prev">
+												<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Previous</span>
+											</button>
+											<button class="carousel-control-next" type="button"
+												data-bs-target="#postDetails{{postDetails.postid}}"
+												data-bs-slide="next">
+												<span class="carousel-control-next-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Next</span>
+											</button>
+										</div>
+									</div>
+									<div ng-if="postDetails.images.length === 1">
+										<!-- Single image HTML code -->
+										<img ng-src="images/{{ postDetails.images[0].imageUrl }}" class="w-100"
+											alt="Single image"
+											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+
+									</div>
+
+
+								</center>
+
+							</center>
+						</div>
+						<div class="col-md-6 phai ">
+							<div>
+								<div data-bs-dismiss="modal" style="cursor: pointer; text-align: right;">x</div>
+								<div style="display: flex; align-items: center; justify-content: space-between;">
+									<div class="user-profile ">
+										<a href="/nguoiDung/{{postDetails.user.userId}}"><img
+												ng-src="images/{{postDetails.user.avatar}}" style="border-radius: 100%;"
+												alt=""></a>
+										<div>
+
+											<span
+												style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+												class="ng-binding">{{postDetails.user.username}}</span>
+											&nbsp;&nbsp; <span><small style="font-size: 12px; color: #65676b"
+													class="ng-binding">
+													{{getFormattedTimeAgo(postDetails.postDate)}} </small></span>
+										</div>
+									</div>
+
+									<div>
+										<div class="btn-group">
+											<span class="btn dropdown-toggle" type="button" id="triggerId"
+												data-bs-toggle="dropdown" aria-haspopup="true"
+												aria-expanded="false"></span>
+											<div class="dropdown-menu" aria-labelledby="triggerId">
+												<a class="dropdown-item" href="#">{{ 'BCVP' | translate
+													}}</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div style="padding: 10px">{{postDetails.content}}</div>
+								<form>
+									<div style="display: flex;">
+										<input ng-model="myComment" type="text" class="ip form-control"
+											style="width: 80%;" placeholder="{{ 'BLCB' | translate }}" required="">
+										<button class="btn01" type="submit"
+											style="background: #007ACC; color: white; height: 70%; transform: translateY(60%); border-radius: 3px; margin-left: 5px; padding: 3px"
+											ng-click="addComment(postDetails.postId)">{{ 'BL' |
+											translate }}</button>
+									</div>
+								</form>
+							</div>
+							<div style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
+								<div ng-repeat="comment in postComments | limitTo:numOfCommentsToShow">
+									<div class="msg ng-scope left-msg" ng-class="left-msg">
+										<div class="msg-img"
+											style="background-image: url(images/{{comment.user.avatar}}); transform: translateY(-100%); border: 1px solid #ebf1f6;">
+										</div>
+										<div class="msg-bubble" style="border-radius: 15px;">
+
+											<div>
+												<div>
+													<label class="nhan"
+														style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{comment.user.username}}</label>
+												</div>
+												<small style="font-size: 12px;"> <svg class="svg-inline--fa fa-comment"
+														aria-hidden="true" focusable="false" data-prefix="far"
+														data-icon="comment" role="img"
+														xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+														data-fa-i2svg="">
+														<path fill="currentColor"
+															d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z">
+														</path>
+													</svg> {{comment.content}}
+												</small><br>
+												<div>
+													<small
+														style="font-size: 10px;">{{getFormattedTimeAgo(comment.commentDate)}}</small>
+													&nbsp; <label> <input type="checkbox" ng-model="o_checkbox"
+															hidden="true"> <small ng-if="comment.reply.length > 0"
+															style="font-size: 10px; cursor: pointer;">{{comment.reply.length}}
+															phản hồi</small>
+													</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
+														<label> <input type="checkbox" ng-model="o_reply" hidden="true">
+															<i class="fa-sharp fa-regular fa-reply"></i> Trả lời
+														</label>
+													</small>
+												</div>
+											</div>
+
+										</div>
+									</div>
+
+									<div ng-show="o_reply"
+										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%; border: 1px solid #dee2e6;">
+										<img ng-src="images/{{myAccount.user.avatar}}" class="img-thumbnail" alt="">
+										<div style="width: 70%">
+											<small style="font-size: 12px;" class="ng-binding"> <i
+													class="fa-regular fa-tag"></i> <small style="font-size: 12px;"
+													class="ng-binding"> Bạn
+													đang trả lời: {{comment.user.username}} </small>
+
+											</small><br>
+											<div>
+												<form>
+													<div class="input-group">
+														<input
+															style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0"
+															type="text" class="form-control"
+															ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
+															placeholder="Nhập nội dung..."
+															ng-model="replyContent[comment.commentId]">
+														<div class="input-group-append" style="margin-left: 0.3rem">
+															<button class="btn btn-primary"
+																style="background-color: #007ACC; color: white; border: none;"
+																type="button"
+																ng-click="sendReplyForComment(comment.user.userId, comment.commentId, replyContent[comment.commentId])">Gửi</button>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+									<div ng-show="o_checkbox">
+										<div ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
+
+											<div class="msg ng-scope left-msg" ng-class="left-msg"
+												style="margin-left: 4rem;">
+												<div class="msg-img"
+													style="background-image: url(images/{{obj.responder.avatar}}); transform: translateY(-100%); border: 1px solid #ebf1f6;">
+												</div>
+												<div class="msg-bubble" style="border-radius: 15px;">
+
+													<div>
+														<div>
+															<label class="nhan ng-binding"
+																style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{obj.responder.username}}</label>
+														</div>
+														<small style="font-size: 12px;" class="ng-binding">
+															<small style="font-size: 12px;" class="ng-binding">
+																<i class="fa-regular fa-comments"></i> <label
+																	class="nhan ng-binding"
+																	style="font-size: 13px; color: #313131; font-weight: bolder;">{{obj.receiver.username}}</label>
+																{{obj.replyContent}}
+															</small>
+														</small><br>
+														<div>
+															<small style="font-size: 10px;"
+																class="ng-binding">{{getFormattedTimeAgo(obj.replyDate)}}</small>
+															&nbsp; <label> <input type="checkbox" ng-model="o_checkbox"
+																	hidden="true"
+																	class="ng-pristine ng-untouched ng-valid ng-empty">
+																<!-- ngIf: comment.reply.length > 0 -->
+															</label> &nbsp; <small
+																style="font-size: 10px; cursor: pointer;">
+																<label> <input type="checkbox" ng-model="o_reply2"
+																		hidden="true"> Trả lời
+																</label>
+															</small>
+														</div>
+													</div>
+
+												</div>
+											</div>
+
+											<div ng-show="o_reply2"
+												class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
+												style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
+												<img ng-src="images/{{myAccount.user.avatar}}" class="img-thumbnail"
+													alt="">
+												<div style="width: 65%">
+													<small style="font-size: 12px;" class="ng-binding">
+														<i class="fa-regular fa-tag"></i> <small
+															style="font-size: 12px;" class="ng-binding"> Bạn
+															đang trả lời: {{obj.responder.username}} </small>
+													</small><br>
+													<div>
+														<form>
+															<div class="input-group">
+																<input
+																	style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0;"
+																	type="text" class="form-control"
+																	placeholder="Nhập nội dung..."
+																	ng-model="replyContent[obj.replyId]"
+																	ng-keydown="handleKeyDown($event, obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">
+
+																<div class="input-group-append">
+																	<button class="btn btn-primary"
+																		style="background-color: #007ACC; color: white; border: none"
+																		type="button"
+																		ng-click="sendReply(obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">Gửi</button>
+																</div>
+															</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+										<center>
+											<hr style="width: 30%;">
+										</center>
+									</div>
+
+								</div>
+								<button class="form-control" ng-show="numOfCommentsToShow < postComments.length"
+									ng-click="showMoreComments()">Hiển thị thêm bình luận</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Thông báo -->
+	<div ng-include="'_notification.html'"></div>
+
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+
+	<!-- Thư viện sweetalert2 -->
+	<script src="js/app.js"></script>
+	<script src="js/Index.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/home.js"></script>
+	<!-- <script src="js/addActive.js"></script> -->
+
+	<script src="js/apexcharts.min.js"></script>
+	<script src="js/search.js"></script>
+	<script src="js/recommend.js"></script>
+	<script src="js/Message.js"></script>
+	<script src="js/profile.js"></script>
+	<script src="js/shopping.js"></script>
+	<script src="js/product.js"></script>
+	<script src="js/myStore.js"></script>
+	<script src="js/report.js"></script>
+	<script src="js/usermanager.js"></script>
+	<script src="js/postsviolations.js"></script>
+</body>
+
+</html>
+
+</html>
