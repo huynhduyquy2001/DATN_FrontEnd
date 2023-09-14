@@ -42,6 +42,9 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/mystore', {
 		templateUrl: "ngview/myStore.html",
 		controller: 'MyStoreController'
+	}).when('/ValidationOrder', {
+		templateUrl: "ngview/ValidationOrder.html",
+		controller: 'ValidationOrderController'
 	});
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
