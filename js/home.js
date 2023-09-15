@@ -360,7 +360,11 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		if ($scope.content === null || $scope.content === undefined) {
 			$scope.content = '';
 		}
-		for (var i = 0; i < fileInput.files.length; i++) {
+
+		var fileCount = fileInput.files.length;
+		var uploadCount = 0;
+
+		for (var i = 0; i < fileCount; i++) {
 			var file = fileInput.files[i];
 			var fileSizeMB = file.size / (1024 * 1024);
 
@@ -383,28 +387,31 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 				// Tải lên thành công, lấy URL của tệp từ Firebase Storage
 				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
 					imagesUrl.push(downloadURL);
-					// downloadURL chứa URL của tệp đã tải lên
+					uploadCount++;
+
+					if (uploadCount === fileCount) {
+						// Khi đã tải lên tất cả các tệp, gửi yêu cầu POST
+						formData.append('content', $scope.content.trim());
+						formData.append('imagesUrl', imagesUrl);
+
+						$http.post(url + '/post', formData, {
+							transformRequest: angular.identity,
+							headers: {
+								'Content-Type': undefined
+							}
+						}).then(function (response) {
+							// Xử lý phản hồi thành công từ máy chủ
+						}, function (error) {
+							// Xử lý lỗi
+							console.log(error);
+						});
+					}
 				}).catch(function (error) {
 					console.error('Error getting download URL:', error);
 				});
 			});
 		}
 
-		formData.append('content', $scope.content.trim());
-		formData.append('imagesUrl', imagesUrl);
-		alert(imagesUrl.length)
-		$http.post(url + '/post', formData, {
-			transformRequest: angular.identity,
-			headers: {
-				'Content-Type': undefined
-			}
-		}).then(function (response) {
-			// Xử lý phản hồi thành công từ máy chủ
-
-		}, function (error) {
-			// Xử lý lỗi
-			console.log(error);
-		})
 		$scope.content = '';
 		fileInput.value = null;
 		var mediaList = document.getElementById('mediaList');
