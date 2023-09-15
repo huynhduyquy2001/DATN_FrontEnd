@@ -1,3 +1,62 @@
+<style>
+	body {
+		font-family: 'Plus Jakarta Sans', sans-serif;
+	}
+
+	input.hover-effect:hover {
+		border-color: #1261c2;
+		/* Màu viền thay đổi khi hover */
+		box-shadow: 0 0 5px #1d4bcc;
+		/* Hiển thị đổ bóng khi hover */
+		cursor: pointer;
+	}
+
+	.circle {
+		width: 7px;
+		height: 7px;
+		background-color: rgb(225, 15, 15);
+		border-radius: 50%;
+	}
+
+	.image-link {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		color: #989692;
+		margin-left: 30px;
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		margin-left: 10px;
+	}
+
+	.sidebar-scrollable {
+		max-height: 540px;
+		/* Đặt chiều cao tối đa của vùng cuộn */
+		overflow-y: auto;
+		/* Tạo thanh cuộn dọc */
+	}
+
+	.sidebar-scrollable::-webkit-scrollbar {
+		width: 4px;
+		/* Độ rộng của thanh cuộn */
+	}
+
+	.sidebar-scrollable::-webkit-scrollbar-thumb {
+		background-color: #888;
+		/* Màu sắc của thanh cuộn */
+		border-radius: 4px;
+		/* Bo tròn viền thanh cuộn */
+	}
+
+	.sidebar-scrollable::-webkit-scrollbar-track {
+		background-color: #f5f5f5;
+		/* Màu sắc của vùng di chuyển thanh cuộn */
+	}
+</style>
+
 <div class="container-fluid" ng-controller="PvmCtrl">
 				<div class="row">
 					<div class="card-title fw-semibold mb-2">
