@@ -17,6 +17,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.page = 1;
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
+	var url = "http://localhost:8080";
 	$scope.changeLanguage = function (langKey) {
 		$translate.use(langKey);
 		localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
@@ -41,8 +42,16 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		firebase.initializeApp(config);
 	}
 
+	//lấy danh sách người theo dõi
+	$scope.findFollowings = function () {
+		$http.get(url + "/findfollowing")
+			.then(function (response) {
+				$scope.followings = response.data;
+			})
+	}
+	$scope.findFollowings();
 
-	var url = "http://localhost:8080";
+
 	//Lấy danh sách vi phạm
 	$http.get('http://localhost:8080/getviolations')
 		.then(function (response) {
