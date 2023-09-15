@@ -365,7 +365,7 @@
 										<div class="carousel-item"
 											ng-repeat="image in postDetails.images track by $index"
 											ng-class="{ 'active': $index === 0 }">
-											<img ng-src="images/{{ image.imageUrl }}" class="w-100 d-block"
+											<img ng-src="{{ image.imageUrl }}" class="w-100 d-block"
 												alt="Slide {{$index + 1}} ">
 										</div>
 									</div>
@@ -385,8 +385,7 @@
 							<div ng-if="postDetails.images.length === 1"
 								style="display: flex; justify-items: center; height: 90vh;">
 								<!-- Single image HTML code -->
-								<img ng-src="images/{{ postDetails.images[0].imageUrl }}" class="w-100"
-									alt="Single image"
+								<img ng-src="{{ postDetails.images[0].imageUrl }}" class="w-100" alt="Single image"
 									style=" object-fit: contain; max-height: 100vh; border-radius: 10px; border-radius: 10px;">
 
 							</div>
