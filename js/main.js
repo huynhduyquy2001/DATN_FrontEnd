@@ -42,7 +42,14 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/mystore', {
 		templateUrl: "ngview/myStore.html",
 		controller: 'MyStoreController'
-	});
+	}).when('/staff/postviolationmanagement', {
+		templateUrl: "ngview/PostsViolationsManagement.html",
+		controller: 'PvmCtrl'
+	}).when('/staff/violationtypemanagement', {
+		templateUrl: "ngview/ViolationTypeManagement.html",
+		controller: 'VtmCtrl'
+	})
+	;
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 	$translateProvider.preferredLanguage(storedLanguage);

@@ -1,0 +1,185 @@
+<div class="container-fluid" ng-controller="VtmCtrl">
+	<!--  Row 1 -->
+	<div class="row">
+		<div class="card-title fw-semibold mb-2">
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<ul class="navbar-nav">
+					<a href="#" class="me-5" data-bs-placement="top" title="Thêm loại vi phạm"
+						ng-click="addViolationModal()"> <i class="fa-solid fa-plus fa-lg"></i> &nbsp Thêm
+					</a>
+				</ul>
+				<div class="navbar-collapse justify-content-end px-0">
+					<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+
+						<form class="position-relative">
+							<input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+								placeholder="Nhập chi tiết vi phạm" ng-keyup="searchByDescription()"
+								ng-model="searchText" style="border: 1px solid #ccc;"> <i
+								class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+						</form>
+					</ul>
+				</div>
+
+			</nav>
+		</div>
+		<div class="table-responsive sidebar-scrollable">
+			<table class="table text-nowrap mb-0 align-middle">
+				<thead class="text-dark fs-4">
+					<tr>
+						<th class="border-bottom-0">
+							<h6 class="fw-semibold mb-0">Mã vi phạm</h6>
+						</th>
+						<th class="border-bottom-0">
+							<h6 class="fw-semibold mb-0">Nội dung vi phạm</h6>
+						</th>
+						<th class="border-bottom-0">
+							<h6 class="fw-semibold mb-0 text-center">Cập nhật</h6>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="list in listViolationType" id="row">
+						<td class="border-bottom-0"><span class="fw-normal mb-0"
+								style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+								{{list.violationTypeId}} </span></td>
+						<td class="border-bottom-0"
+							style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+							<span class="fw-normal">{{list.violationDescription}}</span>
+						</td>
+						<td class="border-bottom-0 text-center"><a href="#" data-bs-placement="top"
+								title="Xem chi tiết bài viết" ng-click="detailViolation(list.violationTypeId)"> <i
+									class="fa-solid fa-pen"></i>
+							</a></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Cập nhật</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<center>
+						<div style="color: red;" ng-bind="errorMessage">{{
+							errorMessage }}</div>
+					</center>
+
+					<!-- Input field for "Mô tả vi phạm" -->
+					<div class="mb-3">
+						<label for="violationDescription" class="form-label">Mô
+							tả vi phạm</label> <input type="text" class="form-control" id="violationDescription"
+							ng-model="violationDescription" placeholder="{{listViolation.violationDescription}}">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<!-- Cancel button -->
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+				<!-- Edit button -->
+				<button type="button" ng-click="submitForm(listViolation.violationTypeId)"
+					class="btn btn-primary">Sửa</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addViolationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Thêm vi phạm</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<center>
+						<div style="color: red;" ng-bind="errorMessage">{{
+							errorMessage }}</div>
+					</center>
+
+					<!-- Input field for "Mô tả vi phạm" -->
+					<div class="mb-3">
+						<label for="violationDescription" class="form-label">Mô
+							tả vi phạm</label> <input type="text" class="form-control" id="violationDescription"
+							ng-model="violationDescription">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<!-- Cancel button -->
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+				<!-- Add button -->
+				<button type="button" ng-click="addViolation()" class="btn btn-primary">Thêm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	body {
+		font-family: 'Plus Jakarta Sans', sans-serif;
+	}
+	
+	input.hover-effect:hover {
+		border-color: #1261c2;
+		/* Màu viền thay đổi khi hover */
+		box-shadow: 0 0 5px #1d4bcc;
+		/* Hiển thị đổ bóng khi hover */
+		cursor: pointer;
+	}
+	
+	.circle {
+		width: 7px;
+		height: 7px;
+		background-color: rgb(225, 15, 15);
+		border-radius: 50%;
+	}
+	
+	.image-link {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		color: #989692;
+		margin-left: 30px;
+	}
+	
+	.content {
+		display: flex;
+		flex-direction: column;
+		margin-left: 10px;
+	}
+	
+	.sidebar-scrollable {
+		max-height: 540px;
+		/* Đặt chiều cao tối đa của vùng cuộn */
+		overflow-y: auto;
+		/* Tạo thanh cuộn dọc */
+	}
+	
+	.sidebar-scrollable::-webkit-scrollbar {
+		width: 4px;
+		/* Độ rộng của thanh cuộn */
+	}
+	
+	.sidebar-scrollable::-webkit-scrollbar-thumb {
+		background-color: #888;
+		/* Màu sắc của thanh cuộn */
+		border-radius: 4px;
+		/* Bo tròn viền thanh cuộn */
+	}
+	
+	.sidebar-scrollable::-webkit-scrollbar-track {
+		background-color: #f5f5f5;
+		/* Màu sắc của vùng di chuyển thanh cuộn */
+	}
+	</style>
