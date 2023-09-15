@@ -9,6 +9,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 	$scope.followings = [];
 	$scope.users = [];
 	$scope.listFollow = [];
+	var Url = "http://localhost:8080";
 	if (!$location.path().startsWith('/profile/')) {
 		// Tạo phần tử link stylesheet
 		var styleLink = document.createElement('link');
@@ -20,7 +21,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 	}
 
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
-	$http.get('/getunseenmessage')
+	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
 			$rootScope.check = response.data > 0;
 			$rootScope.unseenmess = response.data;
@@ -28,7 +29,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 		.catch(function (error) {
 			console.log(error);
 		});
-	$http.get('/ListFollower')
+	$http.get(Url + '/ListFollower')
 		.then(function (response) {
 			$scope.users = response.data;
 			console.log("User", $scope.users); // Kiểm tra dữ liệu trong console 
@@ -45,7 +46,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 	};
 
 
-	$http.get('/ListFollowing')
+	$http.get(Url + '/ListFollowing')
 		.then(function (response) {
 			$scope.followings = response.data;
 			console.log("ListFollowing1", $scope.followings); // Kiểm tra dữ liệu trong console log
@@ -53,7 +54,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 		.catch(function (error) {
 			console.log(error);
 		});
-	$http.get('/getUserInfo').then(function (response) {
+	$http.get(Url + '/getUserInfo').then(function (response) {
 		$scope.UserInfo = response.data;
 		$scope.birthday = new Date($scope.UserInfo.birthday)
 		// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
@@ -70,7 +71,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 			followerId: currentUserId,
 			followingId: followingId
 		};
-		$http.post('/follow', data)
+		$http.post(Url + '/follow', data)
 			.then(function (response) {
 				// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
 				$scope.listFollow.push(response.data);
@@ -90,7 +91,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 			followerId: currentUserId,
 			followingId: followingId
 		};
-		$http.delete('/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
+		$http.delete(Url + '/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
 			.then(function (response) {
 				// Cập nhật lại danh sách follow sau khi xóa thành công
 				$scope.listFollow = $scope.listFollow.filter(function (follow) {
@@ -105,7 +106,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 
 	// Hàm làm mới danh sách follow
 	$scope.refreshFollowList = function () {
-		$http.get('/ListFollower')
+		$http.get(Url + '/ListFollower')
 			.then(function (response) {
 				$scope.users = response.data;
 				console.log("User", $scope.users); // Kiểm tra dữ liệu trong console log
@@ -114,7 +115,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 				console.log("Lỗi load user", error);
 			});
 
-		$http.get('/ListFollowing')
+		$http.get(Url + '/ListFollowing')
 			.then(function (response) {
 				$scope.followings = response.data;
 				console.log("ListFollowing1", $scope.followings); // Kiểm tra dữ liệu trong console log

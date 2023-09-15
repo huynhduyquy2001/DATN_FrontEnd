@@ -7,7 +7,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	$scope.postData = {};
 	$scope.item = {};
 	$scope.listFollow = [];
-
+	var Url = "http://localhost:8080";
 	if (!$location.path().startsWith('/profile/')) {
 		// Tạo phần tử link stylesheet
 		var styleLink = document.createElement('link');
@@ -19,7 +19,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	}
 
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
-	$http.get('/getunseenmessage')
+	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
 			$rootScope.check = response.data > 0;
 			$rootScope.unseenmess = response.data;
@@ -36,15 +36,13 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	// đây là code tim kiếm người dùng (tất cả)
 	$scope.searchUser = function () {
 		var username = $scope.username; // Lấy tên người dùng từ input hoặc form
-		//var username = $scope.username.trim(); // Lấy tên người dùng từ input hoặc form và loại bỏ khoảng trắng thừa
-
 		// Kiểm tra nếu không có kí tự nào trong ô tìm kiếm
 		if (username === "") {
 			$scope.users = []; // Đặt danh sách người dùng thành rỗng
 			return; // Không gọi API, dừng hàm tìm kiếm ở đây
 		}
 		// Gọi API để tìm kiếm người dùng
-		$http.get('/user/search/users?username=' + username)
+		$http.get(Url + '/user/search/users?username=' + username)
 			.then(function (response) {
 				// Xử lý kết quả trả về từ API
 				$scope.users = response.data;
@@ -99,7 +97,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 				return; // Không gọi API, dừng hàm tìm kiếm ở đây
 			}
 			// Gọi API để tìm kiếm người dùng
-			$http.get('/user/search/users?username=' + usernameValue)
+			$http.get(Url + '/user/search/users?username=' + usernameValue)
 				.then(function (response) {
 					// Xử lý kết quả trả về từ API
 					$scope.users = response.data;
@@ -153,7 +151,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			});
 	};
 
-	$http.get('/ListFollowing')
+	$http.get(Url + '/ListFollowing')
 		.then(function (response) {
 			$scope.followings = response.data;
 			console.log($scope.followings); // Kiểm tra dữ liệu trong console log
@@ -179,7 +177,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			followerId: currentUserId,
 			followingId: followingId
 		};
-		$http.post('/follow', data)
+		$http.post(Url + '/follow', data)
 			.then(function (response) {
 				// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
 				$scope.listFollow.push(response.data);
@@ -200,7 +198,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			followingId: followingId
 		};
 		$scope.refreshFollowList();
-		$http.delete('/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
+		$http.delete(Url + '/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
 			.then(function (response) {
 				// Cập nhật lại danh sách follow sau khi xóa thành công
 				$scope.listFollow = $scope.listFollow.filter(function (follow) {
@@ -216,7 +214,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 
 	// Hàm làm mới danh sách follow
 	$scope.refreshFollowList = function () {
-		$http.get('/ListFollowing')
+		$http.get(Url + '/ListFollowing')
 			.then(function (response) {
 				$scope.followings = response.data;
 				console.log($scope.followings); // Kiểm tra dữ liệu trong console log
