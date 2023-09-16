@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<title>Insert title here</title>
 </head>
-<link rel="stylesheet" href="/css/styles.min.css" />
+<link rel="stylesheet" href="css/styles.min.css" />
 <style>
 	body {
 		font-family: 'Plus Jakarta Sans', sans-serif;
@@ -320,11 +320,71 @@
 		line-height: 19px;
 		/* Đảm bảo chữ số được căn giữa theo chiều dọc */
 	}
+
+	.column {
+		width: 100%;
+	}
+
+	@media screen and (max-width: 1180px) {
+		#menuLeft {
+			display: none;
+		}
+
+		#view.offset-lg-3 {
+			margin-left: 0;
+		}
+
+		#view.col-lg-9 {
+			width: 100%;
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+
+		#view.col-lg-12 {
+			width: 100%;
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+
+		#view.col-4 {
+			width: 100%;
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+	}
+
+	@media screen and (max-width: 1180px) {
+		#menuLeft {
+			display: none;
+		}
+
+		#view.offset-lg-3 {
+			margin-left: 0;
+		}
+
+		#view.col-lg-9 {
+			width: 100%;
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+
+		#view.col-lg-12 {
+			width: 100%;
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+
+		#view.col-4 {
+			width: 100%;
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+	}
 </style>
 
 <body>
 	<div ng-controller="ProfileController">
-		<div class="" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6">
+		<div id="main-wrapper" data-layout="vertical" data-navbarbg="skin6">
 
 			<div class="body-wrapper">
 				<div class="container-fluid" style="margin-left: 0; padding-left: 0; margin-top: 0; padding-top: 0">
@@ -332,7 +392,7 @@
 					<div class="card overflow-hidden" style="border-radius: 15px 15px 15px 15px;">
 						<div class="card-body p-0">
 							<div style="position: relative;">
-								<img ng-src="/images/{{UserInfo.background}}" alt="" height="300" width="1440"
+								<img ng-src="images/{{UserInfo.background}}" alt="" height="300" width="1440"
 									style="object-fit: cover;">
 								<button data-bs-toggle="modal" ng-if=" myAccount.user.userId == UserInfo.userId"
 									data-bs-target="#ChinhSuaAnhBia"
@@ -371,10 +431,8 @@
 												style="width: 155px; height: 155px; position: relative; background-color: gray;">
 												<div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
 													style="width: 150px; height: 150px;">
-													<a href="#"> <img ng-src="/images/{{UserInfo.avatar}}" alt=""
-															class="w-100 h-100" style="object-fit: cover;">
-
-													</a>
+													<img ng-src="images/{{UserInfo.avatar}}" alt="" class="w-100 h-100"
+														style="object-fit: cover;">
 												</div>
 												<button data-bs-toggle="modal"
 													ng-if=" myAccount.user.userId == UserInfo.userId"
@@ -402,7 +460,6 @@
 												data-bs-target="#exampleModal2">
 												<i class="fa-light fa-pen-to-square"></i> Tài khoản
 											</button></li>
-
 									</ul>
 
 									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
@@ -454,7 +511,7 @@
 										tabindex="-1">
 										<i class="fa-regular fa-square-user" style="color: #5d87ff;"></i>
 										<span class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
-											Theo dõi</span>
+											Đang theo dõi</span>
 									</button>
 								</li>
 								<li class="nav-item flex-fill" role="presentation">
@@ -519,9 +576,9 @@
 											<h4 class="fw-semibold mb-3">Hình ảnh</h4>
 											<div class="row">
 												<div class="col-4 mb-2" ng-repeat="img in displayedImages">
-													<img src="/images/{{img.imageUrl}}"
-														ng-click="showImageModal(img.imageUrl)" width="100" height="120"
-														class="rounded-2" style="object-fit: cover;">
+													<img ng-src="images/{{img.imageUrl}}"
+														ng-click="showImageModal(img.imageUrl)"
+														class="rounded-2 w-100 h-100" style="object-fit: cover;">
 												</div>
 											</div>
 										</div>
@@ -559,7 +616,7 @@
 										<div class="card">
 											<div class="card-body border-bottom">
 												<div class="d-flex align-items-center gap-3" style="padding: 10px;">
-													<img src="/images/{{myPost.user.avatar}}" alt=""
+													<img ng-src="images/{{myPost.user.avatar}}" alt=""
 														class="rounded-circle" width="40" height="40"
 														style="object-fit: cover;">
 													<h6 class="fw-semibold mb-0 fs-4">{{myPost.user.username}}</h6>
@@ -614,7 +671,7 @@
 
 																	<img ng-click="getPostDetails(myPost.postId)"
 																		ng-if="image.type === true"
-																		ng-src="/images/{{ image.imageUrl }}"
+																		ng-src="images/{{ image.imageUrl }}"
 																		class="w-100 d-block" alt="Slide {{$index + 1}}"
 																		style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
 
@@ -655,7 +712,7 @@
 														<!-- Single image HTML code -->
 														<img ng-if="myPost.images[0].type === true"
 															ng-click="getPostDetails(myPost.postId)"
-															ng-src="/images/{{ myPost.images[0].imageUrl }}"
+															ng-src="images/{{ myPost.images[0].imageUrl }}"
 															class="w-100" alt="Single image">
 													</div>
 												</center>
@@ -702,7 +759,7 @@
 									<div class="card">
 										<div class="card-body p-4 d-flex align-items-center gap-3">
 											<a href="#!/profile/{{follower.userId}}"><img
-													ng-src="/images/{{follower.avatar}}" class="rounded-circle"
+													ng-src="images/{{follower.avatar}}" class="rounded-circle"
 													width="40" height="40" style="object-fit: cover;"></a>
 											<div>
 												<h5 class="fw-semibold mb-0">{{follower.username}}</h5>
@@ -734,7 +791,7 @@
 							aria-labelledby="pills-friends-tab" tabindex="0">
 							<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
 								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
-									Theo dõi <span
+									Đang theo dõi <span
 										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{totalFollowing}}</span>
 								</h3>
 							</div>
@@ -745,12 +802,11 @@
 									<div class="card hover-img">
 										<div class="card-body p-4 text-center border-bottom">
 											<a href="#!/profile/{{following.userId}}"> <img
-													src="/images/{{following.avatar}}" alt=""
+													ng-src="images/{{following.avatar}}" alt=""
 													class="rounded-circle mb-3" width="80" height="80"
 													style="object-fit: cover;">
-												<h5 class="fw-semibold mb-0">{{following.username}}</h5> <span
-													class="text-dark fs-2">{{
-													following.introduction.length > 30 ?
+												<h5 class="fw-semibold mb-0">{{following.username}}</h5>
+												<span class="text-dark fs-2">{{following.introduction.length > 30 ?
 													(following.introduction | limitTo: 30) + '...' :
 													following.introduction }}</span>
 
@@ -786,8 +842,8 @@
 							<div class="row">
 								<div class="rounded-2 d-flex flex-wrap">
 									<div class="col-4 d-flex" ng-repeat="img in imageList">
-										<img ng-src="/images/{{img.imageUrl}}" class="img-fluid w-100 me-1"
-											ng-click="showImageModal(img.imageUrl)"
+										<img ng-src="images/{{img.imageUrl}}" class="img-fluid w-100 h-100 me-1"
+											ng-click="showImageModal(img.imageUrl)" class="rounded-2"
 											style="object-fit: cover; height: 330px; border-radius: 10px; padding: 5px;">
 									</div>
 								</div>
@@ -804,7 +860,7 @@
 							<div class="row">
 								<div class="rounded-2 d-flex flex-wrap">
 									<div class="col-4 d-flex" ng-repeat="vid in videoList">
-										<video controls class="w-100" ng-src="/images/{{vid.imageUrl}}"
+										<video controls class="w-100" ng-src="images/{{vid.imageUrl}}"
 											style="border-radius: 10px; padding: 5px;"> Sorry,
 											your browser doesn't support embedded videos.
 										</video>
@@ -850,7 +906,7 @@
 													style="background-color: #313131; height: 90vh;"
 													ng-repeat="image in selectedPost.images track by $index"
 													ng-class="{ 'active': $index === 0 }">
-													<img ng-src="/images/{{ image.imageUrl }}" class="w-100 d-block"
+													<img ng-src="images/{{ image.imageUrl }}" class="w-100 d-block"
 														alt="Slide {{$index + 1}}"
 														style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
 												</div>
@@ -872,7 +928,7 @@
 										<!-- Single image HTML code -->
 										<img ng-if="selectedPost.images[0].type === true"
 											ng-click="getPostDetails(selectedPost.postId)"
-											ng-src="/images/{{ selectedPost.images[0].imageUrl }}" class="w-100"
+											ng-src="images/{{ selectedPost.images[0].imageUrl }}" class="w-100"
 											alt="Single image">
 										<video ng-if="selectedPost.images[0].type === false"
 											ng-click="getPostDetails(selectedPost.postId)" autoplay controls
@@ -1104,7 +1160,7 @@
 															<div class="carousel-item"
 																ng-repeat="image in postDetails.images track by $index"
 																ng-class="{ 'active': $index === 0 }">
-																<img ng-src="/images/{{ image.imageUrl }}"
+																<img ng-src="images/{{ image.imageUrl }}"
 																	class="w-100 d-block" alt="Slide {{$index + 1}} ">
 															</div>
 														</div>
@@ -1135,7 +1191,7 @@
 													</video>
 													<!-- Single image HTML code -->
 													<img ng-if="postDetails.images[0].type === true"
-														ng-src="/images/{{ postDetails.images[0].imageUrl }}"
+														ng-src="images/{{ postDetails.images[0].imageUrl }}"
 														class="w-100" alt="Single image" width="">
 												</div>
 											</center>
@@ -1149,7 +1205,7 @@
 													style="display: flex; align-items: center; justify-content: space-between;">
 													<div class="user-profile ">
 														<a href="/nguoiDung/{{postDetails.user.userId}}"><img
-																ng-src="/images/{{postDetails.user.avatar}}"
+																ng-src="images/{{postDetails.user.avatar}}"
 																style="border-radius: 100%;" alt=""></a>
 														<div>
 
@@ -1199,7 +1255,7 @@
 												<div ng-repeat="comment in postComments | limitTo:numOfCommentsToShow">
 													<div class="msg ng-scope left-msg mb-4" ng-class="left-msg">
 														<div class="msg-img"
-															style="background-image: url(/images/{{comment.user.avatar}}); border: 1px solid #ebf1f6;">
+															style="background-image: url(images/{{comment.user.avatar}}); border: 1px solid #ebf1f6;">
 														</div>
 
 														<div class="msg-bubble" style="border-radius: 15px;">
@@ -1245,7 +1301,7 @@
 													<div ng-show="o_reply"
 														class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 														style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-														<img ng-src="/images/{{UserInfo.avatar}}" class="img-thumbnail"
+														<img ng-src="images/{{UserInfo.avatar}}" class="img-thumbnail"
 															alt="">
 														<div style="width: 70%">
 															<small style="font-size: 12px;" class="ng-binding">
@@ -1280,7 +1336,7 @@
 
 															<div class="msg left-msg" style="margin-left: 4rem;">
 																<div class="msg-img"
-																	style="background-image: url(/images/{{obj.responder.avatar}}); border: 1px solid #ebf1f6; transform: translateY(-30%);">
+																	style="background-image: url(images/{{obj.responder.avatar}}); border: 1px solid #ebf1f6; transform: translateY(-30%);">
 																</div>
 																<div class="msg-bubble" style="border-radius: 15px;">
 
@@ -1337,7 +1393,7 @@
 															<div ng-show="o_reply2"
 																class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 																style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-																<img ng-src="/images/{{UserInfo.avatar}}"
+																<img ng-src="images/{{UserInfo.avatar}}"
 																	class="img-thumbnail" alt="">
 																<div style="width: 65%">
 																	<small style="font-size: 12px;" class="ng-binding">
@@ -1530,7 +1586,7 @@
 						});
 					});
 				</script>
-				<script type="text/javascript" src="/js/profile.js"></script>
+				<script type="text/javascript" src="js/profile.js"></script>
 				<script src="js/addActive.js"></script>
 
 				<script>
