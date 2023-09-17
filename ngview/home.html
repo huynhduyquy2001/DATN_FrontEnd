@@ -159,13 +159,12 @@
 								</div>
 								<div class="animate__animated animate__fadeIn" ng-if="post.images.length === 1">
 									<video ng-if="post.images[0].type === false" autoplay controls style="width: 100%;">
-										<source ng-src="images/{{ post.images[0].imageUrl }}" type="video/mp4">
+										<source ng-src="{{ post.images[0].imageUrl}}" type="video/mp4">
 										Your browser does not support the video tag.
 									</video>
 									<!-- Single image HTML code -->
 									<img ng-if="post.images[0].type === true" ng-click="getPostDetails(post.postId)"
-										ng-src="https://firebasestorage.googleapis.com/v0/b/viesonet-datn.appspot.com/o/images%2Fz4655055426128_5d68e81ec4f9bd43e92a734e8a4b9f43.jpg?alt=media&token=d109e01a-eb82-4a59-9d7e-0e59e97fd0d1"
-										class="w-100" alt="Single image"
+										ng-src="{{post.images[0].imageUrl}}" class="w-100" alt="Single image"
 										style="max-height: 90vh; object-fit: cover; width: 100%; background-color: black;">
 								</div>
 
@@ -226,7 +225,7 @@
 			<b>Đang theo dõi ({{totalFollowing}})</b>
 			<br>
 			<br>
-			<div class="card" ng-repeat="user in followings"
+			<div class="card" ng-repeat="user in followings | limitTo:4"
 				style=" border: none; background-color: #f8f9fa!important;">
 				<div class="card-body d-flex align-items-center gap-3">
 					<a href="#!/profile/BZOL98493464"><img class="rounded-circle" width="40" height="40"
@@ -366,7 +365,7 @@
 										<div class="carousel-item"
 											ng-repeat="image in postDetails.images track by $index"
 											ng-class="{ 'active': $index === 0 }">
-											<img ng-src="images/{{ image.imageUrl }}" class="w-100 d-block"
+											<img ng-src="{{ image.imageUrl }}" class="w-100 d-block"
 												alt="Slide {{$index + 1}} ">
 										</div>
 									</div>
@@ -386,8 +385,7 @@
 							<div ng-if="postDetails.images.length === 1"
 								style="display: flex; justify-items: center; height: 90vh;">
 								<!-- Single image HTML code -->
-								<img ng-src="images/{{ postDetails.images[0].imageUrl }}" class="w-100"
-									alt="Single image"
+								<img ng-src="{{ postDetails.images[0].imageUrl }}" class="w-100" alt="Single image"
 									style=" object-fit: contain; max-height: 100vh; border-radius: 10px; border-radius: 10px;">
 
 							</div>
