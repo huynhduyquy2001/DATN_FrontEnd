@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử tìm kiếm</title>
+    <style>
+        /* CSS cho thanh tìm kiếm */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 5px;
+        }
+
+        /* CSS cho nút "Hiện lịch sử tìm kiếm" */
+        .show-history-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* CSS cho lịch sử tìm kiếm */
+        #searchHistory {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm...">
+        <button class="show-history-button" onclick="showSearchHistory()">Hiện lịch sử tìm kiếm</button>
+    </div>
+
+    <div id="searchHistory">
+        <ul>
+            <li>Huỳnh Duy Quý</li>
+        </ul>
+    </div>
+
+    <script>
+        // Mảng để lưu trữ lịch sử tìm kiếm (đơn giản để minh họa)
+        const searchHistory = [];
+
+        // Hàm để hiển thị lịch sử tìm kiếm
+        function showSearchHistory() {
+            const searchInput = document.getElementById("searchInput");
+            const searchHistoryDiv = document.getElementById("searchHistory");
+
+            // Lấy giá trị từ thanh tìm kiếm và thêm nó vào mảng lịch sử tìm kiếm
+            const searchText = searchInput.value;
+            searchHistory.push(searchText);
+
+            // Hiển thị lịch sử tìm kiếm trong div
+            searchHistoryDiv.innerHTML = "<h3>Lịch sử tìm kiếm:</h3>";
+            for (let i = 0; i < searchHistory.length; i++) {
+                searchHistoryDiv.innerHTML += `<p>${searchHistory[i]}</p>`;
+            }
+
+            // Hiển thị div chứa lịch sử tìm kiếm
+            searchHistoryDiv.style.display = "block";
+        }
+
+        // Xử lý sự kiện focus trên ô input
+        const searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("focus", function () {
+            const searchHistoryDiv = document.getElementById("searchHistory");
+            searchHistoryDiv.style.display = "block";
+        });
+
+        // Xử lý sự kiện blur trên ô input (khi mất tập trung)
+        searchInput.addEventListener("blur", function () {
+            const searchHistoryDiv = document.getElementById("searchHistory");
+            searchHistoryDiv.style.display = "none";
+        });
+    </script>
+</body>
+
+</html>

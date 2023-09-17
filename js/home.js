@@ -17,6 +17,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.page = 1;
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
+	var url = "http://localhost:8080";
 	$scope.changeLanguage = function (langKey) {
 		$translate.use(langKey);
 		localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
@@ -26,7 +27,31 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		$scope.numOfCommentsToShow += $scope.commentsToShowMore;
 	};
 
-	var url = "http://localhost:8080";
+	var config = {
+		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
+		authDomain: "viesonet-datn.firebaseapp.com",
+		projectId: "viesonet-datn",
+		storageBucket: "viesonet-datn.appspot.com",
+		messagingSenderId: "178200608915",
+		appId: "1:178200608915:web:c1f600287711019b9bcd66",
+		measurementId: "G-Y4LXM5G0Y4"
+	};
+
+	// Kiểm tra xem Firebase đã được khởi tạo chưa trước khi khởi tạo nó
+	if (!firebase.apps.length) {
+		firebase.initializeApp(config);
+	}
+
+	//lấy danh sách người theo dõi
+	$scope.findFollowings = function () {
+		$http.get(url + "/findfollowing")
+			.then(function (response) {
+				$scope.followings = response.data;
+			})
+	}
+	$scope.findFollowings();
+
+
 	//Lấy danh sách vi phạm
 	$http.get('http://localhost:8080/getviolations')
 		.then(function (response) {
@@ -142,7 +167,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 				.catch(function (error) {
 					// Xử lý lỗi
 					console.log(error);
-				});
+				}); imagesurlform
 		} else {
 
 			// Xóa postId khỏi mảng likedPosts
@@ -290,6 +315,26 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.post = function () {
 		var formData = new FormData();
 		var fileInput = document.getElementById('inputGroupFile01');
+		// Check if no files are selected
+		if (fileInput.files.length === 0) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Bạn phải thêm ảnh vào bài viết'
+			})
+			return; // Return without doing anything
+		}
 		for (var i = 0; i < fileInput.files.length; i++) {
 			var file = fileInput.files[i];
 			var fileSizeMB = file.size / (1024 * 1024); // Kích thước tệp tin tính bằng megabyte (MB)
@@ -317,48 +362,65 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 
 		}
 
+		var storage = firebase.storage();
+		var storageRef = storage.ref();
+		var imagesUrl = [];
 
-
-		// Check if no files are selected
-		if (fileInput.files.length === 0) {
-			const Toast = Swal.mixin({
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 3000,
-				timerProgressBar: true,
-				didOpen: (toast) => {
-					toast.addEventListener('mouseenter', Swal.stopTimer)
-					toast.addEventListener('mouseleave', Swal.resumeTimer)
-				}
-			})
-
-			Toast.fire({
-				icon: 'warning',
-				title: 'Bạn phải thêm ảnh vào bài viết'
-			})
-			return; // Return without doing anything
-		}
 		if ($scope.content === null || $scope.content === undefined) {
 			$scope.content = '';
 		}
-		for (var i = 0; i < fileInput.files.length; i++) {
-			formData.append('photoFiles', fileInput.files[i]);
+
+		var fileCount = fileInput.files.length;
+		var uploadCount = 0;
+
+		for (var i = 0; i < fileCount; i++) {
+			var file = fileInput.files[i];
+			var fileSizeMB = file.size / (1024 * 1024);
+
+			var timestamp = new Date().getTime();
+			var fileName = file.name + '_' + timestamp;
+			var fileType = getFileExtensionFromFileName(file.name);
+
+			// Xác định nơi lưu trữ dựa trên loại tệp
+			var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+			// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+			var uploadTask = storageRef.child(storagePath + fileName).put(file);
+
+			// Xử lý sự kiện khi tải lên hoàn thành
+			uploadTask.on('state_changed', function (snapshot) {
+				// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+			}, function (error) {
+				alert("Lỗi tải");
+			}, function () {
+				// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+					imagesUrl.push(downloadURL);
+					uploadCount++;
+
+					if (uploadCount === fileCount) {
+						// Khi đã tải lên tất cả các tệp, gửi yêu cầu POST
+						formData.append('content', $scope.content.trim());
+						formData.append('imagesUrl', imagesUrl);
+
+						$http.post(url + '/post', formData, {
+							transformRequest: angular.identity,
+							headers: {
+								'Content-Type': undefined
+							}
+						}).then(function (response) {
+							// Xử lý phản hồi thành công từ máy chủ
+						}, function (error) {
+							// Xử lý lỗi
+							console.log(error);
+						});
+					}
+				}).catch(function (error) {
+					console.error('Error getting download URL:', error);
+				});
+			});
 		}
-		formData.append('content', $scope.content.trim());
 
-		$http.post(url + '/post', formData, {
-			transformRequest: angular.identity,
-			headers: {
-				'Content-Type': undefined
-			}
-		}).then(function (response) {
-			// Xử lý phản hồi thành công từ máy chủ
-
-		}, function (error) {
-			// Xử lý lỗi
-			console.log(error);
-		})
 		$scope.content = '';
 		fileInput.value = null;
 		var mediaList = document.getElementById('mediaList');
@@ -382,6 +444,10 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		})
 	};
 
+	// Hàm để lấy phần mở rộng từ tên tệp
+	function getFileExtensionFromFileName(fileName) {
+		return fileName.split('.').pop().toLowerCase();
+	}
 
 	$scope.getPostDetails = function (postId) {
 		$http.get('http://localhost:8080/findpostcomments/' + postId)

@@ -1,27 +1,8 @@
-<div ng-controller="SearchController">
+<div ng-controller="SearchController" class="animate__animated animate__fadeIn">
 	<div class="row">
-		<div class="col-md-8 p-3" style="z-index: 10; border: 1px solid #ebf1f6;background-color: white; height: 89vh;">
+		<div class="col-md-6 p-3" style="z-index: 10; border: 1px solid #ebf1f6;background-color: white; height: 89vh;">
 			<b>Tìm kiếm</b>
-			<a class="dropdown-toggle hidden-arrow btn btn-primary" id="navbarDropdownMenuLink" role="button"
-				data-mdb-toggle="dropdown" aria-expanded="false">
-				dropdown
-			</a>
-			<ul class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
-				<li>
-					<div class="input-group mt-2 mx-2">
-						<div class="form-outline w-auto">
-							<input type="search" id="form1" class="form-control-dropdown" />
-							<label class="form-label" for="form1">Search</label>
-						</div>
-					</div>
-				</li>
-				<li>
-					<hr class="dropdown-divider" />
-				</li>
-				<li><a class="dropdown-item" href="#">Action</a></li>
-				<li><a class="dropdown-item" href="#">Another action</a></li>
-				<li><a class="dropdown-item" href="#">Something else here</a></li>
-			</ul>
+			<br><br>
 			<center>
 				<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
 					<!--Tìm kiếm-->
@@ -37,6 +18,7 @@
 					</div>
 				</div>
 			</center>
+
 			<center><b ng-if="searchnull">{{ searchnull }}</b></center>
 			<div class="user-container" style="justify-content: space-evenly;">
 				<div class="user-card col-md-6" style="background: transparent; margin: 0" ng-repeat="user in users">
@@ -45,7 +27,7 @@
 							<div class="username-dt dpbg-1"
 								style="background-image: url(images/{{user.background}}); background-size: cover;">
 								<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-										ng-src="/images/{{user.avatar}}">
+										ng-src="images/{{user.avatar}}">
 								</a>
 							</div>
 							<div class="user-main-details" style="padding: 60px 0 2px 0;">
@@ -64,46 +46,105 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-3 p-3 menuLeft animate__animated animate__backInRight"
-			style="z-index: 10; border: 1px solid #ebf1f6;background-color: white;">
+			<br><br>
 			<div class="row">
 				<b>{{ 'LSTK' | translate }}</b>
 				<div class="col-lg-12" ng-repeat="(key,name) in items"
 					style="display: flex; justify-content: space-between;">
-					<a ng-click="TimKiem(key)" style="cursor: pointer;">{{name.username}}</a> <a
-						ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
+					<a ng-click="TimKiem(key)" style="cursor: pointer;">{{name.username}}</a>
+					<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6 p-3 menuLeft" style="z-index: 10; border: 1px solid #ebf1f6;background-color: white;">
+			<!--GỢI Ý Ở ĐÂY NÈ-->
+			<div ng-controller="RecommendController">
+				<label style="font-size: 20px; font: bold; color: #393e41;">{{ 'GYTD' |
+					translate }}</label>
+				<br> <br>
+				<div>
+					<div class="col-md-12" style="background: transparent; padding-bottom: 2vh"
+						ng-repeat="user in users" ng-if="followings.indexOf(user.userId.toString())===-1">
+						<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
+							<div class="user-profile" style="display: block;">
+								<!-- <div class="username-dt dpbg-1"
+								style="background-image: url(images/{{user.background}}); background-size: cover;">
+								<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
+										ng-src="images/{{user.avatar}}">
+								</a>
+							</div>
+							<div class="user-main-details" style="padding: 60px 0 2px 0;">
+								<h5 style="font-weight: 640; font-size: 18px;" class="ng-binding">{{user.username}}</h5>
+								
+							</div>
+							<center style="height: 50px;">
+								<a href="" role="button" class="btn btn-primary" ng-if="!isFollowing(follower.userId)"
+									ng-click="followUser(user.userId)"
+									style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem">Follow</a>
+								<a href="" role="button" class="btn btn-primary" ng-if="isFollowing(follower.userId)"
+									ng-click="unfollowUser(user.userId)"
+									style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem">Unfollow</a>
+							</center> -->
+								<!--sau này-->
+								<div style="display: flex; width: 100%;">
+									<div>
+										<a href="#!/profile/{{user.userId}}" class="img-fluid"
+											style="object-fit: cover;">
+											<img alt="" ng-src="images/{{user.avatar}}" style=" width: 10vh;
+										height: 10vh;
+										margin: 10px;">
+										</a>
+									</div>
+									<div class="" style="padding-top: 4vh; width: 100%; margin-left: -14vh;">
+										<b style="font-size: 2.3vh;" class="ng-binding">{{user.username}}
+										</b>
+										<small style="display: block; font-size: 2vh;">
+											{{user.introduction.length > 10 ?
+											(user.introduction | limitTo: 10) + '...' : user.introduction
+											}}
+										</small>
+									</div>
+
+									<a href="" role="button" class="btn btn-primary"
+										ng-if="!isFollowing(follower.userId)" ng-click="followUser(user.userId)" style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem; width: 22vh;
+										height: 5vh;margin-top: 4vh; margin-right: 1vh;">Follow</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script>
-		const searchInputDropdown = document.getElementById('search-input-dropdown');
-		const dropdownOptions = document.querySelectorAll('.input-group-dropdown-item');
-
-		searchInputDropdown.addEventListener('input', () => {
-			const filter = searchInputDropdown.value.toLowerCase();
-			showOptions();
-			const valueExist = !!filter.length;
-
-			if (valueExist) {
-				dropdownOptions.forEach((el) => {
-					const elText = el.textContent.trim().toLowerCase();
-					const isIncluded = elText.includes(filter);
-					if (!isIncluded) {
-						el.style.display = 'none';
-					}
-				});
-			}
-		});
-
-		const showOptions = () => {
-			dropdownOptions.forEach((el) => {
-				el.style.display = 'flex';
-			})
-		}
-	</script>
 </div>
+<script>
+	const searchInputDropdown = document.getElementById('search-input-dropdown');
+	const dropdownOptions = document.querySelectorAll('.input-group-dropdown-item');
+
+	searchInputDropdown.addEventListener('input', () => {
+		const filter = searchInputDropdown.value.toLowerCase();
+		showOptions();
+		const valueExist = !!filter.length;
+
+		if (valueExist) {
+			dropdownOptions.forEach((el) => {
+				const elText = el.textContent.trim().toLowerCase();
+				const isIncluded = elText.includes(filter);
+				if (!isIncluded) {
+					el.style.display = 'none';
+				}
+			});
+		}
+	});
+
+	const showOptions = () => {
+		dropdownOptions.forEach((el) => {
+			el.style.display = 'flex';
+		})
+	}
+</script>
+</script>
 <script>
 	function validateSearch() {
 		var inputElement = document.getElementById("text-srh");
@@ -118,5 +159,4 @@
 		// Nếu người dùng đã nhập kí tự thì cho phép submit form
 		return true;
 	}
-
 </script>
