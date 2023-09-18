@@ -7,6 +7,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	$scope.postData = {};
 	$scope.item = {};
 	$scope.listFollow = [];
+
 	var Url = "http://localhost:8080";
 	if (!$location.path().startsWith('/profile/')) {
 		// Tạo phần tử link stylesheet
@@ -17,7 +18,12 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		// Thêm phần tử link vào thẻ <head>
 		document.head.appendChild(styleLink);
 	}
-
+	$http.get('https://search-history-453d4-default-rtdb.firebaseio.com/history.json', {
+		headers: {
+			Authorization: 'Bearer 6o2w5qJNpuRsVMp5GwGa4YTVIrSBc4H24CMl3xlq'
+		}
+	})
+	https://firebasestorage.googleapis.com/v0/b/viesonet-datn.appspot.com/o/images%2F+imageName+?alt=media&token=92e47c72-73bd-4123-a015-7ed371d82c10
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -244,4 +250,5 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			return days + ' ngày trước';
 		}
 	};
+
 });
