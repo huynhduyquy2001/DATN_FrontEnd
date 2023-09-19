@@ -1,6 +1,6 @@
 app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $location) {
     $scope.listViolationType = [];
-    $scope.listViolation = [];
+    $scope.listViolation = {};
     $scope.violation = {};
 
     var url = "http://localhost:8080";
@@ -100,7 +100,6 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
         $http.get(url + '/staff/violationtype/detailViolation/' + violationTypeId)
             .then(function (response) {
                 $scope.violation = response.data;
-                console.log($scope.violation);
                 $('#exampleModal').modal('show'); // Hiển thị modal khi có dữ liệu bài viết
             })
             .catch(function (error) {

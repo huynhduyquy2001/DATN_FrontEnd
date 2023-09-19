@@ -16,20 +16,20 @@
         </ul>
         
           <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-            <!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
-            <small class="me-3">{{currentPage + 1}} /
-              {{totalPages}}</small>
             <!-- Nút chuyển đến trang trước -->
-            <a class="me-4" ng-click="prevPage()"> <i
+            <a class="me-2" ng-click="prevPage()"> <i
                 class="fa-solid fa-chevron-left fa-xs"></i>
             </a>
+            <!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
+            <small class="me-2">{{currentPage + 1}} /
+              {{totalPages}}</small>
             <!-- Nút chuyển đến trang kế tiếp -->
-            <a class="me-4" ng-click="nextPage()"> <i
+            <a class="me-3" ng-click="nextPage()"> <i
                 class="fa-solid fa-chevron-right fa-xs"></i>
             </a>
 
             <form class="position-relative">
-              <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+              <input type="text" class="form-control search-chat ps-5" id="text-srh"
                 placeholder="Nhập tên người đăng" ng-change="searchByAuthor()"
                 ng-model="searchText" style="border: 1px solid #ccc;"> <i
                 class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
@@ -58,9 +58,9 @@
             </th>
           </tr>
         </thead>
-        <tbody style="line-height: 2.5;">
+        <tbody>
           <tr ng-repeat="list in listViolations.content" id="row-{{list.postId}}">
-            <td class="border-bottom-0"><input type="checkbox" ng-click="checkboxClicked()"
+            <td class="border-bottom-0 py-3"><input type="checkbox" ng-click="checkboxClicked()"
                 ng-model="list.checked" class="form-check-input hover-effect"></td>
             <td class="border-bottom-0" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
                 {{list[1]}}</td>
@@ -92,7 +92,7 @@
       <div class="modal-body">
             <div style="margin-bottom: 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
               <a target="_blank" class="image-link ms-2"> <img
-                  ng-src="images/{{post.user.avatar}}" alt="" width="55" height="55"
+                  ng-src="{{post.user.avatar}}" alt="" width="55" height="55"
                   class="rounded-circle mt-3" style="object-fit: cover;">
                 <div class="content mt-3">
                   <span class="name">{{post.user.username}}</span> <small>{{post.postDate
@@ -108,7 +108,7 @@
                   <div class="carousel-inner">
                     <div class="carousel-item" ng-class="{active: $index === 0}"
                       ng-repeat="imageUrl in post.images">
-                      <img ng-src="images/{{imageUrl.imageUrl}}"
+                      <img ng-src="{{imageUrl.imageUrl}}"
                         class="d-block w-100" alt="">
                     </div>
                   </div>
