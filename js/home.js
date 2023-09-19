@@ -14,7 +14,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.selectedPostId = '';
 	$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 	$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
-	$scope.page = 1;
+	$scope.page = 0;
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
 	var url = "http://localhost:8080";
@@ -50,8 +50,6 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 			})
 	}
 	$scope.findFollowings();
-
-
 	//Lấy danh sách vi phạm
 	$http.get('http://localhost:8080/getviolations')
 		.then(function (response) {
@@ -65,16 +63,19 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.loadMore = function () {
 		$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
 			.then(function (response) {
-				var newPosts = response.data;
-				if (newPosts.length > 0) {
-					$scope.Posts = $scope.Posts.concat(newPosts);
-					$scope.page++;
+				if ($scope.page === 0) {
+					$scope.Posts = response.data.content;
+				} else if ($scope.page > 0) {
+					// Nối nội dung mới vào nội dung đã có
+					$scope.Posts = $scope.Posts.concat(response.data.content);
 				}
+				$scope.page = $scope.page + 1;
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	};
+
 
 	// Gọi hàm loadMore khi trang được tải lần đầu
 	$scope.loadMore();
