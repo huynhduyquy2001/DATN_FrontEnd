@@ -91,7 +91,7 @@
 									<div>
 										<a href="#!/profile/{{user.userId}}" class="img-fluid"
 											style="object-fit: cover;">
-											<img alt="" ng-src="images/{{user.avatar}}" style=" width: 10vh;
+											<img alt="" ng-src="{{user.avatar}}" style=" width: 10vh;
 										height: 10vh;
 										margin: 10px;">
 										</a>
@@ -105,7 +105,6 @@
 											}}
 										</small>
 									</div>
-
 									<a href="" role="button" class="btn btn-primary"
 										ng-if="!isFollowing(follower.userId)" ng-click="followUser(user.userId)" style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem; width: 22vh;
 										height: 5vh;margin-top: 4vh; margin-right: 1vh;">Follow</a>
@@ -119,6 +118,7 @@
 	</div>
 </div>
 <script>
+
 	const searchInputDropdown = document.getElementById('search-input-dropdown');
 	const dropdownOptions = document.querySelectorAll('.input-group-dropdown-item');
 
@@ -137,15 +137,12 @@
 			});
 		}
 	});
-
 	const showOptions = () => {
 		dropdownOptions.forEach((el) => {
 			el.style.display = 'flex';
 		})
 	}
-</script>
-</script>
-<script>
+
 	function validateSearch() {
 		var inputElement = document.getElementById("text-srh");
 
@@ -159,4 +156,45 @@
 		// Nếu người dùng đã nhập kí tự thì cho phép submit form
 		return true;
 	}
+
+	// var firebaseConfig = {
+	// 	apiKey: "AIzaSyB_nFfKhlG0KP5lU6d3gqQwniuDHnnI8JE",
+	// 	authDomain: "xxx",
+	// 	projectId: "search-history-453d4",
+	// 	storageBucket: "exxx",
+	// 	messagingSenderId: "308907237461",
+	// 	appId: "xxx",
+	// 	measurementId: "xxx"
+	// };
+	// firebase.initializeApp(firebaseConfig);
+
+	// document.addEventListener("DOMContentLoaded", function () {
+	// 	// Đặt mã JavaScript ở đây
+	// 	const email = "daynewtran@gmail.com";
+	// 	const password = "daynewtran123";
+	// 	firebase.auth().signInWithEmailAndPassword(email, password)
+	// 		.then((userCredential) => {
+	// 			// Đăng nhập thành công, bạn có thể lấy token ở đây
+	// 			alert("OK");
+	// 			userCredential.user.getIdToken().then((token) => {
+	// 				// Sử dụng token cho mục đích xác thực
+	// 				console.log("Token: ", token);
+	// 			});
+	// 		})
+	// 		.catch((error) => {
+	// 			// Xử lý lỗi đăng nhập
+	// 			console.error("Lỗi đăng nhập: ", error);
+	// 		});
+	// });
+
 </script>
+<!-- <script type="module">
+	import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+
+	// If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
+	import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js'
+
+	// Add Firebase products that you want to use
+	import { getAuth } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
+	import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js'
+</script> -->
