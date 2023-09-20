@@ -56,7 +56,7 @@
 
 		</html>
 
-		<div ng-repeat="post in Posts" style="width: 95%;">
+		<div ng-repeat="post in Posts | orderBy: '-postDate'" style="width: 95%;">
 			<div class="write-post-container   "
 				style="margin-bottom: 20px; border-radius: 8px;
 				box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px; padding: 0; padding-top: 10px; padding-bottom: 10px; width: 100%; text-align: left; background: white;">
@@ -64,10 +64,9 @@
 					<div style="display: flex; align-items: center; justify-content: space-between; padding-left: 10px">
 						<div class="dropdown">
 							<div class="user-profile ">
-								<a href="#!/profile/{{post.user.userId}}"><img ng-src="images/{{post.user.avatar }}"
+								<a href="#!/profile/{{post.user.userId}}"><img ng-src="{{post.user.avatar }}"
 										style="border-radius: 100%;" alt=""></a>
 								<div>
-
 									<span
 										style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547">{{
 										post.user.username }}</span> &nbsp;&nbsp; <span><small
@@ -79,9 +78,8 @@
 							<div class="dropdown-content"
 								style="padding-bottom: 0.5rem; padding-top: 0.5rem; transition: 0.3s;">
 								<div class="user-profile ">
-									<a href="#!/profile/{{post.user.userId}}"><img
-											ng-src="images/{{ post.user.avatar }}" style="border-radius: 100%;"
-											alt=""></a>
+									<a href="#!/profile/{{post.user.userId}}"><img ng-src="{{ post.user.avatar }}"
+											style="border-radius: 100%;" alt=""></a>
 									<div>
 										<b>{{ post.user.username }}</b>
 										<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
@@ -132,13 +130,13 @@
 												ng-class="{ 'active': $index === 0 }">
 
 												<img ng-click="getPostDetails(post.postId)" ng-if="image.type === true"
-													ng-src="images/{{ image.imageUrl }}" class="w-100 d-block"
+													ng-src="{{ image.imageUrl }}" class="w-100 d-block"
 													alt="Slide {{$index + 1}}"
 													style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
 
 												<video ng-if="image.type === false" autoplay controls
 													style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%; position: absolute;">
-													<source ng-src="images/{{ image.imageUrl }}" type="video/mp4">
+													<source ng-src="{{ image.imageUrl }}" type="video/mp4">
 													Your browser does not support the video tag.
 												</video>
 											</div>
@@ -222,14 +220,14 @@
 				</div>
 			</div>
 			<br>
-			<b>Đang theo dõi ({{totalFollowing}})</b>
+			<b>Đang theo dõi</b>
 			<br>
 			<br>
 			<div class="card" ng-repeat="user in followings | limitTo:4"
 				style=" border: none; background-color: #f8f9fa!important;">
 				<div class="card-body d-flex align-items-center gap-3">
 					<a href="#!/profile/BZOL98493464"><img class="rounded-circle" width="40" height="40"
-							style="object-fit: cover;" src="images/{{user.avatar}}"></a>
+							style="object-fit: cover;" src="{{user.avatar}}"></a>
 					<div>
 						<h5 class="fw-semibold mb-0 ng-binding" style="font-size: 1rem;font-weight: 600 !important">
 							{{user.username}}</h5>
@@ -301,7 +299,7 @@
 				<div class="modal-body">
 					<form id="postForm" enctype="multipart/form-data">
 						<div class="user-profile">
-							<img ng-src="images/{{ myAccount.user.avatar }}" alt="">
+							<img ng-src="{{ myAccount.user.avatar }}" alt="">
 							<div>
 								<label>{{myAccount.user.username}}</label> <br>
 								<div style="display: flex; align-items: center;">
@@ -399,8 +397,8 @@
 									<div style="display: flex; align-items: center; justify-content: space-between;">
 										<div class="user-profile ">
 											<a href="/nguoiDung/{{postDetails.user.userId}}"><img
-													ng-src="images/{{postDetails.user.avatar}}"
-													style="border-radius: 100%;" alt=""></a>
+													ng-src="{{postDetails.user.avatar}}" style="border-radius: 100%;"
+													alt=""></a>
 											<div>
 
 												<span
@@ -481,7 +479,7 @@
 
 										<div ng-show="o_reply" class="user-profile  img-thumbnail ng-scope"
 											style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%; border: 1px solid #dee2e6;">
-											<img ng-src="images/{{myAccount.user.avatar}}" class="img-thumbnail" alt="">
+											<img ng-src="{{myAccount.user.avatar}}" class="img-thumbnail" alt="">
 											<div style="width: 70%">
 												<small style="font-size: 12px; font-weight: 600;" class="ng-binding"> <i
 														class="fa-regular fa-tag"></i> <small class="ng-binding">
@@ -558,7 +556,7 @@
 
 												<div ng-show="o_reply2" class="user-profile  img-thumbnail ng-scope"
 													style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-													<img ng-src="images/{{myAccount.user.avatar}}" class="img-thumbnail"
+													<img ng-src="{{myAccount.user.avatar}}" class="img-thumbnail"
 														alt="">
 													<div style="width: 65%">
 														<small style="font-size: 12px;" class="ng-binding">

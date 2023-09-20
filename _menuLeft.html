@@ -5,7 +5,6 @@
 			<a class=" logo" style="color: black;"> <img src="images/chimLac.png" height="30px" alt=""> VIE_<b>SONET</b>
 			</a>
 		</div>
-
 		<nav class="sidebar-nav scroll-sidebar" data-simplebar="init">
 			<div class="simplebar-wrapper" style="margin: 0px -24px;">
 				<div class="simplebar-height-auto-observer-wrapper">
@@ -27,31 +26,33 @@
 											</a>
 											<ul class="sub-nav collapse show" id="general">
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/">
+													<a class="sidebar-link" href="#!/" active-link>
 														<i class="fas fa-house"></i>
 														<span>{{ 'home' | translate }}</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/shopping">
+													<a class="sidebar-link" href="#!/shopping" active-link>
 														<i class="fas fa-bag-shopping"></i>
 														<span>Mua sắm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/search">
+													<a class="sidebar-link" href="#!/search" active-link>
 														<i class="fas fa-magnifying-glass"></i>
 														<span>{{ 'TK' | translate }}</span>
 													</a>
 												</li>
+
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!recommend">
+													<a class="sidebar-link" href="#!/recommend" active-link>
 														<i class="fas fa-handshake"></i>
 														<span>{{ 'GY' | translate }}</span>
 													</a>
 												</li>
+
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!message">
+													<a class="sidebar-link" href="#!/message" active-link>
 														<i class="fas fa-messages"></i>
 														<span>{{ 'TN' | translate }}</span>
 														<span class="badge" ng-show="check"
@@ -61,7 +62,7 @@
 											</ul>
 										</li>
 										<li class="nav-item mt-3">
-											<a class="nav-link" data-bs-toggle="collapse" href="#individual"
+											<a class="nav-link" data-bs-toggle="collapse" href="#individual" active-link
 												style="padding-left: 0;" role="button" aria-expanded="false"
 												aria-controls="individual">
 												<b>Cá nhân</b>
@@ -69,32 +70,32 @@
 											</a>
 											<ul class="sub-nav collapse" id="individual">
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/profile/{{myAccount.user.userId}}">
+													<a class="sidebar-link" href="#!/profile/{{myAccount.user.userId}}"
+														active-link>
 														<i class="fas fa-address-card"></i>
 														<span>Trang cá nhân</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/mystore">
+													<a class="sidebar-link" href="#!/mystore" active-link>
 														<i class="fas fa-store"></i>
 														<span>Cửa hàng</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="/">
+													<a class="sidebar-link" href="/" active-link>
 														<i class="fas fa-clipboard-list"></i>
 														<span>Đơn hàng</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/favouriteProduct">
+													<a class="sidebar-link" href="#!/favouriteProduct" active-link>
 														<i class="fa-solid fa-heart"></i>
 														<span>Yêu thích</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
-														href="#!/ValidationOrder">
+													<a class="sidebar-link" active-link href="#!/ValidationOrder">
 														<i class="fa-solid fa-check"></i>
 														<span>Duyệt đơn hàng</span>
 													</a>
@@ -103,28 +104,26 @@
 										</li>
 										<li class="nav-item mt-3">
 											<a class="nav-link" data-bs-toggle="collapse" href="#manager" role="button"
-												style="padding-left: 0;" aria-expanded="false" aria-controls="manager">
+												active-link style="padding-left: 0;" aria-expanded="false"
+												aria-controls="manager">
 												<b>Quản lý</b>
 												<i class="fas fa-chevron-right rotate-icon"></i>
 											</a>
 											<ul class="sub-nav collapse" id="manager">
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
-														href="#!/admin/report">
+													<a class="sidebar-link" active-link href="#!/admin/report">
 														<i class="fas fa-chart-line"></i>
 														<span>Thống kê</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
-														href="#!/admin/usermanager">
+													<a class="sidebar-link" active-link href="#!/admin/usermanager">
 														<i class="fas fa-users"></i>
 														<span>Người dùng</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
-														href="#!/admin/postsviolation">
+													<a class="sidebar-link" active-link href="#!/admin/postsviolation">
 														<i class="fas fa-square-list"></i>
 														<span>Bài viết vi phạm</span>
 													</a>
@@ -133,25 +132,26 @@
 										</li>
 										<li class="nav-item mt-3">
 											<a class="nav-link" data-bs-toggle="collapse" href="#manage" role="button"
-												style="padding-left: 0;" aria-expanded="false" aria-controls="manager">
+												active-link style="padding-left: 0;" aria-expanded="false"
+												aria-controls="manager">
 												<b>Nhân viên</b>
 												<i class="fas fa-chevron-right rotate-icon"></i>
 											</a>
 											<ul class="sub-nav collapse" id="manage">
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
+													<a class="sidebar-link" active-link
 														href="#!/staff/postviolationmanagement">
 														<i class="fas fa-chart-line"></i>
 														<span>Tố cáo vi phạm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
+													<a class="sidebar-link" active-link
 														href="#!/staff/violationtypemanagement">
 														<i class="fas fa-users"></i>
 														<span>Nội dung vi phạm</span>
 													</a>
-												</li>												
+												</li>
 											</ul>
 										</li>
 									</ul>
