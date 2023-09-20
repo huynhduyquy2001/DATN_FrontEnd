@@ -14,6 +14,41 @@
     .history {
         margin-top: 30px;
     }
+
+    @media screen and (max-width: 600px) {
+        .nav-item {
+            width: 34vh;
+            display: flex;
+            text-align: center;
+        }
+
+        .nav-link {
+            font-size: 3vh;
+        }
+
+        span {
+            font-size: 3vh;
+        }
+
+        .btn {
+            width: 30vh;
+            height: 15vh;
+            font-size: 3vh;
+        }
+
+        p {
+            font-size: 3vh;
+            margin: auto;
+        }
+
+        .totalAmount {
+            font-size: 7vh !important;
+        }
+
+        .totalAmount>span {
+            font-size: 7vh !important;
+        }
+    }
 </style>
 
 <body>
@@ -53,9 +88,9 @@
                         <div class="col">
                             <div class="mb-0 card">
                                 <div class="card-header">
-                                    <img src="images/meow.jpg" style="
-                                    width: 30px;
-                                    height: 30px;
+                                    <img class="img-fluid" src="images/avatar.jpg" style="
+                                    width: 6vh;
+                                    height: 6vh;
                                     object-fit: cover;
                                     border-radius: 30px;">
                                     <span style="margin-left: 12px; font-weight: bold; color: #393e41;">Shop Meow
@@ -68,13 +103,14 @@
                                             class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
                                                 class="fa-sharp fa-regular fa-store"></i>
                                             Shop</button></span>
-                                    <span style="float: right; font-size: 20px;color: #ff3f40;">Đã giao hàng</span>
+                                    <span style="float: right; font-size: 3vh;color: #ff3f40; margin: 1vh;">Đã giao
+                                        hàng</span>
                                 </div>
                                 <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 17px;">
+                                <div class="row box-item" style=" margin: 1vh;">
                                     <div class="col-2">
                                         <img src="product_images/Day_chuyen.jpg"
-                                            style="width: 100px;height: 100px;border-radius: 10px; object-fit: cover;">
+                                            style="width: 17vh;height: 17vh;border-radius: 10px; object-fit: cover;">
                                     </div>
                                     <div class="col-6 card-body">
                                         <h5 class="card-title">Dây chuyền chữ thập Banshee</h5>
@@ -86,17 +122,17 @@
                                     </div>
                                 </div>
                                 <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 17px;">
+                                <div class="row box-item" style=" margin: 1vh;">
                                     <div class="col-2">
-                                        <img src="product_images/Vong_tay.jpg" alt="" class="img-fluid"
-                                            style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover;">
+                                        <img src="product_images/Vong_tay.jpg" alt=""
+                                            style="width: 17vh; height: 17vh; border-radius: 10px; object-fit: cover;">
                                     </div>
                                     <div class="col-6 card-body">
                                         <h5 class="card-title">Vòng tay Targon</h5>
                                         <p class="card-text">Phân loại hàng: nhựa, xanh</p>
                                         <p>x1</p>
                                     </div>
-                                    <div class="col-4 justify-content-center" style="text-align: center;">
+                                    <div class=" col-4 justify-content-center" style="text-align: center;">
                                         <p style="margin: 30px;">111.000 VND</p>
                                     </div>
                                 </div>
@@ -106,90 +142,26 @@
                         <div class="col">
                             <div class="mb-0 card">
                                 <span>
-                                    <div
-                                        style="float: right; font-size: 16px; margin-right: 30px; margin-top: 20px; color: #393e41;">
+                                    <div class="totalAmount"
+                                        style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
                                         <i class="fa-regular fa-hand-holding-dollar fa-2xl"
-                                            style="margin-right: 10px; color: #393e41;"></i>
+                                            style="margin-right: 1vh; color: #393e41;"></i>
                                         Thành tiền: <span
-                                            style="font-weight: bold;color: #ff3f40;font-size: 24px;">234.000
+                                            style="font-weight: bold;color: #ff3f40;font-size: 4vh;">234.000
                                             VND</span>
                                     </div>
                                 </span>
-                                <div class="button-navigator" style="margin: 20px;">
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-store"></i>
-                                            Xem các đánh giá</button></span>
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-danger" style="background-color: #ff3f40;">
-                                            Mua lại</button></span>
+                                <div style="margin: 1vh;">
+                                    <span style="margin-left: 12px; float: right;">
+                                        <button type="button" class="btn btn-outline-danger"
+                                            style="outline-color: #ff3f40;"><i class="fa-sharp fa-regular fa-store"></i>
+                                            Xem các đánh giá</button>
+                                    </span>
+                                    <span style="margin-left: 0.6vh; float: right;">
+                                        <button type="button" class="btn btn-danger" style="background-color: #ff3f40;">
+                                            Mua lại</button>
+                                    </span>
 
-                                </div>
-                                <div class="card-footer text-muted">
-                                    2 ngày trước
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history">
-                        <div class="col">
-                            <div class="mb-0 card">
-                                <div class="card-header">
-                                    <img src="images/meow.jpg" alt="" style="
-                                    width: 30px;
-                                    height: 30px;
-                                    object-fit: cover;
-                                    border-radius: 30px;">
-                                    <span style="margin-left: 12px; font-weight: bold; color: #393e41;">Shop Meow
-                                        II</span>
-                                    <span style="margin-left: 12px;"><button class="btn btn-danger" type="button"
-                                            style="background-color: #ff3f40;"> <i class="fa-regular fa-message"></i>
-                                            Nhắn
-                                            tin</button></span>
-                                    <span style="margin-left: 12px;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-store"></i>
-                                            Shop</button></span>
-                                    <span style="float: right; font-size: 20px;color: #ff3f40;">Đã giao hàng</span>
-                                </div>
-                                <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 17px;">
-                                    <div class="col-2">
-                                        <img src="product_images/Day_chuyen.jpg" alt=""
-                                            style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover;">
-                                    </div>
-                                    <div class="col-6 card-body">
-                                        <h5 class="card-title">Dây chuyền chữ thập Banshee</h5>
-                                        <p class="card-text">Phân loại hàng: nhựa, xanh</p>
-                                        <p>x1</p>
-                                    </div>
-                                    <div class="col-4 justify-content-center" style="text-align: center;">
-                                        <p style="margin: 30px;">123.000 VND</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-0 card">
-                                <span>
-                                    <div
-                                        style="float: right; font-size: 16px; margin-right: 30px; margin-top: 20px; color: #393e41;">
-                                        <i class="fa-regular fa-hand-holding-dollar fa-2xl"
-                                            style="margin-right: 10px; color: #393e41;"></i>
-                                        Thành tiền: <span
-                                            style="font-weight: bold;color: #ff3f40;font-size: 24px;">123.000
-                                            VND</span>
-                                    </div>
-                                </span>
-                                <div class="button-navigator" style="margin: 20px;">
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-store"></i>
-                                            Xem các đánh giá</button></span>
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-danger" style="background-color: #ff3f40;">
-                                            Mua lại</button></span>
                                 </div>
                                 <div class="card-footer text-muted">
                                     2 ngày trước
