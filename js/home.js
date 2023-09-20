@@ -1,6 +1,6 @@
 
 
-app.controller('HomeController', function ($scope, $http, $translate, $window, $rootScope, $location) {
+app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location) {
 
 	$scope.Posts = [];
 	$scope.likedPosts = [];
@@ -18,10 +18,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
 	var url = "http://localhost:8080";
-	$scope.changeLanguage = function (langKey) {
-		$translate.use(langKey);
-		localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
-	};
+
 	// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 	$scope.showMoreComments = function () {
 		$scope.numOfCommentsToShow += $scope.commentsToShowMore;
@@ -63,6 +60,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.loadMore = function () {
 		$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
 			.then(function (response) {
+
 				if ($scope.page === 0) {
 					$scope.Posts = response.data.content;
 				} else if ($scope.page > 0) {
