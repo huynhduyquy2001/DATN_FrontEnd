@@ -55,15 +55,15 @@
 		background-color: #f5f5f5;
 		/* Màu sắc của vùng di chuyển thanh cuộn */
 	}
-	</style>
-
-<div class="container-fluid" ng-controller="VtmCtrl">
+</style>
+<div ng-controller="VtmCtrl">
+<div class="container-fluid" >
 	<!--  Row 1 -->
 	<div class="row">
 		<div class="card-title fw-semibold mb-2">
 			<nav class="navbar navbar-expand-lg navbar-light">
 				<ul class="navbar-nav">
-					<a href="#" class="me-5" data-bs-placement="top" title="Thêm loại vi phạm"
+					<a style="cursor: pointer" class="me-5" data-bs-placement="top" title="Thêm loại vi phạm"
 						ng-click="addViolationModal()"> <i class="fa-solid fa-plus fa-lg"></i> &nbsp Thêm
 					</a>
 				</ul>
@@ -105,7 +105,7 @@
 							style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
 							<span class="fw-normal">{{list.violationDescription}}</span>
 						</td>
-						<td class="border-bottom-0 text-center"><a href="#" data-bs-placement="top"
+						<td class="border-bottom-0 text-center"><a style="cursor: pointer;" data-bs-placement="top"
 								title="Xem chi tiết bài viết" ng-click="detailViolation(list.violationTypeId)"> <i
 									class="fa-solid fa-pen"></i>
 							</a></td>
@@ -183,4 +183,4 @@
 		</div>
 	</div>
 </div>
-
+</div>

@@ -93,8 +93,7 @@ app.controller(
 								'warning'
 							)
 						} else {
-							var url = url + '/admin/usermanager/userRole/' + sdt + '/' + role;
-							$http.put(url)
+							$http.put(url + '/admin/usermanager/userRole/' + sdt + '/' + role)
 								.then(function(response) {
 									$scope.profile = response.data;
 									swalWithBootstrapButtons.fire(
@@ -137,8 +136,7 @@ app.controller(
 					reverseButtons: true
 				}).then((result) => {
 					if (result.isConfirmed && violationCount > 0) {
-						var url = url + '/admin/usermanager/userViolations/' + userId;
-							$http.put(url)
+							$http.put(url + '/admin/usermanager/userViolations/' + userId)
 								.then(function(response) {
 									$scope.profile = response.data;
 									swalWithBootstrapButtons.fire(
