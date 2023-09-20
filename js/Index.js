@@ -93,27 +93,11 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$rootScope.postComments = [];
-	$rootScope.postDetails = {};
+	$scope.postDetails = {};
 	$scope.ListUsersMess = [];
 	$scope.receiver = {};
 	$scope.newMessMini = '';
-	$rootScope.ListMess = [];
-
-
-	// $http.get("http://localhost:8080")
-	// 	.then(function (response) {
-
-	// 	})
-	// 	.catch(function (error) {
-	// 		console.log(error);
-	// 	});
-	// $http.get("http://localhost:8080/myendpoint")
-	// 	.then(function (response) {
-	// 		alert("OK");
-	// 	})
-	// 	.catch(function (error) {
-	// 		console.log(error);
-	// 	});
+	$scope.ListMess = [];
 
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
@@ -140,7 +124,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$http.get('url+/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
-				$rootScope.postDetails = postDetails;
+				$scope.postDetails = postDetails;
 				// Xử lý phản hồi thành công từ máy chủ
 				$('#chiTietBaiViet').modal('show');
 
@@ -212,7 +196,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
-				$rootScope.ListMess = response.data;
+				$scope.ListMess = response.data;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -301,7 +285,17 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		});
 	};
 
-
+	$scope.getTotalUnseenMess = function () {
+		// Lấy số lượng tin nhắn nào chưa đọc
+		$http.get(getUnseenMess)
+			.then(function (response) {
+				$rootScope.check = response.data > 0;
+				$rootScope.unseenmess = response.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
 	//Kết nối khi mở trang web
 	$scope.ConnectNotification();
 
@@ -320,7 +314,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			try {
 				var newMess = JSON.parse(message.body);
 
-				var checkMess = $rootScope.ListMess.find(function (obj) {
+				var checkMess = $scope.ListMess.find(function (obj) {
 					return obj.messId === newMess.messId;
 				});
 				if (checkMess) {
@@ -328,9 +322,18 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				}
 				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
 				else if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$rootScope.ListMess.push(newMess);
+					$scope.ListMess.push(newMess);
 				}
 				if ($scope.myAccount.user.userId !== newMess.sender.userId) {
+					// Lấy số lượng tin nhắn nào chưa đọc
+					$http.get(getUnseenMess)
+						.then(function (response) {
+							$rootScope.check = response.data > 0;
+							$rootScope.unseenmess = response.data;
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
 					$scope.playNotificationSound();
 				}
 				//cập nhật lại danh sách người đang nhắn tin với mình

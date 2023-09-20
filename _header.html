@@ -169,7 +169,9 @@
 													<div style="display: flex;">
 														<label class="ng-binding"
 															style="font-weight: 500; color: #393e41; font-size: 14px;">{{
-															UsersMess[3] }}</label>
+															UsersMess[3] }} <span class="badge p-1" ng-show="
+															UsersMess[11]>0" style="font-size: 12px; background-color: red; border-radius: 50%; width: 20px; height: 20px;">{{
+																UsersMess[11] }}</span></label>
 														<div ng-show="UsersMess[8] == 'Đã gửi' && UsersMess[0] != myAccount.user.userId"
 															class="circle mb-2"
 															style="margin-left: 2rem; font-size: 14px"></div>

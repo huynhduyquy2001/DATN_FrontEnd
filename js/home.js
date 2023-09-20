@@ -1,13 +1,11 @@
 
 
 app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location) {
-
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.postData = {};
 	$scope.replyContent = {}; // Khởi tạo replyContent      
 	$rootScope.check = false;
-	$scope.unseenmess = 0;
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.violations = [];

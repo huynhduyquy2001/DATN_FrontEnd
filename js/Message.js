@@ -1,21 +1,18 @@
 
 app.controller('MessController', function ($scope, $rootScope, $window, $http, $timeout, $translate, $location, $routeParams) {
+
 	$scope.LikePost = [];
-	//đây là acc của mình
-	$scope.myAccount = {};
 	//đây là danh sách tin nhắn
-	$scope.ListMess = [];
+	//$scope.ListMess = [];
 	//đây là acc của ngta
 	$scope.userMess = {};
 	//đây coi là có đang nhắn vs ai khum
 	$scope.isEmptyObject = false;
-
-	$scope.itemSelected = $routeParams.otherId;
+	$rootScope.unseenmess = 0;
 
 	var url = "http://localhost:8080";
 
-	// if (!$location.path().startsWith('/profile/')) {
-	//gưir ảnh qua tin nhắn
+	// gửi ảnh qua tin nhắn
 	$scope.uploadFile = function () {
 		var fileInput = document.getElementById('inputGroupFile01');
 		if (fileInput.files.length > 0) {
@@ -50,13 +47,25 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 		}
 	};
 
+	$scope.seen = function () {
+		//đánh dấu là đã xem
+		$http.post(url + '/seen/' + $routeParams.otherId)
+			.then(function (response) {
+				var check = $scope.ListUsersMess.find(function (obj) {
+					return obj[2] === $routeParams.otherId;
+				});
+				check[11] = 0;
+				//$scope.$apply();
+			});
+	}
 	//tìm danh sách tin nhắn với người nào đó
 	if ($routeParams.otherId) {
 		$http.get(url + '/getUser/' + $routeParams.otherId)
 			.then(function (response) {
 				$scope.userMess = response.data;
-
 			})
+		$scope.seen();
+		//lấy danh sách tin nhắn với người đó
 		$http.get(url + '/getmess2/' + $routeParams.otherId)
 			.then(function (response) {
 				$scope.ListMess = response.data;
@@ -81,49 +90,29 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 			sendImageToRecipient(file);
 		}
 	};
-	//đánh dấu là đã xem
-	$http.post(url + '/seen/' + $routeParams.otherId)
-		.then(function (response) {
-			var check = $scope.ListUsersMess.find(function (obj) {
-				return obj[2] === $routeParams.otherId;
-			});
-			check[11] = 0;
-			//$scope.$apply();
-		});
-	$http.get(url + '/getunseenmessage')
-		.then(function (response) {
-			$rootScope.check = response.data > 0;
-			$rootScope.unseenmess = response.data;
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-
-	//Đa ngôn ngữ	
-	$scope.changeLanguage = function (langKey) {
-		$translate.use(langKey);
-		localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
-	};
 
 	// Tìm acc của mình
-	$http.get(url + '/findmyaccount')
-		.then(function (response) {
-			$scope.myAccount = response.data;
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
+	// $http.get(url + '/findmyaccount')
+	// 	.then(function (response) {
+	// 		$scope.myAccount = response.data;
+	// 	})
+	// 	.catch(function (error) {
+	// 		console.log(error);
+	// 	});
 
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
-	$http.get(url + '/getunseenmessage')
-		.then(function (response) {
-			$rootScope.check = response.data > 0;
-			$rootScope.unseenmess = response.data;
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
+	$scope.getUnseenMessage = function () {
+		$http.get(url + '/getunseenmessage')
+			.then(function (response) {
+				$rootScope.check = response.data > 0;
+				$rootScope.unseenmess = response.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
 
+	$scope.getUnseenMessage();
 
 	//Kết nối khi mở trang web
 	$scope.ConnectNotification();
@@ -145,27 +134,24 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
 			try {
 				var newMess = JSON.parse(message.body);
-				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
+
 				var checkMess = $scope.ListMess.find(function (obj) {
 					return obj.messId === newMess.messId;
 				});
+				// nếu là thu hồi tin nhắn thì
 				if (checkMess) {
 					checkMess.status = 'Đã ẩn';
-				} else if (($scope.userMess.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+				}
+				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
+				else if (($scope.userMess.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
 					$scope.ListMess.push(newMess);
 				}
-				if ($scope.myAccount.user.userId !== newMess.sender.userId) {
+				//nếu không phải mình gửi cho chính mình và không phải hàm thu hồi
+				if ($scope.myAccount.user.userId !== newMess.sender.userId && !checkMess) {
+					$scope.getTotalUnseenMess();
 					$scope.playNotificationSound();
-
 				}
-				$http.get(url + '/getunseenmessage')
-					.then(function (response) {
-						$rootScope.check = response.data > 0;
-						$rootScope.unseenmess = response.data;
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
+				$scope.getUnseenMessage();
 				//cập nhật lại danh sách người đang nhắn tin với mình
 				$http.get(url + '/chatlistwithothers')
 					.then(function (response) {
@@ -228,7 +214,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 				return $http.get(url + '/getunseenmessage');
 			})
 			.then(function (response) {
-				$scope.check = response.data > 0;
+				$rootScope.check = response.data > 0;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -284,13 +270,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	$scope.revokeMessage = function (messId) {
 		$http.post(url + '/removemess/' + messId)
 			.then(function (reponse) {
-				var messToUpdate = $scope.ListMess.find(function (mess) {
-					return mess.messId === messId;
-				})
-				messToUpdate.status = "Đã ẩn";
-
 				var mess = reponse.data;
-
 				var objUpdate = $scope.ListUsersMess.find(function (obj) {
 					return (mess.receiver.userId === obj[0] || mess.receiver.userId === obj[2]) && mess.messId === obj[9];
 				});
@@ -309,9 +289,6 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 					});
 				}
 				stompClient.send('/app/sendnewmess', {}, JSON.stringify(mess));
-
-
-
 			}, function (error) {
 				console.log(error);
 			});
