@@ -51,6 +51,9 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/staff/violationtypemanagement', {
 		templateUrl: "ngview/ViolationTypeManagement.html",
 		controller: 'VtmCtrl'
+	}).when('/staff/productpost', {
+		templateUrl: "ngview/PostsProduct.html",
+		controller: 'productPostCtrl'
 	})
 		;
 	// Set the default language
