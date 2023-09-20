@@ -21,9 +21,9 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/profile/:userId', {
 		templateUrl: "ngview/profile.html",
 		controller: 'ProfileController'
-	}).when('/product', {
+	}).when('/productdetails/:productId', {
 		templateUrl: "ngview/productDetails.html",
-		controller: 'ProductController'
+		controller: 'ProductDetailsController'
 	}).when('/favouriteProduct', {
 		templateUrl: "ngview/favouriteProducts.html",
 		controller: 'FavouriteProductsController'

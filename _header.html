@@ -163,7 +163,7 @@
 												class="user-profile" ng-if="UsersMess[0] === myAccount.user.userId"
 												ng-click="getmess2(UsersMess[0] , UsersMess[9], UsersMess[8])">
 												<!-- Nội dung khi UsersMess[0] = 'UI010' -->
-												<img ng-src="images/{{ UsersMess[5] }}"
+												<img ng-src="{{ UsersMess[5] }}"
 													style="border-radius: 100%; border: 1px solid #ebf1f6;" alt="">
 												<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
 													<div style="display: flex;">
@@ -193,7 +193,7 @@
 												class="user-profile" ng-if="UsersMess[0] !== myAccount.user.userId"
 												ng-click="getmess2(UsersMess[2], -1)">
 												<!-- Nội dung khi UsersMess[0] khác 'UI010' -->
-												<img ng-src="images/{{ UsersMess[4] }}"
+												<img ng-src="{{ UsersMess[4] }}"
 													style="border-radius: 100%; width: 4rem; height: 4rem;" alt="">
 												<div style="width: 100%; line-height: 0.7rem">
 													<div style="display: flex;">
@@ -225,7 +225,7 @@
 							</div>
 							<li class="nav-item dropdown"><a class="nav-link nav-icon-hover" href="#" id="drop2"
 									data-bs-toggle="dropdown" aria-expanded="false"> <img
-										src="images/{{myAccount.user.avatar}}" alt="" width="35" height="35"
+										src="{{myAccount.user.avatar}}" alt="" width="35" height="35"
 										class="rounded-circle" style="object-fit: cover;">
 								</a>
 								<div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
@@ -284,7 +284,7 @@
 		<div class="msger-header-title">
 			<a href="#" style="font-weight: 600; color: #212529" class="ng-binding"><img
 					style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;" alt=""
-					ng-src="images/avatar2.jpg" src="images/avatar2.jpg"> Hồng Thắm</a> &nbsp; <small
+					ng-src="avatar2.jpg" src="images/avatar2.jpg"> {{receiver.user.username}}</a> &nbsp; <small
 				style="font-size: 0.7rem;" class="ng-binding">Hoạt động:
 				18-8-2023 01:16</small>
 		</div>
@@ -309,7 +309,7 @@
 				<div class="msg-text" ng-if="mess.status == 'Đã ẩn'" style="color: #adb5bd">Tin nhắn đã được thu
 					hồi</div>
 
-				<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " src="images/{{mess.image}}"
+				<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " src="{{mess.image}}"
 					style="max-width: 9rem; border-radius: 5px">
 
 				<div class="msg-info-time">{{getFormattedTimeAgo(mess.sendDate)}}</div>

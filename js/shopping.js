@@ -7,12 +7,14 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	$scope.totalPages = 0;
 	$scope.currentPageTrending = 0;
 	$scope.totalPagesTrending = 0;
+	$scope.check = true;
 
 	$scope.getproductList = function (currentPage) {
 		$http.get(url + "/get-shopping-by-page/" + currentPage)
 			.then(function (res) {
 				$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+				$scope.check = true;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -47,6 +49,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			.then(function (res) {
 				$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+				$scope.check = false;
 			})
 			.catch(function (error) {
 				console.log(error);
