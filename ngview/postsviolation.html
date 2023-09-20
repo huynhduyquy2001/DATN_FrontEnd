@@ -2,7 +2,7 @@
   <div class="row">
     <div class="card-title fw-semibold mb-2">
       <nav class="navbar navbar-expand-lg navbar-light">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav flex-row align-items-center justify-content-between mb-2">
           <input type="checkbox" ng-click="selectAll()" ng-model="selectAllCheckbox"
           class="form-check-input ms-3 me-4 hover-effect"
           style="border: 3px solid rgb(34, 31, 31);">
@@ -14,7 +14,7 @@
             chọn <b style="color: red">{{ selectedCountText }}</b> mục
           </small>
         </ul>
-        <div class="navbar-collapse justify-content-end px-0">
+        
           <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
             <!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
             <small class="me-3">{{currentPage + 1}} /
@@ -35,7 +35,7 @@
                 class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
             </form>
           </ul>
-        </div>
+
 
       </nav>
     </div>

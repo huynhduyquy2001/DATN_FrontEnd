@@ -1,5 +1,28 @@
 
 var app = angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
+
+// Tạo một directive để theo dõi URL hiện tại
+app.directive('activeLink', ['$location', function ($location) {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			scope.$on('$routeChangeSuccess', function () {
+				var path = $location.path();
+				var href = attrs.href.replace('#!', ''); // Loại bỏ tiền tố '#!'
+
+				// So sánh URL hiện tại với href của liên kết
+				if (path === href) {
+					element.css('background-color', 'rgba(93, 135, 255)');
+					element.css('color', 'white');
+				} else {
+					element.css('background-color', ''); // Xóa CSS nền
+					element.css('color', '#313131');
+				}
+			});
+		}
+	};
+}]);
+
 app.config(function ($httpProvider) {
 	$httpProvider.interceptors.push('AuthInterceptor');
 })

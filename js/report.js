@@ -193,6 +193,28 @@ app.controller(
                 borderRadius: 3,
               },
             },
+            xaxis: {
+              type: "category",
+              categories: [
+                "T.1",
+                "T.2",
+                "T.3",
+                "T.4",
+                "T.5",
+                "T.6",
+                "T.7",
+                "T.8",
+                "T.9",
+                "T.10",
+                "T.11",
+                "T.12",
+              ],
+              labels: {
+                style: {
+                  cssClass: "grey--text lighten-2--text fill-color",
+                },
+              },
+            },
           },
         },
       ],
@@ -239,7 +261,7 @@ app.controller(
           breakpoint: 991,
           options: {
             chart: {
-              width: 150,
+              width: 350,
             },
           },
         },
