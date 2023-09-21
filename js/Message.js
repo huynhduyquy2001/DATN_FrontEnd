@@ -8,8 +8,6 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	$scope.userMess = {};
 	//đây coi là có đang nhắn vs ai khum
 	$scope.isEmptyObject = false;
-	$rootScope.unseenmess = 0;
-
 	var url = "http://localhost:8080";
 
 	// gửi ảnh qua tin nhắn

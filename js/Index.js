@@ -98,7 +98,10 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.receiver = {};
 	$scope.newMessMini = '';
 	$scope.ListMess = [];
-
+	//phân trang shopping
+	$rootScope.checkShopping = true;
+	$rootScope.currentPage = 0;
+	$rootScope.currentPageTrending = 0;
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
 		.then(function (response) {
