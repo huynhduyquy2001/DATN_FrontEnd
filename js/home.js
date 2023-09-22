@@ -5,7 +5,6 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	$scope.likedPosts = [];
 	$scope.postData = {};
 	$scope.replyContent = {}; // Khởi tạo replyContent      
-	$rootScope.check = false;
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.violations = [];
@@ -16,6 +15,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
 	var url = "http://localhost:8080";
+	var getUnseenMess = "http://localhost:8080/getunseenmessage";
 
 	// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 	$scope.showMoreComments = function () {
@@ -137,6 +137,15 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 		$('#modalBaoCao').modal('hide');
 	};
 
+	// Lấy số lượng tin nhắn nào chưa đọc
+	$http.get(getUnseenMess)
+		.then(function (response) {
+			$rootScope.check = response.data > 0;
+			$rootScope.unseenmess = response.data;
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());

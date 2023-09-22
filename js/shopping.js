@@ -25,6 +25,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			.then(function (res) {
 				$scope.product = res.data;
 				$scope.total = -1;
+				$scope.quantity = 1;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -76,8 +77,21 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	};
 
 	$scope.addShoppingCart = function (productId) {
+		var formData = new FormData();
+		formData.append("productId", productId);
+		formData.append("quantity", $scope.quantity);
+		formData.append("color", $scope.product.productColors.color.colorName);
 
+		$http.post(url + "/add-to-cart", formData, {
+			transformRequest: angular.identity,
+			headers: { 'Content-Type': undefined }
+		})
+			.then(function (res) {
+				// Xử lý phản hồi từ máy chủ
+			});
 	}
+
+
 
 	// -----------------------------------------------------------------------------------
 
@@ -170,7 +184,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			return originalPrice;
 		} else {
 			//tính tổng số lượng các đánh giá
-			var SalePrice = originalPrice * promotion / 100;
+			var SalePrice = originalPrice - (originalPrice * promotion / 100);
 			return SalePrice;
 		}
 	}

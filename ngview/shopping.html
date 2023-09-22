@@ -149,8 +149,9 @@
                                 </div>
 
                                 <div class="price animate__animated animate__fadeInUp">
-                                    <span style="text-decoration: line-through; color: gray;">{{product.originalPrice}}
-                                        vnd </span> &nbsp; |&nbsp;
+                                    <span ng-show="!product.promotion==0"><span
+                                            style="text-decoration: line-through; color: gray;">{{product.originalPrice}}
+                                            vnd </span> &nbsp; |&nbsp;</span>
                                     <span> {{getSalePrice(product.originalPrice, product.promotion)}} VND</span>
                                 </div>
                                 <button ng-click="getProduct(product.productId)" data-bs-toggle="modal"
@@ -251,7 +252,7 @@
                             </button>
 
                         </div>
-                        <button ng-click="getProduct(product.productId)" data-bs-toggle="modal"
+                        <button ng-click="addShoppingCart(product.productId)" data-bs-toggle="modal"
                             data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
                             style="margin-top: 1.5rem; display: block;width:100% ;">Thêm vào
                             giỏ hàng</button>
