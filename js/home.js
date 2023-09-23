@@ -201,18 +201,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 		}
 	};
 
-	$scope.getPostDetails = function (postId) {
-		$http.get('http://localhost:8080/findpostcomments/' + postId)
-			.then(function (response) {
-				var count = response.data;
-				if (count > 0) {
-					$scope.check = true;
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}
+
 	$http.get('http://localhost:8080/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
@@ -459,18 +448,17 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 		$http.get('http://localhost:8080/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
-				$rootScope.postComments = postComments;
+				$scope.postComments = postComments;
 				console.log(response.data);
 			}, function (error) {
 				// Xử lý lỗi
 				console.log(error);
 			});
-
 		$scope.isReplyEmpty = true;
 		$http.get('http://localhost:8080/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
-				$rootScope.postDetails = postDetails;
+				$scope.postDetails = postDetails;
 				// Xử lý phản hồi thành công từ máy chủ
 				$('#chiTietBaiViet').modal('show');
 
@@ -567,7 +555,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 		if (postToUpdate) {
 			postToUpdate.commentCount++;
 		}
-		$http.post('/addreply', requestData)
+		$http.post(url + '/addreply', requestData)
 			.then(function (response) {
 				var comment = $scope.postComments.find(function (comment) {
 					return comment.commentId === commentId;
@@ -596,7 +584,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			// Code xử lý thông báo khi nội dung phản hồi trống
 			return;
 		}
-		$http.post('/addreply', requestData)
+		$http.post(url + '/addreply', requestData)
 			.then(function (response) {
 
 				try {
