@@ -1,12 +1,15 @@
 
 app.controller('FavouriteProductsController', function ($scope, $http, $translate, $rootScope, $location) {
-	if (!$location.path().startsWith('/profile/')) {
-		// Tạo phần tử link stylesheet
-		var styleLink = document.createElement('link');
-		styleLink.rel = 'stylesheet';
-		styleLink.href = '/css/style.css';
+	var Url = "http://localhost:8080";
 
-		// Thêm phần tử link vào thẻ <head>
-		document.head.appendChild(styleLink);
-	}
+	$scope.favoriteProducts = [];
+
+	$http.get(Url + "/get-favoriteProducts") // Sử dụng biến URL
+		.then(function (response) {
+			$scope.favoriteProducts = response.data;
+			console.log("LISTTHICSSANPHAM" + $scope.favoriteProducts)
+		})
+		.catch(function (error) {
+			console.error("Lỗi: " + error.data);
+		});
 });
