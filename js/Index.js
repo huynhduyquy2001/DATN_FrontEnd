@@ -1,5 +1,10 @@
 
 var app = angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
+	.filter('currencyFormat', function () {
+		return function (number) {
+			return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+		};
+	});
 
 // Tạo một directive để theo dõi URL hiện tại
 app.directive('activeLink', ['$location', function ($location) {
@@ -98,10 +103,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.receiver = {};
 	$scope.newMessMini = '';
 	$scope.ListMess = [];
+	$rootScope.myAccount = {};
 	//phân trang shopping
 	$rootScope.checkShopping = true;
 	$rootScope.currentPage = 0;
 	$rootScope.currentPageTrending = 0;
+
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
 		.then(function (response) {
@@ -172,6 +179,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$http.get(findMyAccount)
 		.then(function (response) {
 			$scope.myAccount = response.data;
+			$rootScope.myAccount = response.data;
 		})
 		.catch(function (error) {
 			console.log(error);

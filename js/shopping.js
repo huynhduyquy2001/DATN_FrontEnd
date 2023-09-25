@@ -8,6 +8,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	$scope.product = {};
 	$scope.quantity = 1;
 	$scope.total = -1;
+	$scope.color = "";
 	$scope.getproductList = function (currentPage) {
 		$http.get(url + "/get-shopping-by-page/" + currentPage)
 			.then(function (res) {
@@ -67,20 +68,22 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	$scope.increaseQuantity = function () {
 		$scope.quantity++;
 	}
+	//lấy số lượng tồn kho
 	$scope.getTotal = function (id) {
 		var color = $scope.product.productColors.find(function (obj) {
 			if (obj.color.colorId === id) {
 				$scope.total = obj.quantity;
+				$scope.color = obj.color.colorName;
 			}
 			return 0; // Trả về 0 nếu không tìm thấy phần tử thỏa mãn điều kiện
 		});
 	};
 
-	$scope.addShoppingCart = function (productId) {
+	$rootScope.addShoppingCart = function (productId) {
 		var formData = new FormData();
 		formData.append("productId", productId);
 		formData.append("quantity", $scope.quantity);
-		formData.append("color", $scope.product.productColors.color.colorName);
+		formData.append("color", $scope.color);
 
 		$http.post(url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,

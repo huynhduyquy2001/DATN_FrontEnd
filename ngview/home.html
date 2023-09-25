@@ -1,11 +1,11 @@
-<div class="row">
+<div class="row" id="post">
 
 	<script src="js/thoiTiet.js"></script>
 
 	<div class="col-md-6 animate__animated animate__fadeIn offset-md-1" style="z-index: 10;">
 
 		<div class="card shadow-none border ng-scope" data-bs-toggle="modal" href="#exampleModalToggle"
-			style="width: 95%; margin-bottom: 1rem; border-radius: 10px; box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px !important;">
+			style="width: 100%; margin-bottom: 1rem; border-radius: 10px; box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px !important;">
 			<div class="card-body">
 				<div class="mb-3">
 					<textarea class="form-control" placeholder=" Bạn muốn đăng gì?"
@@ -58,7 +58,7 @@
 
 		</html>
 
-		<div ng-repeat="post in Posts | orderBy: '-postDate'" style="width: 95%;">
+		<div ng-repeat="post in Posts | orderBy: '-postDate'" style="width: 100%;">
 			<div class="write-post-container   "
 				style="margin-bottom: 20px; border-radius: 8px;
 				box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px; padding: 0; padding-top: 10px; padding-bottom: 10px; width: 100%; text-align: left; background: white;">
@@ -192,8 +192,8 @@
 				</div>
 			</div>
 		</div>
-		<button class="form-control" style="margin-bottom: 1rem; width: 95%;" ng-click="loadMore()">Hiển thị thêm bài
-			viết</button>
+		<!-- <button class="form-control" style="margin-bottom: 1rem; width: 95%;" ng-click="loadMore()">Hiển thị thêm bài
+			viết</button> -->
 	</div>
 
 

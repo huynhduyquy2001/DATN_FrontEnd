@@ -7,7 +7,6 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 	$http.get(Url + "/get-favoriteProducts") // Sử dụng biến URL
 		.then(function (response) {
 			$scope.favoriteProducts = response.data;
-			console.log("LISTTHICSSANPHAM" + $scope.favoriteProducts)
 		})
 		.catch(function (error) {
 			console.error("Lỗi: " + error.data);
