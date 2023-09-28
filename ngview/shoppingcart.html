@@ -1,46 +1,48 @@
-<div ng-controller="ShoppingCartController">
+<div>
     <div class="container">
         <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center" style="background-color: white;">
             <button class="btn btn-sm btn-danger"  data-bs-toggle="modal" data-bs-target="#exampleModal">Thanh toán</button>
             <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i class="fas fa-trash fa-lg"></i> Xóa</a>
         </div>
-        <div class="card mb-4">
+
+        <div style="max-height: 540px; overflow-y: auto;">
+            <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
                 <div class="card-header d-flex justify-content-between" style="background-color: white;">
                     <h6 class="mt-1">
                         <i class="fa-regular fa-store"></i> 
-                        Đồ gia dụng
+                        {{ groupedProducts[0].product.user.username }} 
                     </h6>
                     <input data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn tất cả sản phẩm" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;">
                 </div>
-                <div class="card-body border-bottom">
-                    <div class="row d-flex justify-content-between align-items-center mb-2">
-                        <div class="col-md-2 col-lg-1 col-xl-1">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp" class="rounded-3 img-thumbnail" width="100%" alt="Cotton T-shirt">
-                        </div>
-                        <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
-                        <p class="fw-normal mb-2 fs-4" 
-                        style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Basic T-shirt </p>
-                        <p class="fw-normal mb-2" style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><span class="text-muted">Color: </span>Grey</p>
-                        </div>
-                        <div class="col-md-3 col-lg-2 col-xl-3 mt-3">
-                            <a class="text-decoration-none text-danger">156.000 VND</a>
-                            <p class="text-decoration-line-through" style="color: gray;">180.000 VND</p>
-                        </div>
-                        <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
-                                <button  onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="btn border rounded min-width-40 py-0 border-end-0" type="button" id="add1">
-                                <i class="fa-regular fa-minus"></i> 
+                <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
+                        <div class="row d-flex justify-content-between align-items-center mb-2">
+                            <div class="col-md-2 col-lg-1 col-xl-1" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                                <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%" alt="Cotton T-shirt">
+                            </div>                                             
+                            <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
+                                <p class="fw-normal mb-2 fs-5" 
+                                style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{ product.product.productName }} </p>
+                                <p class="fw-normal mb-2" style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><span class="text-muted">Màu sắc: </span>{{ product.color }}</p>
+                            </div>
+                            <div class="col-md-3 col-lg-2 col-xl-3 mt-3">
+                                <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | number:0 }} VND</a>
+                            </div>
+                            <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
+                                <button ng-click="decrementQuantity(product)" class="btn border rounded min-width-40 py-0 border-end-0" type="button" id="add1">
+                                    <i class="fa-regular fa-minus"></i> 
                                 </button>
-                                <input type="number" min="0" name="quantity" value="1" class="min-width-40 border fw-semibold text-center" value="1" style="width: 40px;">
-                                <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="btn min-width-40 border  py-0 border-start-0 border-1 rounded " type="button" id="addo2">
+                                <input type="number" min="0" name="quantity" ng-model="product.quantity" ng-change="recalculatePrice(product)" class="min-width-40 border fw-semibold text-center" style="width: 40px;">
+                                <button ng-click="incrementQuantity(product)" class="btn min-width-40 border py-0 border-start-0 border-1 rounded " type="button" id="addo2">
                                     <i class="fa-regular fa-plus"></i>
                                 </button>
+                            </div>                            
+                            <div class="col-md-2 col-lg-2 col-xl-2 d-flex gap-3 justify-content-end mt-3">
+                                <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i class="fas fa-trash fa-lg"></i></a>
+                                <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
+                            </div>
                         </div>
-                        <div class="col-md-2 col-lg-2 col-xl-2 d-flex gap-3 justify-content-end mt-3">
-                        <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i class="fas fa-trash fa-lg"></i></a>
-                        <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
-                        </div>
-                    </div>
                 </div>
+            </div>
         </div>
     </div>
     <!-- Modal -->

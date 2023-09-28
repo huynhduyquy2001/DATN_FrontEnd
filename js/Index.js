@@ -104,6 +104,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.newMessMini = '';
 	$scope.ListMess = [];
 	$rootScope.myAccount = {};
+	$scope.listProduct = [];
 	//phân trang shopping
 	$rootScope.checkShopping = true;
 	$rootScope.currentPage = 0;
@@ -461,6 +462,13 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			return notification.notificationId !== notificationIdToRemove;
 		});
 	};
+
+	//Load thông tin giỏ hàng
+	$http.get(url + '/get-product-shoppingcart').then(function (response) {
+		$scope.listProduct = response.data;
+	}).catch(function (error) {
+		console.error('Lỗi khi lấy dữ liệu:', error);
+	});
 
 
 	// Trong AngularJS controller
