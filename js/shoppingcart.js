@@ -51,6 +51,8 @@ app.controller('ShoppingCartController', function ($scope, $http) {
 	//tính tổng giá tiền khi gõ vào
 	$scope.recalculatePrice = function(product) {
         product.totalPrice = $scope.calculateSubtotal(product);
+        //sửa số lượng trong giỏ hàng
+        $scope.setQuantity(product, product.quantity);
     };
 
 	//tính tổng giá tiền khi load lên
@@ -62,6 +64,7 @@ app.controller('ShoppingCartController', function ($scope, $http) {
 	$scope.incrementQuantity = function(product) {
         product.quantity++;
         $scope.recalculatePrice(product);
+        //tăng số lượng trong giỏ hàng
         $scope.addQuantity(product, 1);
     };
 
@@ -70,6 +73,8 @@ app.controller('ShoppingCartController', function ($scope, $http) {
         if (product.quantity > 1) {
             product.quantity--;
             $scope.recalculatePrice(product);
+            //giảm số lượng trong giỏ hàng
+            $scope.minusQuantity(product, 1);
         }
     };
 
@@ -82,6 +87,38 @@ app.controller('ShoppingCartController', function ($scope, $http) {
 		formData.append("color", product.color);
 
 		$http.post(url + "/add-to-cart", formData, {
+			transformRequest: angular.identity,
+			headers: { 'Content-Type': undefined }
+		}).then(function (res) {
+				// Xử lý phản hồi từ máy chủ
+			});
+    }
+
+    //Hàm giảm số lượng trong giỏ hàng
+    $scope.minusQuantity = function(product, quantity){
+        //giảm số lượng trong giỏ hàng
+        var formData = new FormData();
+		formData.append("productId", product.product.productId);
+		formData.append("quantity", quantity);
+		formData.append("color", product.color);
+
+		$http.post(url + "/minusQuantity-to-cart", formData, {
+			transformRequest: angular.identity,
+			headers: { 'Content-Type': undefined }
+		}).then(function (res) {
+				// Xử lý phản hồi từ máy chủ
+			});
+    }
+
+    //Hàm thêm số lượng vào giỏ hàng
+    $scope.setQuantity = function(product, quantity){
+        //thêm số lượng vào giỏ hàng
+        var formData = new FormData();
+		formData.append("productId", product.product.productId);
+		formData.append("quantity", quantity);
+		formData.append("color", product.color);
+
+		$http.post(url + "/setQuantity-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
 		}).then(function (res) {
