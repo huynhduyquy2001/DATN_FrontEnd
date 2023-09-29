@@ -176,6 +176,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			return formattedDate + '-' + formattedMonth + '-' + formattedYear;
 		}
 	};
+
 	//tìm acc bản thân
 	$http.get(findMyAccount)
 		.then(function (response) {
@@ -200,7 +201,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			console.log(error);
 		});
 
-	//tìm người mình nhắn tin và danh sách tin nhắn với người đó
+	//tìm người mình nhắn tin và danh sách tin nhắn với người mình đã chọn
 	$scope.getMess = function (receiverId) {
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
@@ -308,6 +309,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				console.log(error);
 			});
 	}
+
 	//Kết nối khi mở trang web
 	$scope.ConnectNotification();
 
@@ -329,11 +331,9 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				var checkMess = $scope.ListMess.find(function (obj) {
 					return obj.messId === newMess.messId;
 				});
-				if (checkMess) {
-					checkMess.status = 'Đã ẩn';
-				}
+
 				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				else if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+				if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
 					$scope.ListMess.push(newMess);
 				}
 				if ($scope.myAccount.user.userId !== newMess.sender.userId) {

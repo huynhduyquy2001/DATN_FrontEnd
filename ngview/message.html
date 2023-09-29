@@ -32,7 +32,8 @@
 								ng-show="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
 								ng-cloak ng-click="revokeMessage(mess.messId)"><b>Thu hồi</b></button>
 						</div>
-						<div class="msg-text mess" ng-show="mess.status != 'Đã ẩn' && mess.content!=''" ng-cloak>
+						<div class="msg-text mess" style="font-weight: 510;"
+							ng-show="mess.status != 'Đã ẩn' && mess.content!=''" ng-cloak>
 							{{mess.content}}
 						</div>
 						<div class="msg-text" ng-show="mess.status == 'Đã ẩn'" style="color: #adb5bd" ng-cloak>Tin nhắn
@@ -60,7 +61,6 @@
 			</form>
 		</div>
 	</div>
-	<div style="transform: translateX(-50%);"></div>
 	<div class="col-md-4" id="menuMessLeft"
 		style="border: 1px solid #ebf1f6; padding-top: 0.5rem; background-color: #fff; height: 89vh; overflow: scroll;">
 		<h4><b>Tin Nhắn</b></h4>

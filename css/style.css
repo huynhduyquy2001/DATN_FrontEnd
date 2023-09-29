@@ -1237,10 +1237,61 @@ img {
 	overflow: hidden;
 }
 
+/* ------------------------------------------------------------------------- */
+
+
+/* CSS cho phần tử gốc */
+.sidebar-nav ul .sidebar-item .sidebar-link {
+	position: relative;
+	transition: background-color 0.15s ease-out, color 0.15s ease-out;
+	border: 1px solid transparent;
+	/* Để có border ban đầu */
+}
+
+/* CSS cho pseudo-element ::before và ::after */
+.sidebar-nav ul .sidebar-item .sidebar-link::before,
+.sidebar-nav ul .sidebar-item .sidebar-link::after {
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0.5px;
+	/* Độ dày của border */
+	background-color: #5D87FF;
+	/* Màu của border khi hover */
+	transition: width 0.15s ease-out;
+}
+
+.sidebar-nav ul .sidebar-item .sidebar-link::before {
+	top: 0;
+	left: 0;
+}
+
+.sidebar-nav ul .sidebar-item .sidebar-link::after {
+	bottom: 0;
+	right: 0;
+}
+
+/* Hover state */
+.sidebar-nav ul .sidebar-item .sidebar-link:hover::before {
+	width: 100%;
+	/* Xuất hiện từ trái qua phải */
+}
+
+.sidebar-nav ul .sidebar-item .sidebar-link:hover::after {
+	width: 100%;
+	/* Xuất hiện từ phải qua trái */
+}
+
 .sidebar-nav ul .sidebar-item .sidebar-link:hover {
 	background-color: rgba(93, 135, 255, 0.1);
 	color: #5D87FF;
+	border-color: transparent;
+	/* Ẩn border gốc khi hover */
+	transition: background-color 0.15s ease-out, color 0.15s ease-out;
 }
+
+
+/* -------------------------------------------------------------------------- */
 
 .sidebar-item .sidebar-link {
 	color: #393e41;
@@ -2324,10 +2375,56 @@ a {
 	opacity: 0;
 }
 
-.hver:hover {
-	background-color: rgba(93, 135, 255, 0.1);
-	color: #5D87FF;
+/* CSS cho phần tử gốc */
+.hver {
+	position: relative;
+	transition: background-color 0.15s ease-out, color 0.15s ease-out;
+	border: 1px solid transparent;
+	/* Để có border ban đầu */
 }
+
+/* CSS cho pseudo-element ::before và ::after */
+.hver::before,
+.hver::after {
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0.5px;
+	/* Độ dày của border */
+	background-color: #5D87FF;
+	/* Màu của border khi hover */
+	transition: width 0.15s ease-out;
+}
+
+.hver::before {
+	top: 0;
+	left: 0;
+}
+
+.hver::after {
+	bottom: 0;
+	right: 0;
+}
+
+/* Hover state cho lớp .hver */
+.hver:hover {
+	background-color: rgba(93, 135, 255, 0.1) !important;
+	color: #5D87FF;
+	border-color: transparent;
+
+	/* Ẩn border gốc khi hover */
+}
+
+.hver:hover::before {
+	width: 100%;
+	/* Xuất hiện từ trái qua phải */
+}
+
+.hver:hover::after {
+	width: 100%;
+	/* Xuất hiện từ phải qua trái */
+}
+
 
 .listMess {
 	background-color: white;
