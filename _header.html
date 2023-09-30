@@ -157,7 +157,9 @@
 								<div class="menu-content">
 									<h4><b>Tin Nhắn</b></h4>
 									<ul class="list-unstyled mb-0">
-										<li ng-repeat="UsersMess in ListUsersMess" class="p-2 listMess hver">
+										<li ng-repeat="UsersMess in ListUsersMess"
+											ng-style="{'background-color': (UsersMess[2] === receiver.userId) ? 'rgba(93, 135, 255, 0.1)' : 'transparent'}"
+											class="p-2 listMess hver">
 											<div ng-click="getMess(UsersMess[2])" style="cursor: pointer;"
 												class="user-profile" ng-if="UsersMess[0] === myAccount.user.userId"
 												ng-click="getmess2(UsersMess[0] , UsersMess[9], UsersMess[8])">
