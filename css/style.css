@@ -736,7 +736,7 @@ a {
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus {
-	border: none;
+	border: 1px solid #5d87ff;
 }
 
 .dropdown-item:focus,
@@ -1806,7 +1806,7 @@ h3 {
 
 /* ----- Informations Section ----- */
 .product__info {
-	padding: 0.8em 0;
+	padding: 0 0;
 }
 
 .title {
@@ -2270,7 +2270,7 @@ footer {
 	}
 
 	.frameProduct {
-		height: 47.5vh;
+		height: 35vh;
 	}
 }
 

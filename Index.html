@@ -172,8 +172,9 @@
 		}
 
 		@media screen and (max-width: 1180px) {
-			#menuLeft {
-				display: none;
+			#asideLeft {
+				opacity: 0;
+				left: -280px;
 			}
 
 			#view.offset-lg-3 {
@@ -223,6 +224,7 @@
 			left: 0;
 			box-shadow: none;
 		}
+
 
 		.star .active {
 			color: #ffc107;
@@ -294,13 +296,9 @@
 					</div>
 				</div> -->
 			</nav>
-			<div ng-view id="view" class="col-lg-9 offset-lg-3"></div>
+			<div ng-view id="view" style="transition: 0.5s;" class="col-lg-9 offset-lg-3"></div>
 		</div>
 	</div>
-
-
-
-
 	<!-- Modal hiện  chi tiêt bài viết và danh sách bình luận -->
 	<div class="modal fade" id="chiTietBaiViet" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
 		aria-hidden="true">
