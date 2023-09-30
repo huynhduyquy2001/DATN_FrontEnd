@@ -125,5 +125,4 @@ app.controller('ShoppingCartController', function ($scope, $http) {
 				// Xử lý phản hồi từ máy chủ
 			});
     }
-
 });
