@@ -1,65 +1,28 @@
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đơn hàng</title>
-    <link rel="stylesheet" href="">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/css/styles.css" />
-
-</head>
 <style>
     .history {
         margin-top: 30px;
     }
 
-    @media screen and (max-width: 600px) {
-        .nav-item {
-            width: 34vh;
-            display: flex;
-            text-align: center;
-        }
+    #menu-button {
+        display: none;
+    }
 
-        .nav-link {
-            font-size: 3vh;
-        }
 
-        span {
-            font-size: 3vh;
-        }
-
-        .btn {
-            width: 30vh;
-            height: 15vh;
-            font-size: 3vh;
-        }
-
-        p {
-            font-size: 3vh;
-            margin: auto;
-        }
-
-        .totalAmount {
-            font-size: 7vh !important;
-        }
-
-        .totalAmount>span {
-            font-size: 7vh !important;
-        }
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: bold;
     }
 </style>
 
 <body>
 
-    <div class="container" ng-controller="OrderController">
+    <div class="container">
         <!--Tabs-->
-        <header class="mt-5">
+        <header class="mt-2">
             <!-- <h1 class="display-4">Lịch sử mua hàng</h1> -->
 
             <!-- Nav pill -->
-            <ul class="nav nav-pills justify-content-center">
+            <ul class="nav nav-pills justify-content-center align-items-center">
                 <li class="nav-item">
                     <a class="nav-link active" data-bs-toggle="pill" href="#tab-tat-ca">Tất cả</a>
                 </li>
@@ -78,94 +41,232 @@
             </ul>
         </header>
 
-        <main class="mt-5">
+        <main>
             <!-- Danh sách mua hàng -->
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="tab-tat-ca">
-                    <h2>Tất cả</h2>
-                    <p>Danh sách tất cả đơn hàng</p>
-                    <div class="history">
+                    <!--Bự nhứt nè-->
+                    <div class="history d-md-block d-none" ng-repeat="o in orders">
                         <div class="col">
                             <div class="mb-0 card">
-                                <div class="card-header">
-                                    <img class="img-fluid" src="images/avatar.jpg" style="
-                                    width: 6vh;
-                                    height: 6vh;
-                                    object-fit: cover;
-                                    border-radius: 30px;">
-                                    <span style="margin-left: 12px; font-weight: bold; color: #393e41;">Shop Meow
-                                        II</span>
-                                    <span style="margin-left: 12px;"><button class="btn btn-danger" type="button"
-                                            style="background-color: #ff3f40;"> <i class="fa-regular fa-message"></i>
-                                            Nhắn
-                                            tin</button></span>
-                                    <span style="margin-left: 12px;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-store"></i>
-                                            Shop</button></span>
-                                    <span style="float: right; font-size: 3vh;color: #ff3f40; margin: 1vh;">Đã giao
-                                        hàng</span>
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex"> <span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[3].username}}</span>
+                                        <span id="button-top">
+                                            <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                    <span class="res-text"> Nhắn
+                                                        tin</span></button></span>
+                                            <span style="margin-left: 12px;"><button type="button"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    style="outline-color: #ff3f40;"><i
+                                                        class="fa-sharp fa-regular fa-store ic"></i>
+                                                    <span class="res-text">Shop</span></button></span>
+                                        </span>
+                                        <span id="menu-button">
+                                            <span class="dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            </span>
+                                            <span class="dropdown-menu">
+                                                <span style="margin-left: 0.7rem"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                        <span class="res-text"> Nhắn
+                                                            tin</span></button></span>
+                                                <span style="margin: 0.1rem;"><button type="button"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;"><i
+                                                            class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Shop</span></button></span>
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <span id="statusName"
+                                        class="text-end">{{getFormattedTimeAgo(o[0].orderDate)}}</span>
+
                                 </div>
-                                <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 1vh;">
-                                    <div class="col-2">
-                                        <img src="product_images/Day_chuyen.jpg"
-                                            style="width: 17vh;height: 17vh;border-radius: 10px; object-fit: cover;">
+
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
+                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
                                     </div>
-                                    <div class="col-6 card-body">
-                                        <h5 class="card-title">Dây chuyền chữ thập Banshee</h5>
-                                        <p class="card-text">Phân loại hàng: nhựa, xanh</p>
-                                        <span class="card-text">x1</span>
+                                    <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title">{{o[2].productName}}</p>
+                                        <p class="card-text">Màu: {{o[1].color}}</p>
+                                        <p class="card-text">x{{o[1].quantity}}</p>
                                     </div>
-                                    <div class="col-4 justify-content-center" style="text-align: center;">
-                                        <p style="margin: 30px;">123.000 VND</p>
-                                    </div>
-                                </div>
-                                <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 1vh;">
-                                    <div class="col-2">
-                                        <img src="product_images/Vong_tay.jpg" alt=""
-                                            style="width: 17vh; height: 17vh; border-radius: 10px; object-fit: cover;">
-                                    </div>
-                                    <div class="col-6 card-body">
-                                        <h5 class="card-title">Vòng tay Targon</h5>
-                                        <p class="card-text">Phân loại hàng: nhựa, xanh</p>
-                                        <p>x1</p>
-                                    </div>
-                                    <div class=" col-4 justify-content-center" style="text-align: center;">
-                                        <p style="margin: 30px;">111.000 VND</p>
+                                    <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <i class="fa-regular fa-hand-holding-dollar fa-2xl"
+                                                    style="margin-right: 1vh; color: #393e41;"></i>
+                                                <span class="fs-5">Thành tiền: &nbsp;</span>
+                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount}}
+                                                    VND
+                                                </h5>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-2">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Xem các đánh giá</span></button>
+                                                </span>
+                                                <span>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right ic"></i> <span
+                                                            class="res-text">Mua lại</span></button>
+                                                </span>
+
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
                             </div>
                         </div>
+                    </div>
+                    <!--Responsive Dưới 776px-->
+                    <div class="history d-sm-block d-md-none d-none" ng-repeat="o in orders">
                         <div class="col">
                             <div class="mb-0 card">
-                                <span>
-                                    <div class="totalAmount"
-                                        style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
-                                        <i class="fa-regular fa-hand-holding-dollar fa-2xl"
-                                            style="margin-right: 1vh; color: #393e41;"></i>
-                                        Thành tiền: <span
-                                            style="font-weight: bold;color: #ff3f40;font-size: 4vh;">234.000
-                                            VND</span>
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex">
+                                        <i class="fa-sharp fa-regular fa-store"></i><span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[3].username}}</span>
+                                        <span id="button-top">
+                                            <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                </button></span>
+
+                                        </span>
+                                        <span id="menu-button">
+                                            <span class="dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            </span>
+                                            <span class="dropdown-menu">
+                                                <span style="margin-left: 0.7rem"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                        <span class="res-text"> Nhắn
+                                                            tin</span></button></span>
+                                                <span style="margin: 0.1rem;"><button type="button"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;"><i
+                                                            class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Shop</span></button></span>
+                                            </span>
+                                        </span>
                                     </div>
-                                </span>
-                                <div style="margin: 1vh;">
-                                    <span style="margin-left: 12px; float: right;">
-                                        <button type="button" class="btn btn-outline-danger"
-                                            style="outline-color: #ff3f40;"><i class="fa-sharp fa-regular fa-store"></i>
-                                            Xem các đánh giá</button>
-                                    </span>
-                                    <span style="margin-left: 0.6vh; float: right;">
-                                        <button type="button" class="btn btn-danger" style="background-color: #ff3f40;">
-                                            Mua lại</button>
-                                    </span>
+
+                                    <span id="statusName"
+                                        class="text-end">{{getFormattedTimeAgo(o[0].orderDate)}}</span>
 
                                 </div>
-                                <div class="card-footer text-muted">
-                                    2 ngày trước
+
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
+                                    <div class="col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
+                                    </div>
+                                    <div class="col-sm-6 col-lg-3 col-xl-3 card-body">
+                                        <div class="card-title" style="font-size: small;">{{o[2].productName}}</div>
+                                        <div class="card-text" style="font-size: x-small;">Màu: {{o[1].color}}</div>
+                                        <div class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <h5 class="mb-0 text-danger fs-6">{{o[0].totalAmount}}
+                                                    VND
+                                                </h5>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-6">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-star"></i></button>
+                                                </span>
+                                                <span>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--Dưới nữa nè-->
+                    <div class="history d-sm-none" ng-repeat="o in orders">
+                        <div class="col">
+                            <div class="mb-0 card">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex">
+                                        <i class="fa-sharp fa-regular fa-store"></i><span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[3].username}}</span>
+                                        <span id="button-top">
+                                            <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                </button></span>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-end"
+                                        style="font-size: small;">{{getFormattedTimeAgo(o[0].orderDate)}}</span>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center p-3">
+                                    <div class="col-2 col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
+                                    </div>
+                                    <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
+                                        <div class="card-title" style="font-size: small;">{{o[2].productName}}</div>
+                                        <div class="card-text" style="font-size: x-small;">Màu: {{o[1].color}}</div>
+                                        <div class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}
+                                        </div>
+                                    </div>
+                                    <div class="col-5 col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <span class="mb-0 text-danger fs-9">{{o[0].totalAmount}}
+                                                    VND
+                                                </span>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-6">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-star"></i></button>
+                                                </span>
+                                                <span>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -175,8 +276,8 @@
                     <h2>Vận chuyển</h2>
                     <p>Danh sách đơn hàng đang chờ vận chuyển.</p>
                     <div>
-                        <img src="images/basket-order.png" alt=""
-                            style="height: 30vh; margin: 0 auto; display: flex; justify-content: center;">
+                        <img ng-src="https://firebasestorage.googleapis.com/v0/b/viesonet-datn.appspot.com/o/products%2Fz4732505064881_4a39a24020abfd318d9071b6aa40439b.jpg?alt=media&token=0dbb3a63-b79d-456d-84b2-54fd873f056c"
+                            alt="" style="height: 30vh; margin: 0 auto; display: flex; justify-content: center;">
                         <p style="display: flex; justify-content: center;">Chưa có đơn hàng nào!</p>
                     </div>
 
@@ -200,9 +301,6 @@
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
     <script>
         var myTab = new bootstrap.Tab(document.getElementById('home-tab'));
         myTab.show();
