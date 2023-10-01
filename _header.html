@@ -1,118 +1,7 @@
 <div class="container" style="width: 100%; padding: 0;">
-	<!-- Navbar của Bootstrap -->
-	<nav class="navbar navbar-expand-lg navbar-light bg-light " id="menuLeft-toggle">
-		<div class="container" style="box-shadow: none;">
-			<!-- Nút toggle menu cho thiết bị di động -->
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavLeft"
-				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<!-- Các mục điều hướng -->
-			<div class="collapse navbar-collapse" id="navbarNavLeft">
-				<div id="sidebar" style="max-height: 600px; overflow-y: auto;">
-					<ul class="nav flex-column">
-						<li class="nav-item">
-							<a class="nav-link" data-bs-toggle="collapse" href="#general" role="button"
-								style="padding-left: 0;" aria-expanded="true" aria-controls="general">
-								<b>Chung</b>
-								<i class="fas fa-chevron-right rotate-icon"></i>
-							</a>
-							<ul class="sub-nav collapse show" id="general">
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
-										<i class="fas fa-house"></i>
-										<span>{{ 'home' | translate }}</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('/message')" href="#!shopping">
-										<i class="fas fa-bag-shopping"></i>
-										<span>Mua sắm</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('/search')" href="#!/search">
-										<i class="fas fa-magnifying-glass"></i>
-										<span>{{ 'TK' | translate }}</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('recommend')" href="#!recommend">
-										<i class="fas fa-handshake"></i>
-										<span>{{ 'GY' | translate }}</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('/message')" href="#!message">
-										<i class="fas fa-messages"></i>
-										<span>{{ 'TN' | translate }}</span>
-										<span class="badge" ng-show="check"
-											style="background: red">{{unseenmess}}</span>
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li class="nav-item mt-3">
-							<a class="nav-link" data-bs-toggle="collapse" href="#individual" style="padding-left: 0;"
-								role="button" aria-expanded="false" aria-controls="individual">
-								<b>Cá nhân</b>
-								<i class="fas fa-chevron-right rotate-icon"></i>
-							</a>
-							<ul class="sub-nav collapse" id="individual">
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')"
-										href="#!/profile/{{myAccount.user.userId}}">
-										<i class="fas fa-address-card"></i>
-										<span>Trang cá nhân</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')" href="#!/mystore">
-										<i class="fas fa-store"></i>
-										<span>Cửa hàng</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
-										<i class="fas fa-clipboard-list"></i>
-										<span>Đơn hàng</span>
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li class="nav-item mt-3">
-							<a class="nav-link" data-bs-toggle="collapse" href="#manager" role="button"
-								style="padding-left: 0;" aria-expanded="false" aria-controls="manager">
-								<b>Quản lý</b>
-								<i class="fas fa-chevron-right rotate-icon"></i>
-							</a>
-							<ul class="sub-nav collapse" id="manager">
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
-										<i class="fas fa-chart-line"></i>
-										<span>Thống kê</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
-										<i class="fas fa-users"></i>
-										<span>Người dùng</span>
-									</a>
-								</li>
-								<li class="sidebar-item">
-									<a class="sidebar-link" ng-click="handleLinkClick('')" href="/">
-										<i class="fas fa-square-list"></i>
-										<span>Bài viết vi phạm</span>
-									</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</nav>
+	<button ng-click="togglerMenuLeft()"
+		style="border: none; background-color: transparent; position: absolute; top: 0; left: 0;"><i
+			class="fa-solid fa-bars"></i></button>
 	<div id="collapsibleNavId">
 		<ul class="navbar-nav me-auto mt-2 mt-lg-0">
 		</ul>
@@ -124,8 +13,8 @@
 							<li class="nav-item">
 								<a class="nav-link nav-icon-hover" ng-click="handleLinkClick('/shoppingcart')"
 									href="#!/shoppingcart">
-									<i class="fa-regular fa-cart-shopping"></i>
-									<div class="circle-shop">
+									<i class="fa-regular fa-cart-shopping" style="color: #337AB6;"></i>
+									<div class="circle-shop" style="background-color: #F7C300;">
 										<span>{{listProduct.length}}</span>
 									</div>
 								</a>
@@ -134,8 +23,9 @@
 									data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
 									class="nav-link nav-icon-hover" href="#">
 									<div class="notification-icon">
-										<i class="fa-regular fa-bell"></i>
-										<div class="circle" ng-if="hasNewNotification == true">
+										<i class="fa-regular fa-bell" style="color: #368E9D;"></i>
+										<div class="circle" style="background-color: #F27323;"
+											ng-if="hasNewNotification == true">
 											<!-- Hiển thị tối đa 5 thông báo -->
 											<span ng-if="hasNewNotification == true && notificationNumber.length <=5">{{
 												notificationNumber.length}}</span>
@@ -147,12 +37,15 @@
 								</a></li>
 							<li class="nav-item dropdown"><a class="nav-link nav-icon-hover">
 									<div id="toggle-menu" ng-click="toggleMenu($event)">
-										<i class="fa-regular fa-messages"></i>
-										<div class="circle-shop" ng-show="check" style="background-color: #ff3f40 ;">
+										<i class="fa-regular fa-messages" style="color: rgb(93, 135, 255);"></i>
+										<div class="circle-shop fa-bounce" ng-show="check"
+											style="background-color: #ff3f40 ;">
 											<span>{{unseenmess}}</span>
 										</div>
 									</div>
 								</a></li>
+
+
 							<div class="menu" style="box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px;">
 								<div class="menu-content">
 									<h4><b>Tin Nhắn</b></h4>

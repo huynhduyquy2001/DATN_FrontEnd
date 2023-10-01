@@ -109,6 +109,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.checkShopping = true;
 	$rootScope.currentPage = 0;
 	$rootScope.currentPageTrending = 0;
+	$rootScope.checkMenuLeft = true;
 
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
@@ -206,6 +207,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
 				$scope.receiver = response.data;
+				alert($scope.receiver.username);
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
@@ -505,6 +507,28 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			menu.removeClass('menu-active');
 		}
 	});
+
+	$scope.togglerMenuLeft = function () {
+		var menuLeft = angular.element(document.querySelector('#asideLeft'));
+		var view = angular.element(document.querySelector('#view'));
+
+		if (menuLeft.css('left') === '0px') {
+			menuLeft.css('left', '-280px');
+			menuLeft.css('opacity', '0');
+			view.removeClass('col-lg-9 offset-lg-3'); // Gỡ bỏ lớp 'col-lg-9'
+			view.addClass('col-lg-11 offset-lg-1');
+			$rootScope.checkMenuLeft = false;
+		} else {
+			menuLeft.css('left', '0');
+			menuLeft.css('opacity', '1');
+			view.removeClass('col-lg-11 offset-lg-1');
+			view.addClass('col-lg-9 offset-lg-3'); // Thêm lớp 'col-lg-9'
+			$rootScope.checkMenuLeft = true;
+		}
+	}
+
+
+
 
 	// Ban đầu ẩn menu
 	var menu = angular.element(document.querySelector('.menu'));
