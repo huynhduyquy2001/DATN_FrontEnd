@@ -1,6 +1,9 @@
 
 
-app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location) {
+
+
+
+app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location, $timeout) {
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.postData = {};
@@ -14,6 +17,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	$scope.page = 0;
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
+	$scope.currentHeight = 0;
+	$scope.totalPages = 0;
 	var url = "http://localhost:8080";
 	var getUnseenMess = "http://localhost:8080/getunseenmessage";
 
@@ -56,25 +61,75 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 		});
 
 	$scope.loadMore = function () {
-		$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
-			.then(function (response) {
+		if ($scope.page <= $scope.totalPages) {
+			$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
+				.then(function (response) {
+					if (response.data && response.data.content.length > 0) {
+						if ($scope.page === 0) {
+							$scope.Posts = response.data.content;
+						} else {
+							// Nối nội dung mới vào nội dung đã có
+							$scope.Posts = $scope.Posts.concat(response.data.content);
+						}
+						$scope.page++;
+						$scope.totalPages = response.data.totalPages;
+					} else {
+						// Dữ liệu mới rỗng hoặc hết, bạn có thể ẩn nút "Xem thêm" ở đây nếu cần
+						// Ví dụ: $scope.hasMorePosts = false;
+					}
 
-				if ($scope.page === 0) {
-					$scope.Posts = response.data.content;
-				} else if ($scope.page > 0) {
-					// Nối nội dung mới vào nội dung đã có
-					$scope.Posts = $scope.Posts.concat(response.data.content);
-				}
-				$scope.page = $scope.page + 1;
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		}
+
 	};
-
 
 	// Gọi hàm loadMore khi trang được tải lần đầu
 	$scope.loadMore();
+
+	var lastScrollTop = 0; // Biến lưu trữ vị trí cuối cùng của cuộn
+
+	var scrollTimeout; // Biến để kiểm soát thời gian giữa các lần cuộn
+
+	function checkScrollPosition() {
+		var postDiv = document.getElementById('post');
+		if (postDiv != null) {
+			var postHeight = postDiv.clientHeight;
+			var scrollPosition = document.documentElement.scrollTop;
+
+			// Hủy bỏ timeout trước đó (nếu có)
+			clearTimeout(scrollTimeout);
+
+			// Thiết lập timeout mới để kiểm tra sau một khoảng thời gian nhất định
+			scrollTimeout = setTimeout(function () {
+				// Kiểm tra nếu cuộn xuống và scrollTop lớn hơn lastScrollTop
+				if (scrollPosition > lastScrollTop) {
+					// Kiểm tra nếu cuộn đến điểm mong muốn
+					if (scrollPosition >= postHeight - 700) {
+						$scope.loadMore();
+					}
+				}
+
+				// Lưu trữ vị trí cuối cùng của cuộn
+				lastScrollTop = scrollPosition;
+			}, 100); // Đợi 100ms trước khi kiểm tra lại
+		}
+	}
+
+	// Thêm sự kiện scroll cho thẻ body
+	angular.element($window).bind('scroll', function () {
+		checkScrollPosition();
+	});
+
+
+	// Thêm sự kiện scroll cho thẻ body
+	angular.element($window).bind('scroll', function () {
+		checkScrollPosition();
+	});
+
+
 
 
 	$http.get('http://localhost:8080/findlikedposts')

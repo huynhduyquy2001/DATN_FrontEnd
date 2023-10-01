@@ -1,5 +1,10 @@
 
 var app = angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
+	.filter('currencyFormat', function () {
+		return function (number) {
+			return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+		};
+	});
 
 // Tạo một directive để theo dõi URL hiện tại
 app.directive('activeLink', ['$location', function ($location) {
@@ -98,10 +103,14 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.receiver = {};
 	$scope.newMessMini = '';
 	$scope.ListMess = [];
+	$rootScope.myAccount = {};
+	$scope.listProduct = [];
 	//phân trang shopping
 	$rootScope.checkShopping = true;
 	$rootScope.currentPage = 0;
 	$rootScope.currentPageTrending = 0;
+	$rootScope.checkMenuLeft = true;
+
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
 		.then(function (response) {
@@ -168,10 +177,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			return formattedDate + '-' + formattedMonth + '-' + formattedYear;
 		}
 	};
+
 	//tìm acc bản thân
 	$http.get(findMyAccount)
 		.then(function (response) {
 			$scope.myAccount = response.data;
+			$rootScope.myAccount = response.data;
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -191,11 +202,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			console.log(error);
 		});
 
-	//tìm người mình nhắn tin và danh sách tin nhắn với người đó
+	//tìm người mình nhắn tin và danh sách tin nhắn với người mình đã chọn
 	$scope.getMess = function (receiverId) {
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
 				$scope.receiver = response.data;
+				alert($scope.receiver.username);
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
@@ -299,6 +311,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				console.log(error);
 			});
 	}
+
 	//Kết nối khi mở trang web
 	$scope.ConnectNotification();
 
@@ -320,11 +333,9 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				var checkMess = $scope.ListMess.find(function (obj) {
 					return obj.messId === newMess.messId;
 				});
-				if (checkMess) {
-					checkMess.status = 'Đã ẩn';
-				}
+
 				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				else if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+				if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
 					$scope.ListMess.push(newMess);
 				}
 				if ($scope.myAccount.user.userId !== newMess.sender.userId) {
@@ -454,6 +465,13 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		});
 	};
 
+	//Load thông tin giỏ hàng
+	$http.get(url + '/get-product-shoppingcart').then(function (response) {
+		$scope.listProduct = response.data;
+	}).catch(function (error) {
+		console.error('Lỗi khi lấy dữ liệu:', error);
+	});
+
 
 	// Trong AngularJS controller
 	$scope.toggleMenu = function (event) {
@@ -489,6 +507,28 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			menu.removeClass('menu-active');
 		}
 	});
+
+	$scope.togglerMenuLeft = function () {
+		var menuLeft = angular.element(document.querySelector('#asideLeft'));
+		var view = angular.element(document.querySelector('#view'));
+
+		if (menuLeft.css('left') === '0px') {
+			menuLeft.css('left', '-280px');
+			menuLeft.css('opacity', '0');
+			view.removeClass('col-lg-9 offset-lg-3'); // Gỡ bỏ lớp 'col-lg-9'
+			view.addClass('col-lg-11 offset-lg-1');
+			$rootScope.checkMenuLeft = false;
+		} else {
+			menuLeft.css('left', '0');
+			menuLeft.css('opacity', '1');
+			view.removeClass('col-lg-11 offset-lg-1');
+			view.addClass('col-lg-9 offset-lg-3'); // Thêm lớp 'col-lg-9'
+			$rootScope.checkMenuLeft = true;
+		}
+	}
+
+
+
 
 	// Ban đầu ẩn menu
 	var menu = angular.element(document.querySelector('.menu'));
