@@ -1,9 +1,11 @@
-<div class="row" ng-controller="HomeController">
+<div class="row" id="post">
+
 	<script src="js/thoiTiet.js"></script>
 
 	<div class="col-md-6 animate__animated animate__fadeIn offset-md-1" style="z-index: 10;">
+
 		<div class="card shadow-none border ng-scope" data-bs-toggle="modal" href="#exampleModalToggle"
-			style="width: 95%; margin-bottom: 1rem; border-radius: 10px; box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px !important;">
+			style="width: 100%; margin-bottom: 1rem; border-radius: 10px; box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px !important;">
 			<div class="card-body">
 				<div class="mb-3">
 					<textarea class="form-control" placeholder=" Bạn muốn đăng gì?"
@@ -56,7 +58,7 @@
 
 		</html>
 
-		<div ng-repeat="post in Posts | orderBy: '-postDate'" style="width: 95%;">
+		<div ng-repeat="post in Posts | orderBy: '-postDate'" style="width: 100%;">
 			<div class="write-post-container   "
 				style="margin-bottom: 20px; border-radius: 8px;
 				box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px; padding: 0; padding-top: 10px; padding-bottom: 10px; width: 100%; text-align: left; background: white;">
@@ -155,7 +157,7 @@
 										</button>
 									</div>
 								</div>
-								<div class="animate__animated animate__fadeIn" ng-if="post.images.length === 1">
+								<div ng-if="post.images.length === 1" class="animate__animated animate__fadeIn">
 									<video ng-if="post.images[0].type === false" autoplay controls style="width: 100%;">
 										<source ng-src="{{ post.images[0].imageUrl}}" type="video/mp4">
 										Your browser does not support the video tag.
@@ -165,7 +167,6 @@
 										ng-src="{{post.images[0].imageUrl}}" class="w-100" alt="Single image"
 										style="max-height: 90vh; object-fit: cover; width: 100%; background-color: black;">
 								</div>
-
 
 
 							</center>
@@ -191,13 +192,13 @@
 				</div>
 			</div>
 		</div>
-		<button class="form-control" style="margin-bottom: 1rem; width: 95%;" ng-click="loadMore()">Hiển thị thêm bài
-			viết</button>
+		<!-- <button class="form-control" style="margin-bottom: 1rem; width: 95%;" ng-click="loadMore()">Hiển thị thêm bài
+			viết</button> -->
 	</div>
 
 
 	<div class="col-md-5 row menuLeft animate__animated animate__fadeIn">
-		<div class="col-md-8 offset-md-2">
+		<div class="col-lg-8 col-md-9 offset-md-2">
 			<div class="row">
 				<div>
 					<div
@@ -227,11 +228,12 @@
 				style=" border: none; background-color: #f8f9fa!important;">
 				<div class="card-body d-flex align-items-center gap-3">
 					<a href="#!/profile/BZOL98493464"><img class="rounded-circle" width="40" height="40"
-							style="object-fit: cover;" src="{{user.avatar}}"></a>
+							style="object-fit: cover; max-width: fit-content;" src="{{user.avatar}}"></a>
 					<div>
 						<h5 class="fw-semibold mb-0 ng-binding" style="font-size: 1rem;font-weight: 600 !important">
 							{{user.username}}</h5>
-						<div class=" d-flex  ng-binding" style="font-size: .75rem !important">
+						<div class=" d-flex  ng-binding"
+							style="font-size: .75rem !important; overflow: hidden; white-space: nowrap;text-overflow: ellipsis">
 							<b>Hoạt động:</b> &nbsp; {{getFormattedTimeAgo(user.acessTime)}}
 						</div>
 					</div>
@@ -341,12 +343,11 @@
 	<!-- Modal hiện  chi tiêt bài viết và danh sách bình luận -->
 	<div class="modal fade" style="padding: 0; border-radius: 10px;" id="chiTietBaiViet" tabindex="-1" role="dialog"
 		aria-labelledby="modalTitleId" aria-hidden="true">
-		<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-dialog modal-fullscreen" role="document">
 			<div class="modal-content" style="border-radius: 10px;">
-				<div class="modal-body" style="height: 90vh; padding: 0;">
+				<div class="modal-body" style=" padding: 0;">
 					<div class="row">
-						<div class="col-md-6 trai "
-							style="overflow-y: scroll; max-height: 90vh; background-color: black; padding: 0;">
+						<div class="col-md-6 trai " style="background-color: black; padding: 0;">
 							<div ng-if="postDetails.images.length > 1">
 								<!-- Carousel HTML code -->
 								<div id="postDetails{{postDetails.postid}}" class="carousel slide"
@@ -381,7 +382,7 @@
 								</div>
 							</div>
 							<div ng-if="postDetails.images.length === 1"
-								style="display: flex; justify-items: center; height: 90vh;">
+								style="display: flex; justify-items: center; height: 100vh;">
 								<!-- Single image HTML code -->
 								<img ng-src="{{ postDetails.images[0].imageUrl }}" class="w-100" alt="Single image"
 									style=" object-fit: contain; max-height: 100vh; border-radius: 10px; border-radius: 10px;">
@@ -389,8 +390,9 @@
 							</div>
 
 						</div>
-						<div class="col-md-6 phai "
-							style="overflow-y: scroll; max-height: 90vh; background-color: white;">
+						<div class="col-md-6 phai"
+							style="overflow-y: scroll; max-height: 100vh; background-color: white;">
+
 							<div>
 								<div>
 									<div data-bs-dismiss="modal" style="cursor: pointer; text-align: right;">x</div>
@@ -435,31 +437,24 @@
 
 									</form>
 								</div>
-								<div style=" padding-right: 0.2rem">
-									<br>
-									<div
-										ng-repeat="comment in postComments | limitTo:numOfCommentsToShow track by comment.commentId">
-										<div class="msg ng-scope left-msg" ng-class="left-msg">
-											<div class="msg-img"
-												style="background-image: url(images/{{comment.user.avatar}}); transform: translateY(-50%); border: 1px solid #ebf1f6;">
-											</div>
-											<div class="msg-bubble" style="border-radius: 15px;">
-												<div>
-													<div>
-														<label
-															style="margin: 0; color: #393e41; font-weight: 700 !important;">{{comment.user.username}}</label>
-													</div>
-													<small style="font-weight: 500;">
-														<i class="fa-regular fa-comment"></i>
-														{{comment.content}}
-													</small>
-													<br>
-													<div>
-														<small style="font-size: 12px;">
-															<i class="fa-regular fa-clock"></i>
-															{{getFormattedTimeAgo(comment.commentDate)}}
-														</small> &nbsp;
-														<label>
+
+								<!-- Contenedor Principal -->
+								<div class="comments-container"
+									ng-repeat="comment in postComments | limitTo:numOfCommentsToShow track by comment.commentId">
+
+									<ul id="comments-list" class="comments-list">
+										<li>
+											<div class="comment-main-level">
+												<!-- Avatar -->
+												<div class="comment-avatar"><img ng-src="{{comment.user.avatar}}"
+														alt=""></div>
+												<!-- Contenedor del Comentario -->
+												<div class="comment-box">
+													<div class="comment-head">
+														<b class="comment-name by-author"><a>{{comment.user.username}}</a>
+														</b>
+														<span>{{getFormattedTimeAgo(comment.commentDate)}}</span>
+														<label style="margin-left: 0.4rem;">
 															<input type="checkbox" ng-model="o_checkbox" hidden="true">
 															<small ng-if="comment.reply.length > 0"
 																style="font-size: 12px; cursor: pointer;">{{comment.reply.length}}
@@ -472,131 +467,146 @@
 															</label>
 														</small>
 													</div>
-												</div>
-
-											</div>
-										</div>
-
-										<div ng-show="o_reply" class="user-profile  img-thumbnail ng-scope"
-											style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%; border: 1px solid #dee2e6;">
-											<img ng-src="{{myAccount.user.avatar}}" class="img-thumbnail" alt="">
-											<div style="width: 70%">
-												<small style="font-size: 12px; font-weight: 600;" class="ng-binding"> <i
-														class="fa-regular fa-tag"></i> <small class="ng-binding">
-														Bạn đang trả lời: {{comment.user.username}} </small>
-
-												</small><br>
-												<div>
-													<form>
-														<div class="input-group">
-															<input
-																style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0"
-																type="text" class="form-control"
-																ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
-																placeholder="Nhập nội dung..."
-																ng-model="replyContent[comment.commentId]">
-															<div class="input-group-append" style="margin-left: 0.3rem">
-																<button class="btn btn-primary"
-																	style="background-color: #007ACC; color: white; border: none;"
-																	type="button"
-																	ng-click="sendReplyForComment(comment.user.userId, comment.commentId, replyContent[comment.commentId])">Gửi</button>
-															</div>
-														</div>
-													</form>
-												</div>
-											</div>
-										</div>
-										<div ng-show="o_checkbox">
-											<div ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
-
-												<div class="msg ng-scope" ng-class="left-msg"
-													style="margin-left: 50px;">
-													<div class="msg-img"
-														style="background-image: url(images/{{obj.responder.avatar}}); transform: translateY(-50%); border: 1px solid #ebf1f6;">
+													<div class="comment-content">
+														<i class="fa-regular fa-comment"></i> {{comment.content}}
 													</div>
-													<div class="msg-bubble" style="border-radius: 15px;">
-
-														<div>
-															<div>
-																<label class=" ng-binding"
-																	style="margin: 0; color: #393e41; font-weight: 700 !important;">{{obj.responder.username}}</label>
-															</div>
-															<small style="font-size: 12px;" class="ng-binding">
-																<small style="font-size: 0.875rem;" class="ng-binding">
-																	<i class="fa-regular fa-comments"></i> <b
-																		class="nhan ng-binding"
-																		style="color: #393e41; font-weight: 600 !important;">{{obj.receiver.username}}</b>
-																	{{obj.replyContent}}
-																</small>
+													<div ng-show="o_reply" class="user-profile   ng-scope"
+														style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px;  border: none;">
+														<img ng-src="{{myAccount.user.avatar}}" alt="">
+														<div style="width: 100%; margin-left: 0.5rem;">
+															<small style=" font-weight: 600; font-size: 14px;"
+																class="ng-binding"> <i class="fa-regular fa-tag"></i>
+																<span class="ng-binding">
+																	<b>Bạn đang trả lời:</b> {{comment.user.username}}
+																</span>
 															</small><br>
 															<div>
-																<small style="font-size: 12px;" class="ng-binding"><i
-																		class="fa-regular fa-clock"></i>
-																	{{getFormattedTimeAgo(obj.replyDate)}}</small>
-																&nbsp;
-																<label>
-																	<input type="checkbox" ng-model="o_checkbox"
-																		hidden="true"
-																		class="ng-pristine ng-untouched ng-valid ng-empty">
-																	<!-- ngIf: comment.reply.length > 0 -->
-																</label> &nbsp; <small
-																	style="font-size: 12px; cursor: pointer;">
+																<form>
+																	<div class="input-group">
+																		<input
+																			style="border: none;border-bottom: 1px solid #dee2e6; border-radius: 0; max-width: 20rem;"
+																			type="text" class="form-control"
+																			ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
+																			placeholder="Nhập nội dung..."
+																			ng-model="replyContent[comment.commentId]">
+																		<div class="input-group-append"
+																			style="margin-left: 0.3rem">
+																			<button class="btn buy--btn"
+																				style="display: block;" type="button"
+																				ng-click="sendReplyForComment(comment.user.userId, comment.commentId, replyContent[comment.commentId])">Gửi</button>
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- Respuestas de los comentarios -->
+											<ul ng-show="o_checkbox" class="comments-list reply-list"
+												style="line-height: 30px;">
+												<li class="mb-3 animate__animated animate__fadeInRight "
+													ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
+													<!-- Avatar -->
+													<div class="comment-avatar"><img ng-src="{{obj.responder.avatar}}"
+															alt=""></div>
+													<!-- Contenedor del Comentario -->
+													<div class="comment-box">
+														<div class="comment-head">
+															<b class="comment-name"><a
+																	href="http://creaticode.com/blog">{{obj.responder.username}}</a>
+															</b>
+															<span>{{getFormattedTimeAgo(obj.replyDate)}}</span>
+
+														</div>
+														<div class="comment-content">
+															<div style=" font-size: 14px;">
+																<span><b>&nbsp;&nbsp;&nbsp;&nbsp;<i
+																			class="fa-regular fa-pen"></i>
+																		{{obj.receiver.username}}:</b>
+																	{{obj.replyContent}}</span>
+																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																<small style="font-size: 12px; cursor: pointer; ">
 																	<label> <input type="checkbox" ng-model="o_reply2"
-																			hidden="true"> <i
-																			class="fa-sharp fa-regular fa-reply"></i>
-																		Trả
-																		lời
+																			hidden="true"
+																			class="ng-pristine ng-untouched ng-valid ng-empty">
+																		<svg class="svg-inline--fa fa-reply"
+																			aria-hidden="true" focusable="false"
+																			data-prefix="fasr" data-icon="reply"
+																			role="img"
+																			xmlns="http://www.w3.org/2000/svg"
+																			viewBox="0 0 512 512" data-fa-i2svg="">
+																			<path fill="currentColor"
+																				d="M461.7 427c-35.8 37.4-77.7 53-77.7 53s30.1-30.1 31.9-75.7c.1-1.4 .1-2.8 .1-4.3c0-61.9-50.1-112-112-112H272 224v48 12.2 .9V384H192l-16-14.7L35.5 240.6 0 208l35.5-32.6L176 46.7 192 32h32V66.9v.9V80v48h48 64c97.2 0 176 78.8 176 176c0 54.8-23.5 95-50.3 123zm-5.8-77.6C460.9 336 464 321 464 304c0-70.7-57.3-128-128-128H224 176V128 111.8L71 208l105 96.2V288 240h48 80c70.7 0 130.6 45.8 151.8 109.4z">
+																			</path>
+																		</svg><!-- <i class="fa-sharp fa-regular fa-reply"></i> -->
+																		Trả lời
 																	</label>
 																</small>
 															</div>
-														</div>
+															<div ng-show="o_reply2" class="user-profile   ng-scope"
+																style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px;">
+																<img ng-src="{{myAccount.user.avatar}}" class="" alt="">
+																<div style="width: 100%">
+																	<small style="font-size: 12px;" class="ng-binding">
+																		<i class="fa-regular fa-tag"></i> <small
+																			style="font-size: 12px;" class="ng-binding">
+																			Bạn đang trả lời: {{obj.responder.username}}
+																		</small>
+																	</small><br>
+																	<div>
+																		<form>
+																			<div class="input-group">
+																				<input
+																					style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0;"
+																					type="text" class="form-control"
+																					placeholder="Nhập nội dung..."
+																					ng-model="replyContent[obj.replyId]"
+																					ng-keydown="handleKeyDown($event, obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">
 
-													</div>
-												</div>
-
-												<div ng-show="o_reply2" class="user-profile  img-thumbnail ng-scope"
-													style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-													<img ng-src="{{myAccount.user.avatar}}" class="img-thumbnail"
-														alt="">
-													<div style="width: 65%">
-														<small style="font-size: 12px;" class="ng-binding">
-															<i class="fa-regular fa-tag"></i> <small
-																style="font-size: 12px;" class="ng-binding"> Bạn
-																đang trả lời: {{obj.responder.username}} </small>
-														</small><br>
-														<div>
-															<form>
-																<div class="input-group">
-																	<input
-																		style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0;"
-																		type="text" class="form-control"
-																		placeholder="Nhập nội dung..."
-																		ng-model="replyContent[obj.replyId]"
-																		ng-keydown="handleKeyDown($event, obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">
-
-																	<div class="input-group-append">
-																		<button class="btn btn-primary"
-																			style="background-color: #007ACC; color: white; border: none"
-																			type="button"
-																			ng-click="sendReply(obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">Gửi</button>
+																				<div class="input-group-append">
+																					<button class="btn buy--btn"
+																						style="display: block;"
+																						type="button"
+																						ng-click="sendReply(obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">Gửi</button>
+																				</div>
+																			</div>
+																		</form>
 																	</div>
 																</div>
-															</form>
+															</div>
 														</div>
+													</div>
+												</li>
+											</ul>
+										</li>
+
+										<!-- <li>
+											<div class="comment-main-level">
+										
+												<div class="comment-avatar"><img
+														src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg"
+														alt=""></div>
+									
+												<div class="comment-box">
+													<div class="comment-head">
+														<h6 class="comment-name"><a
+																href="http://creaticode.com/blog">Lorena Rojero</a></h6>
+														<span>hace 10 minutos</span>
+														<i class="fa fa-reply"></i>
+														<i class="fa fa-heart"></i>
+													</div>
+													<div class="comment-content">
+														Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit
+														omnis animi et iure laudantium vitae, praesentium optio,
+														sapiente distinctio illo?
 													</div>
 												</div>
 											</div>
-											<center>
-												<hr style="width: 30%;">
-											</center>
-										</div>
-
-									</div>
-									<button style="margin-bottom: 0.3rem;" class="form-control"
-										ng-show="numOfCommentsToShow < postComments.length"
-										ng-click="showMoreComments()">Hiển thị thêm bình luận</button>
-
+										</li> -->
+									</ul>
 								</div>
+
 							</div>
 						</div>
 					</div>

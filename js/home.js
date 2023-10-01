@@ -1,13 +1,13 @@
 
 
-app.controller('HomeController', function ($scope, $http, $translate, $window, $rootScope, $location) {
 
+
+
+app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location, $timeout) {
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.postData = {};
 	$scope.replyContent = {}; // Khởi tạo replyContent      
-	$rootScope.check = false;
-	$scope.unseenmess = 0;
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.violations = [];
@@ -17,11 +17,11 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 	$scope.page = 0;
 	$scope.followings = [];
 	$scope.totalFollowing = 0;
+	$scope.currentHeight = 0;
+	$scope.totalPages = 0;
 	var url = "http://localhost:8080";
-	$scope.changeLanguage = function (langKey) {
-		$translate.use(langKey);
-		localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
-	};
+	var getUnseenMess = "http://localhost:8080/getunseenmessage";
+
 	// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 	$scope.showMoreComments = function () {
 		$scope.numOfCommentsToShow += $scope.commentsToShowMore;
@@ -61,24 +61,75 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		});
 
 	$scope.loadMore = function () {
-		$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
-			.then(function (response) {
-				if ($scope.page === 0) {
-					$scope.Posts = response.data.content;
-				} else if ($scope.page > 0) {
-					// Nối nội dung mới vào nội dung đã có
-					$scope.Posts = $scope.Posts.concat(response.data.content);
-				}
-				$scope.page = $scope.page + 1;
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	};
+		if ($scope.page <= $scope.totalPages) {
+			$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
+				.then(function (response) {
+					if (response.data && response.data.content.length > 0) {
+						if ($scope.page === 0) {
+							$scope.Posts = response.data.content;
+						} else {
+							// Nối nội dung mới vào nội dung đã có
+							$scope.Posts = $scope.Posts.concat(response.data.content);
+						}
+						$scope.page++;
+						$scope.totalPages = response.data.totalPages;
+					} else {
+						// Dữ liệu mới rỗng hoặc hết, bạn có thể ẩn nút "Xem thêm" ở đây nếu cần
+						// Ví dụ: $scope.hasMorePosts = false;
+					}
 
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		}
+
+	};
 
 	// Gọi hàm loadMore khi trang được tải lần đầu
 	$scope.loadMore();
+
+	var lastScrollTop = 0; // Biến lưu trữ vị trí cuối cùng của cuộn
+
+	var scrollTimeout; // Biến để kiểm soát thời gian giữa các lần cuộn
+
+	function checkScrollPosition() {
+		var postDiv = document.getElementById('post');
+		if (postDiv != null) {
+			var postHeight = postDiv.clientHeight;
+			var scrollPosition = document.documentElement.scrollTop;
+
+			// Hủy bỏ timeout trước đó (nếu có)
+			clearTimeout(scrollTimeout);
+
+			// Thiết lập timeout mới để kiểm tra sau một khoảng thời gian nhất định
+			scrollTimeout = setTimeout(function () {
+				// Kiểm tra nếu cuộn xuống và scrollTop lớn hơn lastScrollTop
+				if (scrollPosition > lastScrollTop) {
+					// Kiểm tra nếu cuộn đến điểm mong muốn
+					if (scrollPosition >= postHeight - 700) {
+						$scope.loadMore();
+					}
+				}
+
+				// Lưu trữ vị trí cuối cùng của cuộn
+				lastScrollTop = scrollPosition;
+			}, 100); // Đợi 100ms trước khi kiểm tra lại
+		}
+	}
+
+	// Thêm sự kiện scroll cho thẻ body
+	angular.element($window).bind('scroll', function () {
+		checkScrollPosition();
+	});
+
+
+	// Thêm sự kiện scroll cho thẻ body
+	angular.element($window).bind('scroll', function () {
+		checkScrollPosition();
+	});
+
+
 
 
 	$http.get('http://localhost:8080/findlikedposts')
@@ -141,6 +192,15 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		$('#modalBaoCao').modal('hide');
 	};
 
+	// Lấy số lượng tin nhắn nào chưa đọc
+	$http.get(getUnseenMess)
+		.then(function (response) {
+			$rootScope.check = response.data > 0;
+			$rootScope.unseenmess = response.data;
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());
@@ -196,18 +256,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		}
 	};
 
-	$scope.getPostDetails = function (postId) {
-		$http.get('http://localhost:8080/findpostcomments/' + postId)
-			.then(function (response) {
-				var count = response.data;
-				if (count > 0) {
-					$scope.check = true;
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}
+
 	$http.get('http://localhost:8080/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
@@ -454,18 +503,17 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		$http.get('http://localhost:8080/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
-				$rootScope.postComments = postComments;
+				$scope.postComments = postComments;
 				console.log(response.data);
 			}, function (error) {
 				// Xử lý lỗi
 				console.log(error);
 			});
-
 		$scope.isReplyEmpty = true;
 		$http.get('http://localhost:8080/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
-				$rootScope.postDetails = postDetails;
+				$scope.postDetails = postDetails;
 				// Xử lý phản hồi thành công từ máy chủ
 				$('#chiTietBaiViet').modal('show');
 
@@ -562,7 +610,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 		if (postToUpdate) {
 			postToUpdate.commentCount++;
 		}
-		$http.post('/addreply', requestData)
+		$http.post(url + '/addreply', requestData)
 			.then(function (response) {
 				var comment = $scope.postComments.find(function (comment) {
 					return comment.commentId === commentId;
@@ -591,7 +639,7 @@ app.controller('HomeController', function ($scope, $http, $translate, $window, $
 			// Code xử lý thông báo khi nội dung phản hồi trống
 			return;
 		}
-		$http.post('/addreply', requestData)
+		$http.post(url + '/addreply', requestData)
 			.then(function (response) {
 
 				try {

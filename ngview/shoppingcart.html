@@ -1,55 +1,217 @@
-<div ng-controller="ShoppingCartController">
-    <div class="container">
-        <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center" style="background-color: white;">
-            <button class="btn btn-sm btn-danger"  data-bs-toggle="modal" data-bs-target="#exampleModal">Thanh toán</button>
-            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i class="fas fa-trash fa-lg"></i> Xóa</a>
+<div class="container d-md-block d-none">
+    <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
+        style="background-color: white;">
+        <div class="d-flex justify-content-between align-items-center gap-3">
+            <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">Thanh toán</button>
+            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
+            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Xóa tất cả {{listProduct.length}} sản phẩm">Xóa</a>
+            |
+            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Thêm vào danh sách yêu thích">Yêu thích</a>
         </div>
-        <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between" style="background-color: white;">
-                    <h6 class="mt-1">
-                        <i class="fa-regular fa-store"></i> 
-                        Đồ gia dụng
-                    </h6>
-                    <input data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn tất cả sản phẩm" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;">
+        <p class="mb-0">Tổng tiền: <span class="text-danger">100.000 VND</span> (7 sản phẩm)</p>
+    </div>
+
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
+        <div class="card-header d-flex justify-content-between" style="background-color: white;">
+            <h6 class="mt-1 fw-bolder">
+                <i class="fa-regular fa-store"></i>
+                {{ groupedProducts[0].product.user.username }}
+            </h6>
+            <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
+        </div>
+        <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
+            <div class="row d-flex justify-content-between align-items-center mb-2">
+                <div class="col-md-2 col-lg-1 col-xl-1"
+                    ng-repeat="img in filterImagesByProductId(product.product.media)">
+                    <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
+                        style="object-fit: cover;">
                 </div>
-                <div class="card-body border-bottom">
-                    <div class="row d-flex justify-content-between align-items-center mb-2">
-                        <div class="col-md-2 col-lg-1 col-xl-1">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp" class="rounded-3 img-thumbnail" width="100%" alt="Cotton T-shirt">
-                        </div>
-                        <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
-                        <p class="fw-normal mb-2 fs-4" 
-                        style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Basic T-shirt </p>
-                        <p class="fw-normal mb-2" style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><span class="text-muted">Color: </span>Grey</p>
-                        </div>
-                        <div class="col-md-3 col-lg-2 col-xl-3 mt-3">
-                            <a class="text-decoration-none text-danger">156.000 VND</a>
-                            <p class="text-decoration-line-through" style="color: gray;">180.000 VND</p>
-                        </div>
-                        <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
-                                <button  onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="btn border rounded min-width-40 py-0 border-end-0" type="button" id="add1">
-                                <i class="fa-regular fa-minus"></i> 
-                                </button>
-                                <input type="number" min="0" name="quantity" value="1" class="min-width-40 border fw-semibold text-center" value="1" style="width: 40px;">
-                                <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="btn min-width-40 border  py-0 border-start-0 border-1 rounded " type="button" id="addo2">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                        </div>
-                        <div class="col-md-2 col-lg-2 col-xl-2 d-flex gap-3 justify-content-end mt-3">
-                        <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i class="fas fa-trash fa-lg"></i></a>
-                        <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
-                        </div>
-                    </div>
+                <div class="col-md-3 col-lg-3 col-xl-3 mt-3">
+                    <p class="fw-bolder mb-2 fs-6"
+                        style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{
+                        product.product.productName }} </p>
+                    <p class="fw-normal mb-2"
+                        style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                        <span class="text-muted">Màu sắc: </span>{{ product.color }}
+                    </p>
                 </div>
+                <div class="col-md-3 col-lg-2 col-xl-3 mt-1">
+                    <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | number:0 }} VND</a>
+                    <p ng-if="product.product.originalPrice * product.quantity != calculateSubtotal(product)"
+                        class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice *
+                        product.quantity | number:0}} VND</p>
+                </div>
+                <div class="col-md-2 col-lg-2 col-xl-2 d-flex mt-2">
+                    <button ng-click="decrementQuantity(product)"
+                        class="btn border rounded min-width-20 py-0 border-end-0" type="button" id="add1">
+                        <i class="fa-regular fa-minus"></i>
+                    </button>
+                    <input type="number" min="0" name="quantity" ng-model="product.quantity"
+                        ng-change="recalculatePrice(product)" class="min-width-40 border fw-semibold text-center"
+                        style="width: 43px;">
+                    <button ng-click="incrementQuantity(product)"
+                        class="btn min-width-20 border py-0 border-start-0 border-1 rounded " type="button" id="addo2">
+                        <i class="fa-regular fa-plus"></i>
+                    </button>
+                </div>
+                <div class="col-md-2 col-lg-2 col-xl-2 d-flex gap-3 justify-content-end mt-2">
+                     <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
+                    <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+</div>
+<!-- Khi responsive tới 768px thì hiện -->
+<div class="container d-md-none d-sm-block d-none">
+    <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
+        style="background-color: white;">
+        <div class="d-flex justify-content-between align-items-center gap-3">
+            <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">Thanh toán (7)</button>
+            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+            title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
+            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Xóa tất cả {{listProduct.length}} sản phẩm"><i
+                    class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
+            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
+        </div>
+        <p class="mb-0">Tổng tiền: <span class="text-danger">100.000 VND</span></p>
+    </div>
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
+        <div class="card-header d-flex justify-content-between" style="background-color: white;">
+            <h6 class="mt-1 fw-bolder">
+                <i class="fa-regular fa-store"></i>
+                {{ groupedProducts[0].product.user.username }}
+            </h6>
+            <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
+        </div>
+        <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
+            <div class="row-cols-3 d-flex justify-content-between align-items-center mb-2">
+                <div class="col-sm-1" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                    <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
+                        style="object-fit: cover;">
+                </div>
+                <div class="col-sm-4">
+                    <p class="fw-bolder mb-0 fs-6"
+                        style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{
+                        product.product.productName }} </p>
+                    <p class="fw-normal mb-2"
+                        style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 0.85rem;">
+                        <span class="text-muted">Màu sắc: </span>{{ product.color }}
+                    </p>
+                    <div class="input-group input-group-sm">
+                        <button ng-click="decrementQuantity(product)" class="btn border rounded py-0 border-end-0"
+                            type="button" id="add1">
+                            <i class="fa-regular fa-minus"></i>
+                        </button>
+                        <input type="number" min="0" name="quantity" ng-model="product.quantity"
+                            ng-change="recalculatePrice(product)" class="py-0 border fw-semibold text-center"
+                            style="width: 43px;">
+                        <button ng-click="incrementQuantity(product)"
+                            class="btn border py-0 border-start-0 border-1 rounded " type="button" id="addo2">
+                            <i class="fa-regular fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | number:0 }} VND</a>
+                    <p ng-if="product.product.originalPrice * product.quantity != calculateSubtotal(product)"
+                        class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice *
+                        product.quantity | number:0}} VND</p>
+                </div>
+                <div class="col-sm-2 d-flex gap-3 justify-content-end">
+                    <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
+                    <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Khi responsive tới 576px thì hiện -->
+<div class="container d-sm-none">
+    <div class="card-header mb-3 p-3" style="background-color: white;">
+        <p class="mb-2" style="font-size: small;">Tổng tiền (0): <span class="text-danger">100.000 VND</span></p>
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC; font-size: x-small;" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">Thanh toán</button>
+            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+            title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
+            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Xóa tất cả {{listProduct.length}} sản phẩm"><i
+                    class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
+            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
+        </div>
+    </div>
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
+        <div class="card-header d-flex justify-content-between" style="background-color: white;">
+            <h6 class="mt-1 fw-bolder">
+                <i class="fa-regular fa-store"></i>
+                {{ groupedProducts[0].product.user.username }}
+            </h6>
+            <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
+        </div>
+        <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
+            <div class="d-flex gap-3 mb-2">
+                <div class="col-1 mt-3 text-center">
+                    <input type="checkbox" class="form-check-input mb-3" style="cursor: pointer;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm"> <br>
+                    <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
+                </div>
+                <div class="col-3" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                    <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
+                        style="object-fit: cover;">
+                </div>
+                <div class="col-sm-6">
+                    <p class="fw-bolder mb-0" style="font-size: small;">{{
+                        product.product.productName }} </p>
+                    <a ng-if="product.product.originalPrice * product.quantity != calculateSubtotal(product)" style="font-size: x-small;"
+                    class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice *
+                    product.quantity | number:0}} VND</a>
+                    <a class="text-decoration-none text-danger" style="font-size: x-small;">{{
+                        calculateSubtotal(product) | number:0 }} VND</a>
+                    <p class="fw-normal mb-0" style="font-size: x-small;">
+                        <span class="text-muted">Màu sắc: </span>{{ product.color }}
+                    </p>
+                    <div class="input-group mt-1" style="font-size: x-small;">
+                        <button ng-click="decrementQuantity(product)" class="btn border rounded py-0 border-end-0"
+                            type="button" id="add1">
+                            <i class="fa-regular fa-minus fa-2xs"></i>
+                        </button>
+                        <input type="number" min="0" name="quantity" ng-model="product.quantity"
+                            ng-change="recalculatePrice(product)" class="py-0 border text-center"
+                            style="width: 43px; font-size: 0.8rem;">
+                        <button ng-click="incrementQuantity(product)"
+                            class="btn border py-0 border-start-0 border-1 rounded " type="button" id="addo2">
+                            <i class="fa-regular fa-plus fa-2xs"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="scrollToTopBtn" onclick="scrollToTop()" style="position: fixed; bottom: 20px; right: 7px; cursor: pointer;"> <i
+        class="fa-solid fa-circle-chevron-up fa-xl fa-shake" style="color:#007ACC;"></i></a>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Thanh toán</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Thanh toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card-body">
@@ -59,18 +221,26 @@
                         </div>
                         <div class="mb-3" style="height: 200px; overflow-y: auto;">
                             <div class="d-flex align-items-center gap-4">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp" alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3" loading="lazy">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                    alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3"
+                                    loading="lazy">
                                 <div class="mt-3">
-                                    <h5 class="mb-2" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Biker’s Jacket </h5>
+                                    <h5 class="mb-2"
+                                        style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                        Biker’s Jacket </h5>
                                     <p class="mb-1">Colour: Red &amp; Black</p>
                                     <p class="mb-0">1.900.000</p>
                                     <p>x5</p>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-4">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp" alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3" loading="lazy">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                    alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3"
+                                    loading="lazy">
                                 <div class="mt-3">
-                                    <h5 class="mb-2" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Biker’s Jacket </h5>
+                                    <h5 class="mb-2"
+                                        style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                        Biker’s Jacket </h5>
                                     <p class="mb-1">Colour: Red &amp; Black</p>
                                     <p class="mb-0">1.900.000</p>
                                     <p>x5</p>
@@ -98,29 +268,36 @@
                             <h5 class="text-primary mb-0">$168.00</h5>
                         </div>
                         <div class="alert border-primary rounded border border-1 mb-2">
-                           <!-- Tab Nav -->
+                            <!-- Tab Nav -->
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true">Địa chỉ nhận hàng</a>
+                                    <a class="nav-link active" id="address-tab" data-bs-toggle="tab" href="#address"
+                                        role="tab" aria-controls="address" aria-selected="true">Địa chỉ nhận
+                                        hàng</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="content2-tab" data-bs-toggle="tab" href="#content2" role="tab" aria-controls="content2" aria-selected="false">Chọn địa chỉ khác</a>
+                                    <a class="nav-link" id="content2-tab" data-bs-toggle="tab" href="#content2"
+                                        role="tab" aria-controls="content2" aria-selected="false">Chọn địa chỉ
+                                        khác</a>
                                 </li>
                             </ul>
                             <!-- Tab Content -->
                             <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                        <div>
-                                            <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
-                                            <p class="mb-0">F26, Khu dân cư hậu thạnh mỹ</p>
-                                            <p class="mb-0">P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</p>
-                                        </div>
+                                <div class="tab-pane fade show active" id="address" role="tabpanel"
+                                    aria-labelledby="address-tab">
+                                    <div>
+                                        <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
+                                        <p class="mb-0">F26, Khu dân cư hậu thạnh mỹ</p>
+                                        <p class="mb-0">P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</p>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="content2" role="tabpanel" aria-labelledby="content2-tab">
                                     <div style="max-height: 26vh; overflow-y: auto;" class="p-1">
                                         <div class="d-flex align-items-center gap-3 mb-2">
                                             <div>
-                                                <input type="radio" name="checkAddress" class="form-check-input" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn địa chỉ">
+                                                <input type="radio" name="checkAddress" class="form-check-input"
+                                                    style="cursor: pointer;" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Chọn địa chỉ">
                                             </div>
                                             <div style="cursor: pointer;">
                                                 <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
@@ -130,7 +307,9 @@
                                         </div>
                                         <div class="d-flex align-items-center gap-3 mb-2">
                                             <div>
-                                                <input type="radio" name="checkAddress" class="form-check-input" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn địa chỉ">
+                                                <input type="radio" name="checkAddress" class="form-check-input"
+                                                    style="cursor: pointer;" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Chọn địa chỉ">
                                             </div>
                                             <div style="cursor: pointer;">
                                                 <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
@@ -140,7 +319,9 @@
                                         </div>
                                         <div class="d-flex align-items-center gap-3 mb-2">
                                             <div>
-                                                <input type="radio" name="checkAddress" class="form-check-input" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn địa chỉ">
+                                                <input type="radio" name="checkAddress" class="form-check-input"
+                                                    style="cursor: pointer;" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Chọn địa chỉ">
                                             </div>
                                             <div style="cursor: pointer;">
                                                 <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
@@ -150,7 +331,8 @@
                                         </div>
                                     </div>
                                     <div class="mt-3 d-flex gap-2">
-                                        <button class="btn btn-primary btn-sm" id="backToAddress">Chọn địa chỉ này</button>
+                                        <button class="btn btn-primary btn-sm" id="backToAddress">Chọn địa chỉ
+                                            này</button>
                                         <button class="btn btn-gray btn-sm">+ Thêm địa chỉ mới</button>
                                     </div>
                                 </div>
@@ -163,13 +345,28 @@
                 </div>
             </div>
         </div>
-        </div>
     </div>
-    <script>
-        document.getElementById("backToAddress").addEventListener("click", function () {
-            // Chuyển về tab đầu tiên ("Địa chỉ nhận hàng")
-            $('#address-tab').tab('show');
-        });
-
-    </script>
 </div>
+<script>
+    document.getElementById("backToAddress").addEventListener("click", function () {
+        // Chuyển về tab đầu tiên ("Địa chỉ nhận hàng")
+        $('#address-tab').tab('show');
+    });
+
+    function scrollToTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+    var scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", function () {
+        // Hiển thị hoặc ẩn nút dựa trên vị trí cuộn
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scrollToTopBtn.style.display = "block";
+        } else {
+            scrollToTopBtn.style.display = "none";
+        }
+    });
+
+</script>

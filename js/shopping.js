@@ -1,46 +1,99 @@
 
 app.controller('ShoppingController', function ($scope, $http, $translate, $rootScope, $location, $anchorScroll) {
 	var url = "http://localhost:8080";
-
 	$scope.productList = [];
-	$scope.currentPage = 0;
-	$scope.totalPages = 0;
-	$scope.currentPageTrending = 0;
-	$scope.totalPagesTrending = 0;
-	$scope.check = true;
 
+	$scope.totalPages = 0;
+	$scope.totalPagesTrending = 0;
+	$scope.product = {};
+	$scope.quantity = 1;
+	$scope.total = -1;
+	$scope.color = "";
 	$scope.getproductList = function (currentPage) {
 		$http.get(url + "/get-shopping-by-page/" + currentPage)
 			.then(function (res) {
 				$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-				$scope.check = true;
+				$rootScope.checkShopping = false;
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	}
-	$scope.getproductList($scope.currentPage);
+
+	$scope.getProduct = function (productId) {
+		$http.get(url + "/get-product/" + productId)
+			.then(function (res) {
+				$scope.product = res.data;
+				$scope.total = -1;
+				$scope.quantity = 1;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
+
+
 	$scope.Previous = function () {
-		if ($scope.currentPage === 0) {
+		if ($rootScope.currentPage === 0) {
 			return;
 		} else {
 			$anchorScroll();
-			$scope.currentPage = $scope.currentPage - 1; // Cập nhật trang hiện tại
-			$scope.getproductList($scope.currentPage);
+			$rootScope.currentPage = $rootScope.currentPage - 1; // Cập nhật trang hiện tại
+			$scope.getproductList($rootScope.currentPage);
 
 		}
 	}
 
 	$scope.Next = function () {
-		if ($scope.currentPage === $scope.totalPages - 1) {
+		if ($rootScope.currentPage === $scope.totalPages - 1) {
 			return;
 		} else {
 			$anchorScroll();
-			$scope.currentPage = $scope.currentPage + 1; // Cập nhật trang hiện tại
-			$scope.getproductList($scope.currentPage);
+			$rootScope.currentPage = $rootScope.currentPage + 1; // Cập nhật trang hiện tại
+
+			$scope.getproductList($rootScope.currentPage);
 		}
 	}
+
+	//----------------------------------------------------------------------------------
+
+	//Tăng giảm số lượng
+	$scope.reduceQuantity = function () {
+		if ($scope.quantity > 0) {
+			$scope.quantity--;
+		}
+
+	}
+	$scope.increaseQuantity = function () {
+		$scope.quantity++;
+	}
+	//lấy số lượng tồn kho
+	$scope.getTotal = function (id) {
+		var color = $scope.product.productColors.find(function (obj) {
+			if (obj.color.colorId === id) {
+				$scope.total = obj.quantity;
+				$scope.color = obj.color.colorName;
+			}
+			return 0;
+		});
+	};
+
+	$rootScope.addShoppingCart = function (productId) {
+		var formData = new FormData();
+		formData.append("productId", productId);
+		formData.append("quantity", $scope.quantity);
+		formData.append("color", $scope.color);
+
+		$http.post(url + "/add-to-cart", formData, {
+			transformRequest: angular.identity,
+			headers: { 'Content-Type': undefined }
+		})
+			.then(function (res) {
+				// Xử lý phản hồi từ máy chủ
+			});
+	}
+
 
 	// -----------------------------------------------------------------------------------
 
@@ -49,33 +102,37 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			.then(function (res) {
 				$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-				$scope.check = false;
+				$rootScope.checkShopping = true;
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	}
 	$scope.PreviousTrending = function () {
-		if ($scope.currentPageTrending === 0) {
+		if ($rootScope.currentPageTrending === 0) {
 			return;
 		} else {
 			$anchorScroll();
-			$scope.currentPageTrending = $scope.currentPageTrending - 1; // Cập nhật trang hiện tại
-			$scope.getproductList($scope.currentPageTrending);
+			$rootScope.currentPageTrending = $rootScope.currentPageTrending - 1; // Cập nhật trang hiện tại
+			$scope.getproductList($rootScope.currentPageTrending);
 
 		}
 	}
 
 	$scope.NextTrending = function () {
-		if ($scope.currentPageTrending === $scope.currentPageTrending - 1) {
+		if ($rootScope.currentPageTrending === $rootScope.currentPageTrending - 1) {
 			return;
 		} else {
 			$anchorScroll();
-			$scope.currentPageTrending = $scope.currentPageTrending + 1; // Cập nhật trang hiện tại
-			$scope.getproductList($scope.currentPageTrending);
+			$rootScope.currentPageTrending = $rootScope.currentPageTrending + 1; // Cập nhật trang hiện tại
+			$scope.getproductList($rootScope.currentPageTrending);
 		}
 	}
-
+	if ($rootScope.checkShopping) {
+		$scope.getproductListTrending($rootScope.currentPageTrending);
+	} else {
+		$scope.getproductList($rootScope.currentPage);
+	}
 
 
 	$scope.getFormattedTimeAgo = function (date) {
@@ -123,16 +180,15 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			return averageRating.toFixed(1);
 		}
 	}
-	//tính giá khuyếb mãi
+	//tính giá khuyến mãi
 	$scope.getSalePrice = function (originalPrice, promotion) {
 		if (promotion === 0) {
 			return originalPrice;
 		} else {
 			//tính tổng số lượng các đánh giá
-			var SalePrice = originalPrice * promotion / 100;
+			var SalePrice = originalPrice - (originalPrice * promotion / 100);
 			return SalePrice;
 		}
 	}
-
 
 });

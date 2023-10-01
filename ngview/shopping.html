@@ -1,17 +1,19 @@
-<div class="row col-md-11 animate__animated animate__fadeIn" ng-controller="ShoppingController">
-
+<div class="row col-md-11">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" ng-click="getproductList(currentPage)" id="home-tab" data-bs-toggle="tab"
-                data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Đang theo
-                dõi</button>
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping }"
+                ng-click="getproductListTrending(currentPageTrending)" id="profile-tab" data-bs-toggle="tab"
+                data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false">Bán chạy
+                trong tuần</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" ng-click="getproductListTrending(currentPageTrending)" id="profile-tab"
-                data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="profile"
-                aria-selected="false">Thịnh hành</button>
+            <button ng-class="{ 'nav-link': true, 'active': !checkShopping }" ng-click="getproductList(currentPage)"
+                id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home"
+                aria-selected="true">Đang theo
+                dõi</button>
         </li>
+
         <!-- <li class="nav-item" role="presentation">
             <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
                 role="tab" aria-controls="messages" aria-selected="false">Messages</button>
@@ -25,12 +27,13 @@
                     style="border-radius: 20px; width: 50%;" placeholder="Nhập sản phẩm cần tìm...">
             </div>
             <div class="row">
-                <div class="col-lg-6" style="z-index: 10; margin-bottom: 2rem; border-radius: 5px;"
-                    ng-repeat="product in productList">
-                    <div class="row frameProduct animate__animated animate__fadeIn animate__delay-1s">
-                        <div class="col-md-6 " style="display: flex; justify-content: center; align-items: center;">
-                            <a href="#!productdetails/{{product.productId}}"><img
-                                    class="imghover animate__animated animate__fadeIn animate__delay-1s" width="100%"
+                <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12"
+                    style="z-index: 10; margin-bottom: 3rem; border-radius: 5px;" ng-repeat="product in productList">
+                    <div class="row frameProduct animate__animated animate__fadeIn">
+                        <div class="col-md-6" style="display: flex;max-height: 100%;">
+                            <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
+                                    class="imghover animate__animated animate__fadeIn" width="100%"
+                                    style="height: 100%; object-fit: cover; border-radius: 5px;"
                                     ng-src="{{product.media[0].mediaUrl}}"></a>
                         </div>
                         <div class="col-md-6 frame" style="cursor: pointer;">
@@ -41,8 +44,8 @@
                                     <div>
                                         <span
                                             style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-                                            class="ng-binding">Vân Anh</span> &nbsp;&nbsp; <span><small
-                                                style="font-size: 12px; color: #65676b" class="ng-binding">
+                                            class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp;
+                                        <span><small style="font-size: 12px; color: #65676b" class="ng-binding">
                                                 {{getFormattedTimeAgo(product.datePost)}}
                                             </small></span>
                                     </div>
@@ -130,12 +133,8 @@
                                             <i ng-repeat="n in [].constructor(4) track by $index"
                                                 class="fa-solid fa-star" style="color: #ffc107;"></i>
                                             <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-
                                         </span>
-
                                     </span>
-
-
                                 </div>
                                 <div class="note">
                                     <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
@@ -151,12 +150,16 @@
                                 </div>
 
                                 <div class="price animate__animated animate__fadeInUp">
-                                    <span style="text-decoration: line-through; color: gray;">{{product.originalPrice}}
-                                        vnd </span> &nbsp; |&nbsp;
-                                    <span> {{getSalePrice(product.originalPrice, product.promotion)}} VND</span>
+                                    <small ng-show="!product.promotion==0"><span
+                                            style="text-decoration: line-through; color: gray;">{{product.originalPrice
+                                            | currencyFormat}}
+                                        </span> &nbsp; |&nbsp;</small>
+                                    <span> {{getSalePrice(product.originalPrice, product.promotion) |
+                                        currencyFormat}}</span>
                                 </div>
-                                <button class="buy--btn animate__animated animate__fadeInDown"
-                                    style="margin-top: 1.5rem;">Thêm vào
+                                <button ng-click="getProduct(product.productId)" data-bs-toggle="modal"
+                                    data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                                    style="margin-top: 0.5rem;">Thêm vào
                                     giỏ hàng</button>
                             </div>
 
@@ -169,31 +172,10 @@
 
 
         </div>
-        <center>
-            <nav ng-show="check" aria-label="Page navigation">
-                <ul class="pagination    ">
-                    <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
-                        <a class="page-link" style="color: #313131;" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
 
-                    <li class="page-item" aria-current="page"><a style="font-weight: 600; color: #313131 !important; "
-                            class="page-link">{{currentPage+1}} /
-                            {{totalPages}}</a>
-                    </li>
-
-                    <li class="page-item" ng-click="Next()" style="cursor: pointer;">
-                        <a class="page-link" style="color: #313131;" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </center>
         <center>
-            <nav ng-show="!check" aria-label="Page navigation">
-                <ul class="pagination    ">
+            <nav ng-show="checkShopping" aria-label="Page navigation">
+                <ul class="pagination">
                     <li class="page-item" ng-click="PreviousTrending()" style="cursor: pointer;">
                         <a class="page-link" style="color: #313131;" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
@@ -212,8 +194,92 @@
                 </ul>
             </nav>
         </center>
+        <center>
+            <nav ng-show="!checkShopping" aria-label="Page navigation">
+                <ul class="pagination    ">
+                    <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
+                        <a class="page-link" style="color: #313131;" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" aria-current="page"><a style="font-weight: 600; color: #313131 !important; "
+                            class="page-link">{{currentPage+1}} /
+                            {{totalPages}}</a>
+                    </li>
+                    <li class="page-item" ng-click="Next()" style="cursor: pointer;">
+                        <a class="page-link" style="color: #313131;" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </center>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <center>
+                        <h5 class="modal-title" id="modalTitleId"><b>Mua ngay, tiết kiệm ngay!</b></h5>
+                    </center>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid" style="line-height: 35px;">
+                        <img ng-src="{{product.media[0].mediaUrl}}" style="border-radius: 10px;" alt="">
+                        <b>{{product.productName}}</b>
+                        <hr>
+                        <b> Chọn màu:</b>
+                        <div style="display: flex;" class="m-1">
+                            <button ng-repeat="color in product.productColors" ng-click="getTotal(color.color.colorId)"
+                                ng-class="{'dislike--btn': color.quantity > 0, 'btn-disable': color.quantity === 0}"
+                                style="display: block; margin-right: 0.2rem; padding: 0.2rem;">{{color.color.colorName}}</button>
+                        </div>
+                        <span ng-show="total>0"><b>Số lượng còn lại:</b> {{total}}</span>
+                        <span ng-show="total===0"><b>Số lượng còn lại:</b> Hết hàng</span>
+                        <div class="input-group mb-3" style="width: 170px;">
+                            <button ng-click="reduceQuantity()" class="btn btn-white border border-secondary px-3"
+                                type="button" id="button-addon1" data-mdb-ripple-color="dark">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="text" class="form-control text-center border border-secondary"
+                                value="{{quantity}}" aria-label="Example text with button addon"
+                                aria-describedby="button-addon1" />
+                            <button ng-click="increaseQuantity()" class="btn btn-white border border-secondary px-3"
+                                type="button" id="button-addon2" data-mdb-ripple-color="dark">
+                                <i class="fas fa-plus"></i>
+                            </button>
+
+                        </div>
+                        <button ng-click="addShoppingCart(product.productId)" data-bs-toggle="modal"
+                            data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                            style="margin-top: 1.5rem; display: block;width:100% ;">Thêm vào
+                            giỏ hàng</button>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var modalId = document.getElementById('modalId');
+
+        modalId.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            let button = event.relatedTarget;
+            // Extract info from data-bs-* attributes
+            let recipient = button.getAttribute('data-bs-whatever');
+
+            // Use above variables to manipulate the DOM
+        });
+    </script>
 
 
 
