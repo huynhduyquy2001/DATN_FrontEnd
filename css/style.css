@@ -1846,6 +1846,31 @@ h3 {
 	}
 }
 
+.accept--btn{
+	padding: 0.8em 1em;
+	border-radius: 7px;
+	border: 1px solid #007ACC;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 1.3px;
+	color: #fff;
+	cursor: pointer;
+	background-color:  #007ACC;
+}
+
+.decline--btn{
+	padding: 0.8em 1em;
+	border-radius: 7px;
+	border: 1px solid #ff3f40;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 1.3px;
+	color: #fff;
+	cursor: pointer;
+	background-color:  #ff3f40;
+}
+
+
 .btn-disable {
 	padding: 0.8em 1em;
 	border: 1px solid #c0c0c0;
