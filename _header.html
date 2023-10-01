@@ -180,9 +180,9 @@
 		<div class="msger-header-title">
 			<a href="#" style="font-weight: 600; color: #212529" class="ng-binding"><img
 					style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;" alt=""
-					ng-src="avatar2.jpg" src="images/avatar2.jpg"> {{receiver.user.username}}</a> &nbsp; <small
+					ng-src="avatar2.jpg" src="images/avatar2.jpg"> {{receiver.username}}</a> &nbsp; <small
 				style="font-size: 0.7rem;" class="ng-binding">Hoạt động:
-				18-8-2023 01:16</small>
+				{{getFormattedTimeAgo(receiver.accessTime)}}</small>
 		</div>
 		<div id="closeBoxchat" ng-click="closeBoxchat($event)" style="cursor: pointer;">
 			x

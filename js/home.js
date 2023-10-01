@@ -447,23 +447,45 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
 					imagesUrl.push(downloadURL);
 					uploadCount++;
-
 					if (uploadCount === fileCount) {
 						// Khi đã tải lên tất cả các tệp, gửi yêu cầu POST
 						formData.append('content', $scope.content.trim());
 						formData.append('imagesUrl', imagesUrl);
-
 						$http.post(url + '/post', formData, {
 							transformRequest: angular.identity,
 							headers: {
 								'Content-Type': undefined
 							}
 						}).then(function (response) {
-							// Xử lý phản hồi thành công từ máy chủ
+
 						}, function (error) {
 							// Xử lý lỗi
 							console.log(error);
 						});
+
+						// Xử lý phản hồi thành công từ máy chủ
+						$scope.content = '';
+						fileInput.value = null;
+						var mediaList = document.getElementById('mediaList');
+						mediaList.innerHTML = '';
+						$window.selectedMedia = [];
+
+						const Toast = Swal.mixin({
+							toast: true,
+							position: 'top-end',
+							showConfirmButton: false,
+							timer: 3000,
+							timerProgressBar: true,
+							didOpen: (toast) => {
+								toast.addEventListener('mouseenter', Swal.stopTimer)
+								toast.addEventListener('mouseleave', Swal.resumeTimer)
+							}
+						})
+
+						Toast.fire({
+							icon: 'success',
+							title: 'Bài viết được đăng thành công'
+						})
 					}
 				}).catch(function (error) {
 					console.error('Error getting download URL:', error);
@@ -471,27 +493,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			});
 		}
 
-		$scope.content = '';
-		fileInput.value = null;
-		var mediaList = document.getElementById('mediaList');
-		mediaList.innerHTML = '';
-		$window.selectedMedia = [];
-		const Toast = Swal.mixin({
-			toast: true,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 3000,
-			timerProgressBar: true,
-			didOpen: (toast) => {
-				toast.addEventListener('mouseenter', Swal.stopTimer)
-				toast.addEventListener('mouseleave', Swal.resumeTimer)
-			}
-		})
 
-		Toast.fire({
-			icon: 'success',
-			title: 'Bài viết được đăng thành công'
-		})
 	};
 
 	// Hàm để lấy phần mở rộng từ tên tệp
