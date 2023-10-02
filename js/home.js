@@ -430,8 +430,6 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 				var storageRef = storage.ref();
 
 				var uploadNextImage = function (fileIndex) {
-					alert(fileIndex)
-					alert(fileInput.files.length)
 					if (fileIndex >= fileInput.files.length) {
 						// All files have been uploaded
 						$scope.content = '';
