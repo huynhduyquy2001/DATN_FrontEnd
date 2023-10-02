@@ -44,6 +44,11 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 		var uploadMedia = function (fileIndex) {
 			if (fileIndex >= fileInput.files.length) {
 				// All files have been uploaded
+				$scope.content = '';
+				fileInput.value = null;
+				var mediaList = document.getElementById('mediaList');
+				mediaList.innerHTML = '';
+				$window.selectedMedia = [];
 				return;
 			}
 
