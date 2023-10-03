@@ -6,6 +6,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $window) {
     .get(url + "/get-product-shoppingcart")
     .then(function (response) {
       $scope.listProduct = response.data;
+      console.log($scope.listProduct)
     })
     .catch(function (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
@@ -138,5 +139,5 @@ app.controller("ShoppingCartController", function ($scope, $http, $window) {
         // Xử lý phản hồi từ máy chủ
       });
   };
-  
+
 });
