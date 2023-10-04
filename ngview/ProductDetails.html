@@ -182,12 +182,18 @@
                                 Kho: {{total}}
                             </div>
                         </div>
-                        <a class="btn btn-warning shadow-0"
-                            style="background-color:white; color: #ff3f40; border: 1px solid #ff3f40;"> Mua ngay </a>
+
                         <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0"
                             style="background-color: white ; color: #007ACC;">
                             <i class=" fa fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
-                        <a class="btn btn-light border border-secondary  icon-hover px-3"> ❤️ Yêu thích
+                        <a ng-show="!favorite" ng-click="togglerFavorite()"
+                            class="btn btn-light border border-secondary  icon-hover px-3">
+                            ❤️ Yêu thích
+                        </a>
+                        <a ng-show="favorite" ng-click="togglerFavorite()"
+                            style="border:1px solid #ff3f40 !important; color: #ff3f40;"
+                            class="btn btn-light border border-secondary  icon-hover px-3">
+                            <i class="fa-solid fa-heart-crack"></i> Bỏ thích
                         </a>
                     </div>
                 </main>
@@ -204,57 +210,22 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Sản phẩm liên quan</h5>
-                                <div class="d-flex mb-3">
+                                <div ng-repeat="obj in relatedProducts" class="d-flex mb-3">
                                     <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+                                        <img ng-src="{{obj.media[0].mediaUrl}}" style="min-width: 96px; height: 96px;"
+                                            class="img-md img-thumbnail" />
                                     </a>
                                     <div class="info">
-                                        <a href="#" class="nav-link mb-1">
-                                            Rucksack Backpack Large <br />
-                                            Line Mounts
+                                        <a href="#" class="nav-link " style="padding-left: 0;">
+                                            <b>{{obj.productName}}</b>
                                         </a>
-                                        <strong class="text-dark"> $38.90</strong>
+                                        <small class="text-dark" ng-show="obj.promotion!=0"
+                                            style="text-decoration: line-through;">
+                                            {{obj.originalPrice}}</small>
+                                        <span>{{getSalePrice(obj.originalPrice, obj.promotion) | currencyFormat}}</span>
                                     </div>
                                 </div>
 
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/9.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1">
-                                            Summer New Men's Denim <br />
-                                            Jeans Shorts
-                                        </a>
-                                        <strong class="text-dark"> $29.50</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1"> T-shirts with multiple colors, for men and
-                                            lady </a>
-                                        <strong class="text-dark"> $120.00</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1"> Blazer Suit Dress Jacket for Men, Blue color
-                                        </a>
-                                        <strong class="text-dark"> $339.90</strong>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

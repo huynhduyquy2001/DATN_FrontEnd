@@ -1640,6 +1640,21 @@ img {
 	border-color: #00bfff;
 }
 
+#dropArea1 {
+	height: 200px;
+	border: 2px dashed #ccc;
+	text-align: center;
+	line-height: 200px;
+	font-size: 16px;
+	color: #666;
+	margin: 20px auto;
+}
+
+#dropArea1.active {
+	border-color: #00bfff;
+}
+
+
 #mediaList img {
 	width: 100%;
 	box-sizing: border-box;

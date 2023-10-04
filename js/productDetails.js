@@ -10,6 +10,7 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
     $scope.myRatings = 0;
     $scope.AverageRating = 0;
     $scope.relatedProducts = [];
+    $scope.favorite = false;
 
     //đánh giá sản phẩm
     $scope.rate = function () {
@@ -122,6 +123,11 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
                 $http.get(Url + "/get-related-products/" + $scope.product.user.userId)
                     .then(function (response) {
                         $scope.relatedProducts = response.data;
+
+                    });
+                $http.get(Url + "/get-favorite-product/" + $scope.product.productId)
+                    .then(function (response) {
+                        $scope.favorite = response.data;
                     });
             }
             $scope.myRate = $scope.product.ratings.find(function (obj) {
@@ -232,5 +238,11 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
         }
     };
 
+    $scope.togglerFavorite = function () {
+        $http.post(Url + "/add-favorite-product/" + $routeParams.productId)
+            .then(function (response) {
+                $scope.favorite = !$scope.favorite;
+            });
+    }
 
 });

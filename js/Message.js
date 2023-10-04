@@ -131,7 +131,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 				$scope.ListMess = response.data;
 				$timeout(function () {
 					$scope.scrollToBottom();
-				}, 100);
+				}, 1500);
 			})
 			.catch(function (error) {
 				console.log(error);
