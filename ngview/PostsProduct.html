@@ -80,7 +80,7 @@
 										vnd </td>
 									<td class="border-bottom-0"
 										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.user.username}}</td>
+										{{list.userName}}</td>
 									<td class="border-bottom-0">
 										<p class="mb-0 fw-normal">{{list.datePost | date: 'dd/MM/yyyy'}}</p>
 									</td>
@@ -114,12 +114,12 @@
 										<h6 class="fw-semibold mb-0">Ngày đăng</h6>
 									</th>
 									<th class="border-bottom-0">
-										<h6 class="fw-semibold mb-0 text-center">Lí do</h6>
+										<h6 class="fw-semibold mb-0">Lí do</h6>
 									</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="list in listPosts" id="row-{{list.productId}}">
+								<tr ng-repeat="list in listReject" id="row-{{list.tempId}}">
 									<td class="border-bottom-0"
 										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
 										{{list.productName}}</td>
@@ -129,14 +129,14 @@
 										vnd </td>
 									<td class="border-bottom-0"
 										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.user.username}}</td>
+										{{list.username}}</td>
 									<td class="border-bottom-0">
-										<p class="mb-0 fw-normal">{{list.datePost | date: 'dd/MM/yyyy'}}</p>
+										<p class="mb-0 fw-normal">{{list.date | date: 'dd/MM/yyyy'}}</p>
 									</td>
-									<td class="border-bottom-0 text-center"><a style="cursor: pointer;"
-											data-bs-placement="top" title="Xem chi tiết bài viết"
-											>
-										</a></td>
+									<td class="border-bottom-0 " 
+										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.reason}}
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -151,7 +151,7 @@
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-			<div class="modal-content">
+			<div class="modal-content" style="height: 100%;">
 				<div class="modal-header">
 					<h4>Chi tiết</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -184,8 +184,12 @@
 										</div>
 										<br>
 										<div>
-											<b>Giá:</b> <span>{{product.originalPrice.toLocaleString('vi-VN')}}
-												vnd </span>
+											<b>Giá:</b> <small ng-show="!product.promotion==0"><span
+													style="text-decoration: line-through; color: gray;">{{product.originalPrice
+													| currencyFormat}}
+												</span> &nbsp; |&nbsp;</small>
+											<span> {{getSalePrice(product.originalPrice, product.promotion) |
+												currencyFormat}}</span>
 										</div>
 										<br>
 										<div>
@@ -206,7 +210,7 @@
 										</div>
 										<button ng-click="accept(product.productId)" class="accept--btn"
 											style="margin-top: 1.5rem;">Chấp nhận</button>
-										<button ng-click="" class="decline--btn" style="margin-top: 1.5rem;">Từ
+										<button ng-click="rejectPage()" class="decline--btn" style="margin-top: 1.5rem;">Từ
 											chối</button>
 									</div>
 
@@ -216,6 +220,30 @@
 						</div>
 
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal2 -->
+	<div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+			<div class="modal-content" style="height: 40%;">
+				<div class="modal-header">
+					<h4>Lí do từ chối</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<label for="reasonRejection" class="form-label">Nhập lí do từ chối: </label> 
+					<input type="text" class="form-control" id="reasonRejection"
+						ng-model="reasonRejection">
+
+				</div>
+				<div class="modal-footer">
+					<!-- Cancel button -->
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Hủy</button>
+					<!-- Add button -->
+					<button type="button" ng-click="reject(product.productId)" class="btn btn-primary">Xác nhận</button>
 				</div>
 			</div>
 		</div>

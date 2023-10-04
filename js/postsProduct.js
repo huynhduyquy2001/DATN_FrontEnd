@@ -1,5 +1,6 @@
 app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScope, $location) {
 	$scope.listPosts = [];
+	$scope.listReject = [];
 	$scope.Product = {};
 	$scope.currentPage = 0;
 	$scope.totalPages = 0;
@@ -8,7 +9,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 
 	var url = "http://localhost:8080";
 
-	
+
 
 	$scope.getproductList = function (currentPage) {
 
@@ -22,12 +23,13 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			});
 	}
 
-	$scope.getproductDecline = function (currentPage) {
+	$scope.getRejectProducts = function (currentPage) {
 
-		$http.get(url + "/staff/postsProductDecline/" + currentPage)
+		$http.get(url + "/staff/rejectproducts/" + currentPage)
 			.then(function (res) {
-				$scope.listPosts = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi				
+				$scope.listReject = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
+				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi		
+				console.log($scope.listReject);		
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -35,6 +37,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 	}
 
 	$scope.getproductList($scope.currentPage);
+	$scope.getRejectProducts($scope.currentPage);
 
 	// $http.get(url + '/staff/postsproduct').then(function (response) {
 	// 	// Gán dữ liệu từ API vào biến $scope.listViolations
@@ -126,8 +129,21 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			});
 	};
 
+
+
+
+	$scope.getSalePrice = function (originalPrice, promotion) {
+		if (promotion === 0) {
+			return originalPrice;
+		} else {
+			//tính tổng số lượng các đánh giá
+			var SalePrice = originalPrice - (originalPrice * promotion / 100);
+			return SalePrice;
+		}
+	}
+
 	$scope.accept = function (productId) {
-		
+
 		Swal.fire({
 			text: 'Bạn có chắc muốn chấp nhận sản phẩm này không?',
 			icon: 'warning',
@@ -136,21 +152,14 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			confirmButtonColor: '#159b59',
 			cancelButtonColor: '#d33'
 		}).then((result) => {
-			if (result.isConfirmed) {				
+			if (result.isConfirmed) {
 				$http({
 					method: 'POST',
 					url: url + '/staff/postsproduct/accept/' + productId
 				}).then(function (response) {
 					// Cập nhật dữ liệu mới nhận được từ server
 					$scope.listPosts = response.data;
-
-					Swal.fire({
-						position: 'top',
-						icon: 'success',
-						text: 'Chấp nhận yêu cầu đăng sản phẩm thành công!',
-						showConfirmButton: false,
-						timer: 1800
-					});
+					$scope.reloadPage();
 				}).catch(function (error) {
 					console.error('Lỗi khi chấp nhận yêu cầu các bài viết:', error);
 
@@ -166,7 +175,61 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 		});
 	};
 
+	$scope.rejectPage = function () {
+		$('#reasonModal').modal('show');
+		$('#exampleModal').modal('hide');
 
+
+
+		$('#reasonModal').on('hidden.bs.modal', function () {
+			$('#exampleModal').modal('show');
+		});
+	}
+
+	$scope.reject = function (productId) {
+		// Lấy lý do từ chối từ input field. Giả sử input field có id là 'reason'
+		var reason = $scope.reasonRejection;
+		if(!reason){
+			Swal.fire(
+				'Lỗi!',
+				'Vui lòng nhập vào lí do từ chối!',
+				'error'
+			)
+		}else{
+			$http({
+				method: 'POST',
+				url: url + '/staff/rejectproduct/reject/' + productId,
+				data: {
+					reason: reason,
+					productId: productId
+				}
+			}).then(function (response) {
+				if(response.status === 400){
+					Swal.fire(
+						'Không được bỏ trống lý do!',
+						response.data,
+						'error'
+					)
+				} else {
+					$scope.Product = response.data;
+					Swal.fire({
+						title: 'Thành công!',
+						text: 'Đã từ chối bài đăng sản phẩm này!',
+						icon: 'success',
+						showCancelButton: false,
+						confirmButtonText: 'OK'
+					}).then((result) => {
+						// Check if the user clicked the "OK" button
+						if (result.isConfirmed) {
+							$scope.reloadPage();
+						}
+					});
+				}
+			});
+		}
+	}
+	
+	
 	$scope.reloadPage = function () {
 		location.reload();
 	}
