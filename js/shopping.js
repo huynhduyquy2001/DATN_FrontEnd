@@ -24,6 +24,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	$scope.getProduct = function (productId) {
 		$http.get(url + "/get-product/" + productId)
 			.then(function (res) {
+				$scope.color = "";
 				$scope.product = res.data;
 				$scope.total = -1;
 				$scope.quantity = 1;
@@ -46,17 +47,17 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	}
 
 	$scope.Next = function () {
-		if ($rootScope.currentPage === $rootScope.totalPages - 1) {
+		if ($rootScope.currentPage === $scope.totalPages - 1) {
 			return;
 		} else {
-
 			$anchorScroll();
 			$rootScope.currentPage = $rootScope.currentPage + 1; // Cập nhật trang hiện tại
 
 			$scope.getproductList($rootScope.currentPage);
 		}
 	}
-	//-----------------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------------
 
 	//Tăng giảm số lượng
 	$scope.reduceQuantity = function () {
@@ -75,11 +76,50 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 				$scope.total = obj.quantity;
 				$scope.color = obj.color.colorName;
 			}
-			return 0; // Trả về 0 nếu không tìm thấy phần tử thỏa mãn điều kiện
+			return 0;
 		});
 	};
 
 	$rootScope.addShoppingCart = function (productId) {
+		if ($scope.color === "") {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn màu sắc sản phẩm'
+			})
+			return;
+		}
+		if ($scope.quantity === 0) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn số lượng cần mua'
+			})
+			return;
+		}
+
 		var formData = new FormData();
 		formData.append("productId", productId);
 		formData.append("quantity", $scope.quantity);
@@ -93,7 +133,6 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 				// Xử lý phản hồi từ máy chủ
 			});
 	}
-
 
 
 	// -----------------------------------------------------------------------------------
@@ -181,7 +220,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			return averageRating.toFixed(1);
 		}
 	}
-	//tính giá khuyếb mãi
+	//tính giá khuyến mãi
 	$scope.getSalePrice = function (originalPrice, promotion) {
 		if (promotion === 0) {
 			return originalPrice;
@@ -191,6 +230,5 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			return SalePrice;
 		}
 	}
-
 
 });

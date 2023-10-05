@@ -7,13 +7,84 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
     $scope.total = -1;
     $scope.color = "";
     $scope.myRate = {};
+    $scope.myRatings = 0;
+    $scope.AverageRating = 0;
+    $scope.relatedProducts = [];
+    $scope.favorite = false;
+
+    //đánh giá sản phẩm
+    $scope.rate = function () {
+
+        if ($scope.myRate) {
+            $scope.myRate.ratingValue = $scope.myRatings;
+        } else {
+            $scope.myRate = {
+                "ratingId": null,
+                "user": null,
+                "ratingValue": $scope.myRatings,
+                "ratingContent": $scope.myRate.ratingContent,
+                "ratingDate": new Date()
+            };
+        }
+
+        $http.post(Url + "/rate-product/" + $scope.product.productId, $scope.myRate, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            $scope.myRate = response.data;
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'success',
+                title: 'Đánh giá thành công'
+            })
+        })
+            .catch(function (error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Đánh giá không thành công'
+                })
+            });
+    }
+
+    $scope.addStars = function (index) {
+        $scope.myRatings = $scope.myRatings + index + 1;
+    };
+    $scope.removeStars = function (index) {
+        if (index !== 0) {
+            index++;
+        }
+        $scope.myRatings = $scope.myRatings - ($scope.myRatings - index);
+    };
+
     //Tăng giảm số lượng
     $scope.reduceQuantity = function () {
         if ($scope.quantity > 0) {
             $scope.quantity--;
         }
-
     }
+
     $scope.increaseQuantity = function () {
         if ($scope.total === "Hết hàng" || $scope.total === -1) {
             return;
@@ -35,16 +106,40 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
             return 0; // Trả về 0 nếu không tìm thấy phần tử thỏa mãn điều kiện
         });
     };
-
+    //lấy thông tin sản phẩm
     $http.get(Url + "/get-product/" + $routeParams.productId)
         .then(function (response) {
             $scope.product = response.data;
+            if ($scope.product.ratings.length > 0) {
+                //tính tổng số lượng các đánh giá
+
+                var totalRatings = $scope.product.ratings.reduce(function (sum, rating) {
+                    return sum + parseFloat(rating.ratingValue);
+                }, 0);
+
+                var averageRating = totalRatings / $scope.product.ratings.length;
+                averageRating = averageRating.toFixed(1);
+                $scope.AverageRating = averageRating;
+                $http.get(Url + "/get-related-products/" + $scope.product.user.userId)
+                    .then(function (response) {
+                        $scope.relatedProducts = response.data;
+
+                    });
+                $http.get(Url + "/get-favorite-product/" + $scope.product.productId)
+                    .then(function (response) {
+                        $scope.favorite = response.data;
+                    });
+            }
             $scope.myRate = $scope.product.ratings.find(function (obj) {
                 if (obj.user.userId === $rootScope.myAccount.user.userId) {
+                    $scope.myRatings = obj.ratingValue;
                     return obj;
                 }
             });
+
         });
+
+    //tính lượt đánh giá trung bình
 
 
     // lấy giá khuyến mãi
@@ -142,5 +237,12 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
             return formattedDate + '-' + formattedMonth + '-' + formattedYear;
         }
     };
+
+    $scope.togglerFavorite = function () {
+        $http.post(Url + "/add-favorite-product/" + $routeParams.productId)
+            .then(function (response) {
+                $scope.favorite = !$scope.favorite;
+            });
+    }
 
 });

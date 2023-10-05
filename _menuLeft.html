@@ -1,5 +1,5 @@
-<aside class="left-sidebar animate__animated animate__backInLeft"
-	style="z-index: 100; position: fixed; top: 0; left: 0;">
+<aside id="asideLeft" class="left-sidebar"
+	style="z-index: 100; position: fixed; top: 0; left: 0; transition: 0.7s ease-in-out;">
 	<div>
 		<div class="brand-logo d-flex align-items-center justify-content-between">
 			<a class=" logo" style="color: black;"> <img src="images/chimLac.png" height="30px" alt=""> VIE_<b>SONET</b>
@@ -55,8 +55,10 @@
 													<a class="sidebar-link" href="#!/message" active-link>
 														<i class="fas fa-messages"></i>
 														<span>{{ 'TN' | translate }}</span>
-														<span class="badge" ng-show="check"
-															style="background: red">{{unseenmess}}</span>
+														<div class="circle-shop fa-bounce" ng-show="check"
+															style="background-color: #ff3f40 ; top: 10px;">
+															<span>{{unseenmess}}</span>
+														</div>
 													</a>
 												</li>
 											</ul>

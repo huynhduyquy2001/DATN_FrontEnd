@@ -392,7 +392,7 @@
 					<div class="card overflow-hidden" style="border-radius: 15px 15px 15px 15px;">
 						<div class="card-body p-0">
 							<div style="position: relative;">
-								<img ng-src="images/{{UserInfo.background}}" alt="" height="300" width="1440"
+								<img ng-src="{{UserInfo.background}}" alt="" height="300" width="1440"
 									style="object-fit: cover;">
 								<button data-bs-toggle="modal" ng-if=" myAccount.user.userId == UserInfo.userId"
 									data-bs-target="#ChinhSuaAnhBia"
@@ -431,7 +431,7 @@
 												style="width: 155px; height: 155px; position: relative; background-color: gray;">
 												<div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
 													style="width: 150px; height: 150px;">
-													<img ng-src="images/{{UserInfo.avatar}}" alt="" class="w-100 h-100"
+													<img ng-src="{{UserInfo.avatar}}" alt="" class="w-100 h-100"
 														style="object-fit: cover;">
 												</div>
 												<button data-bs-toggle="modal"
@@ -576,7 +576,7 @@
 											<h4 class="fw-semibold mb-3">Hình ảnh</h4>
 											<div class="row">
 												<div class="col-4 mb-2" ng-repeat="img in displayedImages">
-													<img ng-src="images/{{img.imageUrl}}"
+													<img ng-src="{{img.imageUrl}}"
 														ng-click="showImageModal(img.imageUrl)"
 														class="rounded-2 w-100 h-100" style="object-fit: cover;">
 												</div>
@@ -616,9 +616,8 @@
 										<div class="card">
 											<div class="card-body border-bottom">
 												<div class="d-flex align-items-center gap-3" style="padding: 10px;">
-													<img ng-src="images/{{myPost.user.avatar}}" alt=""
-														class="rounded-circle" width="40" height="40"
-														style="object-fit: cover;">
+													<img ng-src="{{myPost.user.avatar}}" alt="" class="rounded-circle"
+														width="40" height="40" style="object-fit: cover;">
 													<h6 class="fw-semibold mb-0 fs-4">{{myPost.user.username}}</h6>
 													<span class="fs-2"><span
 															class="p-1 bg-light rounded-circle d-inline-block"></span>
@@ -671,14 +670,14 @@
 
 																	<img ng-click="getPostDetails(myPost.postId)"
 																		ng-if="image.type === true"
-																		ng-src="images/{{ image.imageUrl }}"
+																		ng-src="{{ image.imageUrl }}"
 																		class="w-100 d-block" alt="Slide {{$index + 1}}"
 																		style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
 
 																	<video ng-if="image.type === false" autoplay
 																		controls
 																		style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%; position: absolute;">
-																		<source ng-src="images/{{ image.imageUrl }}"
+																		<source ng-src="{{ image.imageUrl }}"
 																			type="video/mp4">
 																		Your browser does not support the video tag.
 																	</video>
@@ -705,15 +704,15 @@
 														<video ng-if="myPost.images[0].type === false"
 															ng-click="getPostDetails(myPost.postId)" autoplay controls
 															style="width: 100%;">
-															<source ng-src="images/{{ myPost.images[0].imageUrl }}"
+															<source ng-src="{{ myPost.images[0].imageUrl }}"
 																type="video/mp4">
 															Your browser does not support the video tag.
 														</video>
 														<!-- Single image HTML code -->
 														<img ng-if="myPost.images[0].type === true"
 															ng-click="getPostDetails(myPost.postId)"
-															ng-src="images/{{ myPost.images[0].imageUrl }}"
-															class="w-100" alt="Single image">
+															ng-src="{{ myPost.images[0].imageUrl }}" class="w-100"
+															alt="Single image">
 													</div>
 												</center>
 
@@ -758,9 +757,9 @@
 									ng-if="follower.userId != myUserId ">
 									<div class="card">
 										<div class="card-body p-4 d-flex align-items-center gap-3">
-											<a href="#!/profile/{{follower.userId}}"><img
-													ng-src="images/{{follower.avatar}}" class="rounded-circle"
-													width="40" height="40" style="object-fit: cover;"></a>
+											<a href="#!/profile/{{follower.userId}}"><img ng-src="{{follower.avatar}}"
+													class="rounded-circle" width="40" height="40"
+													style="object-fit: cover;"></a>
 											<div>
 												<h5 class="fw-semibold mb-0">{{follower.username}}</h5>
 												<div class="fs-2 d-flex align-items-center">
@@ -802,9 +801,8 @@
 									<div class="card hover-img">
 										<div class="card-body p-4 text-center border-bottom">
 											<a href="#!/profile/{{following.userId}}"> <img
-													ng-src="images/{{following.avatar}}" alt=""
-													class="rounded-circle mb-3" width="80" height="80"
-													style="object-fit: cover;">
+													ng-src="{{following.avatar}}" alt="" class="rounded-circle mb-3"
+													width="80" height="80" style="object-fit: cover;">
 												<h5 class="fw-semibold mb-0">{{following.username}}</h5>
 												<span class="text-dark fs-2">{{following.introduction.length > 30 ?
 													(following.introduction | limitTo: 30) + '...' :
@@ -842,7 +840,7 @@
 							<div class="row">
 								<div class="rounded-2 d-flex flex-wrap">
 									<div class="col-4 d-flex" ng-repeat="img in imageList">
-										<img ng-src="images/{{img.imageUrl}}" class="img-fluid w-100 h-100 me-1"
+										<img ng-src="{{img.imageUrl}}" class="img-fluid w-100 h-100 me-1"
 											ng-click="showImageModal(img.imageUrl)" class="rounded-2"
 											style="object-fit: cover; height: 330px; border-radius: 10px; padding: 5px;">
 									</div>
@@ -860,7 +858,7 @@
 							<div class="row">
 								<div class="rounded-2 d-flex flex-wrap">
 									<div class="col-4 d-flex" ng-repeat="vid in videoList">
-										<video controls class="w-100" ng-src="images/{{vid.imageUrl}}"
+										<video controls class="w-100" ng-src="{{vid.imageUrl}}"
 											style="border-radius: 10px; padding: 5px;"> Sorry,
 											your browser doesn't support embedded videos.
 										</video>
@@ -906,7 +904,7 @@
 													style="background-color: #313131; height: 90vh;"
 													ng-repeat="image in selectedPost.images track by $index"
 													ng-class="{ 'active': $index === 0 }">
-													<img ng-src="images/{{ image.imageUrl }}" class="w-100 d-block"
+													<img ng-src="{{ image.imageUrl }}" class="w-100 d-block"
 														alt="Slide {{$index + 1}}"
 														style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
 												</div>
@@ -928,13 +926,12 @@
 										<!-- Single image HTML code -->
 										<img ng-if="selectedPost.images[0].type === true"
 											ng-click="getPostDetails(selectedPost.postId)"
-											ng-src="images/{{ selectedPost.images[0].imageUrl }}" class="w-100"
+											ng-src="{{ selectedPost.images[0].imageUrl }}" class="w-100"
 											alt="Single image">
 										<video ng-if="selectedPost.images[0].type === false"
 											ng-click="getPostDetails(selectedPost.postId)" autoplay controls
 											style="width: 100%;">
-											<source ng-src="images/{{ selectedPost.images[0].imageUrl }}"
-												type="video/mp4">
+											<source ng-src="{{ selectedPost.images[0].imageUrl }}" type="video/mp4">
 											Your browser does not support the video tag.
 										</video>
 									</div>
@@ -982,7 +979,7 @@
 								<div class="modal-body">
 									<form id="postForm" enctype="multipart/form-data">
 										<div class="user-profile">
-											<img ng-src="images/{{ UserInfo.avatar }}" alt="">
+											<img ng-src="{{ UserInfo.avatar }}" alt="">
 											<div>
 												<label>{{UserInfo.username}}</label> <br>
 												<div style="display: flex; align-items: center;">
@@ -1039,7 +1036,7 @@
 								<div class="modal-body">
 									<form id="postForm" enctype="multipart/form-data">
 										<div class="user-profile">
-											<img ng-src="images/{{ UserInfo.avatar }}" alt="">
+											<img ng-src="{{ UserInfo.avatar }}" alt="">
 											<div>
 												<label>{{UserInfo.username}}</label> <br>
 												<div style="display: flex; align-items: center;">
@@ -1093,7 +1090,7 @@
 								<div class="modal-body">
 									<form id="postForm" enctype="multipart/form-data">
 										<div class="user-profile">
-											<img ng-src="images/{{ UserInfo.avatar }}" alt="">
+											<img ng-src="{{ UserInfo.avatar }}" alt="">
 											<div>
 												<label>{{UserInfo.username}}</label> <br>
 												<div style="display: flex; align-items: center;">
@@ -1160,8 +1157,8 @@
 															<div class="carousel-item"
 																ng-repeat="image in postDetails.images track by $index"
 																ng-class="{ 'active': $index === 0 }">
-																<img ng-src="images/{{ image.imageUrl }}"
-																	class="w-100 d-block" alt="Slide {{$index + 1}} ">
+																<img ng-src="{{ image.imageUrl }}" class="w-100 d-block"
+																	alt="Slide {{$index + 1}} ">
 															</div>
 														</div>
 														<!-- Carousel controls -->
@@ -1185,14 +1182,14 @@
 													<video ng-if="postDetails.images[0].type === false"
 														ng-click="getPostDetails(postDetails.postId)" autoplay controls
 														style="width: 100%;">
-														<source ng-src="images/{{ postDetails.images[0].imageUrl }}"
+														<source ng-src="{{ postDetails.images[0].imageUrl }}"
 															type="video/mp4">
 														Your browser does not support the video tag.
 													</video>
 													<!-- Single image HTML code -->
 													<img ng-if="postDetails.images[0].type === true"
-														ng-src="images/{{ postDetails.images[0].imageUrl }}"
-														class="w-100" alt="Single image" width="">
+														ng-src="{{ postDetails.images[0].imageUrl }}" class="w-100"
+														alt="Single image" width="">
 												</div>
 											</center>
 
@@ -1205,7 +1202,7 @@
 													style="display: flex; align-items: center; justify-content: space-between;">
 													<div class="user-profile ">
 														<a href="/nguoiDung/{{postDetails.user.userId}}"><img
-																ng-src="images/{{postDetails.user.avatar}}"
+																ng-src="{{postDetails.user.avatar}}"
 																style="border-radius: 100%;" alt=""></a>
 														<div>
 
@@ -1255,7 +1252,7 @@
 												<div ng-repeat="comment in postComments | limitTo:numOfCommentsToShow">
 													<div class="msg ng-scope left-msg mb-4" ng-class="left-msg">
 														<div class="msg-img"
-															style="background-image: url(images/{{comment.user.avatar}}); border: 1px solid #ebf1f6;">
+															style="background-image: url({{comment.user.avatar}}); border: 1px solid #ebf1f6;">
 														</div>
 
 														<div class="msg-bubble" style="border-radius: 15px;">
@@ -1301,8 +1298,7 @@
 													<div ng-show="o_reply"
 														class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 														style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-														<img ng-src="images/{{UserInfo.avatar}}" class="img-thumbnail"
-															alt="">
+														<img ng-src="{{UserInfo.avatar}}" class="img-thumbnail" alt="">
 														<div style="width: 70%">
 															<small style="font-size: 12px;" class="ng-binding">
 																<i class="fa-regular fa-tag"></i> <label
@@ -1336,7 +1332,7 @@
 
 															<div class="msg left-msg" style="margin-left: 4rem;">
 																<div class="msg-img"
-																	style="background-image: url(images/{{obj.responder.avatar}}); border: 1px solid #ebf1f6; transform: translateY(-30%);">
+																	style="background-image: url({{obj.responder.avatar}}); border: 1px solid #ebf1f6; transform: translateY(-30%);">
 																</div>
 																<div class="msg-bubble" style="border-radius: 15px;">
 
@@ -1393,8 +1389,8 @@
 															<div ng-show="o_reply2"
 																class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 																style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-																<img ng-src="images/{{UserInfo.avatar}}"
-																	class="img-thumbnail" alt="">
+																<img ng-src="{{UserInfo.avatar}}" class="img-thumbnail"
+																	alt="">
 																<div style="width: 65%">
 																	<small style="font-size: 12px;" class="ng-binding">
 																		<i class="fa-regular fa-tag"></i> <label

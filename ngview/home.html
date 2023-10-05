@@ -198,7 +198,7 @@
 
 
 	<div class="col-md-5 row menuLeft animate__animated animate__fadeIn">
-		<div class="col-md-8 offset-md-2">
+		<div class="col-lg-8 col-md-9 offset-md-2">
 			<div class="row">
 				<div>
 					<div
@@ -228,11 +228,12 @@
 				style=" border: none; background-color: #f8f9fa!important;">
 				<div class="card-body d-flex align-items-center gap-3">
 					<a href="#!/profile/BZOL98493464"><img class="rounded-circle" width="40" height="40"
-							style="object-fit: cover;" src="{{user.avatar}}"></a>
+							style="object-fit: cover; max-width: fit-content;" src="{{user.avatar}}"></a>
 					<div>
 						<h5 class="fw-semibold mb-0 ng-binding" style="font-size: 1rem;font-weight: 600 !important">
 							{{user.username}}</h5>
-						<div class=" d-flex  ng-binding" style="font-size: .75rem !important">
+						<div class=" d-flex  ng-binding"
+							style="font-size: .75rem !important; overflow: hidden; white-space: nowrap;text-overflow: ellipsis">
 							<b>Hoạt động:</b> &nbsp; {{getFormattedTimeAgo(user.acessTime)}}
 						</div>
 					</div>
@@ -241,48 +242,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="col-md-6">
 
-			<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
-				<div class="user-profile" style="display: block;">
-					<a href="#!/profile/{{myAccount.user.userId}}">
-						<div class="username-dt dpbg-1"
-							style="background-image: url(images/{{myAccount.user.background}}); background-size: cover;">
-							<div class="usr-pic">
-								<img ng-src="images/{{myAccount.user.avatar}}" alt="">
-							</div>
-						</div>
-					</a>
-					<div class="user-main-details">
-						<h6 style="font-weight: 600">{{myAccount.user.username}}</h6>
-					</div>
-					<ul class="followers-dts">
-						<li>
-							<div class="followers-dt-sm">
-								<h4>{{ 'NTD' | translate }}</h4>
-								<span>{{myAccount.followers}}</span>
-							</div>
-						</li>
-						<li>
-							<div class="followers-dt-sm">
-								<h4>{{ 'DTD' | translate }}</h4>
-								<span>{{myAccount.following}}</span>
-							</div>
-						</li>
-					</ul>
-
-					<div class="profile-link">
-
-						<a class="btn-blue" data-bs-toggle="modal" href="#exampleModalToggle"
-							style=" border-radius: 2px; border: 1px solid #3a57e8; box-sizing: border-box; display: inline-block; font-family: Arial, sans-serif; font-size: 14px; line-height: 16.8px; margin: 0px 3px 10px; padding: 10px 14px; text-decoration-line: none; transition: all 0.2s; width: 98%; background-color: transparent; color: #3a57e8;"
-							rel="noopener noreferrer"><i class="fa-light fa-address-card"></i> {{
-							'DBV' | translate }} </a>
-					</div>
-
-				</div>
-			</div>
-
-		</div> -->
 
 
 	</div>

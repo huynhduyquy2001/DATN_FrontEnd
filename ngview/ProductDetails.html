@@ -1,6 +1,4 @@
 <div class="animate__animated animate__fadeIn">
-
-
     <!-- content -->
     <section style="padding-top: 0 !important">
         <div>
@@ -45,18 +43,86 @@
                         </h4>
                         <div class="d-flex flex-row my-3">
                             <div class="text-warning mb-1 me-2">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
+
+                                <span>
+                                    <span ng-if="AverageRating==0">
+                                        <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating==1">
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+
+                                    </span>
+                                    <span ng-if="AverageRating==2">
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating==3">
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating==4">
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating==5">
+                                        <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                    </span>
+
+                                    <!-- --------------------------------------------------------- -->
+
+                                    <span ng-if="AverageRating > 0 && AverageRating < 1">
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+
+                                    <span ng-if="AverageRating > 1 && AverageRating < 2">
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating > 2 && AverageRating < 3">
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating > 3 && AverageRating < 4">
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="AverageRating > 4 && AverageRating < 5">
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                    </span>
+                                </span>
+
                                 <span class="ms-1">
-                                    4.5
+                                    {{AverageRating}}
                                 </span>
                             </div>
-                            <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 lượt đánh
+                            <span class="text-muted"><i
+                                    class="fas fa-shopping-basket fa-sm mx-1"></i>{{product.ratings.length}} lượt đánh
                                 giá</span>
-                            <span class="text-success ms-2">230 đã bán</span>
+                            <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
                         </div>
 
                         <div class="mb-3">
@@ -92,7 +158,6 @@
                                             {{obj.color.colorName}}
                                         </label>
                                     </div>
-
                                 </div>
                             </dd>
                             <div class="col-md-4 col-6 mb-3">
@@ -111,19 +176,24 @@
                                         id="button-addon2" data-mdb-ripple-color="dark">
                                         <i class="fas fa-plus"></i>
                                     </button>
-
                                 </div>
                             </div>
                             <div class="col-md-7 col-5 mb-8 offset-1" ng-show="total!==-1">
                                 Kho: {{total}}
                             </div>
                         </div>
-                        <a class="btn btn-warning shadow-0"
-                            style="background-color:white; color: #ff3f40; border: 1px solid #ff3f40;"> Mua ngay </a>
+
                         <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0"
                             style="background-color: white ; color: #007ACC;">
                             <i class=" fa fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
-                        <a class="btn btn-light border border-secondary  icon-hover px-3"> ❤️ Yêu thích
+                        <a ng-show="!favorite" ng-click="togglerFavorite()"
+                            class="btn btn-light border border-secondary  icon-hover px-3">
+                            ❤️ Yêu thích
+                        </a>
+                        <a ng-show="favorite" ng-click="togglerFavorite()"
+                            style="border:1px solid #ff3f40 !important; color: #ff3f40;"
+                            class="btn btn-light border border-secondary  icon-hover px-3">
+                            <i class="fa-solid fa-heart-crack"></i> Bỏ thích
                         </a>
                     </div>
                 </main>
@@ -140,57 +210,22 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Sản phẩm liên quan</h5>
-                                <div class="d-flex mb-3">
+                                <div ng-repeat="obj in relatedProducts" class="d-flex mb-3">
                                     <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+                                        <img ng-src="{{obj.media[0].mediaUrl}}" style="min-width: 96px; height: 96px;"
+                                            class="img-md img-thumbnail" />
                                     </a>
                                     <div class="info">
-                                        <a href="#" class="nav-link mb-1">
-                                            Rucksack Backpack Large <br />
-                                            Line Mounts
+                                        <a href="#" class="nav-link " style="padding-left: 0;">
+                                            <b>{{obj.productName}}</b>
                                         </a>
-                                        <strong class="text-dark"> $38.90</strong>
+                                        <small class="text-dark" ng-show="obj.promotion!=0"
+                                            style="text-decoration: line-through;">
+                                            {{obj.originalPrice}}</small>
+                                        <span>{{getSalePrice(obj.originalPrice, obj.promotion) | currencyFormat}}</span>
                                     </div>
                                 </div>
 
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/9.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1">
-                                            Summer New Men's Denim <br />
-                                            Jeans Shorts
-                                        </a>
-                                        <strong class="text-dark"> $29.50</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1"> T-shirts with multiple colors, for men and
-                                            lady </a>
-                                        <strong class="text-dark"> $120.00</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1"> Blazer Suit Dress Jacket for Men, Blue color
-                                        </a>
-                                        <strong class="text-dark"> $339.90</strong>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -198,34 +233,30 @@
                 <div class="col-lg-8 mb-4">
                     <div class="border rounded-2 px-3 py-2 bg-white  mb-5">
                         <center>
-                            <h5 class="card-title"
+                            <h5 class="card-title" ng-show="myRate.ratingId"
                                 style="text-align: left; font-weight: 600; display: flex; justify-content: space-between;">
                                 Đánh giá của tôi
                                 <span><small style="font-size: 12px; color: #65676b" class="ng-binding">
                                         {{getFormattedTimeAgo(myRate.ratingDate)}}
                                     </small></span>
                             </h5>
+                            <h5 ng-show="!myRate.ratingId">Bạn chưa đánh giá sản phẩm này</h5>
 
-                            <span>
+                            <button ng-click="removeStars($index)"
+                                ng-repeat="n in [].constructor(myRatings) track by $index"
+                                style="border: none; background-color: transparent;">
+                                <i class="fa-solid fa-star" style="color: #ffc107;"></i></button>
 
-                                <i ng-repeat="n in [].constructor(myRate.ratingValue) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107; font-size: 28px;"></i>
-                                <i ng-repeat="n in [].constructor(5-myRate.ratingValue) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
-
-                            </span>
+                            <button ng-repeat="n in [].constructor(5-myRatings) track by $index"
+                                ng-click="addStars($index)" style="border: none; background-color: transparent;"><i
+                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i></button>
 
                             <textarea class="form-control mt-2" name="" id=""
                                 ng-model="myRate.ratingContent"></textarea>
-                            <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0 m-2"
+                            <a ng-click="rate()" class="btn btn-primary shadow-0 m-2"
                                 style="background-color: white ; color: #007ACC;">
-                                Cập nhật </a>
+                                Đánh giá </a>
                         </center>
-
-                        <div>
-
-
-                        </div>
                     </div>
                     <div class="border rounded-2 px-3 py-2 bg-white">
                         <center>
@@ -233,150 +264,31 @@
                         </center>
                         <div>
                             <div class="user-profile m-4" ng-repeat="rate in product.ratings  | orderBy:'-ratingDate'">
-                                <a href="#!/profile/{{rate.user.userId}}"><img ng-src="{{rate.user.avatar}}"
-                                        style="border-radius: 100%;" alt=""></a>
-                                <div>
+                                <div ng-show="rate.user.userId!==myRate.user.userId">
+                                    <a href="#!/profile/{{rate.user.userId}}"><img ng-src="{{rate.user.avatar}}"
+                                            style="border-radius: 100%;" alt=""></a>
+                                    <div>
 
-                                    <span
-                                        style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-                                        class="ng-binding">{{rate.user.username}}</span> &nbsp;&nbsp; <span><small
-                                            style="font-size: 12px; color: #65676b" class="ng-binding">
-                                            {{getFormattedTimeAgo(rate.ratingDate)}}
-                                        </small></span>
-                                    <span>
+                                        <span
+                                            style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+                                            class="ng-binding">{{rate.user.username}}</span> &nbsp;&nbsp; <span><small
+                                                style="font-size: 12px; color: #65676b" class="ng-binding">
+                                                {{getFormattedTimeAgo(rate.ratingDate)}}
+                                            </small></span>
+                                        <span>
+                                            <i ng-repeat="n in [].constructor(rate.ratingValue) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(5-rate.ratingValue) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
 
-                                        <i ng-repeat="n in [].constructor(rate.ratingValue) track by $index"
-                                            class="fa-solid fa-star" style="color: #ffc107;"></i>
-                                        <i ng-repeat="n in [].constructor(5-rate.ratingValue) track by $index"
-                                            class="fa-solid fa-star" style="color: #c0c0c0;"></i>
-
-                                    </span>
-                                    <div style="margin-left: 0.3rem !important">
-                                        {{rate.ratingContent}}
+                                        </span>
+                                        <div style="margin-left: 0.3rem !important">
+                                            {{rate.ratingContent}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-                            <li class="nav-item d-flex" role="presentation">
-                                <a class="nav-link d-flex align-items-center justify-content-center w-100 active"
-                                    id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab"
-                                    aria-controls="ex1-pills-1" aria-selected="true">Specification</a>
-                            </li>
-                            <li class="nav-item d-flex" role="presentation">
-                                <a class="nav-link d-flex align-items-center justify-content-center w-100"
-                                    id="ex1-tab-2" data-mdb-toggle="pill" href="#ex1-pills-2" role="tab"
-                                    aria-controls="ex1-pills-2" aria-selected="false">Warranty info</a>
-                            </li>
-                            <li class="nav-item d-flex" role="presentation">
-                                <a class="nav-link d-flex align-items-center justify-content-center w-100"
-                                    id="ex1-tab-3" data-mdb-toggle="pill" href="#ex1-pills-3" role="tab"
-                                    aria-controls="ex1-pills-3" aria-selected="false">Shipping info</a>
-                            </li>
-                            <li class="nav-item d-flex" role="presentation">
-                                <a class="nav-link d-flex align-items-center justify-content-center w-100"
-                                    id="ex1-tab-4" data-mdb-toggle="pill" href="#ex1-pills-4" role="tab"
-                                    aria-controls="ex1-pills-4" aria-selected="false">Seller profile</a>
-                            </li>
-                        </ul> -->
-
-                        <!-- <div class="tab-content" id="ex1-content">
-                            <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel"
-                                aria-labelledby="ex1-tab-1">
-                                <p>
-                                    With supporting text below as a natural lead-in to additional content. Lorem ipsum
-                                    dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                                    labore et dolore magna aliqua. Ut
-                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                                    ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                    cillum dolore eu fugiat nulla
-                                    pariatur.
-                                </p>
-                                <div class="row mb-2">
-                                    <div class="col-12 col-md-6">
-                                        <ul class="list-unstyled mb-0">
-                                            <li><i class="fas fa-check text-success me-2"></i>Some great feature name
-                                                here</li>
-                                            <li><i class="fas fa-check text-success me-2"></i>Lorem ipsum dolor sit
-                                                amet, consectetur</li>
-                                            <li><i class="fas fa-check text-success me-2"></i>Duis aute irure dolor in
-                                                reprehenderit</li>
-                                            <li><i class="fas fa-check text-success me-2"></i>Optical heart sensor</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-12 col-md-6 mb-0">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fas fa-check text-success me-2"></i>Easy fast and ver good
-                                            </li>
-                                            <li><i class="fas fa-check text-success me-2"></i>Some great feature name
-                                                here</li>
-                                            <li><i class="fas fa-check text-success me-2"></i>Modern style and design
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <table class="table border mt-3 mb-2">
-                                    <tr>
-                                        <th class="py-2">Display:</th>
-                                        <td class="py-2">13.3-inch LED-backlit display with IPS</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="py-2">Processor capacity:</th>
-                                        <td class="py-2">2.3GHz dual-core Intel Core i5</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="py-2">Camera quality:</th>
-                                        <td class="py-2">720p FaceTime HD camera</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="py-2">Memory</th>
-                                        <td class="py-2">8 GB RAM or 16 GB RAM</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="py-2">Graphics</th>
-                                        <td class="py-2">Intel Iris Plus Graphics 640</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade mb-2" id="ex1-pills-2" role="tabpanel"
-                                aria-labelledby="ex1-tab-2">
-                                Tab content or sample information now <br />
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation ullamco laboris nisi ut
-                                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui
-                                officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                                enim ad minim veniam, quis
-                                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            </div>
-                            <div class="tab-pane fade mb-2" id="ex1-pills-3" role="tabpanel"
-                                aria-labelledby="ex1-tab-3">
-                                Another tab content or sample information now <br />
-                                Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea
-                                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                                culpa qui officia deserunt
-                                mollit anim id est laborum.
-                            </div>
-                            <div class="tab-pane fade mb-2" id="ex1-pills-4" role="tabpanel"
-                                aria-labelledby="ex1-tab-4">
-                                Some other tab content or sample information now <br />
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation ullamco laboris nisi ut
-                                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui
-                                officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div> -->
-                        <!-- Pills content -->
                     </div>
                 </div>
 
