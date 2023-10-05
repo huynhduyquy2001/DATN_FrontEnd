@@ -18,136 +18,220 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <h4>Danh sách tất cả đơn hàng</h4>
-                    <div class="history">
+                    <!--Bự nhứt nè-->
+                    <div class="history d-md-block d-none">
                         <div class="col">
                             <div class="mb-0 card">
-                                <div class="card-header">
-                                    <img src="meow.jpg" class="" style="
-                                    width: 30px;
-                                    height: 30px;
-                                    object-fit: cover;
-                                    border-radius: 30px;">
-                                    <span style="margin-left: 12px; font-weight: bold; color: #393e41;">mÈo tRuNg</span>
-                                    <span style="margin-left: 12px;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;">
-                                            <i class="fa-sharp fa-regular fa-user"></i>
-                                            Trang cá nhân</button></span>
-                                    <span style="float: right; font-size: 15px; padding-top: 7px; ">Mới xong</span>
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <div class="d-flex"> <span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[3].username}}</span>
+                                        <span id="button-top">
+                                            <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                    <span class="res-text"> Nhắn
+                                                        tin</span></button></span>
+                                            <span style="margin-left: 12px;"><button type="button"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    style="outline-color: #ff3f40;"><i
+                                                        class="fa-sharp fa-regular fa-store ic"></i>
+                                                    <span class="res-text">Shop</span></button></span>
+                                        </span>
+                                        <span id="menu-button">
+                                            <span class="dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            </span>
+                                            <span class="dropdown-menu">
+                                                <span style="margin-left: 0.7rem"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                        <span class="res-text"> Nhắn
+                                                            tin</span></button></span>
+                                                <span style="margin: 0.1rem;"><button type="button"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;"><i
+                                                            class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Shop</span></button></span>
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <span id="statusName" class="text-end">Ngày mua</span>
+
                                 </div>
-                                <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 17px;">
-                                    <div class="col-2">
-                                        <img src="product_Day_chuyen.jpg" alt=""
-                                            style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover;">
+
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
+                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
                                     </div>
-                                    <div class="col-6 card-body">
-                                        <h5 class="card-title">Dây chuyền chữ thập Banshee</h5>
-                                        <p class="card-text">Phân loại hàng: nhựa, xanh</p>
-                                        <p>x1</p>
+                                    <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title">{{o[2].productName}}</p>
+                                        <p class="card-text">Phân loại hàng: {{o[2].material}}, {{o[1].color}}</p>
+                                        <p class="card-text">x{{o[1].quantity}}</p>
                                     </div>
-                                    <div class="col-4 justify-content-center" style="text-align: center;">
-                                        <p style="margin: 30px; padding-left: 0px; ">123.000 VND</p>
-                                    </div>
-                                </div>
-                                <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 17px;">
-                                    <div class="col-2">
-                                        <img src="product_Vong_tay.jpg" alt=""
-                                            style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover;">
-                                    </div>
-                                    <div class="col-6 card-body">
-                                        <h5 class="card-title">Vòng tay Targon</h5>
-                                        <p class="card-text">Phân loại hàng: nhựa, xanh</p>
-                                        <p>x1</p>
-                                    </div>
-                                    <div class="col-4 justify-content-center" style="text-align: center;">
-                                        <p style="margin: 30px;">111.000 VND</p>
+                                    <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <i class="fa-regular fa-hand-holding-dollar fa-2xl"
+                                                    style="margin-right: 1vh; color: #393e41;"></i>
+                                                <span class="fs-5">Thành tiền: &nbsp;</span>
+                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount}}
+                                                    VND
+                                                </h5>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-2">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Xem các đánh giá</span></button>
+                                                </span>
+                                                <span>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right ic"></i> <span
+                                                            class="res-text">Mua lại</span></button>
+                                                </span>
+
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-0 card">
-                                <span>
-                                    <div
-                                        style="float: right; font-size: 16px; margin-right: 30px; margin-top: 20px; color: #393e41;">
-                                        <i class="fa-regular fa-hand-holding-dollar fa-2xl"
-                                            style="margin-right: 10px; color: #393e41;"></i>
-                                        Thành tiền: <span
-                                            style="font-weight: bold;color: #ff3f40;font-size: 24px;">234.000
-                                            VND</span>
-                                    </div>
-                                </span>
-                                <div class="button-navigator" style="margin: 20px;">
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-xmark"></i> &nbsp;
-                                            Hong duyệt</button></span>
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-danger" style="background-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-check"></i> &nbsp;
-                                            Duyệt đơn</button></span>
-                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="history">
+                    <!--Responsive Dưới 776px-->
+                    <div class="history d-sm-block d-md-none d-none">
                         <div class="col">
                             <div class="mb-0 card">
-                                <div class="card-header">
-                                    <img src="meow.jpg" alt="" style="
-                                    width: 30px;
-                                    height: 30px;
-                                    object-fit: cover;
-                                    border-radius: 30px;">
-                                    <span style="margin-left: 12px; font-weight: bold; color: #393e41;">Mèo Dỹ</span>
-                                    <span style="margin-left: 12px;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-store"></i>
-                                            Trang cá nhân</button></span>
-                                    <span style="float: right; font-size: 15px; padding-top: 7px; ">Mới xong</span>
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex">
+                                        <i class="fa-sharp fa-regular fa-store"></i><span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[3].username}}</span>
+                                        <span id="button-top">
+                                            <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                </button></span>
+
+                                        </span>
+                                        <span id="menu-button">
+                                            <span class="dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            </span>
+                                            <span class="dropdown-menu">
+                                                <span style="margin-left: 0.7rem"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                        <span class="res-text"> Nhắn
+                                                            tin</span></button></span>
+                                                <span style="margin: 0.1rem;"><button type="button"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;"><i
+                                                            class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Shop</span></button></span>
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <span id="statusName" class="text-end">Ngày mua</span>
+
                                 </div>
-                                <hr style="margin: 17px;">
-                                <div class="row box-item" style=" margin: 17px;">
-                                    <div class="col-2">
-                                        <img src="product_Day_chuyen.jpg" alt=""
-                                            style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover;">
+
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
+                                    <div class="col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
                                     </div>
-                                    <div class="col-6 card-body">
-                                        <h5 class="card-title">Dây chuyền chữ thập Banshee</h5>
-                                        <p class="card-text">Phân loại hàng: nhựa, xanh</p>
-                                        <p>x1</p>
+                                    <div class="col-sm-6 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title" style="font-size: small;">{{o[2].productName}}</p>
+                                        <p class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}</p>
                                     </div>
-                                    <div class="col-4 justify-content-center" style="text-align: center;">
-                                        <p style="margin: 30px;">123.000 VND</p>
+                                    <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <h5 class="mb-0 text-danger fs-6">{{o[0].totalAmount}}
+                                                    VND
+                                                </h5>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-6">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-star"></i></button>
+                                                </span>
+                                                <span>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
+
                             </div>
                         </div>
+                    </div>
+                    <!--Dưới nữa nè-->
+                    <div class="history d-sm-none">
                         <div class="col">
                             <div class="mb-0 card">
-                                <span>
-                                    <div
-                                        style="float: right; font-size: 16px; margin-right: 30px; margin-top: 20px; color: #393e41;">
-                                        <i class="fa-regular fa-hand-holding-dollar fa-2xl"
-                                            style="margin-right: 10px; color: #393e41;"></i>
-                                        Thành tiền: <span
-                                            style="font-weight: bold;color: #ff3f40;font-size: 24px;">123.000
-                                            VND</span>
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex">
+                                        <i class="fa-sharp fa-regular fa-store"></i><span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[3].username}}</span>
+                                        <span id="button-top">
+                                            <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                </button></span>
+                                        </span>
                                     </div>
-                                </span>
-                                <div class="button-navigator" style="margin: 20px;">
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-outline-danger" style="outline-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-xmark"></i> &nbsp;
-                                            Hong duyệt</button></span>
-                                    <span style="margin-left: 12px; float: right;"><button type="button"
-                                            class="btn btn-danger" style="background-color: #ff3f40;"><i
-                                                class="fa-sharp fa-regular fa-check"></i> &nbsp;
-                                            Duyệt đơn</button></span>
+
+                                    <span class="text-end" style="font-size: small;">Ngày mua</span>
+
                                 </div>
+
+                                <div class="d-flex justify-content-between align-items-center p-3">
+                                    <div class="col-2 col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
+                                    </div>
+                                    <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title" style="font-size: small;">{{o[2].productName}}</p>
+                                        <p class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}</p>
+                                    </div>
+                                    <div class="col-5 col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <span class="mb-0 text-danger fs-9">{{o[0].totalAmount}}
+                                                    VND
+                                                </span>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-6">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-star"></i></button>
+                                                </span>
+                                                <span>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
