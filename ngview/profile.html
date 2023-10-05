@@ -452,29 +452,37 @@
 								<div class="col-lg-4 order-last">
 									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
 										ng-if=" myAccount.user.userId == UserInfo.userId">
-										<li><button class="btn btn-primary text-end" data-bs-toggle="modal"
+										<li><button class="btn btn-primary text-end btn-sm" data-bs-toggle="modal"
 												data-bs-target="#exampleModal1">
 												<i class="fa-light fa-pen-to-square"></i> Thông tin
 											</button></li>
-										<li><button class="btn btn-secondary text-end" data-bs-toggle="modal"
+										<li><button class="btn btn-secondary text-end btn-sm" data-bs-toggle="modal"
 												data-bs-target="#exampleModal2">
-												<i class="fa-light fa-pen-to-square"></i> Tài khoản
+												<i class="fa-sharp fa-solid fa-shield"></i> Tài khoản
 											</button></li>
+										<li><button class="btn btn-warning text-end btn-sm" data-bs-toggle="modal"
+												data-bs-target="#exampleModal3">
+												<i class="fa-sharp fa-solid fa-truck"></i> Giao hàng
+											</button></li>
+
 									</ul>
 
 									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
 										ng-if="myAccount.user.userId != UserInfo.userId">
-										<button class="btn btn-outline-primary py-1 px-2 ms-auto"
+										<button class="btn btn-outline-primary py-1 px-2 ms-auto btn-sm"
 											ng-if="!isFollowing(UserInfo.userId)"
 											ng-click="followUser(UserInfo.userId)">
 											<span>Follow</span>
 										</button>
-										<button class="btn btn-outline-danger py-1 px-2 ms-auto"
+										<button class="btn btn-outline-danger py-1 px-2 ms-auto btn-sm"
 											ng-if="isFollowing(UserInfo.userId)"
 											ng-click="unfollowUser(UserInfo.userId)">
 
 											<span>Unfollow</span>
 										</button>
+										<a href="#!/message" class="btn btn-outline-success text-end btn-sm">
+											<i class="fa-solid fa-message"></i> Nhắn tin
+										</a>
 									</ul>
 								</div>
 							</div>
@@ -1201,7 +1209,7 @@
 												<div
 													style="display: flex; align-items: center; justify-content: space-between;">
 													<div class="user-profile ">
-														<a href="/nguoiDung/{{postDetails.user.userId}}"><img
+														<a href="{{postDetails.user.userId}}"><img
 																ng-src="{{postDetails.user.avatar}}"
 																style="border-radius: 100%;" alt=""></a>
 														<div>
@@ -1563,11 +1571,53 @@
 										<button type="submit" class="btn btn-primary"
 											data-bs-dismiss="modal">Lưu</button>
 									</div>
-
 								</form>
-
 							</div>
-
+						</div>
+					</div>
+				</div>
+				<!-- Modal chỉnh sửa thông tin địa chỉ giao hàng-->
+				<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									<i class="fa-light fa-pen-to-square"></i> Chỉnh sửa địa chỉ giao hàng
+								</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form ng-submit="updateAccInfo()">
+									<p>Tỉnh/Thành phố</p>
+									<select class="form-select" ng-model="AccInfo.accountStatus.statusName">
+										<option value="Công khai">Công khai</option>
+										<option value="Chỉ theo dõi">Chỉ theo dõi</option>
+										<option value="Tạm ẩn">Tạm ẩn</option>
+									</select> <br>
+									<p>Quận/Huyện</p>
+									<select class="form-select" ng-model="AccInfo.accountStatus.statusName">
+										<option value="Công khai">Công khai</option>
+										<option value="Chỉ theo dõi">Chỉ theo dõi</option>
+										<option value="Tạm ẩn">Tạm ẩn</option>
+									</select> <br>
+									<p>Đường</p>
+									<input type="text" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Đường" value="" ng-model="">
+									<br>
+									<p>Chi tiết</p>
+									<input type="text" class="form-control" id="nametext" aria-describedby="name"
+										placeholder="Chi tiết" value="" ng-model="">
+									<br>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary"
+											data-bs-dismiss="modal">Lưu</button>
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
