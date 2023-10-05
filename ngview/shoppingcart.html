@@ -1,21 +1,21 @@
-<div class="container d-md-block d-none">
+<div class="container d-md-block d-none" style="z-index: 9;">
     <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
             <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
                 data-bs-target="#exampleModal">Thanh toán</button>
-            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
-            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Xóa tất cả {{listProduct.length}} sản phẩm">Xóa</a>
+            <a ng-click="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn </a>
+            <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Xóa sản phẩm">Xóa</a>
             |
-            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Thêm vào danh sách yêu thích">Yêu thích</a>
         </div>
-        <p class="mb-0">Tổng tiền: <span class="text-danger">100.000 VND</span> (7 sản phẩm)</p>
+        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | number:0}} VND</span> (<span class="count-product">0</span>) sản phẩm</p>
     </div>
-
-    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
+   
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProduct">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
@@ -59,9 +59,9 @@
                     </button>
                 </div>
                 <div class="col-md-2 col-lg-2 col-xl-2 d-flex gap-3 justify-content-end mt-2">
-                     <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                     <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
-                    <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
+                    <input id="{{product.product.productId}}_{{ product.color }}" value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
                 </div>
             </div>
@@ -74,16 +74,16 @@
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
             <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
-                data-bs-target="#exampleModal">Thanh toán (7)</button>
-            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-target="#exampleModal">Thanh toán (<span class="count-product">0</span>)</button>
+            <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
             title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
-            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Xóa tất cả {{listProduct.length}} sản phẩm"><i
+            <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Xóa sản phẩm"><i
                     class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
-            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
         </div>
-        <p class="mb-0">Tổng tiền: <span class="text-danger">100.000 VND</span></p>
+        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | number:0}} VND</span></p>
     </div>
     <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
@@ -128,9 +128,9 @@
                         product.quantity | number:0}} VND</p>
                 </div>
                 <div class="col-sm-2 d-flex gap-3 justify-content-end">
-                    <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
-                    <input type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
+                    <input id="{{product.product.productId}}_{{ product.color }}" value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
                 </div>
             </div>
@@ -140,16 +140,16 @@
 <!-- Khi responsive tới 576px thì hiện -->
 <div class="container d-sm-none">
     <div class="card-header mb-3 p-3" style="background-color: white;">
-        <p class="mb-2" style="font-size: small;">Tổng tiền (0): <span class="text-danger">100.000 VND</span></p>
+        <p class="mb-2" style="font-size: small;">Tổng tiền (<span class="count-product">0</span>): <span class="text-danger">{{sumPrice | number:0}} VND</span></p>
         <div class="d-flex align-items-center gap-3">
             <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC; font-size: x-small;" data-bs-toggle="modal"
                 data-bs-target="#exampleModal">Thanh toán</button>
-            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+            <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
             title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
-            <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Xóa tất cả {{listProduct.length}} sản phẩm"><i
+            <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Xóa sản phẩm"><i
                     class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
-            <a style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
         </div>
     </div>
@@ -164,9 +164,9 @@
         <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
             <div class="d-flex gap-3 mb-2">
                 <div class="col-1 mt-3 text-center">
-                    <input type="checkbox" class="form-check-input mb-3" style="cursor: pointer;"
+                    <input id="{{product.product.productId}}_{{ product.color }}" value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm"> <br>
-                    <a style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
                 </div>
                 <div class="col-3" ng-repeat="img in filterImagesByProductId(product.product.media)">
@@ -203,7 +203,7 @@
         </div>
     </div>
 </div>
-<a id="scrollToTopBtn" onclick="scrollToTop()" style="position: fixed; bottom: 20px; right: 7px; cursor: pointer;"> <i
+<a id="scrollToTopBtn" onclick="scrollToTop()" style="position: fixed; bottom: 20px; right: 7px; cursor: pointer; display: none;"> <i
         class="fa-solid fa-circle-chevron-up fa-xl fa-shake" style="color:#007ACC;"></i></a>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
