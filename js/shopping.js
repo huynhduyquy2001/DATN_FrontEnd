@@ -121,6 +121,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 		}
 
 		var formData = new FormData();
+
 		formData.append("productId", productId);
 		formData.append("quantity", $scope.quantity);
 		formData.append("color", $scope.color);
@@ -128,10 +129,15 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 		$http.post(url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
-		})
-			.then(function (res) {
-				// Xử lý phản hồi từ máy chủ
+		}).then(function (res) {
+			//Load thông tin giỏ hàng
+			$http.get(url + '/get-product-shoppingcart').then(function (response) {
+				$rootScope.listProduct = response.data;
+			}).catch(function (error) {
+				console.error('Lỗi khi lấy dữ liệu:', error);
 			});
+		});
+
 	}
 
 

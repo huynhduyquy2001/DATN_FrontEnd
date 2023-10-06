@@ -104,7 +104,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.newMessMini = '';
 	$scope.ListMess = [];
 	$rootScope.myAccount = {};
-	$scope.listProduct = [];
+	$rootScope.listProduct = [];
 	//phân trang shopping
 	$rootScope.checkShopping = true;
 	$rootScope.currentPage = 0;
@@ -480,7 +480,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Load thông tin giỏ hàng
 	$http.get(url + '/get-product-shoppingcart').then(function (response) {
-		$scope.listProduct = response.data;
+		$rootScope.listProduct = response.data;
 	}).catch(function (error) {
 		console.error('Lỗi khi lấy dữ liệu:', error);
 	});

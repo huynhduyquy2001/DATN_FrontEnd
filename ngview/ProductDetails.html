@@ -211,7 +211,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Sản phẩm liên quan</h5>
                                 <div ng-repeat="obj in relatedProducts" class="d-flex mb-3">
-                                    <a href="#" class="me-3">
+                                    <a href="#!productdetails/{{obj.productId}}" class="me-3">
                                         <img ng-src="{{obj.media[0].mediaUrl}}" style="min-width: 96px; height: 96px;"
                                             class="img-md img-thumbnail" />
                                     </a>
@@ -252,7 +252,7 @@
                                     class="fa-solid fa-star" style="color: #c0c0c0;"></i></button>
 
                             <textarea class="form-control mt-2" name="" id=""
-                                ng-model="myRate.ratingContent"></textarea>
+                                ng-model="myRate.ratingContent">Giá trị mặc định của textarea</textarea>
                             <a ng-click="rate()" class="btn btn-primary shadow-0 m-2"
                                 style="background-color: white ; color: #007ACC;">
                                 Đánh giá </a>
