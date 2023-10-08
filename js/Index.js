@@ -104,13 +104,27 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.newMessMini = '';
 	$scope.ListMess = [];
 	$rootScope.myAccount = {};
-	$scope.listProduct = [];
+	$rootScope.listProduct = [];
 	//phân trang shopping
 	$rootScope.checkShopping = true;
 	$rootScope.currentPage = 0;
 	$rootScope.currentPageTrending = 0;
 	$rootScope.checkMenuLeft = true;
 
+	var config = {
+		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
+		authDomain: "viesonet-datn.firebaseapp.com",
+		projectId: "viesonet-datn",
+		storageBucket: "viesonet-datn.appspot.com",
+		messagingSenderId: "178200608915",
+		appId: "1:178200608915:web:c1f600287711019b9bcd66",
+		measurementId: "G-Y4LXM5G0Y4"
+	};
+
+	// Kiểm tra xem Firebase đã được khởi tạo chưa trước khi khởi tạo nó
+	if (!firebase.apps.length) {
+		firebase.initializeApp(config);
+	}
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
 		.then(function (response) {
@@ -207,7 +221,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
 				$scope.receiver = response.data;
-				alert($scope.receiver.username);
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
@@ -467,7 +480,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Load thông tin giỏ hàng
 	$http.get(url + '/get-product-shoppingcart').then(function (response) {
-		$scope.listProduct = response.data;
+		$rootScope.listProduct = response.data;
 	}).catch(function (error) {
 		console.error('Lỗi khi lấy dữ liệu:', error);
 	});
@@ -527,8 +540,108 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		}
 	}
 
+	// Hàm kiểm tra kích thước màn hình và ẩn thanh asideLeft khi cần
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+		} else {
+			view.classList.remove('col-lg-11', 'offset-lg-1');
+			view.classList.add('col-lg-9', 'offset-lg-3');
+			asideLeft.style.opacity = '1';
+			asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+		}
+	}
 
+	// Gọi hàm kiểm tra khi trang được tải và khi cửa sổ thay đổi kích thước
+	window.onload = checkScreenWidth;
+	window.addEventListener('resize', checkScreenWidth);
 
+	// gửi ảnh qua tin nhắn
+	$scope.uploadFile = function () {
+		var fileInput = document.getElementById('inputGroupFile011');
+		// Check if no files are selected
+		if (fileInput.files.length === 0) {
+			// Handle empty file selection
+			return;
+		}
+		var storage = firebase.storage();
+		var storageRef = storage.ref();
+
+		var uploadMedia = function (fileIndex) {
+			if (fileIndex >= fileInput.files.length) {
+				// All files have been uploaded
+				$scope.content = '';
+				fileInput.value = null;
+				var mediaList = document.getElementById('mediaList1');
+				mediaList.innerHTML = '';
+				$window.selectedMedia1 = [];
+				return;
+			}
+
+			var file = fileInput.files[fileIndex];
+			var timestamp = new Date().getTime();
+			var fileName = file.name + '_' + timestamp;
+			var fileType = getFileExtensionFromFileName(file.name);
+
+			// Xác định nơi lưu trữ dựa trên loại tệp
+			var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+			// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+			var uploadTask = storageRef.child(storagePath + fileName).put(file);
+
+			// Xử lý sự kiện khi tải lên hoàn thành
+			uploadTask.on('state_changed', function (snapshot) {
+				// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+			}, function (error) {
+				alert("Lỗi tải");
+			}, function () {
+				// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+					var formData = new FormData();
+					formData.append('mediaUrl', downloadURL);
+
+					$http.post(url + '/sendimage/' + $scope.receiver.userId, formData, {
+						transformRequest: angular.identity,
+						headers: {
+							'Content-Type': undefined
+						}
+					}).then(function (response) {
+						var newListMess = response.data;
+						//$scope.ListMess = $scope.ListMess.concat(newListMess);
+
+						// Gửi từng tin nhắn trong danh sách newListMess bằng stompClient.send
+						for (var i = 0; i < newListMess.length; i++) {
+							var messageToSend = newListMess[i];
+							stompClient.send('/app/sendnewmess', {}, JSON.stringify(messageToSend));
+						}
+
+						// Tiếp tục tải và gửi ảnh tiếp theo
+						uploadMedia(fileIndex + 1);
+					})
+						.catch(function (error) {
+							console.error('Lỗi tải lên tệp:', error);
+						});
+
+				}).catch(function (error) {
+					console.error('Error getting download URL:', error);
+				});
+			});
+		};
+
+		// Bắt đầu tải và gửi ảnh từ fileInput.files[0]
+		uploadMedia(0);
+	};
+
+	// Hàm để lấy phần mở rộng từ tên tệp
+	function getFileExtensionFromFileName(fileName) {
+		return fileName.split('.').pop().toLowerCase();
+	}
 
 	// Ban đầu ẩn menu
 	var menu = angular.element(document.querySelector('.menu'));

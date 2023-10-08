@@ -6,13 +6,13 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
     .get(url + "/get-product-shoppingcart")
     .then(function (response) {
       var grouped = {};
-       angular.forEach(response.data, function (product) {
+      angular.forEach(response.data, function (product) {
         var userId = product.product.user.userId;
         if (!grouped[userId]) {
           grouped[userId] = [];
         }
         grouped[userId].push(product);
-        });
+      });
       $scope.listProduct = grouped;
     })
     .catch(function (error) {
@@ -68,7 +68,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
     $scope.recalculatePrice(product);
     //tăng số lượng trong giỏ hàng
     $scope.addQuantity(product, 1);
-    
+
   };
 
   //tính tổng giá tiền khi click button -
@@ -134,66 +134,66 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
         // Xử lý phản hồi từ máy chủ
       });
   };
-  
+
 
   //xử lý checkbox
   var isChecked = false;
 
-  $scope.checkAll = function(){
-      checked();
-      $scope.getSumPrice();
+  $scope.checkAll = function () {
+    checked();
+    $scope.getSumPrice();
   }
 
-  $scope.updateCount = function(){
+  $scope.updateCount = function () {
     updateCountChecked();
     $scope.getSumPrice();
   }
 
-  function checked(){
-      isChecked = !isChecked;
-      $('input[type="checkbox"]').prop('checked', isChecked);
-      updateCountChecked();
+  function checked() {
+    isChecked = !isChecked;
+    $('input[type="checkbox"]').prop('checked', isChecked);
+    updateCountChecked();
   }
 
   //hiện số lượng checkbox
   function updateCountChecked() {
-      var checkedCount = $('input[type="checkbox"]:checked:visible').length;
-      $('.count-product').text(checkedCount);
+    var checkedCount = $('input[type="checkbox"]:checked:visible').length;
+    $('.count-product').text(checkedCount);
   }
 
   //Tính tổng khi click vào checkbox
   $scope.sumPrice = 0;
-  $scope.getSumPrice = function() {
-      // Lấy tất cả các phần tử input có type là checkbox
-      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      
-      // Lưu giá trị từ các checkbox
-      var sum = 0;
+  $scope.getSumPrice = function () {
+    // Lấy tất cả các phần tử input có type là checkbox
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-      // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
-      checkboxes.forEach(function(checkbox) {
-          if (checkbox.checked && checkbox.offsetParent !== null) {
-              sum += parseInt(checkbox.value);
-          }
-      });
+    // Lưu giá trị từ các checkbox
+    var sum = 0;
 
-      // Đưa giá trị vào biến $scope.sumPrice
-      $scope.sumPrice = sum;
+    // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked && checkbox.offsetParent !== null) {
+        sum += parseInt(checkbox.value);
+      }
+    });
+
+    // Đưa giá trị vào biến $scope.sumPrice
+    $scope.sumPrice = sum;
   };
 
   //Thêm vào danh sách sản phẩm yêu thích
-  $scope.addFavoriteProducts = function(){
+  $scope.addFavoriteProducts = function () {
     // Lấy tất cả các phần tử input có type là checkbox
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     // Lưu giá trị từ các checkbox
     var productIds = [];
     // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
-    checkboxes.forEach(function(checkbox) {
-        if (checkbox.checked && checkbox.offsetParent !== null) {
-          var productIdAndColor = checkbox.id.split('_'); 
-          var productId = productIdAndColor[0];
-          productIds.push(productId);
-        }
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked && checkbox.offsetParent !== null) {
+        var productIdAndColor = checkbox.id.split('_');
+        var productId = productIdAndColor[0];
+        productIds.push(productId);
+      }
     });
 
     if (productIds.length === 0) {
@@ -206,7 +206,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
       });
     } else {
       Swal.fire({
-        text: 'Bạn muốn thêm '+ productIds.length +' sản phẩm vào danh sách yêu thích?',
+        text: 'Bạn muốn thêm ' + productIds.length + ' sản phẩm vào danh sách yêu thích?',
         icon: 'warning',
         confirmButtonText: 'Có, chắc chắn',
         showCancelButton: true,
@@ -220,22 +220,22 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
             data: JSON.stringify(productIds),
             contentType: 'application/json'
           }).then(function (response) {
-              Swal.fire({
-                position: 'top',
-                icon: response.data.status,
-                text: response.data.message,
-                showConfirmButton: false,
-                timer: 1800
-              });
+            Swal.fire({
+              position: 'top',
+              icon: response.data.status,
+              text: response.data.message,
+              showConfirmButton: false,
+              timer: 1800
+            });
           }).catch(function (error) {
-              console.error("Error:", error);
-              Swal.fire({
-								position: 'top',
-								icon: 'error',
-								text: 'Thêm vào yêu thích thất bại',
-								showConfirmButton: false,
-								timer: 1800
-							});
+            console.error("Error:", error);
+            Swal.fire({
+              position: 'top',
+              icon: 'error',
+              text: 'Thêm vào yêu thích thất bại',
+              showConfirmButton: false,
+              timer: 1800
+            });
           });
         }
       });
@@ -244,21 +244,21 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
   }
 
   //Xóa các input được chọn
-  $scope.deleteAll = function(){
+  $scope.deleteAll = function () {
     // Lấy tất cả các phần tử input có type là checkbox
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     // Lưu giá trị từ các checkbox
     var listColorAndProductId = [];
     // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
-    checkboxes.forEach(function(checkbox) {
-        if (checkbox.checked && checkbox.offsetParent !== null) {
-          var productIdAndColor = checkbox.id.split('_'); 
-          var productId = productIdAndColor[0];
-          var color = productIdAndColor[1];
-          listColorAndProductId.push({ productId: productId, color: color });
-        }
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked && checkbox.offsetParent !== null) {
+        var productIdAndColor = checkbox.id.split('_');
+        var productId = productIdAndColor[0];
+        var color = productIdAndColor[1];
+        listColorAndProductId.push({ productId: productId, color: color });
+      }
     });
-        
+
     if (listColorAndProductId.length === 0) {
       Swal.fire({
         position: 'top',
@@ -269,7 +269,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
       });
     } else {
       Swal.fire({
-        text: 'Bạn muốn xóa '+ listColorAndProductId.length +' sản phẩm khỏi giỏ hàng?',
+        text: 'Bạn muốn xóa ' + listColorAndProductId.length + ' sản phẩm khỏi giỏ hàng?',
         icon: 'warning',
         confirmButtonText: 'Có, chắc chắn',
         showCancelButton: true,
@@ -283,32 +283,32 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
             data: listColorAndProductId,
             contentType: 'application/json'
           }).then(function (response) {
-              Swal.fire({
-                position: 'top',
-                icon: response.data.status,
-                text: response.data.message,
-                showConfirmButton: false,
-                timer: 1800
-              });
-              $scope.reloadPageWithDelay();
+            Swal.fire({
+              position: 'top',
+              icon: response.data.status,
+              text: response.data.message,
+              showConfirmButton: false,
+              timer: 1800
+            });
+            $scope.reloadPageWithDelay();
           }).catch(function (error) {
-              console.error("Error:", error);
-              Swal.fire({
-								position: 'top',
-								icon: 'error',
-								text: 'Xóa sản phẩm thất bại',
-								showConfirmButton: false,
-								timer: 1800
-							});
+            console.error("Error:", error);
+            Swal.fire({
+              position: 'top',
+              icon: 'error',
+              text: 'Xóa sản phẩm thất bại',
+              showConfirmButton: false,
+              timer: 1800
+            });
           });
         }
       });
     }
 
-  } 
+  }
 
   //Xóa 1 sản phẩm
-  $scope.deleteToCart = function(productId, color){
+  $scope.deleteToCart = function (productId, color) {
     var listColorAndProductId = [];
     listColorAndProductId.push({ productId: productId, color: color });
     if (listColorAndProductId.length === 0) {
@@ -335,33 +335,33 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
             data: listColorAndProductId,
             contentType: 'application/json'
           }).then(function (response) {
-              Swal.fire({
-                position: 'top',
-                icon: response.data.status,
-                text: response.data.message,
-                showConfirmButton: false,
-                timer: 1800
-              });
-              $scope.reloadPageWithDelay();
+            Swal.fire({
+              position: 'top',
+              icon: response.data.status,
+              text: response.data.message,
+              showConfirmButton: false,
+              timer: 1800
+            });
+            $scope.reloadPageWithDelay();
           }).catch(function (error) {
-              console.error("Error:", error);
-              Swal.fire({
-								position: 'top',
-								icon: 'error',
-								text: 'Xóa sản phẩm thất bại',
-								showConfirmButton: false,
-								timer: 1800
-							});
+            console.error("Error:", error);
+            Swal.fire({
+              position: 'top',
+              icon: 'error',
+              text: 'Xóa sản phẩm thất bại',
+              showConfirmButton: false,
+              timer: 1800
+            });
           });
         }
       });
     }
-  } 
+  }
 
   //Hàm reload lại trang
-  $scope.reloadPageWithDelay = function() {
-    $timeout(function() {
-        $route.reload();
+  $scope.reloadPageWithDelay = function () {
+    $timeout(function () {
+      $route.reload();
     }, 1800); // 2000 milliseconds là 2 giây
   };
 

@@ -57,6 +57,15 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/staff/productpost', {
 		templateUrl: "ngview/PostsProduct.html",
 		controller: 'productPostCtrl'
+	}).when('/order/:userId', {
+		templateUrl: "ngview/order.html",
+		controller: 'OrdersController'
+	}).when('/order/add-order/:userId', {
+		templateUrl: "ngview/addOrder.html",
+		controller: 'OrdersController'
+	}).when('/order/update-order/:productId', {
+		templateUrl: "ngview/updateOrder.html",
+		controller: 'OrdersController'
 	})
 		;
 	// Set the default language

@@ -1640,6 +1640,21 @@ img {
 	border-color: #00bfff;
 }
 
+#dropArea1 {
+	height: 200px;
+	border: 2px dashed #ccc;
+	text-align: center;
+	line-height: 200px;
+	font-size: 16px;
+	color: #666;
+	margin: 20px auto;
+}
+
+#dropArea1.active {
+	border-color: #00bfff;
+}
+
+
 #mediaList img {
 	width: 100%;
 	box-sizing: border-box;
@@ -1896,6 +1911,31 @@ h3 {
 		transform: scale(0.97);
 	}
 }
+
+.accept--btn{
+	padding: 0.8em 1em;
+	border-radius: 7px;
+	border: 1px solid #007ACC;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 1.3px;
+	color: #fff;
+	cursor: pointer;
+	background-color:  #007ACC;
+}
+
+.decline--btn{
+	padding: 0.8em 1em;
+	border-radius: 7px;
+	border: 1px solid #ff3f40;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 1.3px;
+	color: #fff;
+	cursor: pointer;
+	background-color:  #ff3f40;
+}
+
 
 .btn-disable {
 	padding: 0.8em 1em;

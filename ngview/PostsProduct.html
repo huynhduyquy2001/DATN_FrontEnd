@@ -1,178 +1,251 @@
-<div ng-controller="productPostCtrl">
+<div>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="card-title fw-semibold mb-2">
+
 				<nav class="navbar navbar-expand-lg navbar-light">
-					<ul class="navbar-nav flex-row align-items-center justify-content-between mb-2">
-						<input type="checkbox" ng-click="selectAll()" ng-model="selectAllCheckbox"
-							class="form-check-input ms-3 me-4 hover-effect" style="border: 3px solid rgb(34, 31, 31);">
-						<a style="cursor: pointer;"  ng-click="deletePostViolations()" class="me-5" data-bs-placement="top"
-							title="Xóa tố cáo bài viết vi phạm">
-							<i class="fa-regular fa-trash-can fa-lg"></i>
-						</a>
-						<a style="cursor: pointer;"  ng-click="acceptPostViolations()" class="me-5" data-bs-placement="top"
-							title="Chấp nhận tố cáo bài viết vi phạm"><i class="fa-solid fa-check fa-lg"></i>
-						</a>
-						<small class="mt-1" ng-if="selectedCountText > 0"> Đã
-							chọn <b style="color: red">{{ selectedCountText }}</b> mục
-						</small>
+
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button ng-class="{ 'nav-link': true, 'active': checkShopping }"
+								ng-click="getproductList(currentPage)" id="profile-tab" data-bs-toggle="tab"
+								data-bs-target="#processing" type="button" role="tab" aria-controls="profile"
+								aria-selected="false">Đang chờ duyệt</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button ng-class="{ 'nav-link': true, 'active': !checkShopping }"
+								ng-click="getproductDecline(currentPage)" id="home-tab" data-bs-toggle="tab"
+								data-bs-target="#declined" type="button" role="tab" aria-controls="home"
+								aria-selected="true">Đã từ chối</button>
+						</li>
 					</ul>
-					
+
 					<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 						<!-- Nút chuyển đến trang trước -->
-						<a class="me-2" ng-click="prevPage()"> <i
-							class="fa-solid fa-chevron-left fa-xs"></i>
+						<a class="me-2" ng-click="prevPage()"> <i class="fa-solid fa-chevron-left fa-xs"></i>
 						</a>
-			
+
 						<!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
 						<small class="me-2">{{currentPage + 1}} /
-						  {{totalPages}}</small>
-			
+							{{totalPages}}</small>
+
 						<!-- Nút chuyển đến trang kế tiếp -->
-						<a class="me-3" ng-click="nextPage()"> <i
-							class="fa-solid fa-chevron-right fa-xs"></i>
+						<a class="me-3" ng-click="nextPage()"> <i class="fa-solid fa-chevron-right fa-xs"></i>
 						</a>
-			
+
 						<form class="position-relative">
-						  <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-							placeholder="Nhập tên người đăng" ng-change="searchByAuthor()"
-							ng-model="searchText" style="border: 1px solid #ccc;"> <i
-							class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+							<input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+								placeholder="Nhập tên người đăng" ng-change="searchProduct()" ng-model="searchText"
+								style="border: 1px solid #ccc;"> <i
+								class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
 						</form>
-					  </ul>
-				
+					</ul>
+
 
 				</nav>
 			</div>
-			<div class="table-responsive sidebar-scrollable">
-				<table class="table text-nowrap mb-0 align-middle">
-					<thead class="text-dark fs-4">
-						<tr>
-							<th class="border-bottom-0">#</th>
-							<th class="border-bottom-0">
-								<h6 class="fw-semibold mb-0">Tên sản phẩm</h6>
-							</th>
-							<th class="border-bottom-0">
-								<h6 class="fw-semibold mb-0">Giá</h6>
-							</th>
-							<th class="border-bottom-0">
-								<h6 class="fw-semibold mb-0">Người đăng</h6>
-							</th>
-							<th class="border-bottom-0">
-								<h6 class="fw-semibold mb-0">Ngày đăng</h6>
-							</th>
-							<th class="border-bottom-0">
-								<h6 class="fw-semibold mb-0 text-center">Chi tiết</h6>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="list in listPosts.content" id="row-{{list.productId}}" >
-							<td class="border-bottom-0 py-3"><input type="checkbox" ng-click="checkboxClicked()"
-									ng-model="list.checked" class="form-check-input hover-effect"></td>
-							<td class="border-bottom-0" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-									{{list.productName}}</td>
-							<td class="border-bottom-0" style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"
-								>{{list.originalPrice}} VNĐ</td>
-								<td class="border-bottom-0" style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"
-								>{{list.user.username}}</td>
-							<td class="border-bottom-0">
-								<p class="mb-0 fw-normal">{{list.datePost | date: 'dd/MM/yyyy'}}</p>
-							</td>
-							<td class="border-bottom-0 text-center"><a style="cursor: pointer;" data-bs-placement="top"
-									title="Xem chi tiết bài viết" ng-click="detailPost(list[0])"> <i
-										class="fa-light fa-eye" style="color: #336cce;"></i>
-								</a></td>
-						</tr>
-					</tbody>
-				</table>
+
+			<div class="tab-content">
+
+				<div class="tab-pane active" id="processing" role="tabpanel" aria-labelledby="home-tab">
+					<div class="table-responsive sidebar-scrollable">
+						<table class="table text-nowrap mb-0 align-middle">
+							<thead class="text-dark fs-4">
+								<tr>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Tên sản phẩm</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Giá</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Người đăng</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Ngày đăng</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0 text-center">Chi tiết</h6>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="list in listPosts" id="row-{{list.productId}}">
+									<td class="border-bottom-0"
+										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.productName}}</td>
+									<td class="border-bottom-0"
+										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.originalPrice.toLocaleString('vi-VN')}}
+										vnd </td>
+									<td class="border-bottom-0"
+										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.userName}}</td>
+									<td class="border-bottom-0">
+										<p class="mb-0 fw-normal">{{list.datePost | date: 'dd/MM/yyyy'}}</p>
+									</td>
+									<td class="border-bottom-0 text-center"><a style="cursor: pointer;"
+											data-bs-placement="top" title="Xem chi tiết bài viết"
+											ng-click="detailProduct(list.productId)"> <i class="fa-light fa-eye"
+												style="color: #336cce;"></i>
+										</a></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+
+				<div class="tab-pane" id="declined" role="tabpanel" aria-labelledby="home-tab">
+					<div class="table-responsive sidebar-scrollable">
+						<table class="table text-nowrap mb-0 align-middle">
+							<thead class="text-dark fs-4">
+								<tr>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Tên sản phẩm</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Giá</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Người đăng</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Ngày đăng</h6>
+									</th>
+									<th class="border-bottom-0">
+										<h6 class="fw-semibold mb-0">Lí do</h6>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="list in listReject" id="row-{{list.tempId}}">
+									<td class="border-bottom-0"
+										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.productName}}</td>
+									<td class="border-bottom-0"
+										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.originalPrice.toLocaleString('vi-VN')}}
+										vnd </td>
+									<td class="border-bottom-0"
+										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.username}}</td>
+									<td class="border-bottom-0">
+										<p class="mb-0 fw-normal">{{list.date | date: 'dd/MM/yyyy'}}</p>
+									</td>
+									<td class="border-bottom-0 " 
+										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+										{{list.reason}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
 
 			</div>
+
 		</div>
 	</div>
-	<!-- Modal
+	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-			<div class="modal-content">
+			<div class="modal-content" style="height: 100%;">
 				<div class="modal-header">
 					<h4>Chi tiết</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-5">
-							<div style="margin-bottom: 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
-								<a href="#" target="_blank" class="image-link"> <img
-										ng-src="/images/{{post.user.avatar}}" alt="" width="55" height="55"
-										class="rounded-circle mt-3">
-									<div class="content mt-3">
-										<span class="name">{{post.user.username}}</span> <small>{{post.postDate
-											| date: 'dd/MM/yyyy'}}</small>
-									</div>
-								</a>
-								<div id="detailContent" style="margin-top: 15px; margin-left: 25px;"
-									ng-bind="post.content"></div>
-								<center style="margin-right: 20px; margin-top: 10px;">
-									<div id="carouselExampleFade" class="carousel slide carousel-fade carousel-dark"
-										ng-if="post.images && post.images.length > 0">
-										<div class="carousel-inner" style="width: 75%;">
-											<div class="carousel-item" ng-class="{active: $index === 0}"
-												ng-repeat="imageUrl in post.images">
-												<img width="75%" ng-src="/images/{{imageUrl.imageUrl}}"
-													class="d-block w-100" alt="">
+						<div class="col-lg-10" style="z-index: 10; margin-bottom: 2rem; border-radius: 5px;">
+							<div class="row frameProduct ">
+								<div class="col-md-6 "
+									style="display: flex; justify-content: center; align-items: center;">
+									<img width="100%" ng-src="{{product.media[0].mediaUrl}}">
+								</div>
+								<div class="col-md-6 ">
+									<div class="product__info">
+										<div class="user-profile ">
+											<img ng-src="{{product.user.avatar}}" style="border-radius: 100%;" alt="">
+											<div>
+												<span
+													style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+													class="ng-binding">Vân Anh</span> &nbsp;&nbsp; <span><small
+														style="font-size: 12px; color: #65676b" class="ng-binding">
+														{{getFormattedTimeAgo(product.datePost)}}
+													</small></span>
 											</div>
 										</div>
-										<button class="carousel-control-prev" type="button"
-											data-bs-target="#carouselExampleFade" data-bs-slide="prev"
-											ng-if="post.images.length > 1">
-											<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-										</button>
-										<button class="carousel-control-next" type="button"
-											data-bs-target="#carouselExampleFade" data-bs-slide="next"
-											ng-if="post.images.length > 1">
-											<span class="carousel-control-next-icon" aria-hidden="true"></span>
-										</button>
+										<hr>
+										<div class="title">
+											<b style="font-size: 1.2rem; white-space: nowrap;
+									text-overflow: ellipsis;display: block; width: 100%; overflow: hidden;">{{product.productName}}</b>
+										</div>
+										<br>
+										<div>
+											<b>Giá:</b> <small ng-show="!product.promotion==0"><span
+													style="text-decoration: line-through; color: gray;">{{product.originalPrice
+													| currencyFormat}}
+												</span> &nbsp; |&nbsp;</small>
+											<span> {{getSalePrice(product.originalPrice, product.promotion) |
+												currencyFormat}}</span>
+										</div>
+										<br>
+										<div>
+											<b>Chất liệu:</b> <span>{{product.material}}
+											</span>
+										</div>
+										<br>
+										<div>
+											<b>Màu:</b> <span
+												ng-repeat="obj in product.productColors">{{obj.color.colorName}}{{$last
+												? '.' : ','}}
+											</span>
+										</div>
+										<br>
+										<div>
+											<b>Chú thích:</b> <span>{{product.description}}
+											</span>
+										</div>
+										<button ng-click="accept(product.productId)" class="accept--btn"
+											style="margin-top: 1.5rem;">Chấp nhận</button>
+										<button ng-click="rejectPage()" class="decline--btn" style="margin-top: 1.5rem;">Từ
+											chối</button>
+									</div>
 
-									</div>
-								</center>
-								<div class="post-reaction mt-3">
-									<div class="activity-icons d-flex justify-content ms-3">
-										<div>
-											<i class="fa-regular fa-thumbs-up"></i> &nbsp;
-											{{post.likeCount}}
-										</div>
-										&nbsp;&nbsp;&nbsp;&nbsp;
-										<div>
-											<i class="fa-regular fa-comment"></i>&nbsp;
-											{{post.commentCount}}
-										</div>
-									</div>
-									<br>
 								</div>
 							</div>
+
 						</div>
-						<div class="col-1"></div>
-						<div class="col-6">
-							<div class="table-responsive">
-								<table class="table" >
-									<thead>
-										<tr>
-											<th scope="col">Lý do bị vi phạm</th>
-											<th scope="col" class="text-center">Số lượng</th>
-										</tr>
-									</thead>
-									<tbody >
-										<tr ng-repeat="violation in listViolation">
-											<td>{{violation[0]}}</td>
-											<td class="text-center">{{violation[1]}}</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
-	</div> -->
+	</div>
+
+	<!-- Modal2 -->
+	<div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+			<div class="modal-content" style="height: 40%;">
+				<div class="modal-header">
+					<h4>Lí do từ chối</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<label for="reasonRejection" class="form-label">Nhập lí do từ chối: </label> 
+					<input type="text" class="form-control" id="reasonRejection"
+						ng-model="reasonRejection">
+
+				</div>
+				<div class="modal-footer">
+					<!-- Cancel button -->
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Hủy</button>
+					<!-- Add button -->
+					<button type="button" ng-click="reject(product.productId)" class="btn btn-primary">Xác nhận</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

@@ -52,6 +52,8 @@
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
 	<!-- Thêm các script khác của Firebase nếu cần -->
 	<title>Trang chủ</title>
 	<style type="text/css">
@@ -172,10 +174,7 @@
 		}
 
 		@media screen and (max-width: 1180px) {
-			#asideLeft {
-				opacity: 0;
-				left: -280px;
-			}
+
 
 			#view.offset-lg-3 {
 				margin-left: 0;
@@ -565,6 +564,157 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal gửi ảnh bằng boxchat mini -->
+	<div class="modal fade" id="modalSendImages" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+		tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content" style="background-color: rgba(246, 245, 244, 1);">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>Chọn ảnh</b>
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="imagesForm" enctype="multipart/form-data">
+						<div id="dropArea1" ondrop="dropHandler1(event);" ondragover="dragOverHandler1(event);"
+							ondragleave="dragLeaveHandler1(event);">
+							<i class="fa-light fa-download" style="font-size: 4rem;"></i>
+						</div>
+
+						<div class="input-group mb-3">
+							<label class="input-group-text" for="inputGroupFile011">
+								<i class="fa-regular fa-image"></i>{{
+								'HAVD' | translate }}
+							</label> <input type="file" class="form-control" name="mediaFiles" id="inputGroupFile011"
+								multiple>
+						</div>
+
+						<div id="mediaList1"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button ng-click="uploadFile()" style="width: 500px; border: none; background-color: #007ACC ;"
+						class="btn-blue" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+						data-bs-dismiss="modal">Gửi ảnh</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var selectedMedia1 = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
+
+		document.getElementById('dropArea1').addEventListener('click',
+			function () {
+				document.getElementById('inputGroupFile011').click();
+			});
+
+		document.getElementById('inputGroupFile011').addEventListener('change',
+			function () {
+				handleFiles1(this.files);
+			});
+
+		function dropHandler1(event) {
+			event.preventDefault();
+			var files = event.dataTransfer.files;
+			handleFiles1(files);
+		}
+
+		function handleFiles1(files) {
+			var mediaType = /^image\//;
+			var videoType = /^video\//;
+			var mediaList1 = document.getElementById('mediaList1');
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (mediaType.test(file.type) || videoType.test(file.type)) {
+					var reader = new FileReader();
+					reader.onload = (function (file) {
+						return function () {
+							if (mediaType.test(file.type)) {
+								var media = new Image();
+								media.src = this.result;
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+									file);
+								mediaList1.appendChild(container);
+							} else if (videoType.test(file.type)) {
+								var media = document.createElement('video');
+								media.src = this.result;
+								media.setAttribute('controls', 'controls');
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+									file);
+								mediaList1.appendChild(container);
+							}
+						};
+					})(file);
+					reader.readAsDataURL(file);
+					selectedMedia1.push(file);
+				}
+			}
+
+			// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+			var dataTransfer = new DataTransfer();
+			for (var i = 0; i < selectedMedia1.length; i++) {
+				dataTransfer.items.add(selectedMedia1[i]);
+			}
+			document.getElementById('inputGroupFile011').files = dataTransfer.files;
+		}
+
+		function createMediaContainer(media, file) {
+			var container = document.createElement('div');
+			container.classList.add('previewMediaContainer');
+			container.appendChild(media);
+
+			var deleteButton = document.createElement('button');
+			deleteButton.innerHTML = 'X';
+			deleteButton.classList.add('deleteButton');
+			deleteButton
+				.addEventListener(
+					'click',
+					function () {
+						// Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia1 khi người dùng xóa
+						var index = selectedMedia1.indexOf(file);
+						if (index !== -1) {
+							selectedMedia1.splice(index, 1);
+						}
+						// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+						var dataTransfer = new DataTransfer();
+						for (var i = 0; i < selectedMedia1.length; i++) {
+							dataTransfer.items.add(selectedMedia1[i]);
+						}
+						document.getElementById('inputGroupFile011').files = dataTransfer.files;
+
+						container.remove();
+					});
+
+			container.appendChild(deleteButton);
+
+			return container;
+		}
+
+		function dragOverHandler1(event) {
+			event.preventDefault();
+			event.target.classList.add('active');
+		}
+
+		function dragLeaveHandler1(event) {
+			event.preventDefault();
+			event.target.classList.remove('active');
+		}
+		function toggleColor(link) {
+			var allLinks = document.getElementsByClassName("colorful-link");
+
+			for (var i = 0; i < allLinks.length; i++) {
+				var currentLink = allLinks[i];
+				currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+				if (currentLink === link) {
+					link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+				}
+			}
+		}
+	</script>
 	<!-- Thông báo -->
 	<div ng-include="'_notification.html'"></div>
 
@@ -596,6 +746,7 @@
 	<script src="js/main.js"></script>
 	<script src="js/favouriteProducts.js"></script>
 	<script src="js/shoppingcart.js"></script>
+	<script src="js/order.js"></script>
 </body>
 
 </html>

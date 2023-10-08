@@ -24,6 +24,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	$scope.getProduct = function (productId) {
 		$http.get(url + "/get-product/" + productId)
 			.then(function (res) {
+				$scope.color = "";
 				$scope.product = res.data;
 				$scope.total = -1;
 				$scope.quantity = 1;
@@ -80,7 +81,47 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	};
 
 	$rootScope.addShoppingCart = function (productId) {
+		if ($scope.color === "") {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn màu sắc sản phẩm'
+			})
+			return;
+		}
+		if ($scope.quantity === 0) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn số lượng cần mua'
+			})
+			return;
+		}
+
 		var formData = new FormData();
+
 		formData.append("productId", productId);
 		formData.append("quantity", $scope.quantity);
 		formData.append("color", $scope.color);
@@ -88,10 +129,15 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 		$http.post(url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
-		})
-			.then(function (res) {
-				// Xử lý phản hồi từ máy chủ
+		}).then(function (res) {
+			//Load thông tin giỏ hàng
+			$http.get(url + '/get-product-shoppingcart').then(function (response) {
+				$rootScope.listProduct = response.data;
+			}).catch(function (error) {
+				console.error('Lỗi khi lấy dữ liệu:', error);
 			});
+		});
+
 	}
 
 

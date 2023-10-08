@@ -10,40 +10,102 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	$scope.isEmptyObject = false;
 	var url = "http://localhost:8080";
 
+	var config = {
+		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
+		authDomain: "viesonet-datn.firebaseapp.com",
+		projectId: "viesonet-datn",
+		storageBucket: "viesonet-datn.appspot.com",
+		messagingSenderId: "178200608915",
+		appId: "1:178200608915:web:c1f600287711019b9bcd66",
+		measurementId: "G-Y4LXM5G0Y4"
+	};
+
+	// Kiểm tra xem Firebase đã được khởi tạo chưa trước khi khởi tạo nó
+	if (!firebase.apps.length) {
+		firebase.initializeApp(config);
+	}
+
+	// Hàm để lấy phần mở rộng từ tên tệp
+	function getFileExtensionFromFileName(fileName) {
+		return fileName.split('.').pop().toLowerCase();
+	}
+
 	// gửi ảnh qua tin nhắn
 	$scope.uploadFile = function () {
 		var fileInput = document.getElementById('inputGroupFile01');
-		if (fileInput.files.length > 0) {
-			var formData = new FormData();
+		// Check if no files are selected
+		if (fileInput.files.length === 0) {
+			// Handle empty file selection
+			return;
+		}
+		var storage = firebase.storage();
+		var storageRef = storage.ref();
 
-			for (var i = 0; i < fileInput.files.length; i++) {
-				formData.append('photoFiles', fileInput.files[i]);
+		var uploadMedia = function (fileIndex) {
+			if (fileIndex >= fileInput.files.length) {
+				// All files have been uploaded
+				$scope.content = '';
+				fileInput.value = null;
+				var mediaList = document.getElementById('mediaList');
+				mediaList.innerHTML = '';
+				$window.selectedMedia = [];
+				return;
 			}
 
-			$http.post('/sendimage/' + $scope.userMess.userId, formData, {
-				transformRequest: angular.identity,
-				headers: {
-					'Content-Type': undefined
-				}
-			})
-				.then(function (response) {
-					var newListMess = response.data;
-					$scope.ListMess = $scope.ListMess.concat(newListMess);
+			var file = fileInput.files[fileIndex];
+			var timestamp = new Date().getTime();
+			var fileName = file.name + '_' + timestamp;
+			var fileType = getFileExtensionFromFileName(file.name);
 
-					// Gửi từng tin nhắn trong danh sách newListMess bằng stompClient.send
-					for (var i = 0; i < newListMess.length; i++) {
-						var messageToSend = newListMess[i];
-						stompClient.send('/app/sendnewmess', {}, JSON.stringify(messageToSend));
-					}
-					fileInput.value = null;
-				})
-				.catch(function (error) {
-					console.error('Lỗi tải lên tệp:', error);
+			// Xác định nơi lưu trữ dựa trên loại tệp
+			var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+			// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+			var uploadTask = storageRef.child(storagePath + fileName).put(file);
+
+			// Xử lý sự kiện khi tải lên hoàn thành
+			uploadTask.on('state_changed', function (snapshot) {
+				// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+			}, function (error) {
+				alert("Lỗi tải");
+			}, function () {
+				// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+					var formData = new FormData();
+					formData.append('mediaUrl', downloadURL);
+
+					$http.post(url + '/sendimage/' + $scope.userMess.userId, formData, {
+						transformRequest: angular.identity,
+						headers: {
+							'Content-Type': undefined
+						}
+					}).then(function (response) {
+						var newListMess = response.data;
+						//$scope.ListMess = $scope.ListMess.concat(newListMess);
+
+						// Gửi từng tin nhắn trong danh sách newListMess bằng stompClient.send
+						for (var i = 0; i < newListMess.length; i++) {
+							var messageToSend = newListMess[i];
+							stompClient.send('/app/sendnewmess', {}, JSON.stringify(messageToSend));
+						}
+
+						// Tiếp tục tải và gửi ảnh tiếp theo
+						uploadMedia(fileIndex + 1);
+					})
+						.catch(function (error) {
+							console.error('Lỗi tải lên tệp:', error);
+						});
+
+				}).catch(function (error) {
+					console.error('Error getting download URL:', error);
 				});
-		} else {
-			console.log("No files selected.");
-		}
+			});
+		};
+
+		// Bắt đầu tải và gửi ảnh từ fileInput.files[0]
+		uploadMedia(0);
 	};
+
 
 	$scope.seen = function () {
 		//đánh dấu là đã xem
@@ -69,7 +131,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 				$scope.ListMess = response.data;
 				$timeout(function () {
 					$scope.scrollToBottom();
-				}, 100);
+				}, 1500);
 			})
 			.catch(function (error) {
 				console.log(error);
