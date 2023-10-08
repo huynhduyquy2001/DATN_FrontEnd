@@ -232,5 +232,4 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
         }
     };
 
-
 });
