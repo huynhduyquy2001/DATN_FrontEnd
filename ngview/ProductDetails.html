@@ -26,7 +26,7 @@
                                         </figure>
                                     </li>
                                 </ul>
-                                <ul class="carousel__thumbnails">
+                                <ul class="carousel__thumbnails" style="justify-content: center;">
                                     <li style="margin-right: 2px;" ng-repeat="media in product.media">
                                         <label for="slide-{{media.mediaId}}"><img ng-src="{{media.mediaUrl}}"
                                                 style="max-height: 20vh;" alt=""></label>
@@ -264,7 +264,7 @@
                         </center>
                         <div>
                             <div class="user-profile m-4" ng-repeat="rate in product.ratings  | orderBy:'-ratingDate'">
-                                <div ng-show="rate.user.userId!==myRate.user.userId">
+                                <div style="display: flex;" ng-show="rate.user.userId!==myRate.user.userId">
                                     <a href="#!/profile/{{rate.user.userId}}"><img ng-src="{{rate.user.avatar}}"
                                             style="border-radius: 100%;" alt=""></a>
                                     <div>

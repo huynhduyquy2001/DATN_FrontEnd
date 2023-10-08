@@ -2,30 +2,38 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button ng-class="{ 'nav-link': true, 'active': checkShopping }"
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping===1 }"
                 ng-click="getproductListTrending(currentPageTrending)" id="profile-tab" data-bs-toggle="tab"
                 data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false">Bán chạy
                 trong tuần</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button ng-class="{ 'nav-link': true, 'active': !checkShopping }" ng-click="getproductList(currentPage)"
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping===2 }" ng-click="getproductList(currentPage)"
                 id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home"
                 aria-selected="true">Đang theo
                 dõi</button>
         </li>
-
-        <!-- <li class="nav-item" role="presentation">
-            <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
-                role="tab" aria-controls="messages" aria-selected="false">Messages</button>
-        </li> -->
+        <li class="nav-item" role="presentation">
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping===3 }"
+                ng-click="findProduct(currentPageSearch)" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                type="button" role="tab" aria-controls="home" aria-selected="true">Tìm kiếm</button>
+        </li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="mb-3" style="display: flex; justify-content: right;">
-                <input type="text" class="form-control" name="" id="" aria-describedby="helpId"
+                <input ng-show="checkShopping===3" type="text" class="form-control" name="" id=""
+                    aria-describedby="helpId" ng-model="productName" ng-keyup="findProduct(0)"
                     style="border-radius: 20px; width: 50%;" placeholder="Nhập sản phẩm cần tìm...">
             </div>
+            <b> Từ khóa gợi ý</b>
+            <button style="border:  1px solid #313131; margin-right: 0.5rem;" ng-repeat="word in words"
+                ng-click="chooseKey(word)">{{word}}</button>
+            <center> <b style="font-size: 20px;" ng-show="checkShopping===3 && productList.length===0">Sản phẩm bạn tìm
+                    không tồn tại</b>
+            </center>
+            <br>
             <div class="row">
                 <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12"
                     style="z-index: 10; margin-bottom: 3rem; border-radius: 5px;" ng-repeat="product in productList">
@@ -172,9 +180,155 @@
 
 
         </div>
+        <div class="tab-pane" id="search" role="tabpanel" aria-labelledby="home-tab">
+
+            <div class="row">
+                <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12"
+                    style="z-index: 10; margin-bottom: 3rem; border-radius: 5px;" ng-repeat="product in searchProduct">
+                    <div class="row frameProduct animate__animated animate__fadeIn">
+                        <div class="col-md-6" style="display: flex;max-height: 100%;">
+                            <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
+                                    class="imghover animate__animated animate__fadeIn" width="100%"
+                                    style="height: 100%; object-fit: cover; border-radius: 5px;"
+                                    ng-src="{{product.media[0].mediaUrl}}"></a>
+                        </div>
+                        <div class="col-md-6 frame" style="cursor: pointer;">
+                            <div class="product__info">
+                                <div class="user-profile ">
+                                    <a href="#!/profile/{{product.user.userId}}"><img ng-src="{{product.user.avatar}}"
+                                            style="border-radius: 100%;" alt=""></a>
+                                    <div>
+                                        <span
+                                            style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+                                            class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp;
+                                        <span><small style="font-size: 12px; color: #65676b" class="ng-binding">
+                                                {{getFormattedTimeAgo(product.datePost)}}
+                                            </small></span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="title">
+                                    <b
+                                        style="font-size: 1.2rem; white-space: nowrap;
+                            text-overflow: ellipsis;display: block; width: 100%; overflow: hidden;">{{product.productName}}</b>
+                                </div>
+                                <div class="description">
+                                    <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
+
+                                    </h3>
+                                    <span>
+                                        <span ng-if="calculateAverageRating(product.ratings)==0">
+                                            <i ng-repeat="n in [].constructor(5) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span ng-if="calculateAverageRating(product.ratings)==1">
+                                            <i ng-repeat="n in [].constructor(4) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(1) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+
+                                        </span>
+                                        <span ng-if="calculateAverageRating(product.ratings)==2">
+                                            <i ng-repeat="n in [].constructor(2) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(3) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span ng-if="calculateAverageRating(product.ratings)==3">
+                                            <i ng-repeat="n in [].constructor(3) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(2) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span ng-if="calculateAverageRating(product.ratings)==4">
+                                            <i ng-repeat="n in [].constructor(4) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(1) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span ng-if="calculateAverageRating(product.ratings)==5">
+                                            <i ng-repeat="n in [].constructor(5) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                        </span>
+
+                                        <!-- --------------------------------------------------------- -->
+
+                                        <span
+                                            ng-if="calculateAverageRating(product.ratings) > 0 && calculateAverageRating(product.ratings) < 1">
+                                            <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(4) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+
+                                        <span
+                                            ng-if="calculateAverageRating(product.ratings) > 1 && calculateAverageRating(product.ratings) < 2">
+                                            <i ng-repeat="n in [].constructor(1) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(3) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span
+                                            ng-if="calculateAverageRating(product.ratings) > 2 && calculateAverageRating(product.ratings) < 3">
+                                            <i ng-repeat="n in [].constructor(2) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(2) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span
+                                            ng-if="calculateAverageRating(product.ratings) > 3 && calculateAverageRating(product.ratings) < 4">
+                                            <i ng-repeat="n in [].constructor(3) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                            <i ng-repeat="n in [].constructor(1) track by $index"
+                                                class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                        </span>
+                                        <span
+                                            ng-if="calculateAverageRating(product.ratings) > 4 && calculateAverageRating(product.ratings) < 5">
+                                            <i ng-repeat="n in [].constructor(4) track by $index"
+                                                class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                            <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="note">
+                                    <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
+                                            aria-hidden="true" focusable="false" data-prefix="fas"
+                                            data-icon="shopping-basket" role="img" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 576 512" data-fa-i2svg="">
+                                            <path fill="currentColor"
+                                                d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
+                                            </path>
+                                        </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->{{product.ratings.length}}
+                                        lượt đánh giá</span>
+                                    <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
+                                </div>
+
+                                <div class="price animate__animated animate__fadeInUp">
+                                    <small ng-show="!product.promotion==0"><span
+                                            style="text-decoration: line-through; color: gray;">{{product.originalPrice
+                                            | currencyFormat}}
+                                        </span> &nbsp; |&nbsp;</small>
+                                    <span> {{getSalePrice(product.originalPrice, product.promotion) |
+                                        currencyFormat}}</span>
+                                </div>
+                                <button ng-click="getProduct(product.productId)" data-bs-toggle="modal"
+                                    data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                                    style="margin-top: 0.5rem;">Thêm vào
+                                    giỏ hàng</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
 
         <center>
-            <nav ng-show="checkShopping" aria-label="Page navigation">
+            <nav ng-show="checkShopping===1" aria-label="Page navigation">
                 <ul class="pagination">
                     <li class="page-item" ng-click="PreviousTrending()" style="cursor: pointer;">
                         <a class="page-link" style="color: #313131;" aria-label="Previous">
@@ -195,7 +349,7 @@
             </nav>
         </center>
         <center>
-            <nav ng-show="!checkShopping" aria-label="Page navigation">
+            <nav ng-show="checkShopping===2" aria-label="Page navigation">
                 <ul class="pagination    ">
                     <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
                         <a class="page-link" style="color: #313131;" aria-label="Previous">
@@ -208,6 +362,27 @@
                             {{totalPages}}</a>
                     </li>
                     <li class="page-item" ng-click="Next()" style="cursor: pointer;">
+                        <a class="page-link" style="color: #313131;" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </center>
+        <center>
+            <nav ng-show="checkShopping===3 && productList.length>0" aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" ng-click="PreviousSearch()" style="cursor: pointer;">
+                        <a class="page-link" style="color: #313131;" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" aria-current="page"><a style="font-weight: 600; color: #313131 !important; "
+                            class="page-link">{{currentPageSearch+1}} /
+                            {{totalPages}}</a>
+                    </li>
+                    <li class="page-item" ng-click="NextSearch()" style="cursor: pointer;">
                         <a class="page-link" style="color: #313131;" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>

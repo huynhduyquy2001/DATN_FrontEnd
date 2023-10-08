@@ -1,8 +1,4 @@
 
-
-
-
-
 app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location, $timeout) {
 	$scope.Posts = [];
 	$scope.likedPosts = [];
