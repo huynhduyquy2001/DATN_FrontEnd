@@ -60,9 +60,9 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/order/:userId', {
 		templateUrl: "ngview/order.html",
 		controller: 'OrdersController'
-	}).when('/order/add-order/:userId', {
-		templateUrl: "ngview/addOrder.html",
-		controller: 'OrdersController'
+	}).when('/product/add-product/:userId', {
+		templateUrl: "ngview/add-product.html",
+		controller: 'ProductsController'
 	}).when('/order/update-order/:productId', {
 		templateUrl: "ngview/updateOrder.html",
 		controller: 'OrdersController'
