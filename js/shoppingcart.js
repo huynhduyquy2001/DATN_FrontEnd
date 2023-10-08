@@ -1,6 +1,6 @@
 app.controller("ShoppingCartController", function ($scope, $http, $timeout, $route) {
   var url = "http://localhost:8080";
-  $scope.listProduct = [];
+  $scope.listProducts = [];
 
   $http
     .get(url + "/get-product-shoppingcart")
@@ -13,7 +13,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
         }
         grouped[userId].push(product);
       });
-      $scope.listProduct = grouped;
+      $scope.listProducts = grouped;
     })
     .catch(function (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
