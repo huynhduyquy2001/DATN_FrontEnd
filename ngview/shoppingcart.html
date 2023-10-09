@@ -1,21 +1,20 @@
-<div class="container d-md-block d-none" style="z-index: 9;">
+<div class="container d-md-block d-none">
     <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
             <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
                 data-bs-target="#exampleModal">Thanh toán</button>
             <a ng-click="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn </a>
+                title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Xóa sản phẩm">Xóa</a>
             |
             <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Thêm vào danh sách yêu thích">Yêu thích</a>
         </div>
-        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | number:0}} VND</span> (<span class="count-product">0</span>) sản phẩm</p>
+        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | currencyFormat}}</span> (<span class="count-product">0</span>) sản phẩm</p>
     </div>
-   
-    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProduct">
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
@@ -40,10 +39,8 @@
                     </p>
                 </div>
                 <div class="col-md-3 col-lg-2 col-xl-3 mt-1">
-                    <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | number:0 }} VND</a>
-                    <p ng-if="product.product.originalPrice * product.quantity != calculateSubtotal(product)"
-                        class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice *
-                        product.quantity | number:0}} VND</p>
+                    <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | currencyFormat }}</a>
+                    <p class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice | currencyFormat }}</p>
                 </div>
                 <div class="col-md-2 col-lg-2 col-xl-2 d-flex mt-2">
                     <button ng-click="decrementQuantity(product)"
@@ -76,16 +73,16 @@
             <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
                 data-bs-target="#exampleModal">Thanh toán (<span class="count-product">0</span>)</button>
             <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
+            title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Xóa sản phẩm"><i
                     class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
             <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
         </div>
-        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | number:0}} VND</span></p>
+        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | currencyFormat}}</span></p>
     </div>
-    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
@@ -122,10 +119,8 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | number:0 }} VND</a>
-                    <p ng-if="product.product.originalPrice * product.quantity != calculateSubtotal(product)"
-                        class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice *
-                        product.quantity | number:0}} VND</p>
+                    <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | currencyFormat }}</a>
+                    <p class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice | currencyFormat}}</p>
                 </div>
                 <div class="col-sm-2 d-flex gap-3 justify-content-end">
                     <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -140,12 +135,12 @@
 <!-- Khi responsive tới 576px thì hiện -->
 <div class="container d-sm-none">
     <div class="card-header mb-3 p-3" style="background-color: white;">
-        <p class="mb-2" style="font-size: small;">Tổng tiền (<span class="count-product">0</span>): <span class="text-danger">{{sumPrice | number:0}} VND</span></p>
+        <p class="mb-2" style="font-size: small;">Tổng tiền (<span class="count-product">0</span>): <span class="text-danger">{{sumPrice | currencyFormat}}</span></p>
         <div class="d-flex align-items-center gap-3">
             <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC; font-size: x-small;" data-bs-toggle="modal"
                 data-bs-target="#exampleModal">Thanh toán</button>
             <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Chọn tất cả {{listProduct.length}} sản phẩm">Chọn ({{listProduct.length}}) </a>
+            title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Xóa sản phẩm"><i
                     class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
@@ -153,7 +148,7 @@
                 title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
         </div>
     </div>
-    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in groupProducts(listProduct)">
+    <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
@@ -176,11 +171,10 @@
                 <div class="col-sm-6">
                     <p class="fw-bolder mb-0" style="font-size: small;">{{
                         product.product.productName }} </p>
-                    <a ng-if="product.product.originalPrice * product.quantity != calculateSubtotal(product)" style="font-size: x-small;"
-                    class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice *
-                    product.quantity | number:0}} VND</a>
+                    <a style="font-size: x-small;"
+                    class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice | currencyFormat }}</a>
                     <a class="text-decoration-none text-danger" style="font-size: x-small;">{{
-                        calculateSubtotal(product) | number:0 }} VND</a>
+                        calculateSubtotal(product) | currencyFormat }}</a>
                     <p class="fw-normal mb-0" style="font-size: x-small;">
                         <span class="text-muted">Màu sắc: </span>{{ product.color }}
                     </p>
@@ -202,6 +196,9 @@
             </div>
         </div>
     </div>
+</div>
+<div class="container text-center" ng-if="listProduct.length == 0">
+    <h5><i class="fa-solid fa-triangle-exclamation" style="color: #e30202;"></i> Không có sản phẩm nào trong giỏ hàng</h5>
 </div>
 <a id="scrollToTopBtn" onclick="scrollToTop()" style="position: fixed; bottom: 20px; right: 7px; cursor: pointer; display: none;"> <i
         class="fa-solid fa-circle-chevron-up fa-xl fa-shake" style="color:#007ACC;"></i></a>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng sản phẩm</title>
+    <link rel="stylesheet" href="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/styles.css" />
+
+</head>
+<style>
+    .main-tilte {
+        display: flex;
+        justify-content: center;
+        color: #ff3f40;
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    .title-div {
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    .title-element {
+        margin: 20px;
+        font-size: small;
+    }
+
+    .add-color {
+        border: 1px dashed black;
+        margin-top: 5px;
+    }
+
+    .color-detail {
+        border: 1px solid black;
+        margin-top: 5px;
+    }
+
+    .color-detail .add-color :hover {
+        background-color: #ff3f3f48;
+    }
+</style>
+
+<body ng-controller="ProductsController">
+
+    <div class="row">
+        <!--Tabs-->
+
+        <div class="mt-5">
+            <!-- Danh sách mua hàng -->
+            <div class="tab-content">
+                <div style="margin-bottom: 5.5rem;">
+                    <form method="post" enctype="multipart/form-data" ng-submit="addProduct()">
+                        <div class="ml-auto" style="margin-right: 100px;">
+                            <div class="basic-infomation-product card">
+                                <div class="card-header main-tilte">Thêm sản phẩm</div>
+                                <div class="card-body row">
+                                    <div class="title-div">Thông tin sản phẩm</div>
+                                    <div class="col-2">
+                                        <div class="title-element">Tên sản phẩm</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <div class="form-group form-group-alt ">
+                                            <input ng-model="product.productName" type="text"
+                                                class="form-control input">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="title-element">Chất liệu</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <div class="form-group form-group-alt ">
+                                            <input ng-model="product.material" type="text" class="form-control input">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="title-element">Mô tả</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <div class="form-group">
+                                            <textarea ng-model="product.description" name="description" id="description"
+                                                class="form-control" style="height: 200px;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="title-element">Hình ảnh/Video sản phẩm</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text" for="inputGroupFile01">
+                                                <i class="fa-regular fa-image"></i>Hình ảnh và video
+                                            </label> <input hidden type="file" class="form-control" name="mediaFiles"
+                                                id="inputGroupFile01" multiple>
+                                        </div>
+                                        <div id="dropArea" ondrop="dropHandler(event);"
+                                            ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);">
+                                            Chọn hoặc kéo
+                                            thả để tải hình ảnh/video.</div>
+
+                                        <div id="mediaList"></div>
+                                    </div>
+                                    <hr>
+                                    <div class="title-div">Chi tiết</div>
+                                    <div class="col-2">
+                                        <div class="title-element">Giá</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <input type="text" class="form-control" placeholder=""
+                                            ng-model="product.originalPrice">
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="title-element">Danh sách màu</div>
+                                    </div>
+                                    <div class="col-9 mt-3 d-flex justify-content-between">
+                                        <span ng-repeat="color in colors">
+                                            <label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    ng-model="color.selected" ng-click="logSelectedColors()"
+                                                    id="{{color.colorName}}" />
+                                                {{color.colorName }}
+                                            </label>
+                                        </span>
+                                    </div>
+
+
+                                    <div class="col-2">
+                                        <div class="title-element"></div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Màu</th>
+                                                    <th scope="col">Số lượng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="selectedColor in selectedColors">
+                                                    <td>{{ selectedColor }}</td>
+                                                    <td><input type="text" class="form-control"
+                                                            ng-model="selectedColor.quantity"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <hr>
+                                    <div class="title-div">Vận chuyển</div>
+                                    <div class="col-2">
+                                        <div class="title-element">Cân nặng</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <input type="text" class="form-control" placeholder=""
+                                            ng-model="product.weight">
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="title-element">Kích thước</div>
+                                    </div>
+                                    <div class="col-9 mt-3">
+                                        <div class="input-group mb-3">
+                                            <div class="col-2" style="margin: 10px;">
+                                                <span class="input-group-text" id="Width">Chiều rộng</span>
+                                                <input type="text" class="form-control" placeholder="Width"
+                                                    aria-describedby="Width" ng-model="product.width">
+                                            </div>
+                                            <div class="col-2" style="margin: 10px;">
+                                                <span class="input-group-text" id="Height">Chiều dài</span>
+                                                <input type="text" class="form-control" placeholder="Height"
+                                                    aria-describedby="Height" ng-model="product.height">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
+                                     position: fixed; bottom: 0;">
+                            <button type="submit" class="btn btn-light m-1">Hủy</button>
+                            <button type="submit" class="btn btn-light m-1">Thêm
+                                &
+                                Ẩn</button>
+                            <button type="submit" class="btn btn-danger m-1">Thêm &
+                                Hiển thị</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script>
+
+    </script>
+</body>
+
+</html>
