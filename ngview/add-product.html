@@ -44,12 +44,10 @@
     }
 </style>
 
-<body ng-controller="ProductsController">
-
+<body ng-controller="AddProductsController">
     <div class="row">
         <!--Tabs-->
-
-        <div class="mt-5">
+        <div>
             <!-- Danh sách mua hàng -->
             <div class="tab-content">
                 <div style="margin-bottom: 5.5rem;">
@@ -89,42 +87,48 @@
                                         <div class="title-element">Hình ảnh/Video sản phẩm</div>
                                     </div>
                                     <div class="col-9 mt-3">
-                                        <div class="input-group mb-3">
-                                            <label class="input-group-text" for="inputGroupFile01">
-                                                <i class="fa-regular fa-image"></i>Hình ảnh và video
-                                            </label> <input hidden type="file" class="form-control" name="mediaFiles"
-                                                id="inputGroupFile01" multiple>
-                                        </div>
                                         <div id="dropArea" ondrop="dropHandler(event);"
                                             ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);">
-                                            Chọn hoặc kéo
-                                            thả để tải hình ảnh/video.</div>
-
+                                            <i class="fa-light fa-download" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text" for="inputGroupFile01"> <i
+                                                    class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
+                                            </label> <input type="file" class="form-control" name="mediaFiles"
+                                                id="inputGroupFile01" multiple>
+                                        </div>
                                         <div id="mediaList"></div>
                                     </div>
                                     <hr>
                                     <div class="title-div">Chi tiết</div>
                                     <div class="col-2">
-                                        <div class="title-element">Giá</div>
+                                        <div class="title-element">Giá gốc</div>
                                     </div>
-                                    <div class="col-9 mt-3">
+                                    <div class="col-4 mt-3">
                                         <input type="text" class="form-control" placeholder=""
                                             ng-model="product.originalPrice">
                                     </div>
+
+                                    <div class="col-2">
+                                        <div class="title-element">Giảm giá (%)</div>
+                                    </div>
+                                    <div class="col-3 mt-3">
+                                        <input type="text" class="form-control" placeholder=""
+                                            ng-model="product.promotion">
+                                    </div>
+
                                     <div class="col-2">
                                         <div class="title-element">Danh sách màu</div>
                                     </div>
                                     <div class="col-9 mt-3 d-flex justify-content-between">
                                         <span ng-repeat="color in colors">
                                             <label>
-                                                <input class="form-check-input" type="checkbox"
-                                                    ng-model="color.selected" ng-click="logSelectedColors()"
-                                                    id="{{color.colorName}}" />
+                                                <input type="checkbox" ng-model="color.selected"
+                                                    ng-change="toggleColorSelection(color)">
                                                 {{color.colorName }}
                                             </label>
                                         </span>
                                     </div>
-
 
                                     <div class="col-2">
                                         <div class="title-element"></div>
@@ -140,8 +144,8 @@
                                             <tbody>
                                                 <tr ng-repeat="selectedColor in selectedColors">
                                                     <td>{{ selectedColor }}</td>
-                                                    <td><input type="text" class="form-control"
-                                                            ng-model="selectedColor.quantity"></td>
+                                                    <td><input type="text" ng-model="selectedColor.quantity"
+                                                            class="form-control"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -176,12 +180,11 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
                                      position: fixed; bottom: 0;">
-                            <button type="submit" class="btn btn-light m-1">Hủy</button>
-                            <button type="submit" class="btn btn-light m-1">Thêm
-                                &
-                                Ẩn</button>
+                            <button ng-click="sendMedia()" class="btn btn-light m-1">Thêm ảnh</button>
+                            <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button>
                             <button type="submit" class="btn btn-danger m-1">Thêm &
                                 Hiển thị</button>
 
@@ -193,9 +196,120 @@
 
     </div>
 
-    <!-- Bootstrap JS -->
     <script>
+        var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
 
+        document.getElementById('dropArea').addEventListener('click',
+            function () {
+                document.getElementById('inputGroupFile01').click();
+            });
+
+        document.getElementById('inputGroupFile01').addEventListener('change',
+            function () {
+                handleFiles(this.files);
+            });
+
+        function dropHandler(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            var mediaType = /^image\//;
+            var videoType = /^video\//;
+            var mediaList = document.getElementById('mediaList');
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (mediaType.test(file.type) || videoType.test(file.type)) {
+                    var reader = new FileReader();
+                    reader.onload = (function (file) {
+                        return function () {
+                            if (mediaType.test(file.type)) {
+                                var media = new Image();
+                                media.src = this.result;
+                                media.classList.add('previewMedia');
+                                var container = createMediaContainer(media,
+                                    file);
+                                mediaList.appendChild(container);
+                            } else if (videoType.test(file.type)) {
+                                var media = document.createElement('video');
+                                media.src = this.result;
+                                media.setAttribute('controls', 'controls');
+                                media.classList.add('previewMedia');
+                                var container = createMediaContainer(media,
+                                    file);
+                                mediaList.appendChild(container);
+                            }
+                        };
+                    })(file);
+                    reader.readAsDataURL(file);
+                    selectedMedia.push(file);
+                }
+            }
+
+            // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+            var dataTransfer = new DataTransfer();
+            for (var i = 0; i < selectedMedia.length; i++) {
+                dataTransfer.items.add(selectedMedia[i]);
+            }
+            document.getElementById('inputGroupFile01').files = dataTransfer.files;
+        }
+
+        function createMediaContainer(media, file) {
+            var container = document.createElement('div');
+            container.classList.add('previewMediaContainer');
+            container.appendChild(media);
+
+            var deleteButton = document.createElement('button');
+            deleteButton.innerHTML = 'X';
+            deleteButton.classList.add('deleteButton');
+            deleteButton
+                .addEventListener(
+                    'click',
+                    function () {
+                        // Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
+                        var index = selectedMedia.indexOf(file);
+                        if (index !== -1) {
+                            selectedMedia.splice(index, 1);
+                        }
+                        // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+                        var dataTransfer = new DataTransfer();
+                        for (var i = 0; i < selectedMedia.length; i++) {
+                            dataTransfer.items.add(selectedMedia[i]);
+                        }
+                        document.getElementById('inputGroupFile01').files = dataTransfer.files;
+
+                        container.remove();
+                    });
+
+            container.appendChild(deleteButton);
+
+            return container;
+        }
+
+        function dragOverHandler(event) {
+            event.preventDefault();
+            event.target.classList.add('active');
+        }
+
+        function dragLeaveHandler(event) {
+            event.preventDefault();
+            event.target.classList.remove('active');
+        }
+        function toggleColor(link) {
+            var allLinks = document.getElementsByClassName("colorful-link");
+
+            for (var i = 0; i < allLinks.length; i++) {
+                var currentLink = allLinks[i];
+                currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+                if (currentLink === link) {
+                    link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+                }
+            }
+        }
     </script>
 </body>
 
