@@ -10,6 +10,32 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	$scope.isEmptyObject = false;
 	var url = "http://localhost:8080";
 
+	angular.element(document).ready(function () {
+		// Lấy currentPath
+		var currentPath = $location.path();
+
+		// Lấy tất cả các thẻ <a> có class là "messLink"
+		var messLinks = angular.element(document).find('a.messLink');
+
+		// Duyệt qua từng thẻ <a> và kiểm tra href
+		angular.forEach(messLinks, function (link) {
+			var href = angular.element(link).attr('href');
+			// Loại bỏ tiền tố "#!"
+			href = href.replace('#!', '');
+			// So sánh href với currentPath
+			if (href === currentPath) {
+				// Nếu khớp, thay đổi CSS của thẻ <a>
+				angular.element(link).closest('li').css('background-color', 'rgba(93, 135, 255, 0.1)');
+				// angular.element(link).closest('li').css('border-top', '1px solid rgb(93, 135, 255)');
+				// angular.element(link).closest('li').css('border-bottom', '1px solid rgb(93, 135, 255)');
+				angular.element(link).closest('li').css('color', 'white');
+			}
+		});
+	});
+
+
+
+
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
 		authDomain: "viesonet-datn.firebaseapp.com",

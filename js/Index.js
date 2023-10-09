@@ -92,7 +92,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	var loadnotification = "http://localhost:8080/loadnotification";
 	var loadallnotification = "http://localhost:8080/loadallnotification";
 
-	$scope.myAccount = {}; 
+	$scope.myAccount = {};
 	$rootScope.unseenmess = 0;
 	$rootScope.check = false;
 	$scope.notification = [];

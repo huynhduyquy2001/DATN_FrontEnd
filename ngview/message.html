@@ -6,8 +6,7 @@
 		</center>
 		<div ng-show="!isEmptyObject" ng-cloak class="msger "
 			style="width: 100%; text-align: left; margin-left: 0; border-radius: 5px">
-			<header class="msger-header animate__animated animate__fadeIn">
-
+			<header class="msger-header">
 				<div class="msger-header-title">
 					<a href="#!/profile/{{userMess.userId}}" style="font-weight: 600; color: #212529"><img
 							ng-src="{{ userMess.avatar }}"
@@ -70,32 +69,33 @@
 			<li ng-repeat="UsersMess in ListUsersMess" class="hver"
 				style="padding: 0.7rem!important; padding-right: 1.5rem!important; transition: 0.3s;"
 				ng-style="{'background-color': UsersMess[2] === itemSelected ? 'rgba(93, 135, 255, 0.1)' : 'transparent'}">
-				<div class="user-profile" ng-click="getmess(UsersMess[0] , UsersMess[9], UsersMess[8])">
-					<!-- Nội dung khi UsersMess[0] = 'UI010' -->
-					<a href="#!/message/{{UsersMess[2]}}"><img ng-src="{{ UsersMess[5] }}"
-							class="animate__animated animate__fadeIn"
+				<a href="#!/message/{{UsersMess[2]}}" class="messLink">
+					<div class="user-profile">
+						<!-- Nội dung khi UsersMess[0] = 'UI010' -->
+						<img ng-src="{{ UsersMess[5] }}"
 							style="border-radius: 100%; border: 1px solid #ebf1f6; width: 3.5rem; height: 3.5rem; max-width: none;"
-							alt=""></a>
-					<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
-						<div style="display: flex;">
-							<b class="ng-binding" style=" color: #393e41; font-size: 14px;">{{
-								UsersMess[3] }} <span class="badge p-1" ng-show="
-								UsersMess[11]>0" style="font-size: 12px; background-color: red; border-radius: 50%; width: 20px; height: 20px;">{{
-									UsersMess[11] }}</span></b>
-						</div>
-						<br>
-						<div style="display: flex; justify-content: space-between; height: 13px;">
-							<small
-								style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">{{
-								UsersMess[6] }} </small>
-							<!-- <small ng-if="UsersMess[8] === 'Đã ẩn'"
-								style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">Tin
-								nhắn đã được thu hồi </small> -->
-							<small style="font-size: 12px; color: #65676b"
-								class="ng-binding">{{getFormattedTimeAgo(UsersMess[7]) }}</small>
+							alt="">
+						<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
+							<div style="display: flex;">
+								<b class="ng-binding" style=" color: #393e41; font-size: 14px;">{{
+									UsersMess[3] }} <span class="badge p-1" ng-show="
+									UsersMess[11]>0" style="font-size: 12px; background-color: red; border-radius: 50%; width: 20px; height: 20px;">{{
+										UsersMess[11] }}</span></b>
+							</div>
+							<br>
+							<div style="display: flex; justify-content: space-between; height: 13px;">
+								<small
+									style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">{{
+									UsersMess[6] }} </small>
+								<!-- <small ng-if="UsersMess[8] === 'Đã ẩn'"
+									style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">Tin
+									nhắn đã được thu hồi </small> -->
+								<small style="font-size: 12px; color: #65676b"
+									class="ng-binding">{{getFormattedTimeAgo(UsersMess[7]) }}</small>
+							</div>
 						</div>
 					</div>
-				</div>
+				</a>
 			</li>
 		</ul>
 	</div>

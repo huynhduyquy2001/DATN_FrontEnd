@@ -99,7 +99,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			.catch(function (error) {
 				console.log(error);
 			});
-	} 
+	}
 
 	$scope.getProduct = function (productId) {
 		$http.get(url + "/get-product/" + productId)
