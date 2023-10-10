@@ -1,19 +1,20 @@
 app.controller("ShoppingCartController", function ($scope, $http, $timeout, $route) {
   var url = "http://localhost:8080";
   $scope.listProducts = [];
+  $scope.listProductOrder = [];
 
   $http
     .get(url + "/get-product-shoppingcart")
     .then(function (response) {
-      var grouped = {};
-      angular.forEach(response.data, function (product) {
-        var userId = product.product.user.userId;
-        if (!grouped[userId]) {
-          grouped[userId] = [];
-        }
-        grouped[userId].push(product);
-      });
-      $scope.listProducts = grouped;
+        var grouped = {};
+        angular.forEach(response.data, function (product) {
+          var userId = product.product.user.userId;
+          if (!grouped[userId]) {
+            grouped[userId] = [];
+          }
+          grouped[userId].push(product);
+        });
+        $scope.listProducts = grouped;
     })
     .catch(function (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
@@ -356,6 +357,44 @@ app.controller("ShoppingCartController", function ($scope, $http, $timeout, $rou
         }
       });
     }
+  }
+
+  //Đặt hàng
+  $scope.orderShoppingCart = function(){
+    // Lấy tất cả các phần tử input có type là checkbox
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    // Lưu giá trị từ các checkbox
+    var listColorAndProductId = [];
+    // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked && checkbox.offsetParent !== null) {
+        var productIdAndColor = checkbox.id.split('_');
+        var productId = productIdAndColor[0];
+        var color = productIdAndColor[1];
+        listColorAndProductId.push({ productId: productId, color: color });
+      }
+    });
+    if (listColorAndProductId.length === 0) {
+      Swal.fire({
+        position: 'top',
+        icon: 'warning',
+        text: 'Chưa chọn sản phẩm để đặt hàng!',
+        showConfirmButton: false,
+        timer: 1800
+      });
+    } else {
+          $http({
+            method: 'POST',
+            url: url + '/orderShoppingCart',
+            data: listColorAndProductId,
+            contentType: 'application/json'
+          }).then(function (response) {
+            $scope.listProductOrder = response.data;
+            $("#exampleModal").modal("show");
+          }).catch(function (error) {
+            console.error("Error:", error);
+          });
+      }
   }
 
   //Hàm reload lại trang

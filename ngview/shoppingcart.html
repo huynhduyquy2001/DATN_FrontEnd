@@ -2,8 +2,7 @@
     <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
-            <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
-                data-bs-target="#exampleModal">Thanh toán</button>
+            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;">Đặt hàng</button>
             <a ng-click="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -16,31 +15,41 @@
     </div>
     <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
-            <h6 class="mt-1 fw-bolder">
+            <h6 class="mt-1 fw-bolder gap-2 d-flex">
+               <a href="#!/profile/{{groupedProducts[0].product.user.userId}}">
                 <i class="fa-regular fa-store"></i>
                 {{ groupedProducts[0].product.user.username }}
-            </h6>
+               </a>
+               <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
+                <i class="fa-regular fa-messages fa-xs"></i>
+               </a>
+            </h6> 
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
         </div>
         <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
             <div class="row d-flex justify-content-between align-items-center mb-2">
-                <div class="col-md-2 col-lg-1 col-xl-1"
+                <a href="#!productdetails/{{product.product.productId}}" class="col-md-2 col-lg-2 col-xl-2"
                     ng-repeat="img in filterImagesByProductId(product.product.media)">
                     <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
                         style="object-fit: cover;">
-                </div>
-                <div class="col-md-3 col-lg-3 col-xl-3 mt-3">
-                    <p class="fw-bolder mb-2 fs-6"
+                </a>
+                <a href="#!productdetails/{{product.product.productId}}" class="col-md-3 col-lg-3 col-xl-3 mt-3">
+                    <p class="fw-bolder mb-2 fs-5"
                         style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{
                         product.product.productName }} </p>
-                    <p class="fw-normal mb-2"
+                    <p class="fw-normal mb-1"
                         style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                        <span class="text-muted">Màu sắc: </span>{{ product.color }}
+                        <span class="text-muted fs-8">Màu sắc: </span><small>{{ product.color }}</small>
                     </p>
-                </div>
+                    <small ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
+                     class="text-decoration-none text-dark">{{product.product.originalPrice | currencyFormat }}</small>
+                    <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                     class="text-decoration-line-through text-secondary">{{product.product.originalPrice | currencyFormat }}</small>
+                    <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                     class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice, product.product.promotion) | currencyFormat}}</small>
+                </a>
                 <div class="col-md-3 col-lg-2 col-xl-3 mt-1">
                     <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | currencyFormat }}</a>
-                    <p class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice | currencyFormat }}</p>
                 </div>
                 <div class="col-md-2 col-lg-2 col-xl-2 d-flex mt-2">
                     <button ng-click="decrementQuantity(product)"
@@ -70,8 +79,7 @@
     <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
-            <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;" data-bs-toggle="modal"
-                data-bs-target="#exampleModal">Thanh toán (<span class="count-product">0</span>)</button>
+            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;">Đặt hàng (<span class="count-product">0</span>)</button>
             <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
             title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -86,25 +94,35 @@
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
-                {{ groupedProducts[0].product.user.username }}
+                <a href="#!/profile/{{groupedProducts[0].product.user.userId}}">
+                    {{ groupedProducts[0].product.user.username }}
+                   </a>
             </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
         </div>
         <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
             <div class="row-cols-3 d-flex justify-content-between align-items-center mb-2">
-                <div class="col-sm-1" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                <a href="#!productdetails/{{product.product.productId}}" class="col-sm-2" ng-repeat="img in filterImagesByProductId(product.product.media)">
                     <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
                         style="object-fit: cover;">
-                </div>
+                </a>
                 <div class="col-sm-4">
-                    <p class="fw-bolder mb-0 fs-6"
+                    <a href="#!productdetails/{{product.product.productId}}" class="fw-bolder mb-0 fs-6"
                         style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{
-                        product.product.productName }} </p>
-                    <p class="fw-normal mb-2"
+                        product.product.productName }} </a>
+                    <p class="fw-normal mb-0"
                         style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 0.85rem;">
                         <span class="text-muted">Màu sắc: </span>{{ product.color }}
                     </p>
-                    <div class="input-group input-group-sm">
+
+                    <small ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
+                    class="text-decoration-none text-dark">{{product.product.originalPrice | currencyFormat }}</small>
+                   <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                    class="text-decoration-line-through text-secondary">{{product.product.originalPrice | currencyFormat }}</small>
+                   <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                    class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice, product.product.promotion) | currencyFormat}}</small>
+
+                    <div class="input-group input-group-sm mt-1">
                         <button ng-click="decrementQuantity(product)" class="btn border rounded py-0 border-end-0"
                             type="button" id="add1">
                             <i class="fa-regular fa-minus"></i>
@@ -120,7 +138,6 @@
                 </div>
                 <div class="col-sm-3">
                     <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | currencyFormat }}</a>
-                    <p class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice | currencyFormat}}</p>
                 </div>
                 <div class="col-sm-2 d-flex gap-3 justify-content-end">
                     <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -137,8 +154,7 @@
     <div class="card-header mb-3 p-3" style="background-color: white;">
         <p class="mb-2" style="font-size: small;">Tổng tiền (<span class="count-product">0</span>): <span class="text-danger">{{sumPrice | currencyFormat}}</span></p>
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-sm btn- btn-primary" style="background-color: #007ACC; font-size: x-small;" data-bs-toggle="modal"
-                data-bs-target="#exampleModal">Thanh toán</button>
+            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary" style="background-color: #007ACC; font-size: x-small;">Đặt hàng</button>
             <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
             title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -152,7 +168,9 @@
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
-                {{ groupedProducts[0].product.user.username }}
+                <a href="#!/profile/{{groupedProducts[0].product.user.userId}}">
+                    {{ groupedProducts[0].product.user.username }}
+                   </a>
             </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
         </div>
@@ -164,17 +182,19 @@
                     <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
                 </div>
-                <div class="col-3" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                <a href="#!productdetails/{{product.product.productId}}" class="col-3" ng-repeat="img in filterImagesByProductId(product.product.media)">
                     <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
                         style="object-fit: cover;">
-                </div>
+                </a>
                 <div class="col-sm-6">
-                    <p class="fw-bolder mb-0" style="font-size: small;">{{
-                        product.product.productName }} </p>
-                    <a style="font-size: x-small;"
-                    class="text-decoration-line-through text-secondary mb-0">{{product.product.originalPrice | currencyFormat }}</a>
-                    <a class="text-decoration-none text-danger" style="font-size: x-small;">{{
-                        calculateSubtotal(product) | currencyFormat }}</a>
+                    <a href="#!productdetails/{{product.product.productId}}" class="fw-bolder mb-0" style="font-size: small;">{{
+                        product.product.productName }} </a> <br>
+                    <a style="font-size: x-small;" ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
+                    class="text-decoration-none text-danger">{{product.product.originalPrice | currencyFormat }}</a>
+                    <a style="font-size: x-small;" ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                    class="text-decoration-line-through text-secondary">{{product.product.originalPrice | currencyFormat }}</a>
+                    <a style="font-size: x-small;" ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                    class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice, product.product.promotion) | currencyFormat}}</a>
                     <p class="fw-normal mb-0" style="font-size: x-small;">
                         <span class="text-muted">Màu sắc: </span>{{ product.color }}
                     </p>
@@ -213,127 +233,45 @@
             <div class="modal-body">
                 <div class="card-body">
                     <div class="border-bottom">
-                        <div class="d-flex justify-content-between mb-2">
-                            <h6 class="mb-0">Tổng sản phẩm: 8</h6>
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6 class="mb-0">Tổng sản phẩm: {{listProductOrder.length}}</h6>
                         </div>
-                        <div class="mb-3" style="height: 200px; overflow-y: auto;">
-                            <div class="d-flex align-items-center gap-4">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
-                                    alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3"
-                                    loading="lazy">
-                                <div class="mt-3">
-                                    <h5 class="mb-2"
-                                        style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                                        Biker’s Jacket </h5>
-                                    <p class="mb-1">Colour: Red &amp; Black</p>
-                                    <p class="mb-0">1.900.000</p>
-                                    <p>x5</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-4">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
-                                    alt="image" class="img-fluid object-contain avatar-100 iq-product-bg p-3"
-                                    loading="lazy">
-                                <div class="mt-3">
-                                    <h5 class="mb-2"
-                                        style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                                        Biker’s Jacket </h5>
-                                    <p class="mb-1">Colour: Red &amp; Black</p>
-                                    <p class="mb-0">1.900.000</p>
-                                    <p>x5</p>
+                        <div class="mb-3" style="max-height: 200px; overflow-y: auto;">
+                            <div class="d-flex align-items-center gap-4 mb-2" ng-repeat="productOrder in listProductOrder">
+                                <img ng-src="{{productOrder.product.media[0].mediaUrl}}"
+                                    alt="image" class="img-thumbnail avatar-100">
+                                <div class="mt-2">
+                                    <h6 class="mb-1 fw-bolder" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                        {{productOrder.product.productName}} </h6>
+                                    <p class="mb-1"><small>Màu sắc: {{productOrder.color}}</small></p>
+                                    <small class="mb-0 me-1">{{ calculateSubtotal(productOrder) | currencyFormat }}</small>
+                                    <small>x{{productOrder.quantity}}</small>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <h6 class="fw-bolder">Địa chỉ nhận hàng</h6>
+                        <a class="text-primary" style="cursor: pointer;">Thay đổi</a>
+                    </div>
+                    <div class="mt-1">
+                        <small class="mb-1">Lý Quốc Tường | 0382762422 F26, Khu dân cư hậu thạnh mỹ P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</small>
+                    </div>
                     <div class="border-bottom mt-4">
-                        <div class="d-flex justify-content-between mb-4">
+                        <div class="d-flex justify-content-between mb-2">
                             <h6>Tổng tiền hàng</h6>
-                            <h6 class="text-primary">$206.00</h6>
+                            <h6 class="text-danger">{{sumPrice | currencyFormat}}</h6>
                         </div>
-                        <div class="d-flex justify-content-between mb-4">
-                            <h6>Tiền được giảm</h6>
-                            <h6 class="text-success">-$38.00</h6>
-                        </div>
-                        <div class="d-flex justify-content-between mb-4">
+                        <div class="d-flex justify-content-between mb-2">
                             <h6>Tiền vận chuyển</h6>
                             <h6 class="text-success">FREE</h6>
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <div class="d-flex justify-content-between mb-3">
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between mb-1">
                             <h6 class="mb-0">Tổng thanh toán</h6>
-                            <h5 class="text-primary mb-0">$168.00</h5>
+                            <h5 class="text-danger mb-0">0</h5>
                         </div>
-                        <div class="alert border-primary rounded border border-1 mb-2">
-                            <!-- Tab Nav -->
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="address-tab" data-bs-toggle="tab" href="#address"
-                                        role="tab" aria-controls="address" aria-selected="true">Địa chỉ nhận
-                                        hàng</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="content2-tab" data-bs-toggle="tab" href="#content2"
-                                        role="tab" aria-controls="content2" aria-selected="false">Chọn địa chỉ
-                                        khác</a>
-                                </li>
-                            </ul>
-                            <!-- Tab Content -->
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="address" role="tabpanel"
-                                    aria-labelledby="address-tab">
-                                    <div>
-                                        <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
-                                        <p class="mb-0">F26, Khu dân cư hậu thạnh mỹ</p>
-                                        <p class="mb-0">P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</p>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="content2" role="tabpanel" aria-labelledby="content2-tab">
-                                    <div style="max-height: 26vh; overflow-y: auto;" class="p-1">
-                                        <div class="d-flex align-items-center gap-3 mb-2">
-                                            <div>
-                                                <input type="radio" name="checkAddress" class="form-check-input"
-                                                    style="cursor: pointer;" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Chọn địa chỉ">
-                                            </div>
-                                            <div style="cursor: pointer;">
-                                                <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
-                                                <p class="mb-0">F26, Khu dân cư hậu thạnh mỹ</p>
-                                                <a class="mb-0">P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</a>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3 mb-2">
-                                            <div>
-                                                <input type="radio" name="checkAddress" class="form-check-input"
-                                                    style="cursor: pointer;" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Chọn địa chỉ">
-                                            </div>
-                                            <div style="cursor: pointer;">
-                                                <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
-                                                <p class="mb-0">F26, Khu dân cư hậu thạnh mỹ</p>
-                                                <a class="mb-0">P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</a>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3 mb-2">
-                                            <div>
-                                                <input type="radio" name="checkAddress" class="form-check-input"
-                                                    style="cursor: pointer;" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Chọn địa chỉ">
-                                            </div>
-                                            <div style="cursor: pointer;">
-                                                <p class="mb-1 mt-2">Lý Quốc Tường | 0382762422</p>
-                                                <p class="mb-0">F26, Khu dân cư hậu thạnh mỹ</p>
-                                                <a class="mb-0">P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 d-flex gap-2">
-                                        <button class="btn btn-primary btn-sm" id="backToAddress">Chọn địa chỉ
-                                            này</button>
-                                        <button class="btn btn-gray btn-sm">+ Thêm địa chỉ mới</button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="d-flex">
                             <a id="place-order" class="btn btn-primary d-block mt-3 w-100">Thanh toán</a>
@@ -345,10 +283,6 @@
     </div>
 </div>
 <script>
-    document.getElementById("backToAddress").addEventListener("click", function () {
-        // Chuyển về tab đầu tiên ("Địa chỉ nhận hàng")
-        $('#address-tab').tab('show');
-    });
 
     function scrollToTop() {
         document.body.scrollTop = 0;
