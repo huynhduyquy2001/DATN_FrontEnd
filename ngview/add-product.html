@@ -108,8 +108,9 @@
                                     <div class="col-4 mt-3">
                                         <input type="number" class="form-control" placeholder=""
                                             ng-model="product.originalPrice" required>
+                                        <small id="helpId" class="form-text text-muted">{{ product.originalPrice |
+                                            currencyFormat }}</small>
                                     </div>
-
                                     <div class="col-2">
                                         <div class="title-element">Giảm giá (%)</div>
                                     </div>
@@ -125,7 +126,8 @@
                                         <span ng-repeat="color in colors">
                                             <label>
                                                 <input type="checkbox" ng-model="color.selected"
-                                                    ng-change="toggleColorSelection(color)">
+                                                    ng-checked="isColorSelected(color.colorId)"
+                                                    ng-click="toggleColorSelection(color.colorId)">
                                                 {{color.colorName }}
                                             </label>
                                         </span>

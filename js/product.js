@@ -1,10 +1,29 @@
 app.controller('AddProductsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams) {
     var Url = "http://localhost:8080";
-    var isChecked = false;
     $scope.product = {};
     $scope.colors = [];
     $scope.selectedColors = [];
     $scope.productId = "";
+
+    $scope.isColorSelected = function (colorId) {
+        // Kiểm tra xem màu sắc có trong danh sách $scope.selectedColors hay không
+        // Trả về true nếu màu đã được chọn, ngược lại trả về false
+        return $scope.selectedColors.some(function (selectedColor) {
+            return selectedColor.color.colorId === colorId;
+        });
+    };
+
+
+    if ($routeParams.productId) {
+        $http.get(Url + '/get-product/' + $routeParams.productId)
+            .then(function (response) {
+                $scope.product = response.data;
+                $scope.selectedColors = response.data.productColors;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     var config = {
         apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
@@ -160,13 +179,24 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
         .catch(function (error) {
             console.log(error);
         });
-    $scope.toggleColorSelection = function (color) {
-        if (color.selected) {
-            // Nếu checkbox được chọn, thêm màu vào mảng
+    $scope.toggleColorSelection = function (colorId) {
+        var index = $scope.selectedColors.findIndex(function (selectedColor) {
+            return selectedColor.color.colorId == colorId;
+        });
+
+        if (index === -1) {
+            // Nếu index k có tồn tại sẽ thêm vào mảng
             var colorO = $scope.colors.find(function (obj) {
-                return obj.colorId === color.colorId;
+                return obj.colorId === colorId;
             });
+            var id = null;
+            $scope.product.productColors.find(function (obj) {
+                if (obj.color.colorId == colorId) {
+                    id = obj.id;
+                }
+            })
             var colorObj = {
+                "id": id,
                 "color": {
                     "colorId": colorO.colorId,
                     "colorName": colorO.colorName
@@ -174,19 +204,12 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 "quantity": 1 // Cập nhật quantity thành 1 khi màu được chọn
             };
             $scope.selectedColors.push(colorObj); // Thêm colorO vào mảng selectedColors
-        } else {
-            // Nếu checkbox không được chọn, xóa màu khỏi mảng
-            var index = $scope.selectedColors.findIndex(function (selectedColor) {
-                return selectedColor.color.colorId === color.colorId;
-            });
-            if (index !== -1) {
-                $scope.selectedColors.splice(index, 1);
-            }
+        } else if (index !== -1) {
+            // Nếu index có tồn tại
+            // Nếu index tồn tại, xóa màu khỏi mảng
+            var newSelectedColors = angular.copy($scope.selectedColors);
+            newSelectedColors.splice(index, 1);
+            $scope.selectedColors = newSelectedColors;
         }
     };
-
-
-
-
-
 });
