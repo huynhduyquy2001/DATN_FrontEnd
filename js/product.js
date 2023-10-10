@@ -1,4 +1,4 @@
-app.controller('AddProductsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams) {
+app.controller('AddProductsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams, $window) {
     var Url = "http://localhost:8080";
     $scope.product = {};
     $scope.colors = [];
@@ -55,17 +55,32 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
             })
 
             Toast.fire({
-                icon: 'warning',
+                icon: 'info',
                 title: 'Vui lòng chọn một hoặc nhiều màu sắc'
             })
             return;
         }
         $http.post(Url + '/products/add', $scope.product)
             .then(function (response) {
-                var productId = response.data.productId;
-                $scope.sendMedia(productId);
-                $scope.saveProductColor(productId);
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
 
+                Toast.fire({
+                    icon: 'info',
+                    title: 'Đang kiểm tra thông tin sản phẩm'
+                })
+                var productId = response.data.productId;
+                $scope.saveProductColor(productId);
+                $scope.sendMedia(productId);
             })
             .catch(function (error) {
                 // Xử lý lỗi (nếu có)
@@ -94,6 +109,24 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 var mediaList = document.getElementById('mediaList');
                 mediaList.innerHTML = '';
                 $window.selectedMedia = [];
+                $scope.product = {};
+                $scope.selectedColors = [];
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Sản phẩm được đăng thành công, đang trong quá trình chờ duyệt'
+                })
                 return;
             }
 
@@ -110,7 +143,6 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
 
             // Xử lý sự kiện khi tải lên hoàn thành
             uploadTask.on('state_changed', function (snapshot) {
-                // Sự kiện theo dõi tiến trình tải lên (nếu cần)
             }, function (error) {
                 alert("Lỗi tải");
             }, function () {
@@ -144,9 +176,8 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
             var formData = new FormData();
             var colorObj = selectedColor.color;
             var quantity = selectedColor.quantity;
-
-            formData.append('colorId', JSON.stringify(colorObj.colorId));
-            formData.append('quantity', JSON.stringify(quantity));
+            formData.append('colorId', colorObj.colorId);
+            formData.append('quantity', quantity);
             // Gửi yêu cầu POST với danh sách màu
             $http.post(Url + '/save-productcolor/' + productId, formData, {
                 transformRequest: angular.identity,
@@ -155,19 +186,14 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 }
             })
                 .then(function (response) {
-                    // Xử lý kết quả ở đây, response.data có thể chứa thông tin từ máy chủ sau khi lưu
-                    console.log(response.data);
+
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         });
         // Thêm danh sách màu vào FormData
-
-
-
     };
-
 
     // Hàm để lấy danh sách màu sắc từ server
     $http.get(Url + '/products/color')
@@ -190,11 +216,13 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 return obj.colorId === colorId;
             });
             var id = null;
-            $scope.product.productColors.find(function (obj) {
-                if (obj.color.colorId == colorId) {
-                    id = obj.id;
-                }
-            })
+            if ($scope.product.productId != null) {
+                $scope.product.productColors.find(function (obj) {
+                    if (obj.color.colorId == colorId) {
+                        id = obj.id;
+                    }
+                })
+            }
             var colorObj = {
                 "id": id,
                 "color": {

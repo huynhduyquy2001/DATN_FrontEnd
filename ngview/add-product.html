@@ -108,7 +108,8 @@
                                     <div class="col-4 mt-3">
                                         <input type="number" class="form-control" placeholder=""
                                             ng-model="product.originalPrice" required>
-                                        <small id="helpId" class="form-text text-muted">{{ product.originalPrice |
+                                        <small id="helpId" ng-show="product.originalPrice!=null"
+                                            class="form-text text-muted">{{ product.originalPrice |
                                             currencyFormat }}</small>
                                     </div>
                                     <div class="col-2">
@@ -157,26 +158,29 @@
                                     <hr>
                                     <div class="title-div">Vận chuyển</div>
                                     <div class="col-2">
-                                        <div class="title-element">Cân nặng</div>
+                                        <div class="title-element">Cân nặng(kg)</div>
                                     </div>
                                     <div class="col-9 mt-3">
-                                        <input type="number" class="form-control" placeholder=""
-                                            ng-model="product.weight" required>
+                                        <input type="number" class="form-control" placeholder="" value="1"
+                                            ng-model="product.weight" required min="0.1" step="0.01">
+
                                     </div>
                                     <div class="col-2">
-                                        <div class="title-element">Kích thước</div>
+                                        <div class="title-element">Kích thước (m)</div>
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="input-group mb-3">
                                             <div class="col-2" style="margin: 10px;">
                                                 <span class="input-group-text" id="Width">Chiều rộng</span>
                                                 <input type="number" class="form-control" placeholder="Width"
-                                                    aria-describedby="Width" ng-model="product.width" required>
+                                                    aria-describedby="Width" ng-model="product.width" required
+                                                    step="0.01">
                                             </div>
                                             <div class="col-2" style="margin: 10px;">
                                                 <span class="input-group-text" id="Height">Chiều dài</span>
                                                 <input type="number" class="form-control" placeholder="Height"
-                                                    aria-describedby="Height" ng-model="product.height" required>
+                                                    aria-describedby="Height" ng-model="product.height" required
+                                                    step="0.01">
                                             </div>
                                         </div>
                                     </div>
@@ -187,12 +191,13 @@
                         <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
                                      position: fixed; bottom: 0;">
                             <button ng-click="sendMedia()" class="btn btn-light m-1">Thêm ảnh</button>
-                            <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button>
+
                             <button type="submit" class="btn btn-danger m-1">Thêm &
                                 Hiển thị</button>
 
                         </div>
                     </form>
+                    <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button>
                 </div>
             </div>
         </div>
