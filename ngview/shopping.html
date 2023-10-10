@@ -27,9 +27,6 @@
                     aria-describedby="helpId" ng-model="productName" ng-keyup="findProduct(0)"
                     style="border-radius: 20px; width: 50%;" placeholder="Nhập sản phẩm cần tìm...">
             </div>
-            <b> Từ khóa gợi ý</b>
-            <button style="border:  1px solid #313131; margin-right: 0.5rem;" ng-repeat="word in words"
-                ng-click="chooseKey(word)">{{word}}</button>
             <center> <b style="font-size: 20px;" ng-show="checkShopping===3 && productList.length===0">Sản phẩm bạn tìm
                     không tồn tại</b>
             </center>

@@ -22,6 +22,25 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
     }
 
     $scope.addProduct = function () {
+        if ($scope.selectedColors.length === 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'warning',
+                title: 'Vui lòng chọn một hoặc nhiều màu sắc'
+            })
+            return;
+        }
         $http.post(Url + '/products/add', $scope.product)
             .then(function (response) {
                 var productId = response.data.productId;

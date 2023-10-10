@@ -62,8 +62,8 @@
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="form-group form-group-alt ">
-                                            <input ng-model="product.productName" type="text"
-                                                class="form-control input">
+                                            <input ng-model="product.productName" type="text" class="form-control input"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -71,7 +71,8 @@
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="form-group form-group-alt ">
-                                            <input ng-model="product.material" type="text" class="form-control input">
+                                            <input ng-model="product.material" required type="text"
+                                                class="form-control input">
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -80,7 +81,7 @@
                                     <div class="col-9 mt-3">
                                         <div class="form-group">
                                             <textarea ng-model="product.description" name="description" id="description"
-                                                class="form-control" style="height: 200px;"></textarea>
+                                                class="form-control" style="height: 200px;" required></textarea>
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -95,7 +96,7 @@
                                             <label class="input-group-text" for="inputGroupFile01"> <i
                                                     class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
                                             </label> <input type="file" class="form-control" name="mediaFiles"
-                                                id="inputGroupFile01" multiple>
+                                                id="inputGroupFile01" multiple required>
                                         </div>
                                         <div id="mediaList"></div>
                                     </div>
@@ -105,16 +106,16 @@
                                         <div class="title-element">Giá gốc</div>
                                     </div>
                                     <div class="col-4 mt-3">
-                                        <input type="text" class="form-control" placeholder=""
-                                            ng-model="product.originalPrice">
+                                        <input type="number" class="form-control" placeholder=""
+                                            ng-model="product.originalPrice" required>
                                     </div>
 
                                     <div class="col-2">
                                         <div class="title-element">Giảm giá (%)</div>
                                     </div>
                                     <div class="col-3 mt-3">
-                                        <input type="text" class="form-control" placeholder=""
-                                            ng-model="product.promotion">
+                                        <input type="number" class="form-control" placeholder=""
+                                            ng-model="product.promotion" required>
                                     </div>
 
                                     <div class="col-2">
@@ -145,7 +146,7 @@
                                                 <tr ng-repeat="selectedColor in selectedColors">
                                                     <td>{{ selectedColor }}</td>
                                                     <td><input type="text" ng-model="selectedColor.quantity"
-                                                            class="form-control"></td>
+                                                            class="form-control" required></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -157,8 +158,8 @@
                                         <div class="title-element">Cân nặng</div>
                                     </div>
                                     <div class="col-9 mt-3">
-                                        <input type="text" class="form-control" placeholder=""
-                                            ng-model="product.weight">
+                                        <input type="number" class="form-control" placeholder=""
+                                            ng-model="product.weight" required>
                                     </div>
                                     <div class="col-2">
                                         <div class="title-element">Kích thước</div>
@@ -167,13 +168,13 @@
                                         <div class="input-group mb-3">
                                             <div class="col-2" style="margin: 10px;">
                                                 <span class="input-group-text" id="Width">Chiều rộng</span>
-                                                <input type="text" class="form-control" placeholder="Width"
-                                                    aria-describedby="Width" ng-model="product.width">
+                                                <input type="number" class="form-control" placeholder="Width"
+                                                    aria-describedby="Width" ng-model="product.width" required>
                                             </div>
                                             <div class="col-2" style="margin: 10px;">
                                                 <span class="input-group-text" id="Height">Chiều dài</span>
-                                                <input type="text" class="form-control" placeholder="Height"
-                                                    aria-describedby="Height" ng-model="product.height">
+                                                <input type="number" class="form-control" placeholder="Height"
+                                                    aria-describedby="Height" ng-model="product.height" required>
                                             </div>
                                         </div>
                                     </div>
