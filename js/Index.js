@@ -113,6 +113,11 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.checkMenuLeft = true;
 	$rootScope.key = "";
 	//
+
+	//Phân trang myStore
+	$rootScope.currentPageMyStore = 0;
+	$rootScope.currentPageFilter = 0;
+
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
 		authDomain: "viesonet-datn.firebaseapp.com",
@@ -294,6 +299,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.ConnectNotification = function () {
 		var socket = new SockJS(url + '/private-notification');
 		var stompClient = Stomp.over(socket);
+		stompClient.debug = false;
 		stompClient.connect({}, function (frame) {
 			stompClient.subscribe('/private-user', function (response) {
 
@@ -335,6 +341,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
+	stompClient.debug = false;
 	var jwt = localStorage.getItem('jwtToken');
 	// Khi kết nối WebSocket thành công
 	stompClient.connect({}, function (frame) {
