@@ -1,16 +1,16 @@
 <div class="row col-md-11 animate__animated animate__fadeIn">
     <div class="col-md-12 d-flex align-items-center mb-2">
         <div class="col-4 me-2">
-            <input type="text" class="form-control" style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
+            <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control" style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
         </div>
         <li class="btn-group me-2">
             <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-filter-list fa-lg"></i> Lọc</a>
             <div class="dropdown-menu dropdown-menu-animate-up">
-              <a ng-click="sortByMinForMax()" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-arrow-up-short-wide"></i> Giá tăng dần</a>
-              <a class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-arrow-down-short-wide"></i> Giá giảm dần</a>
-              <a class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-display-chart-up-circle-dollar"></i>Bán chạy</a>
-              <a class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-newspaper"></i> Mới nhất</a>
-              <a class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-sharp fa-regular fa-scroll-old"></i></i> Cũ nhất</a>
+              <a ng-click="sortByValue('ASC', 'originalPrice')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-arrow-up-short-wide"></i> Giá tăng dần</a>
+              <a ng-click="sortByValue('DESC', 'originalPrice')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-arrow-down-short-wide"></i> Giá giảm dần</a>
+              <a ng-click="sortByValue('ASC', 'originalPrice')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-display-chart-up-circle-dollar"></i>Bán chạy</a>
+              <a ng-click="sortByValue('DESC', 'datePost')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-newspaper"></i> Mới nhất</a>
+              <a ng-click="sortByValue('ASC', 'datePost')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-sharp fa-regular fa-scroll-old"></i></i> Cũ nhất</a>
             </div>
         </li>
         <a href="#!/product/add-product/{{myAccount.user.userId}}"><i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
@@ -30,6 +30,7 @@
                         <h2 style="font-size: 1.5rem;">{{product.productName}}</h2>
                     </div>
                     <div class="description">
+                        <h3><small>{{product.datePost | date: 'dd/MM/yyyy'}}</small></h3>
                         <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
 
                         </h3>
@@ -134,7 +135,7 @@
                         <a href="#!/product/add-product/:userId" class="buy--btn animate__animated animate__fadeInDown"
                             style="margin-top: 1.5rem; margin-right: 0.2rem;">
                             Chỉnh sửa</a>
-                        <button class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
+                        <button ng-click="hideProductMyStore(product.productId)" class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
                             Xóa</button>
                     </div>
                 </div>

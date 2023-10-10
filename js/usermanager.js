@@ -7,6 +7,7 @@ app.controller(
 		$http.get(url + '/admin/usermanager/load')
 			.then(function(response) {
 				$scope.listUsers = response.data;
+				originalList = response.data;
 			});
 
 		$http.get(url + '/admin/usermanager/profile')
@@ -25,7 +26,7 @@ app.controller(
 		$scope.searchUser = function() {
 			var search = $scope.searchValue;
 			if ($scope.searchValue === '') {
-				$scope.listUsers.content = originalList;
+				$scope.listUsers = originalList;
 				return;
 			}else{
 				$http.get(url + "/admin/usermanager/search/"+ search)
