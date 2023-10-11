@@ -44,7 +44,7 @@
     }
 </style>
 
-<body ng-controller="ProductsController">
+<body>
 
     <div class="row">
         <!--Tabs-->
@@ -119,7 +119,7 @@
                                             <label>
                                                 <input class="form-check-input" type="checkbox"
                                                     ng-model="color.selected" ng-click="logSelectedColors()"
-                                                    id="{{color.colorName}}" />
+                                                    id="{{color.colorId}}_{{color.colorName}}" />
                                                 {{color.colorName }}
                                             </label>
                                         </span>
@@ -139,9 +139,23 @@
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="selectedColor in selectedColors">
-                                                    <td>{{ selectedColor }}</td>
-                                                    <td><input type="text" class="form-control"
-                                                            ng-model="selectedColor.quantity"></td>
+                                                    <td>{{ selectedColor.colorName }}</td>
+                                                    <td class="input-group"><button
+                                                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                                                            class="btn border rounded min-width-20 py-0 border-end-0"
+                                                            type="button" id="add1" va>
+                                                            <i class="fa-regular fa-minus"></i>
+                                                        </button>
+                                                        <input type="number" min="0" value="1" name="quantity"
+                                                            class="QuantityColor min-width-40 border fw-semibold text-center"
+                                                            style="width: 43px;" id="{{selectedColor}}">
+                                                        <button
+                                                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                                            class="btn min-width-20 border py-0 border-start-0 border-1 rounded "
+                                                            type="button" id="addo2">
+                                                            <i class="fa-regular fa-plus"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -182,8 +196,8 @@
                             <button type="submit" class="btn btn-light m-1">Thêm
                                 &
                                 Ẩn</button>
-                            <button type="submit" class="btn btn-danger m-1">Thêm &
-                                Hiển thị</button>
+                            <button type="submit" class="btn btn-danger m-1">Thêm & Hiển thị</button>
+
 
                         </div>
                     </form>
