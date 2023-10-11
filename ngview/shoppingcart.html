@@ -252,10 +252,14 @@
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <h6 class="fw-bolder">Địa chỉ nhận hàng</h6>
-                        <a class="text-primary" style="cursor: pointer;">Thay đổi</a>
+                        <a ng-click="showAddress()" class="text-primary" style="cursor: pointer;">Chọn</a>
                     </div>
                     <div class="mt-1">
-                        <small class="mb-1">Lý Quốc Tường | 0382762422 F26, Khu dân cư hậu thạnh mỹ P. Lê Bình, Q. Cái Răng, TP. Cần Thơ</small>
+                        <small ng-if="checkShip == true" class="mb-1" style="word-spacing: 3px;">
+                            <p class="mb-0">{{oneAddress.user.username}} | {{oneAddress.user.account.phoneNumber}}</p>
+                            {{oneAddress.detailAddress}} {{oneAddress.wardName}}
+                            {{oneAddress.districtName}}  {{oneAddress.provinceName}}
+                        </small>
                     </div>
                     <div class="border-bottom mt-4">
                         <div class="d-flex justify-content-between mb-2">
@@ -264,17 +268,106 @@
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <h6>Tiền vận chuyển</h6>
-                            <h6 class="text-success">FREE</h6>
+                            <h6 ng-if="checkShip == true" class="text-success">ShopDev {{fee | currencyFormat}}</h6>
+                            <h6 ng-if="checkShip == false" class="text-danger"><small>Chưa chọn nơi nhận</small></h6>
                         </div>
                     </div>
                     <div class="mt-3">
                         <div class="d-flex justify-content-between mb-1">
                             <h6 class="mb-0">Tổng thanh toán</h6>
-                            <h5 class="text-danger mb-0">0</h5>
+                            <h5 class="text-danger mb-0">{{sumPrice + fee | currencyFormat}}</h5>
                         </div>
                         </div>
                         <div class="d-flex">
                             <a id="place-order" class="btn btn-primary d-block mt-3 w-100">Thanh toán</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalAddress" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chọn địa chỉ giao hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="bd-example">
+                        <ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fa-sharp fa-regular fa-location-dot"></i> Địa chỉ của bạn</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" ng-click="showProvince()" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fa-solid fa-plus"></i> Tạo địa chỉ mới</button>
+                            </li>
+                          
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
+                                aria-labelledby="pills-home-tab1">
+                                        <div style="max-height: 350px; overflow-y: auto;">
+                                            <label class="d-flex gap-3 mt-2 ms-4 border-bottom" ng-repeat="deliveryAddress in deliveryAddress">
+                                                <input value="{{deliveryAddress.id}}" type="radio" name="address" class="form-check-input mt-1">
+                                                <div>
+                                                    <p class="mb-1 d-flex align-items-center">
+                                                        <i class="fa-regular fa-user fa-sm me-2"></i> <b>{{deliveryAddress.user.username}}</b>
+                                                        <i class="fa-regular fa-phone fa-sm ms-3 me-2"></i> <b>{{deliveryAddress.user.account.phoneNumber}}</b> </p>
+                                                    <p class="mb-1">{{deliveryAddress.detailAddress}} &nbsp; {{deliveryAddress.wardName}}</p>
+                                                    <p>{{deliveryAddress.districtName}}, {{deliveryAddress.provinceName}}</p>
+                                                </div>
+                                            </label>
+                                            <div ng-if="deliveryAddress.length == 0" class="mt-4 mb-2">
+                                                <h5>Bạn chưa thêm địa chỉ nhận hàng</h5>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button ng-click="checkedAddress()" class="btn btn-sm btn-primary me-2">Sử dụng địa chỉ</button>
+                                            <button ng-click="deleteAddress()" class="btn btn-sm btn-danger">Xóa</button>
+                                        </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
+                                aria-labelledby="pills-profile-tab1">
+                                <div class="row">
+                                        <div class="mt-2 col-12">
+                                            <div class="form-floating">
+                                                <select ng-options="province as province.ProvinceName for province in listProvince" 
+                                                   ng-model="selectedProvince" ng-change="onProvince()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                </select>
+                                                <label for="floatingSelect">Tỉnh/Thành Phố (<b class="text-danger">*</b>)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mt-3">
+                                            <div class="form-floating">
+                                                <select ng-options="district as district.DistrictName for district in listDistrict" 
+                                                   ng-model="selectedDistrict" ng-change="onDistrict()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                </select>
+                                                <label for="floatingSelect">Quận/Huyện (<b class="text-danger">*</b>)</label>
+                                              </div>
+                                        </div>
+                                        <div class="col-6 mt-3">
+                                            <div class="form-floating">
+                                                <select ng-options="ward as ward.WardName for ward in listWard" 
+                                                   ng-model="selectedWard" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                </select>
+                                                <label for="floatingSelect">Phường/Xã (<b class="text-danger">*</b>)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <div class="form-floating">
+                                                <textarea ng-model="textareaValue" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                                <label for="floatingTextarea2">Chi tiết</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button ng-click="addAddress()" class="btn btn-sm btn-primary">Thêm địa chỉ</button>
+                                        </div>
+                                    </div>
+                            </div>
                         </div>
                     </div>
                 </div>
