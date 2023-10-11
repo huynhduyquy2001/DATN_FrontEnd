@@ -508,10 +508,15 @@ app.controller(
 
     //Thêm địa chỉ
     $scope.addAddress = function () {
+      var inputElement = document.getElementById("floatingSelect");
+        // Lấy giá trị từ input
+      var inputValue = inputElement.value;
+
       if (
         $scope.selectedDistrict == null ||
         $scope.selectedProvince == null ||
-        $scope.selectedWard == null
+        $scope.selectedWard == null ||
+        inputValue == null
       ) {
         Swal.fire({
           position: "top",
@@ -530,6 +535,7 @@ app.controller(
         formData.append("provinceName", $scope.selectedProvince.ProvinceName);
         formData.append("wardCode", $scope.selectedWard.WardCode);
         formData.append("wardName", $scope.selectedWard.WardName);
+        formData.append("deliveryPhone", inputValue);
         if ($scope.textareaValue != null) {
           content = $scope.textareaValue;
         }
