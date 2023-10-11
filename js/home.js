@@ -363,9 +363,9 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	//đăng bài
 	$scope.post = function () {
-		var formData = new FormData();
+		var form = new FormData();
 		var fileInput = document.getElementById('inputGroupFile01');
-		// Check if no files are selected
+
 		if (fileInput.files.length === 0) {
 			const Toast = Swal.mixin({
 				toast: true,
@@ -412,87 +412,159 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 		}
 
-		var storage = firebase.storage();
-		var storageRef = storage.ref();
-		var imagesUrl = [];
-
 		if ($scope.content === null || $scope.content === undefined) {
 			$scope.content = '';
 		}
 
-		var fileCount = fileInput.files.length;
-		var uploadCount = 0;
-
-		for (var i = 0; i < fileCount; i++) {
-			var file = fileInput.files[i];
-			var fileSizeMB = file.size / (1024 * 1024);
-
-			var timestamp = new Date().getTime();
-			var fileName = file.name + '_' + timestamp;
-			var fileType = getFileExtensionFromFileName(file.name);
-
-			// Xác định nơi lưu trữ dựa trên loại tệp
-			var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
-
-			// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
-			var uploadTask = storageRef.child(storagePath + fileName).put(file);
-
-			// Xử lý sự kiện khi tải lên hoàn thành
-			uploadTask.on('state_changed', function (snapshot) {
-				// Sự kiện theo dõi tiến trình tải lên (nếu cần)
-			}, function (error) {
-				alert("Lỗi tải");
-			}, function () {
-				// Tải lên thành công, lấy URL của tệp từ Firebase Storage
-				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-					imagesUrl.push(downloadURL);
-					uploadCount++;
-
-					if (uploadCount === fileCount) {
-						// Khi đã tải lên tất cả các tệp, gửi yêu cầu POST
-						formData.append('content', $scope.content.trim());
-						formData.append('imagesUrl', imagesUrl);
-
-						$http.post(url + '/post', formData, {
-							transformRequest: angular.identity,
-							headers: {
-								'Content-Type': undefined
-							}
-						}).then(function (response) {
-							// Xử lý phản hồi thành công từ máy chủ
-						}, function (error) {
-							// Xử lý lỗi
-							console.log(error);
-						});
-					}
-				}).catch(function (error) {
-					console.error('Error getting download URL:', error);
-				});
-			});
-		}
-
-		$scope.content = '';
-		fileInput.value = null;
-		var mediaList = document.getElementById('mediaList');
-		mediaList.innerHTML = '';
-		$window.selectedMedia = [];
-		const Toast = Swal.mixin({
-			toast: true,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 3000,
-			timerProgressBar: true,
-			didOpen: (toast) => {
-				toast.addEventListener('mouseenter', Swal.stopTimer)
-				toast.addEventListener('mouseleave', Swal.resumeTimer)
+		var content = $scope.content.trim();
+		form.append('content', content);
+		$http.post(url + '/post', form, {
+			transformRequest: angular.identity,
+			headers: {
+				'Content-Type': undefined
 			}
 		})
+			.then(function (response) {
+				var postId = response.data.postId;
+				var storage = firebase.storage();
+				var storageRef = storage.ref();
 
-		Toast.fire({
-			icon: 'success',
-			title: 'Bài viết được đăng thành công'
-		})
-	};
+				var uploadNextImage = function (fileIndex) {
+					if (fileIndex >= fileInput.files.length) {
+						// All files have been uploaded
+						$scope.content = '';
+						fileInput.value = null;
+						var mediaList = document.getElementById('mediaList');
+						mediaList.innerHTML = '';
+						$window.selectedMedia = [];
+						return;
+					}
+
+					var file = fileInput.files[fileIndex];
+					var timestamp = new Date().getTime();
+					var fileName = file.name + '_' + timestamp;
+					var fileType = getFileExtensionFromFileName(file.name);
+
+					// Xác định nơi lưu trữ dựa trên loại tệp
+					var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+					// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+					var uploadTask = storageRef.child(storagePath + fileName).put(file);
+
+					// Xử lý sự kiện khi tải lên hoàn thành
+					uploadTask.on('state_changed', function (snapshot) {
+						// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+					}, function (error) {
+						// Xử lý lỗi tải lên
+						alert("Lỗi tải");
+					}, function () {
+						// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+						uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+							var formData = new FormData();
+							formData.append('imagesUrl', downloadURL);
+
+							$http.post(url + '/postimage/' + postId, formData, {
+								transformRequest: angular.identity,
+								headers: {
+									'Content-Type': undefined
+								}
+							}).then(function (response) {
+								// Tiếp tục tải và gửi ảnh tiếp theo
+								uploadNextImage(fileIndex + 1);
+							}).catch(function (error) {
+								console.error('Lỗi tải lên tệp:', error);
+							});
+						}).catch(function (error) {
+							console.error('Error getting download URL:', error);
+						});
+					});
+				};
+
+				// Bắt đầu tải và gửi ảnh từ fileInput.files[0]
+				uploadNextImage(0);
+			})
+			.catch(function (error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+	}
+
+
+	//thêm ảnh vào bài viết
+	// $scope.postImages = function () {
+	// 	var formData = new FormData();
+	// 	var fileCount = fileInput.files.length;
+
+	// 	for (var i = 0; i < fileCount; i++) {
+	// 		var imagesUrl = [];
+	// 		var file = fileInput.files[i];
+	// 		var fileSizeMB = file.size / (1024 * 1024);
+
+	// 		var timestamp = new Date().getTime();
+	// 		var fileName = file.name + '_' + timestamp;
+	// 		var fileType = getFileExtensionFromFileName(file.name);
+
+	// 		// Xác định nơi lưu trữ dựa trên loại tệp
+	// 		var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+	// 		// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+	// 		var uploadTask = storageRef.child(storagePath + fileName).put(file);
+	// 		// Xử lý sự kiện khi tải lên hoàn thành
+	// 		uploadTask.on('state_changed', function (snapshot) {
+	// 			// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+	// 		}, function (error) {
+	// 			alert("Lỗi tải");
+	// 		}, function () {
+	// 			// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+	// 			uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+	// 				imagesUrl.push(downloadURL);
+	// 				// Khi đã tải lên tất cả các tệp, gửi yêu cầu POST
+	// 				formData.append('content', $scope.content.trim());
+	// 				formData.append('imagesUrl', imagesUrl);
+	// 				$http.post(url + '/post', formData, {
+	// 					transformRequest: angular.identity,
+	// 					headers: {
+	// 						'Content-Type': undefined
+	// 					}
+	// 				}).then(function (response) {
+
+	// 				}, function (error) {
+	// 					// Xử lý lỗi
+	// 					console.log(error);
+	// 				});
+
+	// 				// Xử lý phản hồi thành công từ máy chủ
+	// 				$scope.content = '';
+	// 				fileInput.value = null;
+	// 				var mediaList = document.getElementById('mediaList');
+	// 				mediaList.innerHTML = '';
+	// 				$window.selectedMedia = [];
+
+	// 				const Toast = Swal.mixin({
+	// 					toast: true,
+	// 					position: 'top-end',
+	// 					showConfirmButton: false,
+	// 					timer: 3000,
+	// 					timerProgressBar: true,
+	// 					didOpen: (toast) => {
+	// 						toast.addEventListener('mouseenter', Swal.stopTimer)
+	// 						toast.addEventListener('mouseleave', Swal.resumeTimer)
+	// 					}
+	// 				})
+
+	// 				Toast.fire({
+	// 					icon: 'success',
+	// 					title: 'Bài viết được đăng thành công'
+	// 				})
+
+	// 			}).catch(function (error) {
+	// 				console.error('Error getting download URL:', error);
+	// 			});
+	// 		});
+	// 	}
+
+
+	// };
 
 	// Hàm để lấy phần mở rộng từ tên tệp
 	function getFileExtensionFromFileName(fileName) {

@@ -207,7 +207,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
 				$scope.receiver = response.data;
-				alert($scope.receiver.username);
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
