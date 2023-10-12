@@ -20,7 +20,7 @@
                             <div>
                                 <span
                                     style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-                                    class="ng-binding">Vân Anh</span> &nbsp;&nbsp; <span><small
+                                    class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp; <span><small
                                         style="font-size: 12px; color: #65676b" class="ng-binding"> 4-8-2023
                                     </small></span>
                             </div>
@@ -132,20 +132,8 @@
                             data-bs-target="#modalId" class="add--btn" style="margin-top: 1.5rem;"><i
                                 class="fa-solid fa-cart-shopping"></i> Thêm </button>
                         <button class="dislike--btn animate__animated animate__fadeInDown"
-                            style="margin-top: 1.5rem;"><i class="fa-solid fa-heart-crack"></i> Bỏ thích</button>
-                        <!-- <div class="photo-album">
-                        <h3>Hình ảnh khác</h3>
-                        <ul>
-                            <li><img src="https://i.pinimg.com/564x/f4/95/c3/f495c375bd19124900e784d75cf74ebe.jpg"
-                                    alt="green apple"></li>
-                            <li><img src="https://i.pinimg.com/564x/c1/ce/38/c1ce389613b0710374484c744df9a7d4.jpg"
-                                    alt="yellow apple"></li>
-                            <li><img src="https://i.pinimg.com/564x/d6/e2/ee/d6e2ee9c5335240b889d045e35473c22.jpg"
-                                    alt="orange apple"></li>
-                            <li><img src="https://i.pinimg.com/564x/57/30/f9/5730f9fc9b18d54bcec283316478f839.jpg"
-                                    alt="red apple"></li>
-                        </ul>
-                    </div> -->
+                            ng-click="togglerFavorite(product.productId)" style="margin-top: 1.5rem;"><i
+                                class="fa-solid fa-heart-crack"></i> Bỏ thích</button>
                     </div>
 
                 </div>

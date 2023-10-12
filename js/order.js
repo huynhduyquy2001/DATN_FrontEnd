@@ -25,4 +25,5 @@ app.controller('OrdersController', function ($scope, $http, $translate, $rootSco
         });
         return grouped;
     };
+
 });
