@@ -92,13 +92,29 @@
                                             ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);">
                                             <i class="fa-light fa-download" style="font-size: 4rem;"></i>
                                         </div>
+                                        <small>Hình ảnh/video sản phẩm cần thêm :</small>
+                                        <div id="mediaList"></div>
+                                        <hr>
+                                        <small>Hình ảnh/video sản phẩm hiện tại:</small>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3 mt-3" style="position: relative;"
+                                                ng-repeat=" obj in product.media">
+                                                <button ng-click="deleteMedia(obj.mediaId)"
+                                                    style="position: absolute; right: 0; top: 0; border: 1px solid gray; border-radius: 3px;">x</button>
+                                                <img ng-src="{{obj.mediaUrl}}"
+                                                    style="border-radius: 8px; height: 200px; object-fit: cover; border: 1px solid gray;"
+                                                    alt="">
+                                            </div>
+                                        </div>
+
                                         <div class="input-group mb-3">
                                             <label class="input-group-text" for="inputGroupFile01"> <i
                                                     class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
                                             </label> <input type="file" class="form-control" name="mediaFiles"
                                                 id="inputGroupFile01" multiple required>
                                         </div>
-                                        <div id="mediaList"></div>
+
+
                                     </div>
                                     <hr>
                                     <div class="title-div">Chi tiết</div>
@@ -119,7 +135,6 @@
                                         <input type="number" class="form-control" placeholder=""
                                             ng-model="product.promotion" required>
                                     </div>
-
                                     <div class="col-2">
                                         <div class="title-element">Danh sách màu</div>
                                     </div>
@@ -187,14 +202,12 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
                                      position: fixed; bottom: 0;">
-                            <button ng-click="sendMedia()" class="btn btn-light m-1">Thêm ảnh</button>
-
-                            <button type="submit" class="btn btn-danger m-1">Thêm &
-                                Hiển thị</button>
-
+                            <button type="submit" class="btn btn-info m-1" style="color: white;">Thêm </button>
+                            <button ng-click="updateProduct()" class="btn btn-light m-1"
+                                style="border: 1px solid gray;">Cập
+                                nhật</button>
                         </div>
                     </form>
                     <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button>
