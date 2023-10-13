@@ -9,9 +9,12 @@ app.controller(
     $scope.listDistrict = [];
     $scope.listWard = [];
     $scope.deliveryAddress = [];
-    $scope.fee = 0;
+    $scope.fee = [];
     $scope.checkShip = false;
     $scope.oneAddress = {};
+
+    var dataListProduct;
+    var dataAddress;
     $http
       .get(url + "/get-product-shoppingcart")
       .then(function (response) {
@@ -401,19 +404,26 @@ app.controller(
         });
       } else {
         //load thông tin sản phẩm đang chọn
-        $http({
+        dataListProduct = $http({
           method: "POST",
           url: url + "/orderShoppingCart",
           data: listColorAndProductId,
           contentType: "application/json",
         })
           .then(function (response) {
-            $scope.listProductOrder = response.data;
+            var grouped = {};
+            angular.forEach(response.data, function (product) {
+              var userId = product.product.user.userId;
+              if (!grouped[userId]) {
+                grouped[userId] = [];
+              }
+              grouped[userId].push(product);
+            });
+            $scope.listProductOrder = grouped;
           })
           .catch(function (error) {
             console.error("Error:", error);
           });
-
         //Hiện modal
         $("#exampleModal").modal("show");
       }
@@ -509,7 +519,7 @@ app.controller(
     //Thêm địa chỉ
     $scope.addAddress = function () {
       var inputElement = document.getElementById("floatingSelect");
-        // Lấy giá trị từ input
+      // Lấy giá trị từ input
       var inputValue = inputElement.value;
 
       if (
@@ -536,6 +546,7 @@ app.controller(
         formData.append("wardCode", $scope.selectedWard.WardCode);
         formData.append("wardName", $scope.selectedWard.WardName);
         formData.append("deliveryPhone", inputValue);
+        formData.append("addressStore", false);
         if ($scope.textareaValue != null) {
           content = $scope.textareaValue;
         }
@@ -597,49 +608,217 @@ app.controller(
         //Ẩn modal chọn địa chỉ
         $("#modalAddress").modal("hide");
         $scope.checkShip = true;
-        //Lấy thông tin địa chỉ đã được chọn
-        $http
+        //Lấy thông tin địa chỉ đã được chọn người mua
+        dataAddress = $http
           .get(url + "/get-oneAddress/" + checkboxValue)
           .then(function (response) {
             $scope.oneAddress = response.data;
+            $scope.shopFee();
             //Hiện lại modal đặt hàng
             $("#exampleModal").modal("show");
+            return response.data;
           })
           .catch(function (error) {
             console.log(error);
           });
-
-          //Tính phí ship
-          $http({
-            method: "POST",
-            url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
-            headers: {
-              Token: token,
-            },
-            data: {
-              service_id: 53322,
-              insurance_value: 500000,
-              coupon: null,
-              from_district_id: 1574,
-              to_district_id: 1833,
-              to_ward_code: "540902",
-              height: 15,
-              length: 15,
-              weight: 1000,
-              width: 15,
-            },
-          })
-            .then(function (response) {
-              // Xử lý phản hồi thành công
-              $scope.fee = response.data.data.total;
-            })
-            .catch(function (error) {
-              // Xử lý lỗi
-              console.error("API request failed:", error);
-              // In ra nội dung đối tượng lỗi
-              console.log("Error Object:", error);
-            });
       }
+    };
+
+    $scope.shopFee = function () {
+      Promise.all([dataListProduct, dataAddress]).then(function () {
+        var listUserIdStore = [];
+        var data = $scope.listProductOrder;
+        //Gom sản phẩm có cùng cửa hàng rồi tính tổng các giá trị của sản phẩm
+        let aggregatedData = {};
+        for (let userId in data) {
+          if (data.hasOwnProperty(userId)) {
+            listUserIdStore.push(userId);
+            for (let i = 0; i < data[userId].length; i++) {
+              var currentQuantity = data[userId][i].quantity;
+              var currentHeight = data[userId][i].product.height;
+              var currentWidth = data[userId][i].product.width;
+              var currentWeight = data[userId][i].product.weight;
+              var currentLength = data[userId][i].product.length;
+              var currentPromotion = data[userId][i].product.promotion;
+              var currentOriginalPrice = data[userId][i].product.originalPrice;
+              // Nếu userId đã tồn tại trong aggregatedData, cộng thêm quantity vào tổng
+              if (aggregatedData.hasOwnProperty(userId)) {
+                aggregatedData[userId].totalQuantity += currentQuantity;
+                aggregatedData[userId].totalHeight += currentHeight;
+                aggregatedData[userId].totalWidth += currentWidth;
+                aggregatedData[userId].totalWeight += currentWeight;
+                aggregatedData[userId].totalLength += currentLength;
+                aggregatedData[userId].totalPrice +=
+                  $scope.getSalePrice(currentOriginalPrice, currentPromotion) *
+                  currentQuantity;
+              } else {
+                // Nếu userId chưa tồn tại, tạo mới một entry trong aggregatedData
+                aggregatedData[userId] = {
+                  userId: userId,
+                  totalQuantity: currentQuantity,
+                  totalHeight: currentHeight,
+                  totalWidth: currentWidth,
+                  totalWeight: currentWeight,
+                  totalLength: currentLength,
+                  totalPrice:
+                    $scope.getSalePrice(
+                      currentOriginalPrice,
+                      currentPromotion
+                    ) * currentQuantity,
+                };
+              }
+            }
+          }
+        }
+
+        // Chuyển đổi aggregatedData từ đối tượng thành mảng
+        var totalData = Object.values(aggregatedData);
+        //Lấy danh sách địa chỉ cửa hàng
+        $http({
+          method: "GET",
+          url: url + "/get-listAddress",
+          params: { userIds: listUserIdStore }, // Sử dụng params
+          headers: { "Content-Type": "application/json" }, // Có thể cần thiết lập header
+        })
+          .then(function (response) {
+            //Gọi hàm gộp mảng và đổ dữ liêu vào
+            var mergedArray = $scope.mergeToArray(totalData, response.data);
+            $scope.getServiceId(
+              mergedArray,
+              $scope.oneAddress.districtId,
+              $scope.oneAddress.wardCode
+            );
+          })
+          .catch(function (error) {
+            // Xử lý error ở đây
+          });
+      });
+    };
+
+    $scope.getServiceId = function (mergedArray, to_district, wardCode) {
+      var serviceIdOfUserId = [];
+      var promises = [];
+
+      mergedArray.forEach(function (item) {
+        var promise = $http({
+          method: "POST",
+          url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services",
+          headers: {
+            Token: token,
+          },
+          data: {
+            shop_id: 4618496,
+            from_district: item.districtId,
+            to_district: to_district,
+          },
+        })
+          .then(function (response) {
+            serviceIdOfUserId.push({
+              serviceUser: item.userId,
+              serviceId: response.data.data[0].service_id,
+              districtId: item.districtId,
+              totalHeight: item.totalHeight,
+              totalLength: item.totalLength,
+              totalPrice: item.totalPrice,
+              totalWeight: item.totalWeight,
+              totalWidth: item.totalWidth,
+            });
+          })
+          .catch(function (error) {
+            console.error("API request failed:", error);
+            console.log("Error Object:", error);
+          });
+
+        promises.push(promise);
+      });
+
+      Promise.all(promises)
+        .then(function () {
+          // Tất cả các yêu cầu HTTP đã hoàn thành
+          $scope.feeShip(serviceIdOfUserId, to_district, wardCode);
+          console.log(serviceIdOfUserId)
+        })
+        .catch(function (error) {
+          // Xử lý lỗi nếu có
+          console.error("Promise.all failed:", error);
+        });
+    };
+
+    $scope.feeShip = function(serviceIdOfUserId, to_district, wardCode){
+      var object = [];
+      var promises = [];
+          serviceIdOfUserId.forEach(function (item) {
+            //Tính phí ship
+            var promise = $http({
+              method: "POST",
+              url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
+              headers: {
+                Token: token,
+              },
+              data: {
+                service_id: item.serviceId,
+                insurance_value: item.totalPrice,
+                coupon: null,
+                from_district_id: item.districtId,
+                to_district_id: to_district,
+                to_ward_code: wardCode,
+                height: Math.round(item.totalHeight),
+                length: Math.round(item.totalLength),
+                weight: Math.round(item.totalWeight),
+                width: Math.round(item.totalWidth),
+              },
+            })
+              .then(function (response) {
+                // Xử lý phản hồi thành công
+                object.push({
+                  userId: item.serviceUser,
+                  total: response.data.data.total,
+                });
+              })
+              .catch(function (error) {
+                // Xử lý lỗi
+                console.error("API request failed:", error);
+                // In ra nội dung đối tượng lỗi
+                console.log("Error Object:", error);
+              });
+              promises.push(promise);
+          });
+          Promise.all(promises)
+          .then(function () {
+            // Tất cả các yêu cầu HTTP đã hoàn thành
+            $scope.fee = object;
+            var sum = 0;
+            angular.forEach($scope.fee, function(f) {
+               sum += f.total;
+            });
+            $scope.totalFee = sum;
+            $scope.$apply();
+          })
+          .catch(function (error) {
+            // Xử lý lỗi nếu có
+            console.error("Promise.all failed:", error);
+          });
+    }
+    //Hàm gọp mảng có cùng userId
+    $scope.mergeToArray = function (array1, array2) {
+      /// Tạo một đối tượng để theo dõi thông tin của mỗi userId
+      let userIdMap = {};
+
+      // Thêm thông tin từ array1 vào userIdMap
+      for (let item of array1) {
+        userIdMap[item.userId] = userIdMap[item.userId] || {};
+        Object.assign(userIdMap[item.userId], item);
+      }
+
+      // Gộp thông tin từ array2 vào userIdMap
+      for (let item of array2) {
+        let userId = item.user.userId;
+        userIdMap[userId] = userIdMap[userId] || {};
+        Object.assign(userIdMap[userId], item);
+      }
+
+      // Kết quả sau khi gộp
+      return Object.values(userIdMap);
     };
 
     //Hàm reload lại trang

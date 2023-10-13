@@ -224,62 +224,70 @@
         class="fa-solid fa-circle-chevron-up fa-xl fa-shake" style="color:#007ACC;"></i></a>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thanh toán</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Đặt hàng <span class="count-product">0</span> sản phẩm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="card-body">
-                    <div class="border-bottom">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h6 class="mb-0">Tổng sản phẩm: {{listProductOrder.length}}</h6>
-                        </div>
-                        <div class="mb-3" style="max-height: 200px; overflow-y: auto;">
-                            <div class="d-flex align-items-center gap-4 mb-2" ng-repeat="productOrder in listProductOrder">
-                                <img ng-src="{{productOrder.product.media[0].mediaUrl}}"
-                                    alt="image" class="img-thumbnail avatar-100">
-                                <div class="mt-2">
-                                    <h6 class="mb-1 fw-bolder" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                                        {{productOrder.product.productName}} </h6>
-                                    <p class="mb-1"><small>Màu sắc: {{productOrder.color}}</small></p>
-                                    <small class="mb-0 me-1">{{ calculateSubtotal(productOrder) | currencyFormat }}</small>
-                                    <small>x{{productOrder.quantity}}</small>
+                <div class="card-body row">
+                    <div class="col-6">
+                        <div ng-repeat="(userId, groupedProducts) in listProductOrder" class="mt-2">
+                            <div class="d-flex justify-content-between mb-2 border-bottom py-2">
+                                <h6 class="mb-0"><i class="fa-regular fa-store"></i> {{ groupedProducts[0].product.user.username }}</h6>
+                            </div>
+                            <div class="mb-3" ng-repeat="productOrder in groupedProducts">
+                                <div class="d-flex align-items-center gap-4 mb-2"  ng-repeat="img in filterImagesByProductId(productOrder.product.media)">
+                                    <img ng-src="{{img.mediaUrl}}"
+                                        alt="image" class="img-thumbnail avatar-100">
+                                    <div class="mt-2">
+                                        <h6 class="mb-1 fw-bolder" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                            {{productOrder.product.productName}} </h6>
+                                        <p class="mb-1"><small>Màu sắc: {{productOrder.color}}</small></p>
+                                        <small class="mb-0 me-1">{{ calculateSubtotal(productOrder) | currencyFormat }}</small>
+                                        <small>x{{productOrder.quantity}}</small>
+                                    </div>
                                 </div>
+                            </div> 
+                            <div class="col-11 d-flex gap-3 justify-content-end align-items-center mb-1 border-top py-2">
+                                <h6 class="fs-8 mb-0"><b>Tiền vận chuyển:</b></h6>
+                                <h6 class="fs-8 text-danger mb-0" ng-repeat="f in fee | filter:{ userId: userId }">{{f.total | currencyFormat}}</h6>
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mt-3">
-                        <h6 class="fw-bolder">Địa chỉ nhận hàng</h6>
-                        <a ng-click="showAddress()" class="text-primary" style="cursor: pointer;">Chọn</a>
-                    </div>
-                    <div class="mt-1">
-                        <small ng-if="checkShip == true" class="mb-1" style="word-spacing: 3px;">
-                            <p class="mb-0">{{oneAddress.user.username}} | {{oneAddress.user.account.phoneNumber}}</p>
-                            {{oneAddress.detailAddress}} {{oneAddress.wardName}}
-                            {{oneAddress.districtName}}  {{oneAddress.provinceName}}
-                        </small>
-                    </div>
-                    <div class="border-bottom mt-4">
-                        <div class="d-flex justify-content-between mb-2">
-                            <h6>Tổng tiền hàng</h6>
-                            <h6 class="text-danger">{{sumPrice | currencyFormat}}</h6>
+                    <div class="col-6">
+                        <div class="d-flex justify-content-between mt-5">
+                            <h6 class="fw-bolder">Địa chỉ nhận hàng</h6>
+                            <a ng-click="showAddress()" class="text-primary" style="cursor: pointer;">Chọn</a>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <h6>Tiền vận chuyển</h6>
-                            <h6 ng-if="checkShip == true" class="text-success">ShopDev {{fee | currencyFormat}}</h6>
-                            <h6 ng-if="checkShip == false" class="text-danger"><small>Chưa chọn nơi nhận</small></h6>
+                        <div class="mt-1">
+                            <small ng-if="checkShip == true" class="mb-1" style="word-spacing: 3px;">
+                                <p class="mb-0">{{oneAddress.user.username}} | {{oneAddress.deliveryPhone}}</p>
+                                {{oneAddress.detailAddress}} {{oneAddress.wardName}}
+                                {{oneAddress.districtName}}  {{oneAddress.provinceName}}
+                            </small>
                         </div>
-                    </div>
-                    <div class="mt-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <h6 class="mb-0">Tổng thanh toán</h6>
-                            <h5 class="text-danger mb-0">{{sumPrice + fee | currencyFormat}}</h5>
+                        <div class="border-bottom mt-5">
+                            <div class="d-flex justify-content-between mb-4">
+                                <h6>Tổng tiền hàng</h6>
+                                <h6 class="text-danger">{{sumPrice | currencyFormat}}</h6>
+                            </div>
+                            <div class="d-flex justify-content-between mb-4">
+                                <h6>Tổng tiền vận chuyển</h6>
+                                <h6 ng-if="checkShip == true" class="text-success" >{{totalFee | currencyFormat}}</h6>
+                                <h6 ng-if="checkShip == false" class="text-danger"><small>Chưa chọn nơi nhận</small></h6>
+                            </div>
                         </div>
-                        </div>
-                        <div class="d-flex">
-                            <a id="place-order" class="btn btn-primary d-block mt-3 w-100">Thanh toán</a>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h6 class="mb-0">Tổng thanh toán</h6>
+                                <h5 class="text-danger mb-0">{{sumPrice + totalFee | currencyFormat}}</h5>
+                            </div>
+                            </div>
+                            <div class="d-flex">
+                                <a id="place-order" class="btn btn-primary d-block mt-3 w-100">Thanh toán</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -305,7 +313,6 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" ng-click="showProvince()" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fa-solid fa-plus"></i> Tạo địa chỉ mới</button>
                             </li>
-                          
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
