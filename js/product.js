@@ -168,6 +168,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 // Xử lý lỗi (nếu có)
                 console.log(error);
             });
+
     };
     // Hàm để lấy phần mở rộng từ tên tệp
     function getFileExtensionFromFileName(fileName) {
