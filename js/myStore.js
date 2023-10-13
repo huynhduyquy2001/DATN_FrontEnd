@@ -7,6 +7,7 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
     $scope.page = function(currentPageMyStore){
         $http.get(url + "/get-product-mystore/" + $rootScope.currentPageMyStore)
         .then(function (res) {
+			 originalList = res.data.content;
              $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
              $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
         })
@@ -15,19 +16,64 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
         });
     }
 
-	//Lọc sản phẩm theo giá tăng dần
-	$scope.sortByMinForMax = function(){
-		$http.get(url + "/filter-product-mystore/" + $rootScope.currentPageFilter + "/")
+	//Lọc sản phẩm theo giá, theo ngày
+	$scope.sortByValue = function(sortDirection, sortName){
+		$http.get(url + "/filter-product-mystore/" + $rootScope.currentPageMyStore + "/" + sortDirection + "/" + sortName)
         .then(function (res) {
              $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
              $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-             console.log($scope.listProductMyStore)
         })
         .catch(function (error) {
             console.log(error);
         });
 	}
 
+	//Lọc sản phẩm bán chạy
+	$scope.filterTrending = function(sortDirection, sortName){
+		$http.get(url + "/get-trending-myStore/" + $rootScope.currentPageMyStore)
+        .then(function (res) {
+             $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
+             $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+	}
+
+	//Tìm kiếm
+	$scope.searchProduct = function(){
+		var search = $scope.searchValue;
+			if ($scope.searchValue === '') {
+				$scope.listProductMyStore = originalList;
+				return;
+			}else{
+				$http.get(url + "/searchProductMyStore/" + search)
+				.then(function(response) {
+					$scope.listProductMyStore = response.data.content;
+					$scope.totalPages = res.data.totalPages;
+				});
+			}
+	}
+
+	//Xóa sản phẩm 
+	$scope.hideProductMyStore = function(productId){
+		Swal.fire({
+			text: 'Bạn có chắn muốn xóa sản phẩm này không?',
+			icon: 'warning',
+			confirmButtonText: 'Có, chắc chắn',
+			showCancelButton: true,
+			confirmButtonColor: '#159b59',
+			cancelButtonColor: '#d33'
+		  }).then((result) => {
+			if (result.isConfirmed) {
+				$http.post(url + "/hideProductMyStore/" + productId + "/" + $rootScope.currentPageMyStore)
+				.then(function(response) {
+					$scope.listProductMyStore = response.data.content;
+					$scope.totalPages = response.data.totalPages;
+				});
+			}
+		  })
+	}
 
 
     $scope.Previous = function () {
