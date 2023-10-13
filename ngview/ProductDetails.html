@@ -26,7 +26,7 @@
                                         </figure>
                                     </li>
                                 </ul>
-                                <ul class="carousel__thumbnails">
+                                <ul class="carousel__thumbnails" style="justify-content: center;">
                                     <li style="margin-right: 2px;" ng-repeat="media in product.media">
                                         <label for="slide-{{media.mediaId}}"><img ng-src="{{media.mediaUrl}}"
                                                 style="max-height: 20vh;" alt=""></label>
@@ -168,8 +168,8 @@
                                         id="button-addon1" data-mdb-ripple-color="dark">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="text" class="form-control text-center border border-secondary"
-                                        value="{{quantity}}" aria-label="Example text with button addon"
+                                    <input type="number" class="form-control text-center border border-secondary"
+                                        ng-model="quantity" aria-label="Example text with button addon"
                                         aria-describedby="button-addon1" />
                                     <button ng-click="increaseQuantity()"
                                         class="btn btn-white border border-secondary px-3" type="button"
@@ -233,6 +233,23 @@
                 <div class="col-lg-8 mb-4">
                     <div class="border rounded-2 px-3 py-2 bg-white  mb-5">
                         <center>
+                            <h5 class="card-title"
+                                style="text-align: left; font-weight: 600; display: flex; justify-content: space-between;">
+                                Mô tả chi tiết
+                            </h5>
+                            <ul style="text-align: left; margin-left: 2rem;">
+                                <li><b>Mã sản phẩm:</b> {{product.productId}}</li>
+                                <li><b>Tên sản phẩm:</b> {{product.productName}}</li>
+                                <li><b>Kích thước:</b> {{product.height}} x {{product.width}}</li>
+                                <li><b>Chất liệu:</b> {{product.material}}</li>
+                                <li><b>Ngày đăng:</b> {{getFormattedTimeAgo(product.datePost)}}</li>
+                                <li><b>Mô tả chi tiết:</b> {{product.description}}</li>
+
+                            </ul>
+                        </center>
+                    </div>
+                    <div class="border rounded-2 px-3 py-2 bg-white  mb-5">
+                        <center>
                             <h5 class="card-title" ng-show="myRate.ratingId"
                                 style="text-align: left; font-weight: 600; display: flex; justify-content: space-between;">
                                 Đánh giá của tôi
@@ -260,11 +277,32 @@
                     </div>
                     <div class="border rounded-2 px-3 py-2 bg-white">
                         <center>
-                            <h5 class="card-title">Đánh giá chung</h5>
+                            <h5 class="card-title">Đánh giá chung ({{product.ratings.length}})</h5>
+                            <li class="btn-group me-2">
+                                <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="fa-regular fa-filter-list fa-lg"></i> Lọc</a>
+                                <div class="dropdown-menu dropdown-menu-animate-up">
+                                    <a ng-click="changeFilterStatus('Tất cả')"
+                                        class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
+                                        style="cursor: pointer;"><i class="fa-solid fa-list"></i> Tất
+                                        cả</a>
+                                    <a ng-click="changeFilterStatus('Tích cực')"
+                                        class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
+                                        style="cursor: pointer;"><i class="fa-regular fa-face-smile-relaxed"></i> Tích
+                                        cực</a>
+                                    <a ng-click="changeFilterStatus('Tiêu cực')"
+                                        class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
+                                        style="cursor: pointer;"><i class="fa-regular fa-face-smile-horns"></i> Tiêu
+                                        cực</a>
+                                </div>
+                                &nbsp;&nbsp;|&nbsp;&nbsp; <span>{{filterStatus}}</span>
+                            </li>
+
                         </center>
                         <div>
-                            <div class="user-profile m-4" ng-repeat="rate in product.ratings  | orderBy:'-ratingDate'">
-                                <div ng-show="rate.user.userId!==myRate.user.userId">
+                            <div class="user-profile m-4"
+                                ng-repeat="rate in product.ratings | orderBy:'-ratingDate' | filter: customFilter">
+                                <div style="display: flex;" ng-show="rate.user.userId!==myRate.user.userId">
                                     <a href="#!/profile/{{rate.user.userId}}"><img ng-src="{{rate.user.avatar}}"
                                             style="border-radius: 100%;" alt=""></a>
                                     <div>

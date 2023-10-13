@@ -44,12 +44,10 @@
     }
 </style>
 
-<body ng-controller="ProductsController">
-
+<body ng-controller="AddProductsController">
     <div class="row">
         <!--Tabs-->
-
-        <div class="mt-5">
+        <div>
             <!-- Danh sách mua hàng -->
             <div class="tab-content">
                 <div style="margin-bottom: 5.5rem;">
@@ -64,8 +62,8 @@
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="form-group form-group-alt ">
-                                            <input ng-model="product.productName" type="text"
-                                                class="form-control input">
+                                            <input ng-model="product.productName" type="text" class="form-control input"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -73,7 +71,8 @@
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="form-group form-group-alt ">
-                                            <input ng-model="product.material" type="text" class="form-control input">
+                                            <input ng-model="product.material" required type="text"
+                                                class="form-control input">
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -82,34 +81,59 @@
                                     <div class="col-9 mt-3">
                                         <div class="form-group">
                                             <textarea ng-model="product.description" name="description" id="description"
-                                                class="form-control" style="height: 200px;"></textarea>
+                                                class="form-control" style="height: 200px;" required></textarea>
                                         </div>
                                     </div>
                                     <div class="col-2">
                                         <div class="title-element">Hình ảnh/Video sản phẩm</div>
                                     </div>
                                     <div class="col-9 mt-3">
-                                        <div class="input-group mb-3">
-                                            <label class="input-group-text" for="inputGroupFile01">
-                                                <i class="fa-regular fa-image"></i>Hình ảnh và video
-                                            </label> <input hidden type="file" class="form-control" name="mediaFiles"
-                                                id="inputGroupFile01" multiple>
-                                        </div>
                                         <div id="dropArea" ondrop="dropHandler(event);"
                                             ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);">
-                                            Chọn hoặc kéo
-                                            thả để tải hình ảnh/video.</div>
-
+                                            <i class="fa-light fa-download" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <small>Hình ảnh/video sản phẩm cần thêm :</small>
                                         <div id="mediaList"></div>
+                                        <hr>
+                                        <small>Hình ảnh/video sản phẩm hiện tại:</small>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3 mt-3" style="position: relative;"
+                                                ng-repeat=" obj in product.media">
+                                                <button ng-click="deleteMedia(obj.mediaId)"
+                                                    style="position: absolute; right: 0; top: 0; border: 1px solid gray; border-radius: 3px;">x</button>
+                                                <img ng-src="{{obj.mediaUrl}}"
+                                                    style="border-radius: 8px; height: 200px; object-fit: cover; border: 1px solid gray;"
+                                                    alt="">
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text" for="inputGroupFile01"> <i
+                                                    class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
+                                            </label> <input type="file" class="form-control" name="mediaFiles"
+                                                id="inputGroupFile01" multiple required>
+                                        </div>
+
+
                                     </div>
                                     <hr>
                                     <div class="title-div">Chi tiết</div>
                                     <div class="col-2">
-                                        <div class="title-element">Giá</div>
+                                        <div class="title-element">Giá gốc</div>
                                     </div>
-                                    <div class="col-9 mt-3">
-                                        <input type="text" class="form-control" placeholder=""
-                                            ng-model="product.originalPrice">
+                                    <div class="col-4 mt-3">
+                                        <input type="number" class="form-control" placeholder=""
+                                            ng-model="product.originalPrice" required>
+                                        <small id="helpId" ng-show="product.originalPrice!=null"
+                                            class="form-text text-muted">{{ product.originalPrice |
+                                            currencyFormat }}</small>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="title-element">Giảm giá (%)</div>
+                                    </div>
+                                    <div class="col-3 mt-3">
+                                        <input type="number" class="form-control" placeholder=""
+                                            ng-model="product.promotion" required>
                                     </div>
                                     <div class="col-2">
                                         <div class="title-element">Danh sách màu</div>
@@ -117,14 +141,13 @@
                                     <div class="col-9 mt-3 d-flex justify-content-between">
                                         <span ng-repeat="color in colors">
                                             <label>
-                                                <input class="form-check-input" type="checkbox"
-                                                    ng-model="color.selected" ng-click="logSelectedColors()"
-                                                    id="{{color.colorName}}" />
+                                                <input type="checkbox" ng-model="color.selected"
+                                                    ng-checked="isColorSelected(color.colorId)"
+                                                    ng-click="toggleColorSelection(color.colorId)">
                                                 {{color.colorName }}
                                             </label>
                                         </span>
                                     </div>
-
 
                                     <div class="col-2">
                                         <div class="title-element"></div>
@@ -140,8 +163,8 @@
                                             <tbody>
                                                 <tr ng-repeat="selectedColor in selectedColors">
                                                     <td>{{ selectedColor }}</td>
-                                                    <td><input type="text" class="form-control"
-                                                            ng-model="selectedColor.quantity"></td>
+                                                    <td><input type="text" ng-model="selectedColor.quantity"
+                                                            class="form-control" required></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -150,26 +173,29 @@
                                     <hr>
                                     <div class="title-div">Vận chuyển</div>
                                     <div class="col-2">
-                                        <div class="title-element">Cân nặng</div>
+                                        <div class="title-element">Cân nặng(kg)</div>
                                     </div>
                                     <div class="col-9 mt-3">
-                                        <input type="text" class="form-control" placeholder=""
-                                            ng-model="product.weight">
+                                        <input type="number" class="form-control" placeholder="" value="1"
+                                            ng-model="product.weight" required min="0.1" step="0.01">
+
                                     </div>
                                     <div class="col-2">
-                                        <div class="title-element">Kích thước</div>
+                                        <div class="title-element">Kích thước (m)</div>
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="input-group mb-3">
                                             <div class="col-2" style="margin: 10px;">
                                                 <span class="input-group-text" id="Width">Chiều rộng</span>
-                                                <input type="text" class="form-control" placeholder="Width"
-                                                    aria-describedby="Width" ng-model="product.width">
+                                                <input type="number" class="form-control" placeholder="Width"
+                                                    aria-describedby="Width" ng-model="product.width" required
+                                                    step="0.01">
                                             </div>
                                             <div class="col-2" style="margin: 10px;">
                                                 <span class="input-group-text" id="Height">Chiều dài</span>
-                                                <input type="text" class="form-control" placeholder="Height"
-                                                    aria-describedby="Height" ng-model="product.height">
+                                                <input type="number" class="form-control" placeholder="Height"
+                                                    aria-describedby="Height" ng-model="product.height" required
+                                                    step="0.01">
                                             </div>
                                         </div>
                                     </div>
@@ -178,24 +204,133 @@
                         </div>
                         <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
                                      position: fixed; bottom: 0;">
-                            <button type="submit" class="btn btn-light m-1">Hủy</button>
-                            <button type="submit" class="btn btn-light m-1">Thêm
-                                &
-                                Ẩn</button>
-                            <button type="submit" class="btn btn-danger m-1">Thêm &
-                                Hiển thị</button>
-
+                            <button type="submit" class="btn btn-info m-1" style="color: white;">Thêm </button>
+                            <button ng-click="updateProduct()" class="btn btn-light m-1"
+                                style="border: 1px solid gray;">Cập
+                                nhật</button>
                         </div>
                     </form>
+                    <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Bootstrap JS -->
     <script>
+        var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
 
+        document.getElementById('dropArea').addEventListener('click',
+            function () {
+                document.getElementById('inputGroupFile01').click();
+            });
+
+        document.getElementById('inputGroupFile01').addEventListener('change',
+            function () {
+                handleFiles(this.files);
+            });
+
+        function dropHandler(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            var mediaType = /^image\//;
+            var videoType = /^video\//;
+            var mediaList = document.getElementById('mediaList');
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (mediaType.test(file.type) || videoType.test(file.type)) {
+                    var reader = new FileReader();
+                    reader.onload = (function (file) {
+                        return function () {
+                            if (mediaType.test(file.type)) {
+                                var media = new Image();
+                                media.src = this.result;
+                                media.classList.add('previewMedia');
+                                var container = createMediaContainer(media,
+                                    file);
+                                mediaList.appendChild(container);
+                            } else if (videoType.test(file.type)) {
+                                var media = document.createElement('video');
+                                media.src = this.result;
+                                media.setAttribute('controls', 'controls');
+                                media.classList.add('previewMedia');
+                                var container = createMediaContainer(media,
+                                    file);
+                                mediaList.appendChild(container);
+                            }
+                        };
+                    })(file);
+                    reader.readAsDataURL(file);
+                    selectedMedia.push(file);
+                }
+            }
+
+            // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+            var dataTransfer = new DataTransfer();
+            for (var i = 0; i < selectedMedia.length; i++) {
+                dataTransfer.items.add(selectedMedia[i]);
+            }
+            document.getElementById('inputGroupFile01').files = dataTransfer.files;
+        }
+
+        function createMediaContainer(media, file) {
+            var container = document.createElement('div');
+            container.classList.add('previewMediaContainer');
+            container.appendChild(media);
+
+            var deleteButton = document.createElement('button');
+            deleteButton.innerHTML = 'X';
+            deleteButton.classList.add('deleteButton');
+            deleteButton
+                .addEventListener(
+                    'click',
+                    function () {
+                        // Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
+                        var index = selectedMedia.indexOf(file);
+                        if (index !== -1) {
+                            selectedMedia.splice(index, 1);
+                        }
+                        // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+                        var dataTransfer = new DataTransfer();
+                        for (var i = 0; i < selectedMedia.length; i++) {
+                            dataTransfer.items.add(selectedMedia[i]);
+                        }
+                        document.getElementById('inputGroupFile01').files = dataTransfer.files;
+
+                        container.remove();
+                    });
+
+            container.appendChild(deleteButton);
+
+            return container;
+        }
+
+        function dragOverHandler(event) {
+            event.preventDefault();
+            event.target.classList.add('active');
+        }
+
+        function dragLeaveHandler(event) {
+            event.preventDefault();
+            event.target.classList.remove('active');
+        }
+        function toggleColor(link) {
+            var allLinks = document.getElementsByClassName("colorful-link");
+
+            for (var i = 0; i < allLinks.length; i++) {
+                var currentLink = allLinks[i];
+                currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+                if (currentLink === link) {
+                    link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+                }
+            }
+        }
     </script>
 </body>
 

@@ -2,24 +2,104 @@
 app.controller('ShoppingController', function ($scope, $http, $translate, $rootScope, $location, $anchorScroll) {
 	var url = "http://localhost:8080";
 	$scope.productList = [];
-
 	$scope.totalPages = 0;
 	$scope.totalPagesTrending = 0;
 	$scope.product = {};
 	$scope.quantity = 1;
 	$scope.total = -1;
 	$scope.color = "";
+	$scope.page = 0;
+	$scope.searchProduct = [];
+	$scope.productName = $rootScope.key;
+
+	$scope.chooseKey = function (word) {
+		$scope.productName = word;
+		$scope.findProductNoSplitText(0);
+	}
+
+	// Khởi tạo biến $scope.words là một mảng để lưu trữ các từ
+	$scope.words = [];
+
+	// Hàm để tách chuỗi thành danh từ, tính từ và động từ
+	$scope.splitText = function (sentence) {
+		var words = sentence.split(/[ ,.]+/); // Tách chuỗi thành các từ
+
+		// Xóa nội dung cũ của $scope.words
+		$scope.words.length = 0;
+
+		// Lặp qua từng từ để xác định loại (danh từ, tính từ hoặc động từ)
+		for (var i = 0; i < words.length; i++) {
+			var word = words[i];
+			var nextWord = words[i + 1];
+
+			if (word.match(/[a-zA-Z]/)) {
+				// Kiểm tra nếu từ chứa chữ cái (tiếng Việt)
+				if (nextWord) {
+					var combinedWord = word + ' ' + nextWord;
+
+					if (nextWord.endsWith("ng")) {
+						$scope.words.push(combinedWord);
+						i++; // Bỏ qua từ tiếp theo vì đã kết hợp thành động từ
+					} else {
+						$scope.words.push(word);
+					}
+				} else {
+					$scope.words.push(word);
+				}
+			}
+			console.log($scope.words);
+		}
+	};
+
+	$scope.findProductNoSplitText = function (currentPageSearch) {
+
+		$rootScope.currentPageSearch = currentPageSearch;
+		$rootScope.key = $scope.productName;
+		$rootScope.checkShopping = 3;
+		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào URL
+		$http.get(url + "/find-product-by-name/" + currentPageSearch, {
+			params: { key: $scope.productName }
+		})
+			.then(function (res) {
+				$scope.productList = res.data.content;
+				$scope.totalPages = res.data.totalPages;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+	$scope.findProduct = function (currentPageSearch) {
+		$scope.splitText($scope.productName);
+
+		$rootScope.currentPageSearch = currentPageSearch;
+		$rootScope.key = $scope.productName;
+		$rootScope.checkShopping = 3;
+		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào URL
+		$http.get(url + "/find-product-by-name/" + currentPageSearch, {
+			params: { key: $scope.productName }
+		})
+			.then(function (res) {
+				$scope.productList = res.data.content;
+				$scope.totalPages = res.data.totalPages;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+
 	$scope.getproductList = function (currentPage) {
 		$http.get(url + "/get-shopping-by-page/" + currentPage)
 			.then(function (res) {
 				$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-				$rootScope.checkShopping = false;
+				$rootScope.checkShopping = 2;
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
-	} 
+	}
 
 	$scope.getProduct = function (productId) {
 		$http.get(url + "/get-product/" + productId)
@@ -143,12 +223,34 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 
 	// -----------------------------------------------------------------------------------
 
+	$scope.PreviousSearch = function () {
+		if ($rootScope.currentPageSearch === 0) {
+			return;
+		} else {
+			$anchorScroll();
+			$rootScope.currentPageSearch = $rootScope.currentPageSearch - 1; // Cập nhật trang hiện tại
+			$scope.findProduct($rootScope.currentPageSearch);
+
+		}
+	}
+
+	$scope.NextSearch = function () {
+		if ($rootScope.currentPageSearch === $rootScope.currentPageSearch - 1) {
+			return;
+		} else {
+			$anchorScroll();
+			$rootScope.currentPageSearch = $rootScope.currentPageSearch + 1; // Cập nhật trang hiện tại
+			$scope.findProduct($rootScope.currentPageSearch);
+		}
+	}
+
+
 	$scope.getproductListTrending = function (currentPage) {
 		$http.get(url + "/get-trending/" + currentPage)
 			.then(function (res) {
 				$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-				$rootScope.checkShopping = true;
+				$rootScope.checkShopping = 1;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -174,10 +276,12 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			$scope.getproductList($rootScope.currentPageTrending);
 		}
 	}
-	if ($rootScope.checkShopping) {
+	if ($rootScope.checkShopping === 1) {
 		$scope.getproductListTrending($rootScope.currentPageTrending);
-	} else {
+	} else if ($rootScope.checkShopping === 2) {
 		$scope.getproductList($rootScope.currentPage);
+	} else {
+		$scope.findProduct($rootScope.currentPageSearch);
 	}
 
 

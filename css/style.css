@@ -1912,7 +1912,7 @@ h3 {
 	}
 }
 
-.accept--btn{
+.accept--btn {
 	padding: 0.8em 1em;
 	border-radius: 7px;
 	border: 1px solid #007ACC;
@@ -1921,10 +1921,10 @@ h3 {
 	letter-spacing: 1.3px;
 	color: #fff;
 	cursor: pointer;
-	background-color:  #007ACC;
+	background-color: #007ACC;
 }
 
-.decline--btn{
+.decline--btn {
 	padding: 0.8em 1em;
 	border-radius: 7px;
 	border: 1px solid #ff3f40;
@@ -1933,7 +1933,7 @@ h3 {
 	letter-spacing: 1.3px;
 	color: #fff;
 	cursor: pointer;
-	background-color:  #ff3f40;
+	background-color: #ff3f40;
 }
 
 
@@ -2434,6 +2434,10 @@ a {
 	background-color: #5D87FF;
 	/* Màu của border khi hover */
 	transition: width 0.15s ease-out;
+}
+
+.hver:active {
+	background-color: rgba(93, 135, 255, 0.1) !important;
 }
 
 .hver::before {
