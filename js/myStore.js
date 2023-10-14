@@ -12,16 +12,19 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
     };
 
 	$scope.customFilter = function (filter) {
-        if ($scope.filterStatus === "Tất cả") {
-            return true; // Hiển thị tất cả
-        } else if ($scope.filterStatus === "Giá tăng dần" &&  filter.originalPrice >= 100000) {
-            return true; // Hiển thị đánh giá tích cực
-        } else if ($scope.filterStatus === "Giá giảm dần" && filter.originalPrice < 100000) {
-            return true; // Hiển thị đánh giá tiêu cực
-        } else if ($scope.filterStatus === "Giá giảm dần" && filter.originalPrice < 100000) {
-            return true; // Hiển thị đánh giá tiêu cực
-        }
-    };
+		if ($scope.filterStatus === "Tất cả") {
+			return true; // Hiển thị tất cả
+		} else if ($scope.filterStatus === "Đánh giá cao" && filter.ratings.ratingValue >= 3) {
+			return true; // Hiển thị đánh giá tích cực
+		} else if ($scope.filterStatus === "Đánh giá thấp" && filter.ratings.ratingValue < 3) {
+			return true; // Hiển thị đánh giá tiêu cực
+		} else if ($scope.filterStatus === "Bán nhiều nhất" && filter.soldQuantity === $scope.maxSoldQuantity) {
+			return true; // Hiển thị sản phẩm có số lượng bán bằng với số lượng bán cao nhất
+		} else if ($scope.filterStatus === "Bán ít nhất" && filter.soldQuantity === $scope.minSoldQuantity) {
+			return true; // Hiển thị sản phẩm có số lượng bán bằng với số lượng bán thấp nhất
+		}
+		return false; // Ẩn các sản phẩm không phù hợp với bất kỳ điều kiện nào
+	};
 
 	// Hàm để cập nhật số lượng bán cao nhất và thấp nhất
 	$scope.filter = function () {
@@ -33,6 +36,7 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
     $scope.page = function(currentPageMyStore){
         $http.get(url + "/get-product-mystore/" + $rootScope.currentPageMyStore)
         .then(function (res) {
+			console.log(res.data.content)
 			 originalList = res.data.content;
              $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
              $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
