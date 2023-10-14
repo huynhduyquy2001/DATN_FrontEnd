@@ -138,7 +138,7 @@
 													style="max-height: 90vh; object-fit: contain; width: 100%; height: 60vh;">
 
 												<video ng-if="image.type === false" autoplay controls
-													style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%;left: 50%; position: absolute;">
+													style="max-height: 80vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%;left: 50%; position: absolute;">
 													<source ng-src="{{ image.imageUrl }}" type="video/mp4">
 													Your browser does not support the video tag.
 												</video>
@@ -159,14 +159,15 @@
 									</div>
 								</div>
 								<div ng-if="post.images.length === 1" class="animate__animated animate__fadeIn">
-									<video ng-if="post.images[0].type === false" autoplay controls style="width: 100%;">
+									<video ng-if="post.images[0].type === false" autoplay controls
+										style="width: 100%; max-height: 80vh;">
 										<source ng-src="{{ post.images[0].imageUrl}}" type="video/mp4">
 										Your browser does not support the video tag.
 									</video>
 									<!-- Single image HTML code -->
 									<img ng-if="post.images[0].type === true" ng-click="getPostDetails(post.postId)"
 										ng-src="{{post.images[0].imageUrl}}" class="w-100" alt="Single image"
-										style="max-height: 90vh; object-fit: cover; width: 100%; background-color: black;">
+										style="max-height: 70vh; object-fit: cover; width: 100%; background-color: black;">
 								</div>
 
 
@@ -229,7 +230,7 @@
 				style=" border: none; background-color: #f8f9fa!important;">
 				<div class="card-body d-flex align-items-center gap-3">
 					<a href="#!/profile/BZOL98493464"><img class="rounded-circle" width="40" height="40"
-							style="object-fit: cover; max-width: fit-content;" src="{{user.avatar}}"></a>
+							style="object-fit: cover; max-width: fit-content;" ng-src="{{user.avatar}}"></a>
 					<div>
 						<h5 class="fw-semibold mb-0 ng-binding" style="font-size: 1rem;font-weight: 600 !important">
 							{{user.username}}</h5>

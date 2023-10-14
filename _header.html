@@ -178,10 +178,10 @@
 	style="width: 100%; text-align: left; margin-left: 0; border-radius: 5px; position: fixed; right: 0; width: 400px; height: 70vh;box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px; transition: bottom 0.3s ease;">
 	<header class="msger-header">
 		<div class="msger-header-title">
-			<a href="#" style="font-weight: 600; color: #212529" class="ng-binding"><img
+			<a href="#!/profile/{{receiver.userId}}" style="font-weight: 600; color: #212529" class="ng-binding"><img
 					style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;" alt=""
-					ng-src="avatar2.jpg" src="images/avatar2.jpg"> {{receiver.username}}</a> &nbsp; <small
-				style="font-size: 0.7rem;" class="ng-binding">Hoạt động:
+					ng-src="{{receiver.avatar}}"> {{receiver.username}}</a> &nbsp; <small style="font-size: 0.7rem;"
+				class="ng-binding">Hoạt động:
 				{{getFormattedTimeAgo(receiver.accessTime)}}</small>
 		</div>
 		<div id="closeBoxchat" ng-click="closeBoxchat($event)" style="cursor: pointer;">
@@ -195,7 +195,6 @@
 			ng-repeat="mess in ListMess">
 			<div class="msg-bubble" ng-style="{'background-color': mess.image ? 'transparent' : ''}">
 				<div class="msg-info">
-
 					<button class="btn-revoke btn btn-outline-danger py-1 px-2 ms-auto ng-scope"
 						ng-if="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
 						ng-click="revokeMessage(mess.messId)"><b>Thu hồi</b></button>
