@@ -4,33 +4,36 @@
             <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
                 style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
         </div>
-        <li class="btn-group me-2">
+        <li class="btn-group me-3">
             <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
-                    class="fa-regular fa-filter-list fa-lg"></i> Lọc</a>
+                    class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp; <span>{{filterStatus}}</span></a>
             <div class="dropdown-menu dropdown-menu-animate-up">
-                <a ng-click="sortByValue('ASC', 'originalPrice')"
+                <a ng-click="changeFilterStatus('Tất cả')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;">
+                    <i class="fa-solid fa-list fa-lg"></i> Tất cả</a>
+                <a ng-click="changeFilterStatus('Giá tăng dần')"
                     class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
                         class="fa-regular fa-arrow-up-short-wide"></i> Giá tăng dần</a>
-                <a ng-click="sortByValue('DESC', 'originalPrice')"
+                <a ng-click="changeFilterStatus('Giá giảm dần')"
                     class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
                         class="fa-regular fa-arrow-down-short-wide"></i> Giá giảm dần</a>
-                <a ng-click="sortByValue('ASC', 'originalPrice')"
+                <a ng-click="changeFilterStatus('Bán chạy')"
                     class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
                         class="fa-regular fa-display-chart-up-circle-dollar"></i>Bán chạy</a>
-                <a ng-click="sortByValue('DESC', 'datePost')"
+                <a ng-click="changeFilterStatus('Mới nhất')"
                     class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
                         class="fa-regular fa-newspaper"></i> Mới nhất</a>
-                <a ng-click="sortByValue('ASC', 'datePost')"
+                <a ng-click="changeFilterStatus('Cũ nhất')"
                     class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
                         class="fa-sharp fa-regular fa-scroll-old"></i></i> Cũ nhất</a>
-            </div>
+            </div> 
         </li>
         <a href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
             phẩm</a>
     </div>
     <hr>
     <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
-        style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in listProductMyStore">
+        style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
         <div class="row frameProduct animate__animated animate__fadeIn">
             <div class="col-md-6" style="display: flex;max-height: 100%;">
                 <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
