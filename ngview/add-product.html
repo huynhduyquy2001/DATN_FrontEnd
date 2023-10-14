@@ -62,8 +62,8 @@
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="form-group form-group-alt ">
-                                            <input ng-model="product.productName" type="text" class="form-control input"
-                                                required>
+                                            <input ng-model="product.productName" placeholder="Vd: gấu bông đan len"
+                                                type="text" class="form-control input" required>
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -72,7 +72,7 @@
                                     <div class="col-9 mt-3">
                                         <div class="form-group form-group-alt ">
                                             <input ng-model="product.material" required type="text"
-                                                class="form-control input">
+                                                placeholder="vải, len, giấy..." class="form-control input">
                                         </div>
                                     </div>
                                     <div class="col-2">
@@ -95,7 +95,8 @@
                                         <small>Hình ảnh/video sản phẩm cần thêm :</small>
                                         <div id="mediaList"></div>
                                         <hr>
-                                        <small>Hình ảnh/video sản phẩm hiện tại:</small>
+                                        <small ng-show="product.media.length>0">Hình ảnh/video sản phẩm hiện
+                                            tại:</small>
                                         <div class="row">
                                             <div class="col-md-3 mb-3 mt-3" style="position: relative;"
                                                 ng-repeat=" obj in product.media">
@@ -107,7 +108,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="input-group mb-3">
+                                        <div class="input-group mb-3" hidden>
                                             <label class="input-group-text" for="inputGroupFile01"> <i
                                                     class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
                                             </label> <input type="file" class="form-control" name="mediaFiles"
@@ -122,17 +123,17 @@
                                         <div class="title-element">Giá gốc</div>
                                     </div>
                                     <div class="col-4 mt-3">
-                                        <input type="number" class="form-control" placeholder=""
-                                            ng-model="product.originalPrice" required>
+                                        <input type="number" class="form-control" placeholder="vnd"
+                                            ng-model="product.originalPrice" required min="10000">
                                         <small id="helpId" ng-show="product.originalPrice!=null"
                                             class="form-text text-muted">{{ product.originalPrice |
                                             currencyFormat }}</small>
                                     </div>
                                     <div class="col-2">
-                                        <div class="title-element">Giảm giá (%)</div>
+                                        <div class="title-element">Giảm giá </div>
                                     </div>
                                     <div class="col-3 mt-3">
-                                        <input type="number" class="form-control" placeholder=""
+                                        <input type="number" class="form-control" placeholder="%" min="0"
                                             ng-model="product.promotion" required>
                                     </div>
                                     <div class="col-2">
@@ -163,7 +164,7 @@
                                             <tbody>
                                                 <tr ng-repeat="selectedColor in selectedColors">
                                                     <td>{{ selectedColor }}</td>
-                                                    <td><input type="text" ng-model="selectedColor.quantity"
+                                                    <td><input type="text" ng-model="selectedColor.quantity" min="1"
                                                             class="form-control" required></td>
                                                 </tr>
                                             </tbody>
@@ -173,27 +174,33 @@
                                     <hr>
                                     <div class="title-div">Vận chuyển</div>
                                     <div class="col-2">
-                                        <div class="title-element">Cân nặng(kg)</div>
+                                        <div class="title-element">Cân nặng</div>
                                     </div>
                                     <div class="col-9 mt-3">
-                                        <input type="number" class="form-control" placeholder="" value="1"
+                                        <input type="number" class="form-control" placeholder="gram" value="1"
                                             ng-model="product.weight" required min="0.1" step="0.01">
 
                                     </div>
                                     <div class="col-2">
-                                        <div class="title-element">Kích thước (m)</div>
+                                        <div class="title-element">Kích thước (cm)</div>
                                     </div>
                                     <div class="col-9 mt-3">
                                         <div class="input-group mb-3">
-                                            <div class="col-2" style="margin: 10px;">
+                                            <div class="col-3" style="margin: 10px;">
                                                 <span class="input-group-text" id="Width">Chiều rộng</span>
-                                                <input type="number" class="form-control" placeholder="Width"
+                                                <input type="number" class="form-control" placeholder="cm"
                                                     aria-describedby="Width" ng-model="product.width" required
                                                     step="0.01">
                                             </div>
-                                            <div class="col-2" style="margin: 10px;">
+                                            <div class="col-3" style="margin: 10px;">
                                                 <span class="input-group-text" id="Height">Chiều dài</span>
-                                                <input type="number" class="form-control" placeholder="Height"
+                                                <input type="number" class="form-control" placeholder="cm"
+                                                    aria-describedby="Height" ng-model="product.length" required
+                                                    step="0.01">
+                                            </div>
+                                            <div class="col-3" style="margin: 10px;">
+                                                <span class="input-group-text" id="Height">Chiều cao</span>
+                                                <input type="number" class="form-control" placeholder="cm"
                                                     aria-describedby="Height" ng-model="product.height" required
                                                     step="0.01">
                                             </div>

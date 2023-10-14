@@ -2,7 +2,7 @@
 
 	<script src="js/thoiTiet.js"></script>
 
-	<div class="col-md-6 animate__animated animate__fadeIn offset-md-1" style="z-index: 10;">
+	<div class="col-md-6 offset-md-1" style="z-index: 10;">
 
 		<div class="card shadow-none border ng-scope" data-bs-toggle="modal" href="#exampleModalToggle"
 			style="width: 100%; margin-bottom: 1rem; border-radius: 10px; box-shadow: rgba(6, 19, 36, 0.2) 0px 1px 4px 0px !important;">
@@ -126,18 +126,19 @@
 												aria-current="{{$index === 0}}" aria-label="Slide {{$index + 1}}"></li>
 										</ol>
 										<!-- Carousel items -->
-										<div class="carousel-inner" role="listbox">
-											<div class="carousel-item" style="background-color: #313131; height: 90vh;"
+										<div class="carousel-inner" role="listbox"
+											ng-style="{ 'height': getHeightCarousel(post.images) }">
+											<div class="carousel-item" style="background-color: black;"
 												ng-repeat="image in post.images track by $index"
 												ng-class="{ 'active': $index === 0 }">
 
 												<img ng-click="getPostDetails(post.postId)" ng-if="image.type === true"
 													ng-src="{{ image.imageUrl }}" class="w-100 d-block"
 													alt="Slide {{$index + 1}}"
-													style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
+													style="max-height: 90vh; object-fit: contain; width: 100%; height: 60vh;">
 
 												<video ng-if="image.type === false" autoplay controls
-													style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%; position: absolute;">
+													style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%;left: 50%; position: absolute;">
 													<source ng-src="{{ image.imageUrl }}" type="video/mp4">
 													Your browser does not support the video tag.
 												</video>
@@ -300,17 +301,18 @@
 	</div>
 
 	<!-- Modal hiện  chi tiêt bài viết và danh sách bình luận -->
-	<div class="modal fade" style="padding: 0; border-radius: 10px;" id="chiTietBaiViet" tabindex="-1" role="dialog"
+	<div class="modal fade" style="padding: 0 !important;" id="chiTietBaiViet" tabindex="-1" role="dialog"
 		aria-labelledby="modalTitleId" aria-hidden="true">
 		<div class="modal-dialog modal-fullscreen" role="document">
-			<div class="modal-content" style="border-radius: 10px;">
+			<div class="modal-content">
 				<div class="modal-body" style=" padding: 0;">
 					<div class="row">
-						<div class="col-md-6 trai " style="background-color: black; padding: 0;">
+						<div class="col-md-7 trai " style="background-color: black; padding: 0;">
 							<div ng-if="postDetails.images.length > 1">
 								<!-- Carousel HTML code -->
 								<div id="postDetails{{postDetails.postid}}" class="carousel slide"
-									data-bs-ride="carousel">
+									data-bs-ride="carousel"
+									style="display: flex; justify-items: center; height: 100vh; background-color: black; margin-top: 0; margin-bottom: 0;">
 									<!-- Carousel indicators -->
 									<ol class="carousel-indicators">
 										<li data-bs-target="#postDetails{{postDetails.postid}}"
@@ -324,7 +326,7 @@
 											ng-repeat="image in postDetails.images track by $index"
 											ng-class="{ 'active': $index === 0 }">
 											<img ng-src="{{ image.imageUrl }}" class="w-100 d-block"
-												alt="Slide {{$index + 1}} ">
+												alt="Slide {{$index + 1}} " style="height: 100vh; object-fit: contain;">
 										</div>
 									</div>
 									<!-- Carousel controls -->
@@ -341,7 +343,7 @@
 								</div>
 							</div>
 							<div ng-if="postDetails.images.length === 1"
-								style="display: flex; justify-items: center; height: 100vh;">
+								style="display: flex; justify-items: center; height: 100vh; background-color: black;">
 								<!-- Single image HTML code -->
 								<img ng-src="{{ postDetails.images[0].imageUrl }}" class="w-100" alt="Single image"
 									style=" object-fit: contain; max-height: 100vh; border-radius: 10px; border-radius: 10px;">
@@ -349,13 +351,15 @@
 							</div>
 
 						</div>
-						<div class="col-md-6 phai"
-							style="overflow-y: scroll; max-height: 100vh; background-color: white;">
-
+						<div class="col-md-5 phai" style="height: 100vh; overflow: scroll;">
 							<div>
 								<div>
-									<div data-bs-dismiss="modal" style="cursor: pointer; text-align: right;">x</div>
+									<div data-bs-dismiss="modal"
+										style="cursor: pointer;color: #313131; display: flex; justify-content: flex-end;">
+										x
+									</div>
 									<div style="display: flex; align-items: center; justify-content: space-between;">
+
 										<div class="user-profile ">
 											<a href="/nguoiDung/{{postDetails.user.userId}}"><img
 													ng-src="{{postDetails.user.avatar}}" style="border-radius: 100%;"
@@ -443,7 +447,7 @@
 																<form>
 																	<div class="input-group">
 																		<input
-																			style="border: none;border-bottom: 1px solid #dee2e6; border-radius: 0; max-width: 20rem;"
+																			style=" border-radius: 20px; max-width: 20rem;"
 																			type="text" class="form-control"
 																			ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
 																			placeholder="Nhập nội dung..."
@@ -540,29 +544,6 @@
 											</ul>
 										</li>
 
-										<!-- <li>
-											<div class="comment-main-level">
-										
-												<div class="comment-avatar"><img
-														src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg"
-														alt=""></div>
-									
-												<div class="comment-box">
-													<div class="comment-head">
-														<h6 class="comment-name"><a
-																href="http://creaticode.com/blog">Lorena Rojero</a></h6>
-														<span>hace 10 minutos</span>
-														<i class="fa fa-reply"></i>
-														<i class="fa fa-heart"></i>
-													</div>
-													<div class="comment-content">
-														Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit
-														omnis animi et iure laudantium vitae, praesentium optio,
-														sapiente distinctio illo?
-													</div>
-												</div>
-											</div>
-										</li> -->
 									</ul>
 								</div>
 

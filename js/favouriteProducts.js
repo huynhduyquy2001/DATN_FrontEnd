@@ -75,12 +75,12 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		formData.append("quantity", $scope.quantity);
 		formData.append("color", $scope.color);
 
-		$http.post(url + "/add-to-cart", formData, {
+		$http.post(Url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
 		})
 			.then(function (res) {
-				// Xử lý phản hồi từ máy chủ
+				alert("ok")
 			});
 	}
 	$scope.togglerFavorite = function (productId) {
