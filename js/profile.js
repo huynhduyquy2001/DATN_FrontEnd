@@ -25,30 +25,22 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.AccInfo = {};
+	$scope.check = false;
 
-	$scope.listProducts = [];
-	$scope.listProductOrder = [];
-	$scope.listProvince = [];
-	$scope.listDistrict = [];
-	$scope.listWard = [];
-	$scope.deliveryAddress = [];
-	$scope.fee = 0;
-	$scope.checkShip = false;
-	$scope.oneAddress = {};
-	var url = "http://localhost:8080";
+	var Url = "http://localhost:8080";
 	var countpost = "http://localhost:8080/countmypost/";
 	var findMyAccount = "http://localhost:8080/findmyaccount";
 	var getUnseenMess = "http://localhost:8080/getunseenmessage";
 	var getChatlistwithothers = "http://localhost:8080/chatlistwithothers";
 	var loadnotification = "http://localhost:8080/loadnotification";
 	var loadallnotification = "http://localhost:8080/loadallnotification";
-	var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
 
 	if ($routeParams.userId) {
-		$http.post(url + '/getOtherUserId/' + $routeParams.userId)
+		$http.post(Url + '/getOtherUserId/' + $routeParams.userId)
 			.then(function (response) {
+				$scope.check = true;
 				$scope.UserInfo = response.data;
-				$http.get(url + '/getListImage/' + $routeParams.userId)
+				$http.get(Url + '/getListImage/' + $routeParams.userId)
 					.then(function (response) {
 						// Dữ liệu trả về từ API sẽ nằm trong response.data
 						$scope.imageList = response.data;
@@ -58,7 +50,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 					.catch(function (error) {
 						console.log(error);
 					});
-				$http.get(url + '/getListVideo/' + $routeParams.userId)
+				$http.get(Url + '/getListVideo/' + $routeParams.userId)
 					.then(function (response) {
 						// Dữ liệu trả về từ API sẽ nằm trong response.data
 						$scope.videoList = response.data;
@@ -67,13 +59,13 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 					.catch(function (error) {
 						console.log(error);
 					});
-				$http.get(url + '/findmyusers')
+				$http.get(Url + '/findmyusers')
 					.then(function (response) {
 						var myInfo = response.data;
 						$scope.myInfo = myInfo;
 						$scope.myUserId = $scope.myInfo.userId;
 					})
-				$http.get(url + '/findmyfollowers/' + $routeParams.userId)
+				$http.get(Url + '/findmyfollowers/' + $routeParams.userId)
 					.then(function (response) {
 						$scope.followers = response.data;
 						$scope.totalFollower = $scope.followers.length;
@@ -82,7 +74,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 						console.log(error);
 					});
 
-				$http.get(url + '/findmyfollowing/' + $routeParams.userId)
+				$http.get(Url + '/findmyfollowing/' + $routeParams.userId)
 					.then(function (response) {
 						$scope.followings = response.data;
 						$scope.totalFollowing = $scope.followings.length;
@@ -90,7 +82,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 					.catch(function (error) {
 						console.log(error);
 					});
-				$http.get(url + '/findmyfollow')
+				$http.get(Url + '/findmyfollow')
 					.then(function (response) {
 						var myAccount = response.data;
 						$scope.myAccount = myAccount;
@@ -116,7 +108,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 					return false;
 				}
 				$scope.refreshFollowList = function () {
-					$http.get(url + '/getallfollow')
+					$http.get(Url + '/getallfollow')
 						.then(function (response) {
 							$scope.myListFollow = response.data;
 						}, function (error) {
@@ -142,7 +134,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.hasNewNotification = false;
 	$scope.notificationNumber = [];
 	//Load thông báo chưa đọc
-	$http.get(url + '/loadnotification')
+	$http.get(Url + '/loadnotification')
 		.then(function (response) {
 			var data = response.data;
 			for (var i = 0; i < data.length; i++) {
@@ -157,7 +149,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			console.log(error);
 		});
 	//Load tất cả thông báo
-	$http.get(url + '/loadallnotification')
+	$http.get(Url + '/loadallnotification')
 		.then(function (response) {
 			$scope.allNotification = response.data;
 		})
@@ -236,7 +228,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.ConnectNotification();
 
 
-	$http.get(url + '/findusers')
+	$http.get(Url + '/findusers')
 		.then(function (response) {
 			$scope.myUserId = $scope.UserInfo.userId;
 		})
@@ -247,7 +239,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 	// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
-	$http.get(url + '/getUserInfo').then(function (response) {
+	$http.get(Url + '/getUserInfo').then(function (response) {
 		$scope.birthday = new Date($scope.UserInfo.birthday)
 		// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
 
@@ -282,7 +274,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		} else {
 			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
 
-			$http.post(url + '/updateUserInfo', $scope.UpdateUser).then(function (response) {
+			$http.post(Url + '/updateUserInfo', $scope.UpdateUser).then(function (response) {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -307,7 +299,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 	// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
-	$http.get(url + '/getAccInfo').then(function (response) {
+	$http.get(Url + '/getAccInfo').then(function (response) {
 		$scope.AccInfo = response.data;
 		// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
 
@@ -319,7 +311,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	// Hàm cập nhật thông tin người dùng
 	$scope.updateAccInfo = function () {
 		// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
-		$http.post(url + '/updateAccInfo/' + $scope.AccInfo.email + "/" + $scope.AccInfo.accountStatus.statusName).then(function (response) {
+		$http.post(Url + '/updateAccInfo/' + $scope.AccInfo.email + "/" + $scope.AccInfo.accountStatus.statusName).then(function (response) {
 			console.log('Account info updated successfully.');
 			const Toast = Swal.mixin({
 				toast: true,
@@ -365,7 +357,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 
-	$http.get(url + '/findlikedposts')
+	$http.get(Url + '/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
 			$scope.likedPosts = likedPosts;
@@ -375,7 +367,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		});
 
 
-	$http.post(url + '/getmypost/' + $routeParams.userId)
+	$http.post(Url + '/getmypost/' + $routeParams.userId)
 		.then(function (response) {
 			var myPosts = response.data;
 			$scope.myPosts = myPosts;
@@ -388,8 +380,8 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());
-		var likeEndpoint = url + '/likepost/' + postId;
-		var dislikeEndpoint = url + '/didlikepost/' + postId;
+		var likeEndpoint = Url + '/likepost/' + postId;
+		var dislikeEndpoint = Url + '/didlikepost/' + postId;
 
 		// Nếu postId chưa tồn tại trong mảng likedPosts
 		if (likedIndex === -1) {
@@ -492,7 +484,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		}
 		formData.append('content', $scope.content);
 
-		$http.post(url + '/post', formData, {
+		$http.post(Url + '/post', formData, {
 			transformRequest: angular.identity,
 			headers: {
 				'Content-Type': undefined
@@ -526,7 +518,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 	$scope.getPostDetails = function (postId) {
 
-		$http.get(url + '/findpostcomments/' + postId)
+		$http.get(Url + '/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
 				$scope.postComments = postComments;
@@ -538,7 +530,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 				console.log(error);
 			});
 
-		$http.get(url + '/postdetails/' + postId)
+		$http.get(Url + '/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
 				$scope.postDetails = postDetails;
@@ -553,7 +545,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 	$scope.getPostDetails = function (postId) {
-		$http.get(url + '/findpostcomments/' + postId)
+		$http.get(Url + '/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
 				$scope.postComments = postComments;
@@ -566,7 +558,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			});
 
 		$scope.isReplyEmpty = true;
-		$http.get(url + '/postdetails/' + postId)
+		$http.get(Url + '/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
 				$scope.postDetails = postDetails;
@@ -600,7 +592,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			})
 			return;
 		}
-		$http.post(url + '/addcomment/' + postId + '?myComment=' + myComment)
+		$http.post(Url + '/addcomment/' + postId + '?myComment=' + myComment)
 			.then(function (response) {
 				$scope.postComments.unshift(response.data);
 				var postToUpdate = $scope.Posts.find(function (post) {
@@ -619,7 +611,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 	$scope.logout = function () {
-		$http.get(url + '/logout')
+		$http.get(Url + '/logout')
 			.then(function () {
 				window.location.href = '/login';
 			}, function (error) {
@@ -627,7 +619,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			});
 	};
 	//Lấy danh sách vi phạm
-	$http.get(url + '/user/getviolations')
+	$http.get(Url + '/user/getviolations')
 		.then(function (response) {
 			$scope.violations = response.data;
 
@@ -658,7 +650,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			})
 			return;
 		}
-		$http.post(url + '/user/report/' + postId + '/' + $scope.selectedViolationType)
+		$http.post(Url + '/user/report/' + postId + '/' + $scope.selectedViolationType)
 			.then(function (response) {
 				const Toast = Swal.mixin({
 					toast: true,
@@ -716,7 +708,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		if (postToUpdate) {
 			postToUpdate.commentCount++;
 		}
-		$http.post(url + '/addreply', requestData)
+		$http.post(Url + '/addreply', requestData)
 			.then(function (response) {
 				var comment = $scope.postComments.find(function (comment) {
 					return comment.commentId === commentId;
@@ -759,7 +751,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			return;
 
 		}
-		$http.post(url + '/addreply', requestData)
+		$http.post(Url + '/addreply', requestData)
 			.then(function (response) {
 				var comment = $scope.postComments.find(function (comment) {
 					return comment.commentId === commentId;
@@ -793,7 +785,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			$scope.sendReplyForComment(receiverId, commentId, replyContent);
 		}
 	};
-	$http.get(url + '/getallfollow')
+	$http.get(Url + '/getallfollow')
 		.then(function (response) {
 			$scope.myListFollow = response.data;
 		}, function (error) {
@@ -808,7 +800,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			followingId: followingId
 		};
 
-		$http.post(url + '/followOther', data)
+		$http.post(Url + '/followOther', data)
 			.then(function (response) {
 
 				// Thêm follow mới đã chuyển đổi vào myListFollow
@@ -829,7 +821,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			followerId: currentUserId,
 			followingId: followingId
 		};
-		$http.delete(url + '/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
+		$http.delete(Url + '/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
 			.then(function (response) {
 				// Cập nhật lại danh sách follow sau khi xóa thành công
 				$scope.myListFollow = $scope.myListFollow.filter(function (follow) {
@@ -887,7 +879,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		}
 		formData.append('content', $scope.content);
 
-		$http.post(url + '/updateAvatar', formData, {
+		$http.post(Url + '/updateAvatar', formData, {
 			transformRequest: angular.identity,
 			headers: {
 				'Content-Type': undefined
@@ -916,15 +908,15 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		// Hiển thị modal
 		$('#editModal').modal('show');
 	};
-	$scope.showImageModal = function (imageurl) {
+	$scope.showImageModal = function (imageUrl) {
 		// Gán đường dẫn ảnh vào thuộc tính src của thẻ img trong modal
-		document.getElementById('modalImage').src = '/images/' + imageurl;
+		document.getElementById('modalImage').src = '/images/' + imageUrl;
 
 		// Hiển thị modal
 		$('#imageModal').modal('show');
 	};
 	$scope.updatePost = function (selectedPost) {
-		$http.put(url + '/updatePost/' + selectedPost.postId, selectedPost)
+		$http.put(Url + '/updatePost/' + selectedPost.postId, selectedPost)
 			.then(function (response) {
 				// Xử lý phản hồi thành công từ server
 
@@ -961,7 +953,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 	$scope.hidePost = function (postId) {
-		$http.put(url + '/hide/' + postId)
+		$http.put(Url + '/hide/' + postId)
 			.then(function (response) {
 				// Cập nhật trạng thái của bài viết trong danh sách myPosts
 				var index = $scope.myPosts.findIndex(function (post) {
@@ -1012,7 +1004,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			$scope.sendReplyForComment(receiverId, commentId, replyContent);
 		}
 	};
-	$http.get(url + '/findaccounts/' + $routeParams.userId)
+	$http.get(Url + '/findaccounts/' + $routeParams.userId)
 		.then(function (response) {
 			AccInfo = response.data;
 			$scope.AccInfo = AccInfo;
@@ -1023,228 +1015,6 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 		}
 
 		);
-	$scope.showAddress = function () {
-		//Ẩn modal đặt hàng
-		$("#exampleModal").modal("hide");
 
-		//Load địa chỉ giao hàng
-		$http
-			.get(url + "/get-address")
-			.then(function (response) {
-				$scope.deliveryAddress = response.data;
-			})
-			.catch(function (error) {
-				console.error("Lỗi khi lấy dữ liệu:", error);
-			});
-
-		//Hiện modal chọn địa chỉ
-		$("#modalAddress").modal("show");
-	};
-
-	//Lấy danh sách Tỉnh thành phố
-	$scope.showProvince = function () {
-		$http({
-			method: "POST",
-			url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
-			headers: {
-				Token: token,
-			},
-		})
-			.then(function (response) {
-				// Xử lý phản hồi thành công
-
-				$scope.listProvince = response.data.data;
-			})
-			.catch(function (error) {
-				// Xử lý lỗi
-				console.error("API request failed:", error);
-				// In ra nội dung đối tượng lỗi
-				console.log("Error Object:", error);
-			});
-	};
-
-	//Lấy danh sách Quận huyện
-	$scope.onProvince = function () {
-		$http({
-			method: "POST",
-			url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/district",
-			headers: {
-				Token: token,
-			},
-			data: {
-				province_id: $scope.selectedProvince.ProvinceID,
-			},
-		})
-			.then(function (response) {
-				// Xử lý phản hồi thành công
-				$scope.listDistrict = response.data.data;
-			})
-			.catch(function (error) {
-				// Xử lý lỗi
-				console.error("API request failed:", error);
-				// In ra nội dung đối tượng lỗi
-				console.log("Error Object:", error);
-			});
-	};
-
-	//Lấy danh sách Phường xã
-	$scope.onDistrict = function () {
-		$http({
-			method: "POST",
-			url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward",
-			headers: {
-				Token: token,
-			},
-			data: {
-				district_id: $scope.selectedDistrict.DistrictID,
-			},
-		})
-			.then(function (response) {
-				// Xử lý phản hồi thành công
-				$scope.listWard = response.data.data;
-			})
-			.catch(function (error) {
-				// Xử lý lỗi
-				console.error("API request failed:", error);
-				// In ra nội dung đối tượng lỗi
-				console.log("Error Object:", error);
-			});
-	};
-
-	//Thêm địa chỉ
-	$scope.addAddress = function () {
-		var inputElement = document.getElementById("floatingSelect");
-		// Lấy giá trị từ input
-		var inputValue = inputElement.value;
-
-		if (
-			$scope.selectedDistrict == null ||
-			$scope.selectedProvince == null ||
-			$scope.selectedWard == null ||
-			inputValue == null
-		) {
-			Swal.fire({
-				position: "top",
-				icon: "warning",
-				text: "Chưa chọn đủ thông tin địa chỉ!",
-				showConfirmButton: false,
-				timer: 1800,
-			});
-		} else {
-			//Thêm địa chỉ
-			var content = "";
-			var formData = new FormData();
-			formData.append("districtID", $scope.selectedDistrict.DistrictID);
-			formData.append("districtName", $scope.selectedDistrict.DistrictName);
-			formData.append("provinceID", $scope.selectedProvince.ProvinceID);
-			formData.append("provinceName", $scope.selectedProvince.ProvinceName);
-			formData.append("wardCode", $scope.selectedWard.WardCode);
-			formData.append("wardName", $scope.selectedWard.WardName);
-			formData.append("deliveryPhone", inputValue);
-			if ($scope.textareaValue != null) {
-				content = $scope.textareaValue;
-			}
-			formData.append("detailAddress", content);
-
-			$http
-				.post(url + "/add-to-DeliveryAddress", formData, {
-					transformRequest: angular.identity,
-					headers: { "Content-Type": undefined },
-				})
-				.then(function (response) {
-					$scope.deliveryAddress = response.data;
-					Swal.fire({
-						position: "top",
-						icon: "success",
-						text: "Thêm địa chỉ thành công",
-						showConfirmButton: false,
-						timer: 1800,
-					});
-				});
-		}
-	};
-
-	//Xóa địa chỉ
-	$scope.deleteAddress = function () {
-		var checkboxValue;
-		var checkbox = document.getElementsByName("address");
-		for (var i = 0; i < checkbox.length; i++) {
-			if (checkbox[i].checked === true) {
-				checkboxValue = checkbox[i].value;
-			}
-		}
-		if (checkboxValue == null) {
-			return;
-		} else {
-			$http
-				.post(url + "/deleteAddress/" + checkboxValue)
-				.then(function (response) {
-					$scope.deliveryAddress = response.data;
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
-		}
-	};
-
-	//Chọn địa chỉ
-	$scope.checkedAddress = function () {
-		var checkboxValue;
-		var checkbox = document.getElementsByName("address");
-		for (var i = 0; i < checkbox.length; i++) {
-			if (checkbox[i].checked === true) {
-				checkboxValue = checkbox[i].value;
-			}
-		}
-		if (checkboxValue == null) {
-			return;
-		} else {
-			//Ẩn modal chọn địa chỉ
-			$("#modalAddress").modal("hide");
-			$scope.checkShip = true;
-			//Lấy thông tin địa chỉ đã được chọn
-			$http
-				.get(url + "/get-oneAddress/" + checkboxValue)
-				.then(function (response) {
-					$scope.oneAddress = response.data;
-					//Hiện lại modal đặt hàng
-					$("#exampleModal").modal("show");
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
-
-			//Tính phí ship
-			$http({
-				method: "POST",
-				url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
-				headers: {
-					Token: token,
-				},
-				data: {
-					service_id: 53322,
-					insurance_value: 500000,
-					coupon: null,
-					from_district_id: 1574,
-					to_district_id: 1833,
-					to_ward_code: "540902",
-					height: 15,
-					length: 15,
-					weight: 1000,
-					width: 15,
-				},
-			})
-				.then(function (response) {
-					// Xử lý phản hồi thành công
-					$scope.fee = response.data.data.total;
-				})
-				.catch(function (error) {
-					// Xử lý lỗi
-					console.error("API request failed:", error);
-					// In ra nội dung đối tượng lỗi
-					console.log("Error Object:", error);
-				});
-		}
-	};
 });
 

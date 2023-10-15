@@ -1,22 +1,39 @@
 <div class="row col-md-11 animate__animated animate__fadeIn">
     <div class="col-md-12 d-flex align-items-center mb-2">
         <div class="col-4 me-2">
-            <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control" style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
+            <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
+                style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
         </div>
-        <li class="btn-group me-2">
-            <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-filter-list fa-lg"></i> Lọc</a>
+        <li class="btn-group me-3">
+            <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                    class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp; <span>{{filterStatus}}</span></a>
             <div class="dropdown-menu dropdown-menu-animate-up">
-              <a ng-click="sortByValue('ASC', 'originalPrice')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-arrow-up-short-wide"></i> Giá tăng dần</a>
-              <a ng-click="sortByValue('DESC', 'originalPrice')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-arrow-down-short-wide"></i> Giá giảm dần</a>
-              <a ng-click="sortByValue('ASC', 'originalPrice')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-display-chart-up-circle-dollar"></i>Bán chạy</a>
-              <a ng-click="sortByValue('DESC', 'datePost')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-regular fa-newspaper"></i> Mới nhất</a>
-              <a ng-click="sortByValue('ASC', 'datePost')" class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-sharp fa-regular fa-scroll-old"></i></i> Cũ nhất</a>
-            </div>
+                <a ng-click="changeFilterStatus('Tất cả')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;">
+                    <i class="fa-solid fa-list fa-lg"></i> Tất cả</a>
+                <a ng-click="changeFilterStatus('Giá tăng dần')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
+                        class="fa-regular fa-arrow-up-short-wide"></i> Giá tăng dần</a>
+                <a ng-click="changeFilterStatus('Giá giảm dần')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
+                        class="fa-regular fa-arrow-down-short-wide"></i> Giá giảm dần</a>
+                <a ng-click="changeFilterStatus('Bán chạy')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
+                        class="fa-regular fa-display-chart-up-circle-dollar"></i>Bán chạy</a>
+                <a ng-click="changeFilterStatus('Mới nhất')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
+                        class="fa-regular fa-newspaper"></i> Mới nhất</a>
+                <a ng-click="changeFilterStatus('Cũ nhất')"
+                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
+                        class="fa-sharp fa-regular fa-scroll-old"></i></i> Cũ nhất</a>
+            </div> 
         </li>
-        <a href="#!/product/add-product/{{myAccount.user.userId}}"><i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm</a>
+        <a href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
+            phẩm</a>
     </div>
     <hr>
-    <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2" style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in listProductMyStore">
+    <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
+        style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
         <div class="row frameProduct animate__animated animate__fadeIn">
             <div class="col-md-6" style="display: flex;max-height: 100%;">
                 <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
@@ -36,37 +53,37 @@
                         </h3>
                         <span>
                             <span ng-if="calculateAverageRating(product.ratings)==0">
-                                <i ng-repeat="n in [].constructor(5) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span ng-if="calculateAverageRating(product.ratings)==1">
-                                <i ng-repeat="n in [].constructor(4) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(1) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
 
                             </span>
                             <span ng-if="calculateAverageRating(product.ratings)==2">
-                                <i ng-repeat="n in [].constructor(2) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(3) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span ng-if="calculateAverageRating(product.ratings)==3">
-                                <i ng-repeat="n in [].constructor(3) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(2) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span ng-if="calculateAverageRating(product.ratings)==4">
-                                <i ng-repeat="n in [].constructor(4) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(1) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span ng-if="calculateAverageRating(product.ratings)==5">
-                                <i ng-repeat="n in [].constructor(5) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
                             </span>
 
                             <!-- --------------------------------------------------------- -->
@@ -74,47 +91,46 @@
                             <span
                                 ng-if="calculateAverageRating(product.ratings) > 0 && calculateAverageRating(product.ratings) < 1">
                                 <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(4) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
 
                             <span
                                 ng-if="calculateAverageRating(product.ratings) > 1 && calculateAverageRating(product.ratings) < 2">
-                                <i ng-repeat="n in [].constructor(1) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
                                 <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(3) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span
                                 ng-if="calculateAverageRating(product.ratings) > 2 && calculateAverageRating(product.ratings) < 3">
-                                <i ng-repeat="n in [].constructor(2) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
                                 <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(2) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span
                                 ng-if="calculateAverageRating(product.ratings) > 3 && calculateAverageRating(product.ratings) < 4">
-                                <i ng-repeat="n in [].constructor(3) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
                                 <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(1) track by $index"
-                                    class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                    style="color: #c0c0c0;"></i>
                             </span>
                             <span
                                 ng-if="calculateAverageRating(product.ratings) > 4 && calculateAverageRating(product.ratings) < 5">
-                                <i ng-repeat="n in [].constructor(4) track by $index"
-                                    class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                    style="color: #ffc107;"></i>
                                 <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
                             </span>
                         </span>
                     </div>
                     <div class="note mt-2">
                         <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
-                                aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="shopping-basket" role="img" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512" data-fa-i2svg="">
+                                aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-basket"
+                                role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
                                 <path fill="currentColor"
                                     d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
                                 </path>
@@ -130,12 +146,14 @@
                             </span> &nbsp; |&nbsp;</small>
                         <span> {{getSalePrice(product.originalPrice, product.promotion) |
                             currencyFormat}}</span>
-                    </div> 
+                    </div>
                     <div style="display: flex;">
-                        <a href="#!/product/add-product/:userId" class="buy--btn animate__animated animate__fadeInDown"
+                        <a href="#!/product/add-product/{{product.productId}}"
+                            class="buy--btn animate__animated animate__fadeInDown"
                             style="margin-top: 1.5rem; margin-right: 0.2rem;">
                             Chỉnh sửa</a>
-                        <button ng-click="hideProductMyStore(product.productId)" class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
+                        <button ng-click="hideProductMyStore(product.productId)"
+                            class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
                             Xóa</button>
                     </div>
                 </div>

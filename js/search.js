@@ -1,5 +1,16 @@
 
 app.controller('SearchController', function ($scope, $http, $translate, $rootScope, $location) {
+	// For Firebase JS SDK v7.20.0 and later, measurementId is optional\	
+	const firebaseConfig = {
+		apiKey: "AIzaSyB_nFfKhlG0KP5lU6d3gqQwniuDHnnI8JE",
+		authDomain: "search-history-453d4.firebaseapp.com",
+		databaseURL: "https://search-history-453d4-default-rtdb.firebaseio.com",
+		projectId: "search-history-453d4",
+		storageBucket: "search-history-453d4.appspot.com",
+		messagingSenderId: "308907237461",
+		appId: "1:308907237461:web:fb26ebd6793a5ec24af4dc",
+		measurementId: "G-Q2JXS4PSMF"
+	};
 	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
 	$scope.Posts = [];
 	$scope.likedPosts = [];
@@ -18,12 +29,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		// Thêm phần tử link vào thẻ <head>
 		document.head.appendChild(styleLink);
 	}
-	$http.get('https://search-history-453d4-default-rtdb.firebaseio.com/history.json', {
-		headers: {
-			Authorization: 'Bearer 6o2w5qJNpuRsVMp5GwGa4YTVIrSBc4H24CMl3xlq'
-		}
-	})
-	https://firebasestorage.googleapis.com/v0/b/viesonet-datn.appspot.com/o/images%2F+imageName+?alt=media&token=92e47c72-73bd-4123-a015-7ed371d82c10
+
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -72,6 +78,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	var url = `${host}/history.json`;
 	$http.get(url).
 		then(resp => {
+
 			$scope.items = resp.data;
 			console.log("Load OK lS", resp);
 		}).catch(function (error) {

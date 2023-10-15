@@ -1,8 +1,4 @@
 
-
-
-
-
 app.controller('HomeController', function ($scope, $http, $window, $rootScope, $location, $timeout) {
 	$scope.Posts = [];
 	$scope.likedPosts = [];
@@ -21,6 +17,34 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	$scope.totalPages = 0;
 	var url = "http://localhost:8080";
 	var getUnseenMess = "http://localhost:8080/getunseenmessage";
+
+	//lấy chiều cao carousel
+	$scope.getHeightCarousel = function (images) {
+		var maxHeight = 0;
+		angular.forEach(images, function (image) {
+			var img = new Image();
+			img.src = image.imageUrl;
+			img.onload = function () {
+				if (img.height > maxHeight) {
+					maxHeight = img.height;
+				}
+			};
+		});
+		$timeout(function () {
+			return maxHeight + 'px';
+		}, 1000);
+	}
+
+	// var img = new Image();
+	// img.src = '/images/beach.jpg';
+
+	// img.onload = function () {
+	// 	var colorThief = new ColorThief();
+	// 	var color = colorThief.getColor(img);
+	// 	alert('Màu chủ đạo:' + color);
+	// };
+
+
 
 	// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 	$scope.showMoreComments = function () {

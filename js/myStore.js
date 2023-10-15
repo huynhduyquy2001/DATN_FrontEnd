@@ -2,11 +2,41 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
     var url = "http://localhost:8080";
     $scope.listProductMyStore = [];
     $scope.totalPages = 0;
-    
+
+	//Biến lưu trạng thái lọc 
+	$scope.filterStatus = "Tất cả";
+
+    // Hàm để thay đổi trạng thái lọc
+    $scope.changeFilterStatus = function (status) {
+        $scope.filterStatus = status;
+    };
+
+	$scope.customFilter = function (filter) {
+		if ($scope.filterStatus === "Tất cả") {
+			return true; // Hiển thị tất cả
+		} else if ($scope.filterStatus === "Đánh giá cao" && filter.ratings.ratingValue >= 3) {
+			return true; // Hiển thị đánh giá tích cực
+		} else if ($scope.filterStatus === "Đánh giá thấp" && filter.ratings.ratingValue < 3) {
+			return true; // Hiển thị đánh giá tiêu cực
+		} else if ($scope.filterStatus === "Bán nhiều nhất" && filter.soldQuantity === $scope.maxSoldQuantity) {
+			return true; // Hiển thị sản phẩm có số lượng bán bằng với số lượng bán cao nhất
+		} else if ($scope.filterStatus === "Bán ít nhất" && filter.soldQuantity === $scope.minSoldQuantity) {
+			return true; // Hiển thị sản phẩm có số lượng bán bằng với số lượng bán thấp nhất
+		}
+		return false; // Ẩn các sản phẩm không phù hợp với bất kỳ điều kiện nào
+	};
+
+	// Hàm để cập nhật số lượng bán cao nhất và thấp nhất
+	$scope.filter = function () {
+		$scope.maxSoldQuantity = Math.max.apply(Math, $scope.listProductMyStore.map(function(product) { return product.soldQuantity; }));
+		$scope.minSoldQuantity = Math.min.apply(Math, $scope.listProductMyStore.map(function(product) { return product.soldQuantity; }));
+	};
+
 	//Load sản phẩm theo số trang
     $scope.page = function(currentPageMyStore){
         $http.get(url + "/get-product-mystore/" + $rootScope.currentPageMyStore)
         .then(function (res) {
+			console.log(res.data.content)
 			 originalList = res.data.content;
              $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
              $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
@@ -15,30 +45,6 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
             console.log(error);
         });
     }
-
-	//Lọc sản phẩm theo giá, theo ngày
-	$scope.sortByValue = function(sortDirection, sortName){
-		$http.get(url + "/filter-product-mystore/" + $rootScope.currentPageMyStore + "/" + sortDirection + "/" + sortName)
-        .then(function (res) {
-             $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-             $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-	}
-
-	//Lọc sản phẩm bán chạy
-	$scope.filterTrending = function(sortDirection, sortName){
-		$http.get(url + "/get-trending-myStore/" + $rootScope.currentPageMyStore)
-        .then(function (res) {
-             $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-             $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-	}
 
 	//Tìm kiếm
 	$scope.searchProduct = function(){

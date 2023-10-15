@@ -11,9 +11,29 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
     $scope.AverageRating = 0;
     $scope.relatedProducts = [];
     $scope.favorite = false;
+
+    // Biến để lưu trạng thái hiện tại ("Tất cả", "Tích cực", "Tiêu cực")
+    $scope.filterStatus = "Tất cả";
+ 
+    // Hàm để thay đổi trạng thái lọc
+    $scope.changeFilterStatus = function (status) {
+        $scope.filterStatus = status;
+    };
+
+    $scope.customFilter = function (rate) {
+        if ($scope.filterStatus === "Tất cả") {
+            return true; // Hiển thị tất cả
+        } else if ($scope.filterStatus === "Tích cực" && rate.ratingValue >= 3) {
+            return true; // Hiển thị đánh giá tích cực
+        } else if ($scope.filterStatus === "Tiêu cực" && rate.ratingValue < 3) {
+            return true; // Hiển thị đánh giá tiêu cực
+        }
+        return false; // Ẩn đánh giá không phù hợp
+    };
+
+
     //đánh giá sản phẩm
     $scope.rate = function () {
-
         $http.post(Url + "/check-bought/" + $routeParams.productId)
             .then(function (response) {
                 if (response.data === false) {
@@ -254,6 +274,24 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
             Toast.fire({
                 icon: 'warning',
                 title: 'Hãy chọn số lượng cho sản phẩm'
+            })
+            return;
+        }
+        if ($scope.quantity > $scope.total) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'warning',
+                title: 'Số lượng sản phẩm không đủ'
             })
             return;
         }

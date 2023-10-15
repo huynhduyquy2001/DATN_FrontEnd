@@ -36,7 +36,7 @@ app.factory('AuthInterceptor', function ($q, $window) {
 		responseError: function (rejection) {
 			if (rejection.status === 403) {
 				// Redirect to the login page
-				$window.location.href = 'login.html';
+				$window.location.href = 'Login.html';
 			}
 			return $q.reject(rejection);
 		}
@@ -92,7 +92,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	var loadnotification = "http://localhost:8080/loadnotification";
 	var loadallnotification = "http://localhost:8080/loadallnotification";
 
-	$scope.myAccount = {}; 
+	$scope.myAccount = {};
 	$rootScope.unseenmess = 0;
 	$rootScope.check = false;
 	$scope.notification = [];
@@ -106,10 +106,13 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.myAccount = {};
 	$rootScope.listProduct = [];
 	//phân trang shopping
-	$rootScope.checkShopping = true;
+	$rootScope.checkShopping = 1;
 	$rootScope.currentPage = 0;
+	$rootScope.currentPageSearch = 0;
 	$rootScope.currentPageTrending = 0;
 	$rootScope.checkMenuLeft = true;
+	$rootScope.key = "";
+	//
 
 	//Phân trang myStore
 	$rootScope.currentPageMyStore = 0;
@@ -556,11 +559,17 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			asideLeft.style.opacity = '0';
 			view.classList.remove('col-lg-9', 'offset-lg-3');
 			view.classList.add('col-lg-11', 'offset-lg-1');
+
+
+
 		} else {
 			view.classList.remove('col-lg-11', 'offset-lg-1');
 			view.classList.add('col-lg-9', 'offset-lg-3');
 			asideLeft.style.opacity = '1';
 			asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+			$rootScope.checkMenuLeft = true;
+			$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+
 		}
 	}
 

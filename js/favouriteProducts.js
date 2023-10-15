@@ -3,7 +3,6 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 	var Url = "http://localhost:8080";
 
 	$scope.favoriteProducts = [];
-
 	$http.get(Url + "/get-favoriteProducts") // Sử dụng biến URL
 		.then(function (response) {
 			$scope.favoriteProducts = response.data;
@@ -76,14 +75,25 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		formData.append("quantity", $scope.quantity);
 		formData.append("color", $scope.color);
 
-		$http.post(url + "/add-to-cart", formData, {
+		$http.post(Url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
 		})
 			.then(function (res) {
-				// Xử lý phản hồi từ máy chủ
+				alert("ok")
 			});
 	}
-
-
+	$scope.togglerFavorite = function (productId) {
+		$http.post(Url + "/addfavoriteproduct/" + productId)
+			.then(function (response) {
+				$scope.favorite = !$scope.favorite;
+				$http.get(Url + "/get-favoriteProducts") // Sử dụng biến URL
+					.then(function (response) {
+						$scope.favoriteProducts = response.data;
+					})
+					.catch(function (error) {
+						console.error("Lỗi: " + error.data);
+					});
+			});
+	}
 });
