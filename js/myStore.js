@@ -1,8 +1,12 @@
-app.controller('MyStoreController', function ($scope, $http, $translate, $rootScope, $location) {
+app.controller('MyStoreController', function ($scope, $http, $routeParams, $rootScope) {
     var url = "http://localhost:8080";
     $scope.listProductMyStore = [];
+    $scope.listProductPending = [];
     $scope.totalPages = 0;
+    $scope.totalPagePending = 0;
 
+	//Biến check xem có phải cửa hàng của mình không
+	$scope.userId = $routeParams.userId;
 	//Biến lưu trạng thái lọc 
 	$scope.filterStatus = "Tất cả";
 
@@ -12,31 +16,54 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
     };
 
 	$scope.customFilter = function (filter) {
-        if ($scope.filterStatus === "Tất cả") {
-            return true; // Hiển thị tất cả
-        } else if ($scope.filterStatus === "Giá tăng dần" &&  filter.originalPrice >= 100000) {
-            return true; // Hiển thị đánh giá tích cực
-        } else if ($scope.filterStatus === "Giá giảm dần" && filter.originalPrice < 100000) {
-            return true; // Hiển thị đánh giá tiêu cực
-        } else if ($scope.filterStatus === "Giá giảm dần" && filter.originalPrice < 100000) {
-            return true; // Hiển thị đánh giá tiêu cực
-        }
-    };
-
-	// Hàm để cập nhật số lượng bán cao nhất và thấp nhất
-	$scope.filter = function () {
-		$scope.maxSoldQuantity = Math.max.apply(Math, $scope.listProductMyStore.map(function(product) { return product.soldQuantity; }));
-		$scope.minSoldQuantity = Math.min.apply(Math, $scope.listProductMyStore.map(function(product) { return product.soldQuantity; }));
+		if ($scope.filterStatus === "Tất cả") {
+			return true; // Hiển thị tất cả
+		} else if ($scope.filterStatus === "Giá  dưới 200.000₫" && filter.originalPrice <= 200000) {
+			return true; // Hiển thị đánh giá tích cực
+		} else if ($scope.filterStatus === "Giá từ 200.000₫ đến 500.000₫" && filter.originalPrice > 200000 && filter.originalPrice <= 500000) {
+			return true; // Hiển thị đánh giá tích cực
+		} else if ($scope.filterStatus === "Giá từ 500.000₫ đến 1.000.000₫" && filter.originalPrice > 500000 && filter.originalPrice <= 1000000) {
+			return true; // Hiển thị đánh giá tích cực
+		} else if ($scope.filterStatus === "Trên 1.000.000₫" && filter.originalPrice > 1000000) {
+			return true; // Hiển thị đánh giá tích cực
+		} 
+		return false; // Ẩn các sản phẩm không phù hợp với bất kỳ điều kiện nào
 	};
 
 	//Load sản phẩm theo số trang
     $scope.page = function(currentPageMyStore){
-        $http.get(url + "/get-product-mystore/" + $rootScope.currentPageMyStore)
+		
+        $http.get(url + "/mystore/"+ $routeParams.userId + "/" + currentPageMyStore)
         .then(function (res) {
 			 originalList = res.data.content;
              $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-             $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+			 $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+			 $rootScope.checkMystore = 1;
         })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+	//Load từ đầu
+	$http.get(url + "/mystore/"+ $routeParams.userId + "/" + $scope.currentPageMyStore)
+        .then(function (res) {
+			 originalList = res.data.content;
+             $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
+			 $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    $scope.pagePending = function(currentPagePending){
+		
+        $http.get(url + "/mystore-pending/"+ $routeParams.userId + "/" + currentPagePending)
+        .then(function (res) {
+             $scope.listProductPending = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
+			 $scope.totalPagePending = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+			 $rootScope.checkMystore = 2;
+			})
         .catch(function (error) {
             console.log(error);
         });
@@ -49,10 +76,10 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
 				$scope.listProductMyStore = originalList;
 				return;
 			}else{
-				$http.get(url + "/searchProductMyStore/" + search)
+				$http.get(url + "/searchProductMyStore/" + $routeParams.userId + "/" + search)
 				.then(function(response) {
 					$scope.listProductMyStore = response.data.content;
-					$scope.totalPages = res.data.totalPages;
+					$scope.totalPages = response.data.totalPages;
 				});
 			}
 	}
@@ -68,7 +95,7 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
 			cancelButtonColor: '#d33'
 		  }).then((result) => {
 			if (result.isConfirmed) {
-				$http.post(url + "/hideProductMyStore/" + productId + "/" + $rootScope.currentPageMyStore)
+				$http.post(url + "/hideProductMyStore/"+ $routeParams.userId + "/" + productId + "/" + $rootScope.currentPageMyStore)
 				.then(function(response) {
 					$scope.listProductMyStore = response.data.content;
 					$scope.totalPages = response.data.totalPages;
@@ -77,7 +104,7 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
 		  })
 	}
 
-
+	//Phân trang đang bán
     $scope.Previous = function () {
 		if ($rootScope.currentPageMyStore === 0) {
 			return;
@@ -95,6 +122,27 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
 			$rootScope.currentPageMyStore = $rootScope.currentPageMyStore + 1; // Cập nhật trang hiện tại
 
 			$scope.page($rootScope.currentPageMyStore);
+		}
+	}
+
+	//Phân trang của tabs chờ duyệt
+    $scope.PreviousPending = function () {
+		if ($rootScope.currentPagePending === 0) {
+			return;
+		} else {
+			$rootScope.currentPagePending = $rootScope.currentPagePending - 1; // Cập nhật trang hiện tại
+			$scope.pagePending($rootScope.currentPagePending);
+
+		}
+	}
+
+	$scope.NextPending = function () {
+		if ($rootScope.currentPagePending=== $scope.totalPagePending - 1) {
+			return;
+		} else {
+			$rootScope.currentPagePending = $rootScope.currentPagePending + 1; // Cập nhật trang hiện tại
+
+			$scope.pagePending($rootScope.currentPagePending);
 		}
 	}
 
@@ -124,6 +172,4 @@ app.controller('MyStoreController', function ($scope, $http, $translate, $rootSc
 		}
 	}
 
-	//Load sản phẩm cửa hàng khi mới vào
-	$scope.page();
 });
