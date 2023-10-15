@@ -16,7 +16,7 @@
     <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder gap-2 d-flex">
-               <a href="#!/profile/{{groupedProducts[0].product.user.userId}}">
+               <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
                 <i class="fa-regular fa-store"></i>
                 {{ groupedProducts[0].product.user.username }}
                </a>
@@ -94,8 +94,11 @@
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
-                <a href="#!/profile/{{groupedProducts[0].product.user.userId}}">
+                <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
                     {{ groupedProducts[0].product.user.username }}
+                   </a>
+                   <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
+                    <i class="fa-regular fa-messages fa-xs"></i>
                    </a>
             </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
@@ -168,8 +171,11 @@
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder">
                 <i class="fa-regular fa-store"></i>
-                <a href="#!/profile/{{groupedProducts[0].product.user.userId}}">
+                <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
                     {{ groupedProducts[0].product.user.username }}
+                   </a>
+                   <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
+                    <i class="fa-regular fa-messages fa-xs"></i>
                    </a>
             </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
