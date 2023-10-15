@@ -25,6 +25,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.AccInfo = {};
+	$scope.check = false;
 
 	$scope.listProducts = [];
 	$scope.listProductOrder = [];
@@ -62,6 +63,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	if ($routeParams.userId) {
 		$http.post(url + '/getOtherUserId/' + $routeParams.userId)
 			.then(function (response) {
+				$scope.check = true;
 				$scope.UserInfo = response.data;
 				$http.get(url + '/getListImage/' + $routeParams.userId)
 					.then(function (response) {

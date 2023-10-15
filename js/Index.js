@@ -116,7 +116,9 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Phân trang myStore
 	$rootScope.currentPageMyStore = 0;
+	$rootScope.currentPagePending = 0;
 	$rootScope.currentPageFilter = 0;
+	$rootScope.checkMystore = 1;
 
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
