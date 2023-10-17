@@ -84,6 +84,7 @@ app.controller('MyStoreController', function ($scope, $http, $routeParams, $root
 			}
 	}
 
+
 	//Xóa sản phẩm 
 	$scope.hideProductMyStore = function(productId){
 		Swal.fire({
@@ -172,4 +173,16 @@ app.controller('MyStoreController', function ($scope, $http, $routeParams, $root
 		}
 	}
 
+	$scope.getProduct = function (productId) {
+		$http.get(url + "/get-product/" + productId)
+			.then(function (res) {
+				$scope.color = "";
+				$scope.product = res.data;
+				$scope.total = -1;
+				$scope.quantity = 1;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
 });
