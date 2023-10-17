@@ -1,5 +1,5 @@
-<div class="container" ng-if="userId == myAccount.user.userId">
-    <ul class="nav nav-tabs" id="myTabs">
+<div class="container">
+    <ul class="nav nav-tabs" id="myTabs" ng-if="listProductMyStore[0].user.userId == myAccount.user.userId">
         <li class="nav-item">
             <a ng-click="page(currentPageMyStore)" ng-class="{ 'nav-link': true, 'active': checkMystore===1 }" id="tab1"
                 data-bs-toggle="tab" href="#content1">Đang bán</a>
@@ -19,14 +19,20 @@
         <div class="tab-pane fade show active" id="content1">
             <div class="row col-md-11 animate__animated animate__fadeIn">
                 <div class="col-md-12 d-flex align-items-center mb-2">
+                    <div class="d-flex align-items-center me-2"
+                        ng-if="listProductMyStore[0].user.userId != myAccount.user.userId">
+                        <img ng-src="{{listProductMyStore[0].user.avatar}}" height="45" width="45"
+                            style="object-fit: cover;" class="rounded-circle me-2">
+                        <h6>{{listProductMyStore[0].user.username}}</h6>
+                    </div>
                     <div class="col-4 me-2">
                         <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
                             style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
                     </div>
                     <li class="btn-group me-3">
                         <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp; <a
-                                style="max-width: 150px;  white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{filterStatus}}</a></a>
+                                class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <span>{{filterStatus}}</span></a>
                         <div class="dropdown-menu dropdown-menu-animate-up">
                             <a ng-click="changeFilterStatus('Tất cả')"
                                 class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
@@ -48,7 +54,8 @@
                                 style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Trên 1.000.000₫</a>
                         </div>
                     </li>
-                    <a href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
+                    <a ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                        href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
                         phẩm</a>
                 </div>
                 <hr>
@@ -170,299 +177,324 @@
                                         currencyFormat}}</span>
                                 </div>
                                 <div style="display: flex;">
-                                    <a href="#!/product/add-product/{{product.productId}}"
+                                    <a ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                                        href="#!/product/add-product/{{product.productId}}"
                                         class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem; margin-right: 0.2rem;">
                                         Chỉnh sửa</a>
-                                    <button ng-click="hideProductMyStore(product.productId)"
+                                    <button ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                                        ng-click="hideProductMyStore(product.productId)"
                                         class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem;">
                                         Xóa</button>
+                                    <button ng-if="listProductMyStore[0].user.userId != myAccount.user.userId"
+                                        ng-click="getProduct(product.productId)" data-bs-toggle="modal"
+                                        data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                                        style="margin-top: 1.5rem;">Thêm vào
+                                        giỏ hàng</button>
                                 </div>
                             </div>
-
+                            </li>
+                            <a href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
+                                phẩm</a>
                         </div>
-                    </div>
-                </div>
-                <nav class="d-flex justify-content-center" aria-label="Page navigation">
-                    <ul class="pagination">
-                        <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
-                            <a class="page-link" style="color: #313131;" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-
-                        <li class="page-item" aria-current="page"><a
-                                style="font-weight: 600; color: #313131 !important; "
-                                class="page-link">{{currentPageMyStore+1}} /
-                                {{totalPages}}</a>
-                        </li>
-                        <li class="page-item" ng-click="Next()" style="cursor: pointer;">
-                            <a class="page-link" style="color: #313131;" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
-            </div>
-        </div>
-        <!-- Tabs đang chờ kiểm duyệt -->
-        <div class="tab-pane fade" id="content2">
-            <div class="row col-md-11 animate__animated animate__fadeIn">
-                <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
-                    style="z-index: 10; margin-bottom: 2rem;"
-                    ng-repeat="product in listProductPending | orderBy:'-datePost' | filter: customFilter">
-                    <div class="row frameProduct animate__animated animate__fadeIn">
-                        <div class="col-md-6" style="display: flex;max-height: 100%;">
-                            <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
-                                    class="imghover animate__animated animate__fadeIn" width="100%"
-                                    style="height: 100%; object-fit: cover; border-radius: 5px;"
-                                    ng-src="{{product.media[0].mediaUrl}}"></a>
-                        </div>
-                        <div class="col-md-6 frame" style="cursor: pointer;">
-                            <div class="product__info">
-                                <div class="title">
-                                    <h2 style="font-size: 1.5rem;">{{product.productName}}</h2>
+                        <hr>
+                        <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
+                            style="z-index: 10; margin-bottom: 2rem;"
+                            ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
+                            <div class="row frameProduct animate__animated animate__fadeIn">
+                                <div class="col-md-6" style="display: flex;max-height: 100%;">
+                                    <a href="#!productdetails/{{product.productId}}"
+                                        style="height: 100%; width: 100%;"><img
+                                            class="imghover animate__animated animate__fadeIn" width="100%"
+                                            style="height: 100%; object-fit: cover; border-radius: 5px;"
+                                            ng-src="{{product.media[0].mediaUrl}}"></a>
                                 </div>
-                                <div class="description mt-3">
-                                    <h6><small>{{product.datePost | date: 'dd/MM/yyyy'}}</small></h6>
+                                <div class="col-md-6 frame" style="cursor: pointer;">
+                                    <div class="product__info">
+                                        <div class="title">
+                                            <h2 style="font-size: 1.5rem;">{{product.productName}}</h2>
+                                        </div>
+                                        <div class="description">
+                                            <h3><small>{{product.datePost | date: 'dd/MM/yyyy'}}</small></h3>
+                                            <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
 
-                                    <span class="text-success">Chất liệu : {{product.material}}</span>
-                                </div>
+                                            </h3>
+                                            <span>
+                                                <span ng-if="calculateAverageRating(product.ratings)==0">
+                                                    <i ng-repeat="n in [].constructor(5) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span ng-if="calculateAverageRating(product.ratings)==1">
+                                                    <i ng-repeat="n in [].constructor(4) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(1) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
 
-                                <div class="price animate__animated animate__fadeInUp">
-                                    <small ng-show="!product.promotion==0"><span
-                                            style="text-decoration: line-through; color: gray;">{{product.originalPrice
-                                            | currencyFormat}}
-                                        </span> &nbsp; |&nbsp;</small>
-                                    <span> {{getSalePrice(product.originalPrice, product.promotion) |
-                                        currencyFormat}}</span>
-                                </div>
-                                <div style="display: flex;">
-                                    <a href="#!/product/add-product/{{product.productId}}"
-                                        class="buy--btn animate__animated animate__fadeInDown"
-                                        style="margin-top: 1.5rem; margin-right: 0.2rem;">
-                                        Chỉnh sửa</a>
+                                                </span>
+                                                <span ng-if="calculateAverageRating(product.ratings)==2">
+                                                    <i ng-repeat="n in [].constructor(2) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(3) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span ng-if="calculateAverageRating(product.ratings)==3">
+                                                    <i ng-repeat="n in [].constructor(3) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(2) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span ng-if="calculateAverageRating(product.ratings)==4">
+                                                    <i ng-repeat="n in [].constructor(4) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(1) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span ng-if="calculateAverageRating(product.ratings)==5">
+                                                    <i ng-repeat="n in [].constructor(5) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                </span>
+
+                                                <!-- --------------------------------------------------------- -->
+
+                                                <span
+                                                    ng-if="calculateAverageRating(product.ratings) > 0 && calculateAverageRating(product.ratings) < 1">
+                                                    <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(4) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+
+                                                <span
+                                                    ng-if="calculateAverageRating(product.ratings) > 1 && calculateAverageRating(product.ratings) < 2">
+                                                    <i ng-repeat="n in [].constructor(1) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(3) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span
+                                                    ng-if="calculateAverageRating(product.ratings) > 2 && calculateAverageRating(product.ratings) < 3">
+                                                    <i ng-repeat="n in [].constructor(2) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(2) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span
+                                                    ng-if="calculateAverageRating(product.ratings) > 3 && calculateAverageRating(product.ratings) < 4">
+                                                    <i ng-repeat="n in [].constructor(3) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                                    <i ng-repeat="n in [].constructor(1) track by $index"
+                                                        class="fa-solid fa-star" style="color: #c0c0c0;"></i>
+                                                </span>
+                                                <span
+                                                    ng-if="calculateAverageRating(product.ratings) > 4 && calculateAverageRating(product.ratings) < 5">
+                                                    <i ng-repeat="n in [].constructor(4) track by $index"
+                                                        class="fa-solid fa-star" style="color: #ffc107;"></i>
+                                                    <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="note mt-2">
+                                            <span class="text-muted"><svg
+                                                    class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
+                                                    aria-hidden="true" focusable="false" data-prefix="fas"
+                                                    data-icon="shopping-basket" role="img"
+                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                    data-fa-i2svg="">
+                                                    <path fill="currentColor"
+                                                        d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
+                                                    </path>
+                                                </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->{{product.ratings.length}}
+                                                lượt đánh giá</span>
+                                            <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
+                                        </div>
+
+                                        <div class="price animate__animated animate__fadeInUp">
+                                            <small ng-show="!product.promotion==0"><span
+                                                    style="text-decoration: line-through; color: gray;">{{product.originalPrice
+                                                    | currencyFormat}}
+                                                </span> &nbsp; |&nbsp;</small>
+                                            <span> {{getSalePrice(product.originalPrice, product.promotion) |
+                                                currencyFormat}}</span>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <a href="#!/product/add-product/{{product.productId}}"
+                                                class="buy--btn animate__animated animate__fadeInDown"
+                                                style="margin-top: 1.5rem; margin-right: 0.2rem;">
+                                                Chỉnh sửa</a>
+                                            <button ng-click="hideProductMyStore(product.productId)"
+                                                class="buy--btn animate__animated animate__fadeInDown"
+                                                style="margin-top: 1.5rem;">
+                                                Xóa</button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
+                        </div>
+                        <nav class="d-flex justify-content-center" aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
+                                    <a class="page-link" style="color: #313131;" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
 
+                                <li class="page-item" aria-current="page"><a
+                                        style="font-weight: 600; color: #313131 !important; "
+                                        class="page-link">{{currentPageMyStore+1}} /
+                                        {{totalPages}}</a>
+                                </li>
+                                <li class="page-item" ng-click="Next()" style="cursor: pointer;">
+                                    <a class="page-link" style="color: #313131;" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+                <!-- Tabs đang chờ kiểm duyệt -->
+                <div class="tab-pane fade" id="content2">
+                    <div class="row col-md-11 animate__animated animate__fadeIn">
+                        <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
+                            style="z-index: 10; margin-bottom: 2rem;"
+                            ng-repeat="product in listProductPending | orderBy:'-datePost' | filter: customFilter">
+                            <div class="row frameProduct animate__animated animate__fadeIn">
+                                <div class="col-md-6" style="display: flex;max-height: 100%;">
+                                    <a href="#!productdetails/{{product.productId}}"
+                                        style="height: 100%; width: 100%;"><img
+                                            class="imghover animate__animated animate__fadeIn" width="100%"
+                                            style="height: 100%; object-fit: cover; border-radius: 5px;"
+                                            ng-src="{{product.media[0].mediaUrl}}"></a>
+                                </div>
+                                <div class="col-md-6 frame" style="cursor: pointer;">
+                                    <div class="product__info">
+                                        <div class="title">
+                                            <h2 style="font-size: 1.5rem;">{{product.productName}}</h2>
+                                        </div>
+                                        <div class="description mt-3">
+                                            <h6><small>{{product.datePost | date: 'dd/MM/yyyy'}}</small></h6>
+
+                                            <span class="text-success">Chất liệu : {{product.material}}</span>
+                                        </div>
+
+                                        <div class="price animate__animated animate__fadeInUp">
+                                            <small ng-show="!product.promotion==0"><span
+                                                    style="text-decoration: line-through; color: gray;">{{product.originalPrice
+                                                    | currencyFormat}}
+                                                </span> &nbsp; |&nbsp;</small>
+                                            <span> {{getSalePrice(product.originalPrice, product.promotion) |
+                                                currencyFormat}}</span>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <a href="#!/product/add-product/{{product.productId}}"
+                                                class="buy--btn animate__animated animate__fadeInDown"
+                                                style="margin-top: 1.5rem; margin-right: 0.2rem;">
+                                                Chỉnh sửa</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <nav class="d-flex justify-content-center" aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item" ng-click="PreviousPending()" style="cursor: pointer;">
+                                    <a class="page-link" style="color: #313131;" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <li class="page-item" aria-current="page"><a
+                                        style="font-weight: 600; color: #313131 !important; "
+                                        class="page-link">{{currentPagePending+1}} /
+                                        {{totalPagePending}}</a>
+                                </li>
+                                <li class="page-item" ng-click="NextPending()" style="cursor: pointer;">
+                                    <a class="page-link" style="color: #313131;" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+                <!-- Tabs khác -->
+                <div class="tab-pane fade" id="content3">
+                    <p>Content for Tab 3 goes here.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <center>
+                            <h5 class="modal-title" id="modalTitleId"><b>Mua ngay, tiết kiệm ngay!</b></h5>
+                        </center>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid" style="line-height: 35px;">
+                            <img ng-src="{{product.media[0].mediaUrl}}" style="border-radius: 10px;" alt="">
+                            <b>{{product.productName}}</b>
+                            <hr>
+                            <b> Chọn màu:</b>
+                            <div style="display: flex;" class="m-1">
+                                <button ng-repeat="color in product.productColors"
+                                    ng-click="getTotal(color.color.colorId)"
+                                    ng-class="{'dislike--btn': color.quantity > 0, 'btn-disable': color.quantity === 0}"
+                                    style="display: block; margin-right: 0.2rem; padding: 0.2rem;">{{color.color.colorName}}</button>
+                            </div>
+                            <span ng-show="total>0"><b>Số lượng còn lại:</b> {{total}}</span>
+                            <span ng-show="total===0"><b>Số lượng còn lại:</b> Hết hàng</span>
+                            <div class="input-group mb-3" style="width: 170px;">
+                                <button ng-click="reduceQuantity()" class="btn btn-white border border-secondary px-3"
+                                    type="button" id="button-addon1" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="text" class="form-control text-center border border-secondary"
+                                    value="{{quantity}}" aria-label="Example text with button addon"
+                                    aria-describedby="button-addon1" />
+                                <button ng-click="increaseQuantity()" class="btn btn-white border border-secondary px-3"
+                                    type="button" id="button-addon2" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+
+                            </div>
+                            <button ng-click="addShoppingCart(product.productId)" data-bs-toggle="modal"
+                                data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                                style="margin-top: 1.5rem; display: block;width:100% ;">Thêm vào
+                                giỏ hàng</button>
                         </div>
                     </div>
+                    <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div> -->
                 </div>
-                <nav class="d-flex justify-content-center" aria-label="Page navigation">
-                    <ul class="pagination">
-                        <li class="page-item" ng-click="PreviousPending()" style="cursor: pointer;">
-                            <a class="page-link" style="color: #313131;" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-
-                        <li class="page-item" aria-current="page"><a
-                                style="font-weight: 600; color: #313131 !important; "
-                                class="page-link">{{currentPagePending+1}} /
-                                {{totalPagePending}}</a>
-                        </li>
-                        <li class="page-item" ng-click="NextPending()" style="cursor: pointer;">
-                            <a class="page-link" style="color: #313131;" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
             </div>
         </div>
-        <!-- Tabs khác -->
-        <div class="tab-pane fade" id="content3">
-            <p>Content for Tab 3 goes here.</p>
-        </div>
-    </div>
-</div>
-<!-- Cửa hàng của người khác -->
-<div class="row col-md-11 animate__animated animate__fadeIn" ng-if="userId != myAccount.user.userId">
-    <div class="col-md-12 d-flex align-items-center mb-2">
-        <img ng-src="{{listProductMyStore[0].user.avatar}}" height="45" width="45" style="object-fit: cover;"
-            class="rounded-circle me-2">
-        <h6>{{listProductMyStore[0].user.username}}</h6>
-        <div class="col-4 me-2 ms-2">
-            <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
-                style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
-        </div>
-        <li class="btn-group me-3">
-            <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
-                    class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp; <a
-                    style="max-width: 150px;  white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">{{filterStatus}}</a></a>
-            <div class="dropdown-menu dropdown-menu-animate-up">
-                <a ng-click="changeFilterStatus('Tất cả')"
-                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;">
-                    <i class="fa-solid fa-list fa-lg"></i> Tất cả</a>
-                <a ng-click="changeFilterStatus('Giá  dưới 200.000₫')"
-                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
-                        class="fa-light fa-circle-dollar"></i> Giá dưới 200.000₫</a>
-                <a ng-click="changeFilterStatus('Giá từ 200.000₫ đến 500.000₫')"
-                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
-                        class="fa-light fa-circle-dollar"></i> Giá từ 200.000₫ đến 500.000₫</a>
-                <a ng-click="changeFilterStatus('Giá từ 500.000₫ đến 1.000.000₫')"
-                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
-                        class="fa-light fa-circle-dollar"></i></i>Giá từ 500.000₫ đến 1.000.000₫</a>
-                <a ng-click="changeFilterStatus('Trên 1.000.000₫')"
-                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i
-                        class="fa-light fa-circle-dollar"></i> Trên 1.000.000₫</a>
-            </div>
-        </li>
-        <a href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
-            phẩm</a>
-    </div>
-    <hr>
-    <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
-        style="z-index: 10; margin-bottom: 2rem;"
-        ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
-        <div class="row frameProduct animate__animated animate__fadeIn">
-            <div class="col-md-6" style="display: flex;max-height: 100%;">
-                <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
-                        class="imghover animate__animated animate__fadeIn" width="100%"
-                        style="height: 100%; object-fit: cover; border-radius: 5px;"
-                        ng-src="{{product.media[0].mediaUrl}}"></a>
-            </div>
-            <div class="col-md-6 frame" style="cursor: pointer;">
-                <div class="product__info">
-                    <div class="title">
-                        <h2 style="font-size: 1.5rem;">{{product.productName}}</h2>
-                    </div>
-                    <div class="description">
-                        <h3><small>{{product.datePost | date: 'dd/MM/yyyy'}}</small></h3>
-                        <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
 
-                        </h3>
-                        <span>
-                            <span ng-if="calculateAverageRating(product.ratings)==0">
-                                <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span ng-if="calculateAverageRating(product.ratings)==1">
-                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
 
-                            </span>
-                            <span ng-if="calculateAverageRating(product.ratings)==2">
-                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span ng-if="calculateAverageRating(product.ratings)==3">
-                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span ng-if="calculateAverageRating(product.ratings)==4">
-                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span ng-if="calculateAverageRating(product.ratings)==5">
-                                <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                            </span>
+        <script>
+            var modalId = document.getElementById('modalId');
 
-                            <!-- --------------------------------------------------------- -->
+            modalId.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                let button = event.relatedTarget;
+                // Extract info from data-bs-* attributes
+                let recipient = button.getAttribute('data-bs-whatever');
 
-                            <span
-                                ng-if="calculateAverageRating(product.ratings) > 0 && calculateAverageRating(product.ratings) < 1">
-                                <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-
-                            <span
-                                ng-if="calculateAverageRating(product.ratings) > 1 && calculateAverageRating(product.ratings) < 2">
-                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span
-                                ng-if="calculateAverageRating(product.ratings) > 2 && calculateAverageRating(product.ratings) < 3">
-                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span
-                                ng-if="calculateAverageRating(product.ratings) > 3 && calculateAverageRating(product.ratings) < 4">
-                                <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                                <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
-                                    style="color: #c0c0c0;"></i>
-                            </span>
-                            <span
-                                ng-if="calculateAverageRating(product.ratings) > 4 && calculateAverageRating(product.ratings) < 5">
-                                <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
-                                    style="color: #ffc107;"></i>
-                                <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
-                            </span>
-                        </span>
-                    </div>
-                    <div class="note mt-2">
-                        <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
-                                aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-basket"
-                                role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
-                                <path fill="currentColor"
-                                    d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
-                                </path>
-                            </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->{{product.ratings.length}}
-                            lượt đánh giá</span>
-                        <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
-                    </div>
-
-                    <div class="price animate__animated animate__fadeInUp">
-                        <small ng-show="!product.promotion==0"><span
-                                style="text-decoration: line-through; color: gray;">{{product.originalPrice
-                                | currencyFormat}}
-                            </span> &nbsp; |&nbsp;</small>
-                        <span> {{getSalePrice(product.originalPrice, product.promotion) |
-                            currencyFormat}}</span>
-                    </div>
-                    <div style="display: flex;">
-                        <a href="#!/product/add-product/{{product.productId}}"
-                            class="buy--btn animate__animated animate__fadeInDown"
-                            style="margin-top: 1.5rem; margin-right: 0.2rem;">
-                            Chỉnh sửa</a>
-                        <button ng-click="hideProductMyStore(product.productId)"
-                            class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
-                            Xóa</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <nav class="d-flex justify-content-center" aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
-                <a class="page-link" style="color: #313131;" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <li class="page-item" aria-current="page"><a style="font-weight: 600; color: #313131 !important; "
-                    class="page-link">{{currentPageMyStore+1}} /
-                    {{totalPages}}</a>
-            </li>
-            <li class="page-item" ng-click="Next()" style="cursor: pointer;">
-                <a class="page-link" style="color: #313131;" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-</div>
+                // Use above variables to manipulate the DOM
+            });
+        </script>
