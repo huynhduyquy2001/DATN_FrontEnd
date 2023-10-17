@@ -1,4 +1,54 @@
 <div class="row col-md-11">
+    <!-- Modal -->
+    <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <center>
+                        <h5 class="modal-title" id="modalTitleId"><b>Mua ngay, tiết kiệm ngay!</b></h5>
+                    </center>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid" style="line-height: 35px;">
+                        <img ng-src="{{product.media[0].mediaUrl}}" style="border-radius: 10px;" alt="">
+                        <b>{{product.productName}}</b>
+                        <hr>
+                        <b> Chọn màu:</b>
+                        <div style="display: flex;" class="m-1">
+                            <button ng-repeat="color in product.productColors" ng-click="getTotal(color.color.colorId)"
+                                ng-class="{'dislike--btn': color.quantity > 0, 'btn-disable': color.quantity === 0}"
+                                style="display: block; margin-right: 0.2rem; padding: 0.2rem;">{{color.color.colorName}}</button>
+                        </div>
+                        <span ng-show="total>0"><b>Số lượng còn lại:</b> {{total}}</span>
+                        <span ng-show="total===0"><b>Số lượng còn lại:</b> Hết hàng</span>
+                        <div class="input-group mb-3" style="width: 170px;">
+                            <button ng-click="reduceQuantity()" class="btn btn-white border border-secondary px-3"
+                                type="button" id="button-addon1" data-mdb-ripple-color="dark">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="text" class="form-control text-center border border-secondary"
+                                value="{{quantity}}" aria-label="Example text with button addon"
+                                aria-describedby="button-addon1" />
+                            <button ng-click="increaseQuantity()" class="btn btn-white border border-secondary px-3"
+                                type="button" id="button-addon2" data-mdb-ripple-color="dark">
+                                <i class="fas fa-plus"></i>
+                            </button>
+
+                        </div>
+                        <button ng-click="addShoppingCart(product.productId)" data-bs-toggle="modal"
+                            data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                            style="margin-top: 1.5rem; display: block;width:100% ;">Thêm vào
+                            giỏ hàng</button>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -389,61 +439,4 @@
             </nav>
         </center>
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <center>
-                        <h5 class="modal-title" id="modalTitleId"><b>Mua ngay, tiết kiệm ngay!</b></h5>
-                    </center>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid" style="line-height: 35px;">
-                        <img ng-src="{{product.media[0].mediaUrl}}" style="border-radius: 10px;" alt="">
-                        <b>{{product.productName}}</b>
-                        <hr>
-                        <b> Chọn màu:</b>
-                        <div style="display: flex;" class="m-1">
-                            <button ng-repeat="color in product.productColors" ng-click="getTotal(color.color.colorId)"
-                                ng-class="{'dislike--btn': color.quantity > 0, 'btn-disable': color.quantity === 0}"
-                                style="display: block; margin-right: 0.2rem; padding: 0.2rem;">{{color.color.colorName}}</button>
-                        </div>
-                        <span ng-show="total>0"><b>Số lượng còn lại:</b> {{total}}</span>
-                        <span ng-show="total===0"><b>Số lượng còn lại:</b> Hết hàng</span>
-                        <div class="input-group mb-3" style="width: 170px;">
-                            <button ng-click="reduceQuantity()" class="btn btn-white border border-secondary px-3"
-                                type="button" id="button-addon1" data-mdb-ripple-color="dark">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="text" class="form-control text-center border border-secondary"
-                                value="{{quantity}}" aria-label="Example text with button addon"
-                                aria-describedby="button-addon1" />
-                            <button ng-click="increaseQuantity()" class="btn btn-white border border-secondary px-3"
-                                type="button" id="button-addon2" data-mdb-ripple-color="dark">
-                                <i class="fas fa-plus"></i>
-                            </button>
-
-                        </div>
-                        <button ng-click="addShoppingCart(product.productId)" data-bs-toggle="modal"
-                            data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
-                            style="margin-top: 1.5rem; display: block;width:100% ;">Thêm vào
-                            giỏ hàng</button>
-                    </div>
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div> -->
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
 </div>
