@@ -7,6 +7,7 @@ app.controller('OrdersController', function ($scope, $http, $translate, $rootSco
             // Dữ liệu trả về từ API sẽ nằm trong response.data
             orders = response.data;
             $scope.orders = orders;
+            console.log($scope.orders)
         })
         .catch(function (error) {
             console.log(error);
@@ -23,6 +24,7 @@ app.controller('OrdersController', function ($scope, $http, $translate, $rootSco
                 grouped[userId].push(order);
             }
         });
+        // console.log(grouped);
         return grouped;
     };
 
