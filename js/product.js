@@ -195,87 +195,10 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 icon: 'success',
                 title: 'Sản phẩm được đăng thành công, đang trong quá trình chờ duyệt'
             })
+
             return;
         }
-        var storage = firebase.storage();
-        var storageRef = storage.ref();
 
-        var uploadMedia = function (fileIndex) {
-            if (fileIndex >= fileInput.files.length) {
-                // All files have been uploaded
-                fileInput.value = null;
-                var mediaList = document.getElementById('mediaList');
-                mediaList.innerHTML = '';
-                $window.selectedMedia = [];
-                if ($routeParams.productId) {
-                    $http.get(Url + '/get-product/' + $routeParams.productId)
-                        .then(function (response) {
-                            $scope.product = response.data;
-                            $scope.selectedColors = response.data.productColors;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                }
-
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                })
-
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Sản phẩm được đăng thành công, đang trong quá trình chờ duyệt'
-                })
-                return;
-            }
-
-            var file = fileInput.files[fileIndex];
-            var timestamp = new Date().getTime();
-            var fileName = file.name + '_' + timestamp;
-            var fileType = getFileExtensionFromFileName(file.name);
-
-            // Xác định nơi lưu trữ dựa trên loại tệp
-            var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
-
-            // Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
-            var uploadTask = storageRef.child(storagePath + fileName).put(file);
-
-            // Xử lý sự kiện khi tải lên hoàn thành
-            uploadTask.on('state_changed', function (snapshot) {
-            }, function (error) {
-                alert("Lỗi tải");
-            }, function () {
-                // Tải lên thành công, lấy URL của tệp từ Firebase Storage
-                uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-                    var formData = new FormData();
-                    formData.append('mediaUrl', downloadURL);
-                    $http.post(Url + '/send-media/' + productId, formData, {
-                        transformRequest: angular.identity,
-                        headers: {
-                            'Content-Type': undefined
-                        }
-                    }).then(function (response) {
-                        // Tiếp tục tải và gửi ảnh tiếp theo
-                        uploadMedia(fileIndex + 1);
-                    }).catch(function (error) {
-                        console.error('Lỗi tải lên tệp:', error);
-                    });
-
-                }).catch(function (error) {
-                    console.error('Error getting download URL:', error);
-                });
-            });
-        };
-        // Bắt đầu tải và gửi ảnh từ fileInput.files[0]
-        uploadMedia(0);
     }
 
     $scope.sendMedia = function (productId) {
@@ -298,6 +221,16 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 icon: 'success',
                 title: 'Sản phẩm được đăng thành công, đang trong quá trình chờ duyệt'
             })
+            if ($routeParams.productId) {
+                $http.get(Url + '/get-product/' + $routeParams.productId)
+                    .then(function (response) {
+                        $scope.product = response.data;
+                        $scope.selectedColors = response.data.productColors;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
             return;
         }
         var storage = firebase.storage();
@@ -326,8 +259,18 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
 
                 Toast.fire({
                     icon: 'success',
-                    title: 'Sản phẩm được đăng thành công, đang trong quá trình chờ duyệt'
+                    title: 'Sản phẩm đã được cập nhật'
                 })
+                if ($routeParams.productId) {
+                    $http.get(Url + '/get-product/' + $routeParams.productId)
+                        .then(function (response) {
+                            $scope.product = response.data;
+                            $scope.selectedColors = response.data.productColors;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
                 return;
             }
 
