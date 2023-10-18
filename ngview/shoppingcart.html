@@ -312,35 +312,35 @@
             <div class="modal-body">
                 <div class="card-body">
                     <div class="bd-example">
-                        <ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fa-sharp fa-regular fa-location-dot"></i> Địa chỉ của bạn</button>
+                        <ul class="nav nav-tabs" data-toggle="slider-tab" id="myTab" role="tablist">
+                            <li class="nav-item" >
+                                <button class="nav-link active" ng-click="clearForm()" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fa-sharp fa-regular fa-location-dot"></i>&nbsp; Địa chỉ của bạn</button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" ng-click="showProvince()" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fa-solid fa-plus"></i> Tạo địa chỉ mới</button>
+                            <li class="nav-item" >
+                                <button class="nav-link" ng-click="showProvince()" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fa-solid fa-plus"></i>&nbsp; Tạo địa chỉ mới</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
                                 aria-labelledby="pills-home-tab1">
                                         <div style="max-height: 350px; overflow-y: auto;">
-                                            <label class="d-flex gap-3 mt-2 ms-4 border-bottom" ng-repeat="deliveryAddress in deliveryAddress">
-                                                <input value="{{deliveryAddress.id}}" type="radio" name="address" class="form-check-input mt-1">
+                                            <label class="d-flex gap-3 mt-2 ms-4 border-bottom" ng-repeat="d in deliveryAddress">
+                                                <input value="{{d.id}}" type="radio" name="address" class="form-check-input mt-1" ng-checked="$first">
                                                 <div>
                                                     <p class="mb-1 d-flex align-items-center">
-                                                        <i class="fa-regular fa-user fa-sm me-2"></i> <b>{{deliveryAddress.user.username}}</b>
-                                                        <i class="fa-regular fa-phone fa-sm ms-3 me-2"></i> <b>{{deliveryAddress.deliveryPhone}}</b> </p>
-                                                    <p class="mb-1">{{deliveryAddress.detailAddress}} &nbsp; {{deliveryAddress.wardName}}</p>
-                                                    <p>{{deliveryAddress.districtName}}, {{deliveryAddress.provinceName}}</p>
+                                                        <i class="fa-regular fa-user fa-sm me-2"></i> <b>{{d.user.username}}</b>
+                                                        <i class="fa-regular fa-phone fa-sm ms-3 me-2"></i> <b>{{d.deliveryPhone}}</b> </p>
+                                                    <p class="mb-1">{{d.detailAddress}} &nbsp; {{d.wardName}}</p>
+                                                    <p>{{d.districtName}}, {{d.provinceName}}</p>
                                                 </div>
-                                            </label>
+                                            </label>                                            
                                             <div ng-if="deliveryAddress.length == 0" class="mt-4 mb-2">
                                                 <h5>Bạn chưa thêm địa chỉ nhận hàng</h5>
                                             </div>
                                         </div>
                                         <div class="mt-3">
                                             <button ng-click="checkedAddress()" class="btn btn-sm btn-primary me-2">Sử dụng địa chỉ</button>
-                                            <button ng-click="deleteAddress()" class="btn btn-sm btn-danger">Xóa</button>
+                                            <button ng-click="deleteAddress()" ng-if="deliveryAddress.length != 1" class="btn btn-sm btn-danger">Xóa</button>
                                         </div>
                             </div>
                             <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
@@ -348,7 +348,7 @@
                                 <div class="row">
                                         <div class="mt-2 col-12">
                                             <div class="form-floating">
-                                                <input type="text" id="floatingSelect" class="form-control">
+                                                <input type="text" id="phone" class="form-control">
                                                 <label for="floatingSelect">Số điện thoại (<b class="text-danger">*</b>)</label>
                                             </div>
                                         </div>
@@ -385,7 +385,7 @@
                                         <div class="col-12 mt-3">
                                             <button ng-click="addAddress()" class="btn btn-sm btn-primary">Thêm địa chỉ</button>
                                         </div>
-                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -411,5 +411,4 @@
             scrollToTopBtn.style.display = "none";
         }
     });
-
 </script>
