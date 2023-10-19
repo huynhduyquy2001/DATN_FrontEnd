@@ -384,7 +384,6 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
         .then(function (response) {
             // Dữ liệu trả về từ API sẽ nằm trong response.data
             $scope.colors = response.data;
-            console.log($scope.colors)
         })
         .catch(function (error) {
             console.log(error);

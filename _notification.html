@@ -26,7 +26,7 @@
 						<li class="sidebar-item notification mt-1 align-items-center d-flex" style="padding: 10px;"
 							ng-repeat="notify in notification | orderBy:'notificationDate':true">
 							<a ng-click="getPostDetails(notify.post.postId)" data-bs-dismiss="offcanvas"
-								aria-label="Close" class="image-link"> <img ng-src="images/{{notify.receiver.avatar}}"
+								aria-label="Close" class="image-link"> <img ng-src="{{notify.receiver.avatar}}"
 									width="55" height="55" style="object-fit: cover;" class="rounded-circle">
 								<div class="content" style="color: black; cursor: pointer;">
 									<b>{{ notify.notificationContent }}</b>
@@ -57,7 +57,7 @@
 						ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true">
 						<a data-bs-dismiss="offcanvas" aria-label="Close"
 							ng-click="getPostDetails(allnotify.post.postId)" class="image-link"> <img
-								ng-src="images/{{allnotify.receiver.avatar}}" alt="" width="55" height="55"
+								ng-src="{{allnotify.receiver.avatar}}" alt="" width="55" height="55"
 								class="rounded-circle" style="object-fit: cover;">
 							<div class="content" style="color: black; cursor: pointer;">
 								<b>{{ allnotify.notificationContent }}</b>

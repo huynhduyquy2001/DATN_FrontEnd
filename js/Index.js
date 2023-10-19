@@ -240,8 +240,14 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 					.then(function (response) {
 						$http.get(getChatlistwithothers)
 							.then(function (response) {
-								$rootScope.check = response.data > 0;
-								$rootScope.unseenmess = response.data;
+								$http.get(getUnseenMess)
+									.then(function (response) {
+										$rootScope.check = response.data > 0;
+										$rootScope.unseenmess = response.data;
+									})
+									.catch(function (error) {
+										console.log(error);
+									});
 								$timeout(function () {
 									$scope.scrollToBottom();
 								}, 100);
@@ -620,15 +626,17 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			view.classList.remove('col-lg-9', 'offset-lg-3');
 			view.classList.add('col-lg-11', 'offset-lg-1');
 
-
-
 		} else {
-			view.classList.remove('col-lg-11', 'offset-lg-1');
-			view.classList.add('col-lg-9', 'offset-lg-3');
-			asideLeft.style.opacity = '1';
-			asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
-			$rootScope.checkMenuLeft = true;
-			$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
 
 		}
 	}

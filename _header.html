@@ -204,7 +204,7 @@
 				<div class="msg-text" ng-if="mess.status == 'Đã ẩn'" style="color: #adb5bd">Tin nhắn đã được thu
 					hồi</div>
 
-				<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " src="{{mess.image}}"
+				<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " ng-src="{{mess.image}}"
 					style="max-width: 9rem; border-radius: 5px">
 
 				<div class="msg-info-time">{{getFormattedTimeAgo(mess.sendDate)}}</div>
