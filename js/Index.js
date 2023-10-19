@@ -122,6 +122,9 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	//nhắn tin
 	$rootScope.userMess = {};
 	$rootScope.ListMess = [];
+	// Kiểm tra xem trình duyệt hỗ trợ HTML5 Notifications hay không
+
+
 
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
@@ -392,6 +395,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
 				if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
 					$scope.ListMessMini.push(newMess);
+
+
 				}
 				if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
 					$rootScope.ListMess.push(newMess);
@@ -407,7 +412,25 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 						.catch(function (error) {
 							console.log(error);
 						});
-					$scope.playNotificationSound();
+					//hiện popup thôg báo
+					if ("Notification" in window) {
+						// Yêu cầu quyền hiển thị thông báo
+						Notification.requestPermission().then(function (permission) {
+							if (permission === "granted") {
+								// Hiển thị thông báo
+								var notification = new Notification("Thông báo", {
+									body: newMess.sender.username + " vừa gửi tin nhắn đến bạn"
+								});
+
+								// Đặt hành động khi thông báo được nhấn
+								notification.onclick = function () {
+									// Xử lý hành động khi thông báo được nhấn
+									window.focus(); // Tập trung vào tab chính
+								};
+							}
+						});
+					}
+					//$scope.playNotificationSound();
 				}
 				//cập nhật lại danh sách người đang nhắn tin với mình
 				$http.get(url + '/chatlistwithothers')
