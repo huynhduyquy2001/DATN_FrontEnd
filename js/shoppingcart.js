@@ -428,6 +428,8 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
           console.error("Error:", error);
         });
       //Hiện modal
+      $scope.checkShip = false;
+      $scope.fee = []
       $("#exampleModal").modal("show");
     }
   };
@@ -437,10 +439,16 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     $("#exampleModal").modal("hide");
 
     //Load địa chỉ giao hàng
-    $http
-      .get(url + "/get-address")
+    $http.get(url + "/get-address")
       .then(function (response) {
         $scope.deliveryAddress = response.data;
+        if(response.data.length == 0){
+            //Hiện tab địa chỉ trước  
+            $('#profile-tab').tab('show');
+        }else{
+          //Hiện tab địa chỉ trước  
+          $('#home-tab').tab('show');
+        }
       })
       .catch(function (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
@@ -469,6 +477,9 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
         // In ra nội dung đối tượng lỗi
         console.log("Error Object:", error);
       });
+    
+    //Clear form thêm địa chỉ
+    $scope.clearForm();
   };
 
   //Lấy danh sách Quận huyện
@@ -521,7 +532,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
 
   //Thêm địa chỉ
   $scope.addAddress = function () {
-    var inputElement = document.getElementById("floatingSelect");
+    var inputElement = document.getElementById("phone");
     // Lấy giá trị từ input
     var inputValue = inputElement.value;
 
@@ -529,12 +540,12 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
       $scope.selectedDistrict == null ||
       $scope.selectedProvince == null ||
       $scope.selectedWard == null ||
-      inputValue == null
+      inputValue == ''
     ) {
       Swal.fire({
         position: "top",
         icon: "warning",
-        text: "Chưa chọn đủ thông tin địa chỉ!",
+        text: "Chưa đủ thông tin địa chỉ!",
         showConfirmButton: false,
         timer: 1800,
       });
@@ -562,12 +573,16 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
         })
         .then(function (response) {
           $scope.deliveryAddress = response.data;
+          $scope.clearForm();
+          //Trở về tabs địa chỉ 
+          $('#home-tab').tab('show');
+
           Swal.fire({
             position: "top",
             icon: "success",
             text: "Thêm địa chỉ thành công",
             showConfirmButton: false,
-            timer: 1800,
+            timer: 800,
           });
         });
     }
@@ -631,6 +646,8 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     Promise.all([dataListProduct, dataAddress]).then(function () {
       var listUserIdStore = [];
       var data = $scope.listProductOrder;
+      console.log(data)
+      console.log("---------------------")
       //Gom sản phẩm có cùng cửa hàng rồi tính tổng các giá trị của sản phẩm
       let aggregatedData = {};
       for (let userId in data) {
@@ -647,10 +664,10 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
             // Nếu userId đã tồn tại trong aggregatedData, cộng thêm quantity vào tổng
             if (aggregatedData.hasOwnProperty(userId)) {
               aggregatedData[userId].totalQuantity += currentQuantity;
-              aggregatedData[userId].totalHeight += currentHeight;
-              aggregatedData[userId].totalWidth += currentWidth;
-              aggregatedData[userId].totalWeight += currentWeight;
-              aggregatedData[userId].totalLength += currentLength;
+              aggregatedData[userId].totalHeight += currentHeight * currentQuantity;
+              aggregatedData[userId].totalWidth += currentWidth * currentQuantity;
+              aggregatedData[userId].totalWeight += currentWeight * currentQuantity;
+              aggregatedData[userId].totalLength += currentLength * currentQuantity;
               aggregatedData[userId].totalPrice +=
                 $scope.getSalePrice(currentOriginalPrice, currentPromotion) *
                 currentQuantity;
@@ -659,10 +676,10 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
               aggregatedData[userId] = {
                 userId: userId,
                 totalQuantity: currentQuantity,
-                totalHeight: currentHeight,
-                totalWidth: currentWidth,
-                totalWeight: currentWeight,
-                totalLength: currentLength,
+                totalHeight: currentHeight * currentQuantity,
+                totalWidth: currentWidth * currentQuantity,
+                totalWeight: currentWeight * currentQuantity,
+                totalLength: currentLength * currentQuantity,
                 totalPrice:
                   $scope.getSalePrice(currentOriginalPrice, currentPromotion) *
                   currentQuantity,
@@ -674,6 +691,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
 
       // Chuyển đổi aggregatedData từ đối tượng thành mảng
       var totalData = Object.values(aggregatedData);
+      console.log(totalData)
       //Lấy danh sách địa chỉ cửa hàng
       $http({
         method: "GET",
@@ -799,6 +817,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
         console.error("Promise.all failed:", error);
       });
   };
+
   //Hàm gọp mảng có cùng userId
   $scope.mergeToArray = function (array1, array2) {
     /// Tạo một đối tượng để theo dõi thông tin của mỗi userId
@@ -820,4 +839,14 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     // Kết quả sau khi gộp
     return Object.values(userIdMap);
   };
+
+  $scope.clearForm = function(){
+    var inputElement = document.getElementById("phone");
+    $scope.selectedDistrict = null;
+    $scope.selectedProvince = null;
+    $scope.selectedWard = null;
+    $scope.textareaValue = "";
+    inputElement.value = "";
+  }
+
 });
