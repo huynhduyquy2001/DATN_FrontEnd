@@ -441,14 +441,15 @@
 															<small style=" font-weight: 600; font-size: 14px;"
 																class="ng-binding"> <i class="fa-regular fa-tag"></i>
 																<span class="ng-binding">
-																	<b>Bạn đang trả lời:</b> {{comment.user.username}}
+																	<strong>Bạn đang trả lời:</strong>
+																	{{comment.user.username}}
 																</span>
 															</small><br>
 															<div>
 																<form>
 																	<div class="input-group">
 																		<input
-																			style=" border-radius: 20px; max-width: 20rem;"
+																			style=" border-radius: 20px; border-bottom: 1px solid #dee2e6; max-width: 20rem;"
 																			type="text" class="form-control"
 																			ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
 																			placeholder="Nhập nội dung..."
@@ -515,14 +516,16 @@
 																	<small style="font-size: 12px;" class="ng-binding">
 																		<i class="fa-regular fa-tag"></i> <small
 																			style="font-size: 12px;" class="ng-binding">
-																			Bạn đang trả lời: {{obj.responder.username}}
+																			<strong>Bạn đang trả lời:</strong>
+																			{{obj.responder.username}}
 																		</small>
 																	</small><br>
 																	<div>
 																		<form>
-																			<div class="input-group">
+																			<div class="input-group"
+																				style="max-width: 90%;">
 																				<input
-																					style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0;"
+																					style="border: none; border: 1px solid #dee2e6; border-radius: 20px;"
 																					type="text" class="form-control"
 																					placeholder="Nhập nội dung..."
 																					ng-model="replyContent[obj.replyId]"
