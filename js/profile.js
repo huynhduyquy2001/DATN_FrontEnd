@@ -25,6 +25,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.AccInfo = {};
+	$scope.check = false;
 
 	var Url = "http://localhost:8080";
 	var countpost = "http://localhost:8080/countmypost/";
@@ -37,6 +38,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	if ($routeParams.userId) {
 		$http.post(Url + '/getOtherUserId/' + $routeParams.userId)
 			.then(function (response) {
+				$scope.check = true;
 				$scope.UserInfo = response.data;
 				$http.get(Url + '/getListImage/' + $routeParams.userId)
 					.then(function (response) {

@@ -83,7 +83,7 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 			headers: { 'Content-Type': undefined }
 		})
 			.then(function (res) {
-				// Xử lý phản hồi từ máy chủ
+				alert("ok")
 			});
 	}
 	$scope.togglerFavorite = function (productId) {

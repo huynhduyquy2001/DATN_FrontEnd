@@ -42,7 +42,7 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/admin/postsviolation', {
 		templateUrl: "ngview/postsviolation.html",
 		controller: 'PostsViolationController'
-	}).when('/mystore', {
+	}).when('/mystore/:userId/:page', {
 		templateUrl: "ngview/myStore.html",
 		controller: 'MyStoreController'
 	}).when('/ValidationOrder', {

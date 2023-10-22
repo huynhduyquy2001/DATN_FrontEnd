@@ -36,7 +36,7 @@ app.factory('AuthInterceptor', function ($q, $window) {
 		responseError: function (rejection) {
 			if (rejection.status === 403) {
 				// Redirect to the login page
-				$window.location.href = 'login.html';
+				$window.location.href = 'Login.html';
 			}
 			return $q.reject(rejection);
 		}
@@ -116,7 +116,9 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Phân trang myStore
 	$rootScope.currentPageMyStore = 0;
+	$rootScope.currentPagePending = 0;
 	$rootScope.currentPageFilter = 0;
+	$rootScope.checkMystore = 1;
 
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
