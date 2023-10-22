@@ -1,6 +1,9 @@
 
+
+
+
 app.controller('SearchController', function ($scope, $http, $translate, $rootScope, $location) {
-	// For Firebase JS SDK v7.20.0 and later, measurementId is optional\	
+
 	const firebaseConfig = {
 		apiKey: "AIzaSyB_nFfKhlG0KP5lU6d3gqQwniuDHnnI8JE",
 		authDomain: "search-history-453d4.firebaseapp.com",
@@ -8,28 +11,44 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		projectId: "search-history-453d4",
 		storageBucket: "search-history-453d4.appspot.com",
 		messagingSenderId: "308907237461",
-		appId: "1:308907237461:web:fb26ebd6793a5ec24af4dc",
-		measurementId: "G-Q2JXS4PSMF"
+		appId: "1:308907237461:web:97a517ea4387f1df4af4dc",
+		measurementId: "G-J3T65DFKHD"
 	};
+	if (!firebase.apps.length) {
+		firebase.initializeApp(firebaseConfig);
+	}
+	$scope.saveData = function () {
+		dataRef.set($scope.data);
+	};
+	firebase.auth().createUserWithEmailAndPassword('daynewtran@gmail.com', 'daynewtran123')
+		.then((userCredential) => {
+			// Người dùng đã đăng ký thành công
+			const user = userCredential.user;
+		})
+		.catch((error) => {
+			// Xử lý lỗi nếu có, ví dụ: email đã tồn tại, mật khẩu yếu, ...
+			console.error("Mã lỗi:", error.code);
+			console.error("Thông điệp lỗi:", error.message);
+		});
+
+	// firebase.auth().signInWithEmailAndPassword('daynewtran@gmail.com', 'daynewtran123')
+	// 	.then(function (userCredential) {
+	// 		// Người dùng đã đăng nhập thành công
+	// 		const user = userCredential.user;
+	// 	})
+	// 	.catch(function (error) {
+	// 		// Xử lý lỗi xác thực, bao gồm cả lỗi 401
+	// 		console.error("Lỗi xác thực:", error);
+	// 	});
+
 	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
+	var Url = "http://localhost:8080";
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.myAccount = {};
 	$scope.postData = {};
 	$scope.item = {};
 	$scope.listFollow = [];
-
-	var Url = "http://localhost:8080";
-	if (!$location.path().startsWith('/profile/')) {
-		// Tạo phần tử link stylesheet
-		var styleLink = document.createElement('link');
-		styleLink.rel = 'stylesheet';
-		styleLink.href = '/css/style.css';
-
-		// Thêm phần tử link vào thẻ <head>
-		document.head.appendChild(styleLink);
-	}
-
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -75,12 +94,16 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		$scope.showName(key);
 	};
 	//đây là code hiện lên lịch sử người dùng
-	var url = `${host}/history.json`;
-	$http.get(url).
-		then(resp => {
 
+
+	const databaseURL = 'https://search-history-453d4-default-rtdb.firebaseio.com/history.json';
+	$scope.hienthi = [];
+	// var url = `${host}/history.json`;
+	$http.get(databaseURL).
+		then(resp => {
 			$scope.items = resp.data;
-			console.log("Load OK lS", resp);
+			$scope.hienthi = $scope.items;
+			console.log("Load list lích su", $scope.hienthi);
 		}).catch(function (error) {
 			console.log("Load Error", error);
 		});
@@ -172,7 +195,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		.catch(function (error) {
 			console.log(error);
 		});
-	$http.get('/getUserInfo').then(function (response) {
+	$http.get(Url + '/getUserInfo').then(function (response) {
 		$scope.UserInfo = response.data;
 		$scope.birthday = new Date($scope.UserInfo.birthday)
 		// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
