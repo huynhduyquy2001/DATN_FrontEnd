@@ -1,4 +1,4 @@
-app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
+app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $compile, $injector) {
   var url = "http://localhost:8080";
   var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
   $scope.listProducts = [];
@@ -10,6 +10,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
   $scope.fee = [];
   $scope.checkShip = false;
   $scope.oneAddress = {};
+  $scope.checkPay = true;
   var dataListProduct;
   var dataAddress;
   $scope.loadData = function () {
@@ -850,9 +851,9 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     inputElement.value = "";
   }
 
-  $scope.paymentVNPay = function () {
+  $scope.paymentVNPay = function (pay) {
     var element = document.getElementById("vnpay");
-
+    $scope.checkPay = pay;
     $scope.payment = element.textContent || element.innerText;
 
     // Loại bỏ các ký tự không phải số hoặc dấu chấm
@@ -863,16 +864,15 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
 
     console.log(numericValue);
 
-    $http.post(url + "/create_payment/" + numericValue)
-      .then(function (response) {
-        // Lấy URL từ response data
-        var newPageUrl = response.data.body;
-        console.log(response);
-        // Mở trang mới với URL nhận được
-        window.open(newPageUrl, '_blank');
-      });
-
-
+    if (pay == true) {
+      $http.post(url + "/create_payment/" + numericValue)
+        .then(function (response) {
+          // Lấy URL từ response data
+          var newPageUrl = response.data.body;
+          // Mở trang mới với URL nhận được
+          window.location.href = newPageUrl;
+        });
+    }
 
   }
 

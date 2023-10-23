@@ -329,29 +329,30 @@
                         <div class="mt-4">
                             <div class="d-flex justify-content-between mb-3">
                                 <h6 class="mb-0">Tổng thanh toán</h6>
-                                <h5 class="text-danger mb-0">{{sumPrice + totalFee | currencyFormat}}</h5>
+                                <h5 class="text-danger mb-0" id="vnpay">{{sumPrice + totalFee | currencyFormat}}</h5>
                             </div>
                             <div class="mt-3 border-top pt-3">
                                 <h6 class="mb-0">Phương thức thanh toán</h6>
                                 <div class="mt-3 row">
                                     <div class="col-12 d-flex gap-3">
-                                        <a style="cursor: pointer;" class="border border-primary p-2">
+                                        <a style="cursor: pointer;" class="border border-primary p-2"
+                                            onclick="setPrimary(this)">
                                             Thanh toán khi nhận hàng
                                         </a>
-                                        <a style="cursor: pointer;" class="border p-2">
+                                        <a style="cursor: pointer;" class="border p-2" onclick="setPrimary(this)">
                                             Thanh toán Online VNPay
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex">
-                                <button ng-disabled="!checkShip" class="btn btn-primary d-block mt-3 w-100">Thanh
+                                <button ng-disabled="!checkShip" ng-class="{'d-none':checkPay===false}"
+                                    class="btn btn-primary mt-3 w-100" ng-click="paymentVNPay(false)">Thanh
+                                    toán</button>
+                                <button ng-disabled="!checkShip" ng-class="{'d-none':checkPay===true}"
+                                    class="btn btn-primary mt-3 w-100" ng-click="paymentVNPay(true)">Thanh
                                     toán</button>
                             </div>
-                        </div>
-                        <div class="d-flex">
-                            <a id="place-order" class="btn btn-primary d-block mt-3 w-100"
-                                ng-click="paymentVNPay()">Thanh toán</a>
                         </div>
                     </div>
                 </div>
@@ -493,4 +494,13 @@
             scrollToTopBtn.style.display = "none";
         }
     });
+
+    function setPrimary(clickedButton) {
+        const buttons = document.querySelectorAll('.border');
+        buttons.forEach(button => {
+            button.classList.remove('border-primary');
+        });
+        clickedButton.classList.add('border-primary');
+
+    }
 </script>
