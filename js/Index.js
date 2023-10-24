@@ -102,7 +102,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.ListUsersMess = [];
 	$scope.receiver = {};
 	$scope.newMessMini = '';
-	$scope.ListMess = [];
+	$scope.ListMessMini = [];
 	$rootScope.myAccount = {};
 	$rootScope.listProduct = [];
 	//phân trang shopping
@@ -119,6 +119,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.currentPagePending = 0;
 	$rootScope.currentPageFilter = 0;
 	$rootScope.checkMystore = 1;
+	//nhắn tin
+	$rootScope.userMess = {};
+	$rootScope.ListMess = [];
+	// Kiểm tra xem trình duyệt hỗ trợ HTML5 Notifications hay không
+
+
 
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
@@ -230,10 +236,33 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
 				$scope.receiver = response.data;
+				$http.post(url + '/seen/' + receiverId)
+					.then(function (response) {
+						$http.get(getChatlistwithothers)
+							.then(function (response) {
+								$http.get(getUnseenMess)
+									.then(function (response) {
+										$rootScope.check = response.data > 0;
+										$rootScope.unseenmess = response.data;
+									})
+									.catch(function (error) {
+										console.log(error);
+									});
+								$timeout(function () {
+									$scope.scrollToBottom();
+								}, 100);
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
-				$scope.ListMess = response.data;
+				$scope.ListMessMini = response.data;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -259,7 +288,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.revokeMessage = function (messId) {
 		$http.post(url + '/removemess/' + messId)
 			.then(function (reponse) {
-				var messToUpdate = $scope.ListMess.find(function (mess) {
+				var messToUpdate = $scope.ListMessMini.find(function (mess) {
 					return mess.messId === messId;
 				})
 				messToUpdate.status = "Đã ẩn";
@@ -348,20 +377,37 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	// Khi kết nối WebSocket thành công
 	stompClient.connect({}, function (frame) {
 		// Lắng nghe các tin nhắn được gửi về cho người dùng
-		var jwt = localStorage.getItem('jwtToken')
 		//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
 		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
 			try {
 				var newMess = JSON.parse(message.body);
-
-				var checkMess = $scope.ListMess.find(function (obj) {
+				// alert("tk người nhận: " + $scope.receiver.userId)
+				// alert("tk người nhận trong tin nhắn: " + newMess.receiver.userId)
+				// alert("tk người gửi trong tin nhắn: " + newMess.sender.userId)
+				// alert("tk của tôi hiện tại: " + $scope.myAccount.user.userId)
+				var checkMess = $scope.ListMessMini.find(function (obj) {
 					return obj.messId === newMess.messId;
 				});
 
+
 				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$scope.ListMess.push(newMess);
+				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của mình
+				if (($scope.receiver.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+					$scope.ListMessMini.push(newMess);
 				}
+				if (($rootScope.userMess.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+					$rootScope.ListMess.push(newMess);
+				}
+				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
+				if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
+					$scope.ListMessMini.push(newMess);
+
+
+				}
+				if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
+					$rootScope.ListMess.push(newMess);
+				}
+
 				if ($scope.myAccount.user.userId !== newMess.sender.userId) {
 					// Lấy số lượng tin nhắn nào chưa đọc
 					$http.get(getUnseenMess)
@@ -372,7 +418,25 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 						.catch(function (error) {
 							console.log(error);
 						});
-					$scope.playNotificationSound();
+					//hiện popup thôg báo
+					if ("Notification" in window) {
+						// Yêu cầu quyền hiển thị thông báo
+						Notification.requestPermission().then(function (permission) {
+							if (permission === "granted") {
+								// Hiển thị thông báo
+								var notification = new Notification("Thông báo", {
+									body: newMess.sender.username + " vừa gửi tin nhắn đến bạn"
+								});
+
+								// Đặt hành động khi thông báo được nhấn
+								notification.onclick = function () {
+									// Xử lý hành động khi thông báo được nhấn
+									window.focus(); // Tập trung vào tab chính
+								};
+							}
+						});
+					}
+					//$scope.playNotificationSound();
 				}
 				//cập nhật lại danh sách người đang nhắn tin với mình
 				$http.get(url + '/chatlistwithothers')
@@ -562,15 +626,17 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			view.classList.remove('col-lg-9', 'offset-lg-3');
 			view.classList.add('col-lg-11', 'offset-lg-1');
 
-
-
 		} else {
-			view.classList.remove('col-lg-11', 'offset-lg-1');
-			view.classList.add('col-lg-9', 'offset-lg-3');
-			asideLeft.style.opacity = '1';
-			asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
-			$rootScope.checkMenuLeft = true;
-			$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
 
 		}
 	}
@@ -629,12 +695,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 							'Content-Type': undefined
 						}
 					}).then(function (response) {
-						var newListMess = response.data;
-						//$scope.ListMess = $scope.ListMess.concat(newListMess);
+						var newListMessMini = response.data;
+						//$scope.ListMessMini = $scope.ListMessMini.concat(newListMessMini);
 
-						// Gửi từng tin nhắn trong danh sách newListMess bằng stompClient.send
-						for (var i = 0; i < newListMess.length; i++) {
-							var messageToSend = newListMess[i];
+						// Gửi từng tin nhắn trong danh sách newListMessMini bằng stompClient.send
+						for (var i = 0; i < newListMessMini.length; i++) {
+							var messageToSend = newListMessMini[i];
 							stompClient.send('/app/sendnewmess', {}, JSON.stringify(messageToSend));
 						}
 

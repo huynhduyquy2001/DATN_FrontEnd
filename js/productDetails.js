@@ -14,7 +14,7 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
 
     // Biến để lưu trạng thái hiện tại ("Tất cả", "Tích cực", "Tiêu cực")
     $scope.filterStatus = "Tất cả";
- 
+
     // Hàm để thay đổi trạng thái lọc
     $scope.changeFilterStatus = function (status) {
         $scope.filterStatus = status;
@@ -31,6 +31,60 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
         return false; // Ẩn đánh giá không phù hợp
     };
 
+    $scope.reportProduct = function () {
+        var reportContent = $scope.reportContent;
+        if (!reportContent) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'warning',
+                title: 'Vui lòng nhập nội dung tố cáo'
+            })
+        } else {
+            var formData = new FormData();
+            var reportContent = $scope.reportContent;
+            formData.append('reportContent', reportContent); // Đặt tên là 'reportContent'
+            $http.post(Url + "/report-product/" + $routeParams.productId, formData,
+                {
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                .then(function (res) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Sản phẩm thêm vào danh sách kiểm duyệt'
+                    });
+                })
+                .catch(function (error) {
+                    // Xử lý khi xảy ra lỗi
+                    console.error("Lỗi yêu cầu POST: ", error);
+                });
+
+        }
+
+    }
 
     //đánh giá sản phẩm
     $scope.rate = function () {

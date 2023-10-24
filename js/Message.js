@@ -3,9 +3,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 
 	$scope.LikePost = [];
 	//đây là danh sách tin nhắn
-	//$scope.ListMess = [];
 	//đây là acc của ngta
-	$scope.userMess = {};
 	//đây coi là có đang nhắn vs ai khum
 	$scope.isEmptyObject = false;
 	var url = "http://localhost:8080";
@@ -32,10 +30,6 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 			}
 		});
 	});
-
-
-
-
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
 		authDomain: "viesonet-datn.firebaseapp.com",
@@ -107,7 +101,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 						}
 					}).then(function (response) {
 						var newListMess = response.data;
-						//$scope.ListMess = $scope.ListMess.concat(newListMess);
+						//$rootScope.ListMess = $rootScope.ListMess.concat(newListMess);
 
 						// Gửi từng tin nhắn trong danh sách newListMess bằng stompClient.send
 						for (var i = 0; i < newListMess.length; i++) {
@@ -148,13 +142,13 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	if ($routeParams.otherId) {
 		$http.get(url + '/getUser/' + $routeParams.otherId)
 			.then(function (response) {
-				$scope.userMess = response.data;
+				$rootScope.userMess = response.data;
 			})
 		$scope.seen();
 		//lấy danh sách tin nhắn với người đó
 		$http.get(url + '/getmess2/' + $routeParams.otherId)
 			.then(function (response) {
-				$scope.ListMess = response.data;
+				$rootScope.ListMess = response.data;
 				$timeout(function () {
 					$scope.scrollToBottom();
 				}, 1500);
@@ -212,55 +206,6 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
-
-	// Khi kết nối WebSocket thành công
-	stompClient.connect({}, function (frame) {
-		// Đăng ký hàm xử lý khi nhận thông điệp từ server
-		// Lắng nghe các tin nhắn được gửi về cho người dùng
-		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
-			try {
-				var newMess = JSON.parse(message.body);
-
-				var checkMess = $scope.ListMess.find(function (obj) {
-					return obj.messId === newMess.messId;
-				});
-				// nếu là thu hồi tin nhắn thì
-				if (checkMess) {
-					checkMess.status = 'Đã ẩn';
-				}
-				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				else if (($scope.userMess.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$scope.ListMess.push(newMess);
-				}
-				//nếu không phải mình gửi cho chính mình và không phải hàm thu hồi
-				if ($scope.myAccount.user.userId !== newMess.sender.userId && !checkMess) {
-					$scope.getTotalUnseenMess();
-					$scope.playNotificationSound();
-				}
-				$scope.getUnseenMessage();
-				//cập nhật lại danh sách người đang nhắn tin với mình
-				$http.get(url + '/chatlistwithothers')
-					.then(function (response) {
-						$scope.ListUsersMess = response.data;
-						//$scope.playNotificationSound();
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
-
-				$timeout(function () {
-					$scope.scrollToBottom();
-				}, 10);
-
-				$scope.$apply();
-			} catch (error) {
-				alert('Error handling received message:', error);
-			}
-		});
-	}, function (error) {
-		console.error('Lỗi kết nối WebSocket:', error);
-	});
-
 
 	// Hàm gửi tin nhắn và lưu vào csdl
 	$scope.sendMessage = function (senderId, content, receiverId) {

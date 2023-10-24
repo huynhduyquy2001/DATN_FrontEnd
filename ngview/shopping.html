@@ -1,25 +1,5 @@
 <div class="row col-md-11">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button ng-class="{ 'nav-link': true, 'active': checkShopping===1 }"
-                ng-click="getproductListTrending(currentPageTrending)" id="profile-tab" data-bs-toggle="tab"
-                data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false">Bán chạy
-                trong tuần</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button ng-class="{ 'nav-link': true, 'active': checkShopping===2 }" ng-click="getproductList(currentPage)"
-                id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home"
-                aria-selected="true">Đang theo
-                dõi</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button ng-class="{ 'nav-link': true, 'active': checkShopping===3 }"
-                ng-click="findProduct(currentPageSearch)" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-                type="button" role="tab" aria-controls="home" aria-selected="true">Tìm kiếm</button>
-        </li>
-    </ul>
-    <!-- Tab panes -->
+    <!-- Modal -->
     <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -69,6 +49,27 @@
             </div>
         </div>
     </div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping===1 }"
+                ng-click="getproductListTrending(currentPageTrending)" id="profile-tab" data-bs-toggle="tab"
+                data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false">Bán chạy
+                trong tuần</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping===2 }" ng-click="getproductList(currentPage)"
+                id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home"
+                aria-selected="true">Đang theo
+                dõi</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button ng-class="{ 'nav-link': true, 'active': checkShopping===3 }"
+                ng-click="findProduct(currentPageSearch)" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                type="button" role="tab" aria-controls="home" aria-selected="true">Tìm kiếm</button>
+        </li>
+    </ul>
+    <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="mb-3" style="display: flex; justify-content: right;">
@@ -438,25 +439,4 @@
             </nav>
         </center>
     </div>
-
-    <!-- Modal -->
-
-
-    <script>
-        var modalId = document.getElementById('modalId');
-
-        modalId.addEventListener('show.bs.modal', function (event) {
-            // Button that triggered the modal
-            let button = event.relatedTarget;
-            // Extract info from data-bs-* attributes
-            let recipient = button.getAttribute('data-bs-whatever');
-
-            // Use above variables to manipulate the DOM
-        });
-    </script>
-
-
-
-
-
 </div>
