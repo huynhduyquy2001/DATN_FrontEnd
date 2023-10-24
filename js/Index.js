@@ -79,9 +79,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	};
 
 	// Hàm để phát âm thanh
-	var sound = new Howl({
-		src: ['images/nhacchuong2.mp3']
-	});
+
 	$scope.playNotificationSound = function () {
 		sound.play();
 	};
@@ -112,6 +110,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.currentPageTrending = 0;
 	$rootScope.checkMenuLeft = true;
 	$rootScope.key = "";
+
 	//
 
 	//Phân trang myStore
@@ -122,10 +121,21 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	//nhắn tin
 	$rootScope.userMess = {};
 	$rootScope.ListMess = [];
+	//gọi điện
+	$rootScope.token = "";
+	$rootScope.callerId = "";
+	$rootScope.currentCall = null;
+	$rootScope.checkCall = 1;
 	// Kiểm tra xem trình duyệt hỗ trợ HTML5 Notifications hay không
 
+	$http.get(url + '/generateToken')
+		.then(function (response) {
+			$rootScope.token = response.data.token;
 
-
+		})
+		.catch(function (error) {
+			console.error("Error:", error);
+		});
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
 		authDomain: "viesonet-datn.firebaseapp.com",
@@ -211,6 +221,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$http.get(findMyAccount)
 		.then(function (response) {
 			$scope.myAccount = response.data;
+
 			$rootScope.myAccount = response.data;
 		})
 		.catch(function (error) {
@@ -725,7 +736,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	function getFileExtensionFromFileName(fileName) {
 		return fileName.split('.').pop().toLowerCase();
 	}
-
 	// Ban đầu ẩn menu
 	var menu = angular.element(document.querySelector('.menu'));
 	menu.css("right", "-330px");
@@ -733,6 +743,40 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	// boxchatMini.css("bottom", "-500px");
 	// boxchatMini.css("opacity", "0");
 
+
+
+	// =================================================================================
+
+	$rootScope.client = new StringeeClient();
+	var generateToken = "http://localhost:8080/generateToken";
+	$rootScope.getToken = function () {
+		$http.get(generateToken)
+			.then(function (response) {
+				$rootScope.token = response.data.token;
+				$rootScope.client.connect($rootScope.token);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
+	$rootScope.getToken();
+
+	//hàm thông báo người ta gọi
+	$rootScope.client.on('incomingcall', function (incomingcall) {
+		console.log("incomingcall", incomingcall)
+
+		//hiện popup thôg báo
+		var width = 640;
+		var height = 600;
+		var left = (window.innerWidth - width) / 2;
+		var top = (window.innerHeight - height) / 2;
+		var newWindow = window.open(
+			"http://127.0.0.1:5501/Index.html#!/videocall/" + incomingcall.fromNumber,
+			"_blank",
+			"width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",toolbar=no,location=no,status=no,menubar=no,resizable=no"
+		);
+		newWindow.focus();
+	});
 })
 
 

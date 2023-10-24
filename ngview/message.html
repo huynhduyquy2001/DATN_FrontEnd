@@ -49,14 +49,15 @@
 				<input ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
 					placeholder="Nhập tin nhắn của bạn...">
 				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
-					href="#exampleModalToggle"><i style="margin: 0; padding: 0;"
+					href="#exampleModalToggle"><i style="margin: 0; padding: 0;padding-right: 1rem;"
 						class="fa-regular fa-camera-retro"></i></span>
+				<a style="margin: 0; padding: 0; height: 0; cursor: pointer; " ng-click="openLink(userMess.userId)"><i
+						style="padding: 0;" class="fa-regular fa-phone"></i></a>
 				<button type="submit" class="msger-send-btn"
 					style="background: transparent; padding: 0; border-radius: 10px; border: none; color: #3a57e8; height: 0;"
 					ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">
 					<i class="fa-regular fa-paper-plane" style="padding-top: 0; padding-bottom: 0;"></i>
 				</button>
-
 			</form>
 		</div>
 	</div>
@@ -123,7 +124,6 @@
 							</label> <input type="file" class="form-control" name="mediaFiles" id="inputGroupFile01"
 								multiple>
 						</div>
-
 						<div id="mediaList"></div>
 					</form>
 				</div>
