@@ -1,4 +1,4 @@
-app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
+app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $compile, $injector) {
   var url = "http://localhost:8080";
   var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
   $scope.listProducts = [];
@@ -10,6 +10,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
   $scope.fee = [];
   $scope.checkShip = false;
   $scope.oneAddress = {};
+  $scope.checkPay = true;
   var dataListProduct;
   var dataAddress;
   $scope.loadData = function () {
@@ -442,10 +443,10 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     $http.get(url + "/get-address")
       .then(function (response) {
         $scope.deliveryAddress = response.data;
-        if(response.data.length == 0){
-            //Hiện tab địa chỉ trước  
-            $('#profile-tab').tab('show');
-        }else{
+        if (response.data.length == 0) {
+          //Hiện tab địa chỉ trước  
+          $('#profile-tab').tab('show');
+        } else {
           //Hiện tab địa chỉ trước  
           $('#home-tab').tab('show');
         }
@@ -477,7 +478,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
         // In ra nội dung đối tượng lỗi
         console.log("Error Object:", error);
       });
-    
+
     //Clear form thêm địa chỉ
     $scope.clearForm();
   };
@@ -810,6 +811,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
           sum += f.total;
         });
         $scope.totalFee = sum;
+
         $scope.$apply();
       })
       .catch(function (error) {
@@ -840,13 +842,38 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     return Object.values(userIdMap);
   };
 
-  $scope.clearForm = function(){
+  $scope.clearForm = function () {
     var inputElement = document.getElementById("phone");
     $scope.selectedDistrict = null;
     $scope.selectedProvince = null;
     $scope.selectedWard = null;
     $scope.textareaValue = "";
     inputElement.value = "";
+  }
+
+  $scope.paymentVNPay = function (pay) {
+    var element = document.getElementById("vnpay");
+    $scope.checkPay = pay;
+    $scope.payment = element.textContent || element.innerText;
+
+    // Loại bỏ các ký tự không phải số hoặc dấu chấm
+    var numberOnly = $scope.payment.replace(/[^\d]/g, '');
+
+    // Chuyển đổi chuỗi thành số
+    var numericValue = parseInt(numberOnly);
+
+    console.log(numericValue);
+
+    if (pay == true) {
+      $http.post(url + "/create_payment/" + numericValue)
+        .then(function (response) {
+          // Lấy URL từ response data
+          var newPageUrl = response.data.body;
+          // Mở trang mới với URL nhận được
+          window.location.href = newPageUrl;
+        });
+    }
+
   }
 
 });

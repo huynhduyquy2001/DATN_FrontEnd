@@ -69,10 +69,10 @@ app.controller(
     $http
       .get(
         url +
-          "/mystore/" +
-          $routeParams.userId +
-          "/" +
-          $scope.currentPageMyStore
+        "/mystore/" +
+        $routeParams.userId +
+        "/" +
+        $scope.currentPageMyStore
       )
       .then(function (res) {
         originalList = res.data.content;
@@ -87,10 +87,10 @@ app.controller(
       $http
         .get(
           url +
-            "/mystore-pending/" +
-            $routeParams.userId +
-            "/" +
-            currentPagePending
+          "/mystore-pending/" +
+          $routeParams.userId +
+          "/" +
+          currentPagePending
         )
         .then(function (res) {
           $scope.listProductPending = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
@@ -134,12 +134,12 @@ app.controller(
           $http
             .post(
               url +
-                "/hideProductMyStore/" +
-                $routeParams.userId +
-                "/" +
-                productId +
-                "/" +
-                $rootScope.currentPageMyStore
+              "/hideProductMyStore/" +
+              $routeParams.userId +
+              "/" +
+              productId +
+              "/" +
+              $rootScope.currentPageMyStore
             )
             .then(function (response) {
               $scope.listProductMyStore = response.data.content;
@@ -340,7 +340,7 @@ app.controller(
             transformRequest: angular.identity,
             headers: { "Content-Type": undefined },
           })
-          .then(function (response) {});
+          .then(function (response) { });
 
         $http
           .put(url + "/admin/usermanager/userRole/" + phoneNumber + "/" + 4)
@@ -352,7 +352,7 @@ app.controller(
               showConfirmButton: false,
               timer: 1000,
             });
-			$scope.reloadPageAfterDelay(1)
+            $scope.reloadPageAfterDelay(1)
           })
           .catch(function (error) {
             // Xử lý lỗi
@@ -361,10 +361,10 @@ app.controller(
       }
     };
 
-	$scope.reloadPageAfterDelay = function(delayInSeconds) {
-        $timeout(function() {
-            $window.location.reload();
-        }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
+    $scope.reloadPageAfterDelay = function (delayInSeconds) {
+      $timeout(function () {
+        $window.location.reload();
+      }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
     };
   }
 );

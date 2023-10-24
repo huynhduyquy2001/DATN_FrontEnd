@@ -298,17 +298,17 @@
                                         currencyFormat}}</span>
                                 </div>
                                 <div style="display: flex;">
-                                    <a ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                                    <a ng-if="userId == myAccount.user.userId"
                                         href="#!/product/add-product/{{product.productId}}"
                                         class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem; margin-right: 0.2rem;">
                                         Chỉnh sửa</a>
-                                    <button ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                                    <button ng-if="userId == myAccount.user.userId"
                                         ng-click="hideProductMyStore(product.productId)"
                                         class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem;">
                                         Xóa</button>
-                                    <button ng-if="listProductMyStore[0].user.userId != myAccount.user.userId"
+                                    <button ng-if="userId != myAccount.user.userId"
                                         ng-click="getProduct(product.productId)" data-bs-toggle="modal"
                                         data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem;">Thêm vào
@@ -415,13 +415,15 @@
     </div>
 </div>
 
-<div class="row" ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2">
-        <center style="padding: 25vh;">
-            <h5>Đăng ký cửa hàng để bắt đầu kinh doanh nào</h5> 
-            <button ng-click="showProvince()" type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Đăng ký
-            </button>
-        </center>
+<div class="row"
+    ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2">
+    <center style="padding: 25vh;">
+        <h5>Đăng ký cửa hàng để bắt đầu kinh doanh nào</h5>
+        <button ng-click="showProvince()" type="button" class="btn btn-primary mt-1" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            Đăng ký
+        </button>
+    </center>
 </div>
 
 
@@ -477,61 +479,65 @@
 </div>
 
 <!-- Modal đăng ký -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng ký cửa hàng</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="mt-2 col-12">
-                    <div class="form-floating mt-1">
-                        <input type="text" id="phone" class="form-control">
-                        <label for="floatingSelect">Số điện thoại (<b class="text-danger">*</b>)</label>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng ký cửa hàng</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="mt-2 col-12">
+                        <div class="form-floating mt-1">
+                            <input type="text" id="phone" class="form-control">
+                            <label for="floatingSelect">Số điện thoại (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <label class="mt-3">Địa chỉ lấy hàng</label>
+                    <div class="mt-2 col-12">
+                        <div class="form-floating">
+                            <select ng-options="province as province.ProvinceName for province in listProvince"
+                                ng-model="selectedProvince" ng-change="onProvince()" class="form-select"
+                                id="floatingSelect" aria-label="Floating label select example">
+                            </select>
+                            <label for="floatingSelect">Tỉnh/Thành Phố (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-3">
+                        <div class="form-floating">
+                            <select ng-options="district as district.DistrictName for district in listDistrict"
+                                ng-model="selectedDistrict" ng-change="onDistrict()" class="form-select"
+                                id="floatingSelect" aria-label="Floating label select example">
+                            </select>
+                            <label for="floatingSelect">Quận/Huyện (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-3">
+                        <div class="form-floating">
+                            <select ng-options="ward as ward.WardName for ward in listWard" ng-model="selectedWard"
+                                class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                            </select>
+                            <label for="floatingSelect">Phường/Xã (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="form-floating">
+                            <textarea ng-model="textareaValue" class="form-control" placeholder="Leave a comment here"
+                                id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2">Chi tiết (<b class="text-danger">*</b>)</label>
+                        </div>
                     </div>
                 </div>
-                <label class="mt-3">Địa chỉ lấy hàng</label>
-                <div class="mt-2 col-12">
-                    <div class="form-floating">
-                        <select ng-options="province as province.ProvinceName for province in listProvince" 
-                           ng-model="selectedProvince" ng-change="onProvince()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        </select>
-                        <label for="floatingSelect">Tỉnh/Thành Phố (<b class="text-danger">*</b>)</label>
-                    </div>
-                </div>
-                <div class="col-6 mt-3">
-                    <div class="form-floating">
-                        <select ng-options="district as district.DistrictName for district in listDistrict" 
-                           ng-model="selectedDistrict" ng-change="onDistrict()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        </select>
-                        <label for="floatingSelect">Quận/Huyện (<b class="text-danger">*</b>)</label>
-                      </div>
-                </div>
-                <div class="col-6 mt-3">
-                    <div class="form-floating">
-                        <select ng-options="ward as ward.WardName for ward in listWard" 
-                           ng-model="selectedWard" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        </select>
-                        <label for="floatingSelect">Phường/Xã (<b class="text-danger">*</b>)</label>
-                    </div>
-                </div>
-                <div class="col-12 mt-3">
-                    <div class="form-floating">
-                        <textarea ng-model="textareaValue" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">Chi tiết (<b class="text-danger">*</b>)</label>
-                    </div>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary"
+                    ng-click="addAddress(myAccount.user.account.phoneNumber)">Xong</button>
+            </div>
         </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button type="button" class="btn btn-primary" ng-click="addAddress(myAccount.user.account.phoneNumber)">Xong</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 <script>
     var modalId = document.getElementById('modalId');
 
