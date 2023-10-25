@@ -766,7 +766,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		console.log("incomingcall", incomingcall)
 
 		//hiện popup thôg báo
-		var width = 640;
+		var width = 840;
 		var height = 600;
 		var left = (window.innerWidth - width) / 2;
 		var top = (window.innerHeight - height) / 2;

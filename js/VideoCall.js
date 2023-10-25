@@ -59,9 +59,11 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     $scope.localVideo = document.getElementById('localVideo');
     $scope.remoteVideo = document.getElementById('remoteVideo');
     var findMyAccount = "http://localhost:8080/findmyaccount";
+    var url = "http://localhost:8080";
     $scope.callerId = "";
     $scope.callIsAllowed = true;
-
+    var sound = null;
+    $scope.yourAccount = {};
     $scope.getAccount = function () {
         $http.get(findMyAccount)
             .then(function (response) {
@@ -74,35 +76,53 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     $scope.getAccount();
     $scope.calleeId = $routeParams.userId;
 
+    if ($routeParams.userId) {
+        $http.get(url + '/getUser/' + $routeParams.userId)
+            .then(function (response) {
+                $scope.yourAccount = response.data;
+            })
+    }
+
     // ===================================================================================//
 
 
-    $scope.makeCall = function () {
-        if ($rootScope.checkCall === 1) {
-            try {
-                $rootScope.client.connect($rootScope.token);
-                $rootScope.currentCall = new StringeeCall($rootScope.client, $scope.callerId, $scope.calleeId, true);
-
-                $scope.settingCallEvent($rootScope.currentCall, $scope.localVideo, $scope.remoteVideo);
-                $rootScope.currentCall.makeCall(function (res) {
-                    //$rootScope.$broadcast('connect_ok'); // Gửi sự kiện "connect_ok" tới toàn bộ ứng dụng
-                    $rootScope.checkCall = 2;
-                    $scope.$apply();
-                    // console.log('+++ call callback: ', res);
-                });
-            } catch (error) {
-                alert(error);
-            }
+    $scope.makeVideoCall = function () {
+        try {
+            $rootScope.client.connect($rootScope.token);
+            $rootScope.currentCall = new StringeeCall($rootScope.client, $scope.callerId, $scope.calleeId, true);
+            $scope.settingCallEvent($rootScope.currentCall, $scope.localVideo, $scope.remoteVideo);
+            $rootScope.currentCall.makeCall(function (res) {
+                //$rootScope.$broadcast('connect_ok'); // Gửi sự kiện "connect_ok" tới toàn bộ ứng dụng
+                $rootScope.checkCall = 2;
+                $scope.$apply();
+                // console.log('+++ call callback: ', res);
+            });
+        } catch (error) {
+            alert(error);
         }
     };
-
+    $scope.makeCall = function () {
+        try {
+            $rootScope.client.connect($rootScope.token);
+            $rootScope.currentCall = new StringeeCall($rootScope.client, $scope.callerId, $scope.calleeId, false);
+            $scope.settingCallEvent($rootScope.currentCall, $scope.localVideo, $scope.remoteVideo);
+            $rootScope.currentCall.makeCall(function (res) {
+                //$rootScope.$broadcast('connect_ok'); // Gửi sự kiện "connect_ok" tới toàn bộ ứng dụng
+                $rootScope.checkCall = 2;
+                $scope.$apply();
+                // console.log('+++ call callback: ', res);
+            });
+        } catch (error) {
+            alert(error);
+        }
+    };
 
     //hàm thông báo người ta gọi
     $rootScope.client.on('incomingcall', function (incomingcall) {
         //$('#incoming-call-notice').show();
         console.log("incomingcall", incomingcall)
         $rootScope.currentCall = incomingcall;
-        var sound = new Howl({
+        sound = new Howl({
             src: ['images/nhacchuong.mp3']
         });
         sound.play();
@@ -114,6 +134,7 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     });
     //hàm trả lời
     $scope.answerCall = function () {
+        sound.stop();
         if ($rootScope.currentCall != null) {
             $rootScope.currentCall.answer(function (res) {
                 console.log('+++ answering call: ', res);

@@ -63,16 +63,26 @@
 
                 </div> -->
 
-                <div id="video-container">
-                    <video id="localVideo" autoplay muted></video>
-                    <video id="remoteVideo" autoplay style="border: 1px solid #3333;"></video>
+                <div>
+                    <div ng-show="checkCall===1 ||checkCall=3" style="display: flex;justify-content: center;">
+                        <img ng-src="{{yourAccount.avatar}}"
+                            style="width: 100px;height: 100px;object-fit: cover;border-radius: 100%;" alt="">
+                    </div>
+                    <div id="video-container">
+                        <video ng-show="checkCall===2" id="localVideo" autoplay muted></video>
+                        <video ng-show="checkCall===2" id="remoteVideo" autoplay
+                            style="border: 1px solid #3333;"></video>
+                    </div>
                 </div>
             </div>
 
         </div>
 
-        <center>
-            <button ng-click="makeCall()" ng-show="checkCall===1" class="btn btn-success">Gọi</button>
+        <center class="mt-1">
+            <button ng-click="makeVideoCall()" ng-show="checkCall===1" class="btn btn-success"><i
+                    class="fa-regular fa-video"></i></button>
+            <button ng-click="makeCall()" ng-show="checkCall===1" class="btn btn-info"><i
+                    class="fa-regular fa-phone"></i></button>
             <button ng-click="answerCall()" ng-show="checkCall===3" class="btn btn-info ">Trả lời</button>
             <button ng-click="rejectCall()" ng-show="checkCall===3" class="btn btn-warning ">Từ chối</button>
             <button ng-click="endCall()" ng-show="checkCall===2" class="btn btn-danger">Kết thúc</button>
