@@ -17,20 +17,6 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	if (!firebase.apps.length) {
 		firebase.initializeApp(firebaseConfig);
 	}
-	$scope.saveData = function () {
-		dataRef.set($scope.data);
-	};
-	firebase.auth().createUserWithEmailAndPassword('daynewtran@gmail.com', 'daynewtran123')
-		.then((userCredential) => {
-			// Người dùng đã đăng ký thành công
-			const user = userCredential.user;
-		})
-		.catch((error) => {
-			// Xử lý lỗi nếu có, ví dụ: email đã tồn tại, mật khẩu yếu, ...
-			console.error("Mã lỗi:", error.code);
-			console.error("Thông điệp lỗi:", error.message);
-		});
-
 	// firebase.auth().signInWithEmailAndPassword('daynewtran@gmail.com', 'daynewtran123')
 	// 	.then(function (userCredential) {
 	// 		// Người dùng đã đăng nhập thành công
@@ -49,6 +35,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	$scope.postData = {};
 	$scope.item = {};
 	$scope.listFollow = [];
+	$scope.usernameS = $rootScope.keyS;
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -64,41 +51,188 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		$translate.use(langKey);
 		localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
 	};
-	// đây là code tim kiếm người dùng (tất cả)
-	$scope.searchUser = function () {
-		var username = $scope.username; // Lấy tên người dùng từ input hoặc form
-		// Kiểm tra nếu không có kí tự nào trong ô tìm kiếm
-		if (username === "") {
-			$scope.users = []; // Đặt danh sách người dùng thành rỗng
-			return; // Không gọi API, dừng hàm tìm kiếm ở đây
-		}
-		// Gọi API để tìm kiếm người dùng
-		$http.get(Url + '/user/search/users?username=' + username)
-			.then(function (response) {
-				// Xử lý kết quả trả về từ API
-				$scope.users = response.data;
-				if ($scope.users.length === 0) {
-					$scope.searchnull = "Không tìm thấy người dùng"; // Thông báo khi không tìm thấy người dùng
-				} else {
-					$scope.searchnull = ""; // Ẩn thông báo khi tìm thấy người dùng
-				}
-				console.log("Tim kim thanh cong", $scope.users);
-				console.log("Tim kim thanh cong nhung k co", $scope.searchnull);
-			})
-			.catch(function (error) {
-				console.log('Lỗi khi tìm kiếm người dùng:', error);
-			});
-	};
+
 	$scope.TimKiem = function (key) {
 		//$scope.LS();
 		$scope.showName(key);
 	};
+
+	$scope.chooseKey = function (word) {
+		$scope.usernameS = word;
+		$scope.findProductNoSplitText();
+	};
+	// Khởi tạo biến $scope.words là một mảng để lưu trữ các từ
+	$scope.words = [];
+	// Hàm để tách chuỗi thành danh từ, tính từ và động từ
+	$scope.splitText = function (sentenceS) {
+		var words = sentenceS.split(/[ ,.]+/); // Tách chuỗi thành các từ
+
+		// Xóa nội dung cũ của $scope.words
+		$scope.words.length = 0;
+
+		// Lặp qua từng từ để xác định loại (danh từ, tính từ hoặc động từ)
+		for (var i = 0; i < words.length; i++) {
+			var word = words[i];
+			var nextWord = words[i + 1];
+
+			if (word.match(/[a-zA-Z]/)) {
+				// Kiểm tra nếu từ chứa chữ cái (tiếng Việt)
+				if (nextWord) {
+					var combinedWord = word + ' ' + nextWord;
+
+					if (nextWord.endsWith("ng")) {
+						$scope.words.push(combinedWord);
+						i++; // Bỏ qua từ tiếp theo vì đã kết hợp thành động từ
+					} else {
+						$scope.words.push(word);
+					}
+				} else {
+					$scope.words.push(word);
+				}
+			}
+		}
+		console.log($scope.words);
+	};
+	$scope.findProductNoSplitText = function () {
+		$rootScope.keyS = $scope.usernameS;
+		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào UR
+		$http.get(Url + '/user/search/' + $scope.usernameS)
+			.then(function (res) {
+				$scope.users = res.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+	$scope.findProduct = function (username) {
+		$scope.splitText($scope.usernameS);
+
+		$rootScope.keyS = $scope.usernameS;
+		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào URL
+		$http.get(Url + '/user/search/' + username)
+			.then(function (res) {
+				$scope.users = res.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+	const searchInput = document.querySelector('#text-srh');
+	// Tro ly ao
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+	const recognition = new SpeechRecognition();
+	const synth = window.speechSynthesis;
+	recognition.lang = 'vi-VI';
+	recognition.continuous = false;
+
+	const microphone = document.querySelector('.microphone');
+
+	const speak = (text) => {
+		if (synth.speaking) {
+			console.error('Busy. Speaking...');
+			return;
+		}
+
+		const utter = new SpeechSynthesisUtterance(text);
+
+		utter.onend = () => {
+			console.log('SpeechSynthesisUtterance.onend');
+		}
+		utter.onerror = (err) => {
+			console.error('SpeechSynthesisUtterance.onerror', err);
+		}
+
+		synth.speak(utter);
+	};
+
+	const handleVoice = (text) => {
+		console.log('text', text);
+		// "thời tiết tại Đà Nẵng" => ["thời tiết tại", "Đà Nẵng"]
+		const handledText = text.toLowerCase();
+
+		const location = handledText[1];
+
+		console.log('location', location);
+		searchInput.value = handledText;
+		// const changeEvent = new Event('change');
+		// searchInput.dispatchEvent(changeEvent);
+		$scope.findProduct(handledText);
+		searchInput.dispatchEvent($scope.findProduct(handledText));
+		return;
+
+
+		speak('Try again');
+	}
+
+	microphone.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		recognition.start();
+		microphone.classList.add('recording');
+	});
+
+	recognition.onspeechend = () => {
+		recognition.stop();
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onerror = (err) => {
+		console.error(err);
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onresult = (e) => {
+		console.log('onresult', e);
+		const text = e.results[0][0].transcript;
+		handleVoice(text);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//đây là code hiện lên lịch sử người dùng
-
-
 	const databaseURL = 'https://search-history-453d4-default-rtdb.firebaseio.com/history.json';
 	$scope.hienthi = [];
-	// var url = `${host}/history.json`;
+	// var Url = `${host}/history.json`;
 	$http.get(databaseURL).
 		then(resp => {
 			$scope.items = resp.data;
@@ -109,8 +243,8 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		});
 	//đây là code xóa lịch sử tìm kiếm
 	$scope.deleteLS = function (key) {
-		var url = `${host}/history/${key}.json`;
-		$http.delete(url).then(resp => {
+		var Url = `${host}/history/${key}.json`;
+		$http.delete(Url).then(resp => {
 			delete $scope.items[key];
 			console.log("Xóa OK", resp);
 		}).catch(function (error) {
@@ -120,8 +254,8 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 
 	//đây là code shownames
 	$scope.showName = function (key) {
-		var url = `${host}/history/${key}.json`;
-		$http.get(url).then(resp => {
+		var Url = `${host}/history/${key}.json`;
+		$http.get(Url).then(resp => {
 			$scope.items[key] = resp.data;
 			$scope.showname = $scope.items[key];
 			$scope.username = $scope.showname;
@@ -157,12 +291,12 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 
 	$scope.LS = function () {
 		var item = angular.copy($scope.username);
-		var url = `${host}/history.json`;
+		var Url = `${host}/history.json`;
 		if (item.trim() === "") {
 			console.log("Vui lòng nhập kí tự vào ô tìm kiếm.");
 			return; // Không gọi API, dừng hàm tìm kiếm ở đây
 		} else {
-			$http.post(url, { username: item })
+			$http.post(Url, { username: item })
 				.then(function (response) {
 					$scope.key = response.data.name;
 					$scope.item[$scope.key] = item;
@@ -176,8 +310,8 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		}
 	};
 	$scope.reset = function () {
-		var url = `${host}/history.json`;
-		$http.get(url).
+		var Url = `${host}/history.json`;
+		$http.get(Url).
 			then(resp => {
 				$scope.items = resp.data;
 				console.log($scope.items);

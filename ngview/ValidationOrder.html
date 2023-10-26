@@ -19,7 +19,7 @@
                     <h4>Danh sách tất cả đơn hàng</h4>
                     <!--Bự nhứt nè-->
                     <div class="history d-md-block d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col" ng-if="o[0].orderStatus.statusId === 1">
+                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 1">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
                                     <div class="d-flex"> <span
@@ -91,10 +91,12 @@
 
                             </div>
                         </div>
+                        <div></div>
                     </div>
+
                     <!--Responsive Dưới 776px-->
                     <div class="history d-sm-block d-md-none d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col" ng-if="o[0].orderStatus.statusId === 1">
+                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 1">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
 
@@ -161,13 +163,14 @@
                     </div>
                     <!--Dưới nữa nè-->
                     <div class="history d-sm-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col" ng-if="o[0].orderStatus.statusId === 1">
+                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 1">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
 
                                     <div class="d-flex">
                                         <span id="shopname"
                                             style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}</span>
+                                        {{o[0].orderId}}
                                         <span id="button-top">
                                             <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
                                                     type="button" style="background-color: #ff3f40;"> <i
@@ -220,13 +223,12 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="tab-pane fede" id="tab-da-duyet" role="tabpanel" aria-labelledby="tab-da-duyet">
                     <h4>Danh sách tất cả đơn hàng đã duyệt</h4>
                     <!--Bự nhứt nè-->
                     <div class="history d-md-block d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col" ng-if="o[0].orderStatus.statusId === 2">
+                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 2">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
                                     <div class="d-flex"> <span
@@ -307,7 +309,7 @@
                     </div>
                     <!--Responsive Dưới 776px-->
                     <div class="history d-sm-block d-md-none d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col" ng-if="o[0].orderStatus.statusId === 2">
+                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 2">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
 
@@ -373,7 +375,7 @@
                     </div>
                     <!--Dưới nữa nè-->
                     <div class="history d-sm-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col" ng-if="o[0].orderStatus.statusId === 2">
+                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 2">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
 
@@ -438,24 +440,23 @@
         </main>
 
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script>
-        var myTab = new bootstrap.Tab(document.getElementById('home-tab'));
-        myTab.show();
+        // var myTab = new bootstrap.Tab(document.getElementById('home-tab'));
+        // myTab.show();
 
-        // Bắt sự kiện click trên các tab link và hiển thị nội dung tương ứng
-        var tabLinks = document.querySelectorAll('.nav-link');
-        tabLinks.forEach(function (tabLink) {
-            tabLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                var target = document.querySelector(this.getAttribute('data-bs-target'));
-                var tab = new bootstrap.Tab(target);
-                tab.show();
-            });
-        });
+        // // Bắt sự kiện click trên các tab link và hiển thị nội dung tương ứng
+        // var tabLinks = document.querySelectorAll('.nav-link');
+        // tabLinks.forEach(function (tabLink) {
+        //     tabLink.addEventListener('click', function (event) {
+        //         event.preventDefault();
+        //         var target = document.querySelector(this.getAttribute('data-bs-target'));
+        //         var tab = new bootstrap.Tab(target);
+        //         tab.show();
+        //     });
+        // });
     </script>
 </div>

@@ -1,9 +1,17 @@
 <div class="row col-md-11">
     <div class="row">
         <h4><b>Sản phẩm yêu thích ({{favoriteProducts.length}})</b></h4>
-        <br> <br> <br>
-        <input type="text" class="form-control" name="" id="" aria-describedby="helpId" ng-model="productName"
-            ng-keyup="findProduct(0)" placeholder="Nhập sản phẩm cần tìm...">
+        <br> <br>
+        <div class="mb-3" style="display: flex; justify-content: right;">
+            <input type="text" class="form-control" name="" id="search-F" aria-describedby="helpId"
+                ng-model="productNameF" ng-keyup="findProductF(0)" placeholder="Nhập sản phẩm cần tìm...">
+            <span class="microphone">
+                <i class="fas fa-microphone"></i>
+                <span class="recording-icon"></span>
+            </span>
+
+        </div>
+        <br> <br>
         <div class="col-lg-6" style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in favoriteProducts">
             <div class="row frameProduct animate__animated animate__fadeIn">
                 <div class="col-md-6" style="display: flex; justify-content: center;align-items: center;">
@@ -23,7 +31,8 @@
                                 <span
                                     style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
                                     class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp; <span><small
-                                        style="font-size: 12px; color: #65676b" class="ng-binding"> 4-8-2023
+                                        style="font-size: 12px; color: #65676b" class="ng-binding">
+                                        <!-- {{getFormattedTimeAgo(product.favoriteDate)}} -->
                                     </small></span>
                             </div>
                         </div>
@@ -144,9 +153,9 @@
         </div>
     </div>
     <center>
-        <nav ng-show="checkShopping===1" aria-label="Page navigation">
+        <nav aria-label="Page navigation">
             <ul class="pagination">
-                <li class="page-item" ng-click="PreviousTrending()" style="cursor: pointer;">
+                <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
                     <a class="page-link" style="color: #313131;" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
@@ -154,9 +163,9 @@
 
                 <li class="page-item" aria-current="page"><a style="font-weight: 600; color: #313131 !important; "
                         class="page-link">{{currentPage+1}} /
-                        {{totalPages}}</a>
+                        {{totalPagesF}}</a>
                 </li>
-                <li class="page-item" ng-click="NextTrending()" style="cursor: pointer;">
+                <li class="page-item" ng-click="Next()" style="cursor: pointer;">
                     <a class="page-link" style="color: #313131;" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

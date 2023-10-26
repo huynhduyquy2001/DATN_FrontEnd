@@ -1,23 +1,26 @@
 
-app.controller('FavouriteProductsController', function ($scope, $http, $translate, $rootScope, $location) {
+app.controller('FavouriteProductsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams, $anchorScroll) {
 	var Url = "http://localhost:8080";
-	$scope.totalPages = 0;
-	$scope.totalPagesTrending = 0;
+	$scope.totalPagesF = 0;
 	$scope.favoriteProducts = [];
-	$http.get(Url + "/get-favoriteProducts") // Sử dụng biến Url
-		.then(function (response) {
-			$scope.favoriteProducts = response.data;
-		})
-		.catch(function (error) {
-			console.error("Lỗi: " + error.data);
-		});
 
+	$scope.spiuthich = function (currentPage) {
+		$http.get(Url + "/get-favoriteProducts/" + currentPage) // Sử dụng biến Url
+			.then(function (res) {
+				$scope.favoriteProducts = res.data.content;
+				$scope.totalPagesF = res.data.totalPages;
+			})
+			.catch(function (error) {
+				console.error("Lỗi: " + error);
+			});
+	}
+	$scope.spiuthich($rootScope.currentPage);
 	$scope.getProduct = function (productId) {
 		$http.get(Url + "/get-product/" + productId)
 			.then(function (res) {
 				$scope.product = res.data; // Lưu danh sách sản phẩm từ phản hồi
-				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-				// $scope.product = res.data;
+				$scope.totalPagesF = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+				$scope.product = res.data;
 				$scope.total = -1;
 				$scope.quantity = 1;
 			})
@@ -106,35 +109,25 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		} else {
 			$anchorScroll();
 			$rootScope.currentPage = $rootScope.currentPage - 1; // Cập nhật trang hiện tại
-			$scope.getproductList($rootScope.currentPage);
+			$scope.spiuthich($rootScope.currentPage);
 
 		}
 	}
 
 	$scope.Next = function () {
-		if ($rootScope.currentPage === $scope.totalPages - 1) {
+		if ($rootScope.currentPage === $scope.totalPagesF - 1) {
 			return;
 		} else {
 			$anchorScroll();
 			$rootScope.currentPage = $rootScope.currentPage + 1; // Cập nhật trang hiện tại
-
-			$scope.getproductList($rootScope.currentPage);
+			$scope.spiuthich($rootScope.currentPage);
 		}
 	}
 
-
-	$http.get(Url + "/get-shopping-by-page/" + 1)
-		.then(function (res) {
-			$scope.productList = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-			$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-			$rootScope.checkShopping = 2;
-			console.log("Ra hay k ra", $scope.productList);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-
-
+	$scope.chooseKey = function (word) {
+		$scope.productNameF = word;
+		$scope.findProductNoSplitText(0);
+	}
 	//Tìm kiếm 
 	// Khởi tạo biến $scope.words là một mảng để lưu trữ các từ
 	$scope.words = [];
@@ -170,40 +163,107 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		}
 	};
 
-	$scope.findProductNoSplitText = function (currentPageSearch) {
+	$scope.findProductNoSplitText = function (currentPage) {
 
-		$rootScope.currentPageSearch = currentPageSearch;
-		$rootScope.key = $scope.productName;
-		$rootScope.checkShopping = 3;
+		$rootScope.currentPageSearchFavorite = currentPage;
+		$rootScope.keyF = $scope.productNameF;
 		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào Url
-		$http.get(Url + "/find-product-by-name/" + currentPageSearch, {
-			params: { key: $scope.productName }
+		$http.get(Url + "/find-productFavorite-by-name/" + currentPage, {
+			params: { keyF: $scope.productNameF }
 		})
 			.then(function (res) {
-				$scope.productList = res.data.content;
-				$scope.totalPages = res.data.totalPages;
+				$scope.favoriteProducts = res.data.content;
+				$scope.totalPagesF = res.data.totalPages;
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	};
 
-	$scope.findProduct = function (currentPageSearch) {
-		$scope.splitText($scope.productName);
+	$scope.findProductF = function (currentPage) {
+		$scope.splitText($scope.productNameF);
 
-		$rootScope.currentPageSearch = currentPageSearch;
-		$rootScope.key = $scope.productName;
-		$rootScope.checkShopping = 3;
+		$rootScope.currentPageSearchFavorite = currentPage;
+		$rootScope.keyF = $scope.productNameF;
 		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào Url
-		$http.get(Url + "/find-product-by-name/" + currentPageSearch, {
-			params: { key: $scope.productName }
+		$http.get(Url + "/find-productFavorite-by-name/" + currentPage, {
+			params: { keyF: $scope.productNameF }
 		})
 			.then(function (res) {
-				$scope.productList = res.data.content;
-				$scope.totalPages = res.data.totalPages;
+				$scope.favoriteProducts = res.data.content;
+				$scope.totalPagesF = res.data.totalPages;
 			})
 			.catch(function (error) {
-				console.log(error);
+				console.log(error.data);
 			});
 	};
+
+	const searchInputF = document.querySelector('#search-F');
+	// Tro ly ao
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+	const recognition = new SpeechRecognition();
+	const synth = window.speechSynthesis;
+	recognition.lang = 'vi-VI';
+	recognition.continuous = false;
+
+	const microphone = document.querySelector('.microphone');
+
+	const speak = (text) => {
+		if (synth.speaking) {
+			console.error('Busy. Speaking...');
+			return;
+		}
+
+		const utter = new SpeechSynthesisUtterance(text);
+
+		utter.onend = () => {
+			console.log('SpeechSynthesisUtterance.onend');
+		}
+		utter.onerror = (err) => {
+			console.error('SpeechSynthesisUtterance.onerror', err);
+		}
+
+		synth.speak(utter);
+	};
+
+	const handleVoice = (text) => {
+		console.log('text', text);
+		$scope.productNameF = text.toLowerCase();
+
+
+		searchInputF.value = $scope.productNameF;
+
+		// searchInputF.dispatchEvent(changeEvent);
+		$rootScope.keyF = $scope.productNameF;
+		$scope.findProductF(0);
+		//searchInputF.dispatchEvent($scope.findProductF($scope.productNameF));
+		return;
+
+
+		speak('Try again');
+	}
+
+	microphone.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		recognition.start();
+		microphone.classList.add('recording');
+	});
+
+	recognition.onspeechend = () => {
+		recognition.stop();
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onerror = (err) => {
+		console.error(err);
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onresult = (e) => {
+		console.log('onresult', e);
+		const text = e.results[0][0].transcript;
+		handleVoice(text);
+	}
 });

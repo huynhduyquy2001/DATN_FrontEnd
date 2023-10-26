@@ -69,10 +69,10 @@ app.controller(
     $http
       .get(
         url +
-          "/mystore/" +
-          $routeParams.userId +
-          "/" +
-          $scope.currentPageMyStore
+        "/mystore/" +
+        $routeParams.userId +
+        "/" +
+        $scope.currentPageMyStore
       )
       .then(function (res) {
         originalList = res.data.content;
@@ -87,10 +87,10 @@ app.controller(
       $http
         .get(
           url +
-            "/mystore-pending/" +
-            $routeParams.userId +
-            "/" +
-            currentPagePending
+          "/mystore-pending/" +
+          $routeParams.userId +
+          "/" +
+          currentPagePending
         )
         .then(function (res) {
           $scope.listProductPending = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
@@ -134,12 +134,12 @@ app.controller(
           $http
             .post(
               url +
-                "/hideProductMyStore/" +
-                $routeParams.userId +
-                "/" +
-                productId +
-                "/" +
-                $rootScope.currentPageMyStore
+              "/hideProductMyStore/" +
+              $routeParams.userId +
+              "/" +
+              productId +
+              "/" +
+              $rootScope.currentPageMyStore
             )
             .then(function (response) {
               $scope.listProductMyStore = response.data.content;
@@ -340,7 +340,7 @@ app.controller(
             transformRequest: angular.identity,
             headers: { "Content-Type": undefined },
           })
-          .then(function (response) {});
+          .then(function (response) { });
 
         $http
           .put(url + "/admin/usermanager/userRole/" + phoneNumber + "/" + 4)
@@ -352,7 +352,7 @@ app.controller(
               showConfirmButton: false,
               timer: 1000,
             });
-			$scope.reloadPageAfterDelay(1)
+            $scope.reloadPageAfterDelay(1)
           })
           .catch(function (error) {
             // Xử lý lỗi
@@ -361,10 +361,218 @@ app.controller(
       }
     };
 
-	$scope.reloadPageAfterDelay = function(delayInSeconds) {
-        $timeout(function() {
-            $window.location.reload();
-        }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
+    $scope.reloadPageAfterDelay = function (delayInSeconds) {
+      $timeout(function () {
+        $window.location.reload();
+      }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
     };
-  }
-);
+
+
+    //thống kê của hàng của tôi 
+    $scope.countorderperonal = [];
+    $scope.sumorderperonal = [];
+    $scope.Orderstatus = [];
+    $scope.bestselling = [];
+    var Url = "http://localhost:8080/personalStatisticsCoutOrder";
+    var Url2 = "http://localhost:8080/personalStatisticsSumTotalAmout";
+    var Url3 = "http://localhost:8080/personalStatisticsCoutOrderStatus";
+    var Url4 = "http://localhost:8080/productbestSelling";
+    var categories2 = [];
+    var data2 = [];
+
+    //biểu đồ 1 
+    $http.get(Url2).then(function (response) {
+      $scope.sumorderperonal = response.data;
+      console.log("Load dữ liệu1" + $scope.sumorderperonal);
+      $scope.sumorderperonal.forEach(function (item) {
+        categories2.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
+        data2.push(parseInt(item[1]));
+      });
+
+      console.log("Data2: " + JSON.stringify(data2));
+      Highcharts.chart('container', option);
+
+    }).catch(function (error) {
+      console.error("Lỗi: " + error);
+    });
+    var categories = [];
+    var data = [];
+    // Highcharts.setOptions({
+    //   lang: {
+    //     thousandsSep: ','
+    //   }
+    // });
+    var option = {
+      chart: {
+        zoomType: 'xy'
+      },
+      title: {
+        text: '',
+        align: 'left'
+      },
+      subtitle: {
+
+        align: 'left'
+      },
+      xAxis: {
+        categories: categories,
+      },
+      yAxis: [{ // Primary yAxis
+        labels: {
+          format: '{value:.0f}',
+          style: {
+            color: Highcharts.getOptions().colors[1]
+          }
+        },
+        title: {
+          text: 'Tổng số lượng đơn hàng',
+          style: {
+            color: Highcharts.getOptions().colors[1]
+          }
+        }
+      }, { // Secondary yAxis
+        title: {
+          text: 'Doanh thu',
+          style: {
+            color: Highcharts.getOptions().colors[0]
+          }
+        },
+        labels: {
+          formatter: function () {
+            return Highcharts.numberFormat(this.value, 0, '', '.') + ' VND';
+          },
+          style: {
+            color: Highcharts.getOptions().colors[0]
+          }
+        },
+        opposite: true
+      }],
+      tooltip: {
+        shared: true
+      },
+      legend: {
+        align: 'left',
+        x: 80,
+        verticalAlign: 'top',
+        y: 60,
+        floating: false,
+        backgroundColor:
+          Highcharts.defaultOptions.legend.backgroundColor || // theme
+          'rgba(255,255,255,0.25)'
+      },
+      series: [{
+        name: 'Doanh thu',
+        type: 'column',
+        yAxis: 1,
+        data: data2,
+        tooltip: {
+          valueSuffix: ' VND'
+        }
+
+      }, {
+        name: 'Tổng số lượng đơn hàng',
+        type: 'spline',
+        data: data,
+        tooltip: {
+          valueSuffix: ' đơn hàng'
+        }
+      }]
+    }
+    $http.get(Url)
+      .then(function (response) {
+        $scope.countorderperonal = response.data;
+        console.log("Load dữ liệu" + $scope.countorderperonal);
+        // Tạo mảng categories và data từ dữ liệu
+        $scope.countorderperonal.forEach(function (item) {
+          categories.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
+          data.push(parseInt(item[1]));
+        });
+        console.log("Data: " + JSON.stringify(data));
+        Highcharts.chart('container', option);
+      })
+      .catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+
+
+
+
+    //biểu đò 2 
+    var nameOrderStatus = [];
+    var data3 = [];
+    $http.get(Url3).then(function (response) {
+      $scope.Orderstatus = response.data;
+      console.log("Load dữ liệu3" + $scope.Orderstatus);
+      $scope.Orderstatus.forEach(function (item) {
+        nameOrderStatus.push((item[0]));
+        data3.push((item[1]));
+      });
+      console.log("Data3: " + JSON.stringify(data3));
+      // Highcharts.chart('container', option);
+      var names = nameOrderStatus;
+      var values = data3;
+
+      // Tạo mảng dữ liệu từ hai mảng riêng biệt
+      var dataOrderstatus = names.map(function (name, index) {
+        return {
+          name: name,
+          y: values[index]
+        };
+      });
+      // Build the chart
+      Highcharts.chart('container1', {
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+        },
+        title: {
+          text: '',
+          align: 'left'
+        },
+        tooltip: {
+          // pointFormat: '{series.name}: <b>{point.percentage:.0f} đơn</b>'
+        },
+        accessibility: {
+          point: {
+            valueSuffix: ' đơn'
+          }
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '<br>{point.percentage:.0f} %',
+              distance: -50,
+              filter: {
+                property: 'percentage',
+                operator: '>',
+                value: 4
+              }
+            },
+            showInLegend: true
+          }
+        },
+        series: [{
+          name: 'Đơn hàng',
+          colorByPoint: true,
+          data: dataOrderstatus
+        }]
+      });
+    }).catch(function (error) {
+      console.error("Lỗi: " + error);
+    });
+
+    //bestselling Product
+    $http.get(Url4).then(function (response) {
+      $scope.bestselling = response.data;
+      console.log("bestselling" + $scope.bestselling);
+    }).catch(function (error) {
+      console.error("Lỗi: " + error);
+    });
+
+  });
+

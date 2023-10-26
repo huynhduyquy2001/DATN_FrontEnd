@@ -2813,3 +2813,38 @@ th {
 	border-bottom: 1px solid red;
 	transition: 0.3s ease-in-out;
 }
+
+.microphone {
+	cursor: pointer;
+}
+
+.microphone .recording-icon {
+	display: none;
+	width: 10px;
+	height: 10px;
+	background-color: #e22d2d;
+	border-radius: 50%;
+	animation: pulse 1.5s infinite linear;
+}
+
+.microphone.recording .recording-icon {
+	display: inline-block;
+}
+
+.microphone.recording .fa-microphone {
+	display: none;
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 3px 0 rgba(173, 0, 0, .3);
+	}
+
+	65% {
+		box-shadow: 0 0 3px 5px rgba(173, 0, 0, .3);
+	}
+
+	100% {
+		box-shadow: 0 0 3px 5px rgba(173, 0, 0, 0);
+	}
+}

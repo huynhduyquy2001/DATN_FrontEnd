@@ -112,6 +112,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.currentPageTrending = 0;
 	$rootScope.checkMenuLeft = true;
 	$rootScope.key = "";
+	$rootScope.keyS = "";
+
 	//
 
 	//Phân trang myStore
