@@ -57,8 +57,10 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/staff/productpost', {
 		templateUrl: "ngview/PostsProduct.html",
 		controller: 'productPostCtrl'
-	})
-		;
+	}).when('/staff/productsviolation', {
+		templateUrl: "ngview/ProductsViolation.html",
+		controller: 'productsViolationCtrl'
+	});
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 	$translateProvider.preferredLanguage(storedLanguage);
