@@ -72,10 +72,16 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="mb-3" style="display: flex; justify-content: right;">
-                <input ng-show="checkShopping===3" type="text" class="form-control" name="" id=""
-                    aria-describedby="helpId" ng-model="productName" ng-keyup="findProduct(0)"
-                    style="border-radius: 20px; width: 50%;" placeholder="Nhập sản phẩm cần tìm...">
+            <div ng-show="checkShopping===3" class="mb-3" style="display: flex; justify-content: right;">
+                <input type="text" class="form-control" name="" aria-describedby="helpId" ng-model="productName"
+                    id="text-srh" ng-keyup="findProduct(0)" style="border-radius: 20px; width: 50%;"
+                    placeholder="Nhập sản phẩm cần tìm...">
+                <span class="microphone" style="display: flex;
+                justify-content: center;
+                align-items: center; margin-left: 1rem;">
+                    <i class="fas fa-microphone"></i>
+                    <span class="recording-icon"></span>
+                </span>
             </div>
             <center> <b style="font-size: 20px;" ng-show="checkShopping===3 && productList.length===0">Sản phẩm bạn tìm
                     không tồn tại</b>
