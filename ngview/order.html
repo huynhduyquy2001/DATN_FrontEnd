@@ -1,3 +1,29 @@
+<style>
+    /* Add your own styles here */
+    .card-title {
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        padding: 10px;
+        margin-left: 100px;
+    }
+
+    .card-title:hover .dropdown-menu {
+        display: block;
+    }
+
+    .card-text {
+        font-weight: normal;
+        font-size: small;
+    }
+</style>
 <div class="container">
     <!--Tabs-->
     <header class="mt-2">
@@ -52,6 +78,7 @@
                                                         style="outline-color: #ff3f40;"><i
                                                             class="fa-sharp fa-regular fa-store ic"></i>
                                                         <span class="res-text">Shop</span></button></span></a>
+
                                         </span>
                                     </div>
                                     <span class="text-end">{{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
@@ -63,13 +90,23 @@
                                             <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
                                     </div>
                                     <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
-                                        <div class="card-title fw-bold">{{o[2].productName}}</div>
-                                        <span>
-                                            <span class="card-text">Số lượng: {{o[1].quantity}}</span>
-                                            <span class="card-text text-end">Màu: {{o[1].color}}</span>
-                                        </span>
-                                        <p class="card-text">Màu: {{o[1].color}}</p>
-
+                                        <div class="card-title fw-bold">{{o[2].productName}} <i
+                                                class="fa-regular fa-circle-info"></i>
+                                            <div class="dropdown-menu"
+                                                style="padding-bottom: 0.5rem; padding-top: 0.5rem; transition: 0.3s; width: 200px;">
+                                                <div class="text-center">Chi tiết</div>
+                                                <div>
+                                                    <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}">
+                                                </div>
+                                                <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
+                                                <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
+                                                </div>
+                                                <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                                    currencyFormat}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">Số lượng: {{o[1].quantity}}</div>
+                                        <div class="card-text">Màu: {{o[1].color}}</div>
                                     </div>
                                     <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
                                         <div class="totalAmount"
@@ -78,10 +115,10 @@
                                                 <i class="fa-regular fa-hand-holding-dollar fa-2xl"
                                                     style="margin-right: 1vh; color: #393e41;"></i>
                                                 <span class="fs-5">Thành tiền: &nbsp;</span>
-                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount}}
-                                                    VND
+                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount | currencyFormat}}
                                                 </h5>
                                             </div>
+                                            <div class="text-sm">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                             <div class="mt-3">
                                                 <span class="me-2">
                                                     <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
@@ -103,13 +140,14 @@
                                         </div>
 
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="history d-sm-block d-md-none d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -127,7 +165,7 @@
                                     </span>
 
                                 </div>
-
+                                <span class="text-end">{{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center gap-3 p-3"
@@ -174,7 +212,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -191,6 +229,7 @@
                                                 </button></span></a>
                                     </span>
                                 </div>
+                                <span class="text-end">{{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center p-3"
@@ -1268,5 +1307,7 @@
         </div>
 
     </main>
+    <footer style="height: 100px;">
 
+    </footer>
 </div>
