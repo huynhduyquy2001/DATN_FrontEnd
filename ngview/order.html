@@ -9,6 +9,9 @@
                 <a class="nav-link active" data-bs-toggle="pill" href="#tab-tat-ca">Tất cả</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-xet-duyet">Chờ xét duyệt</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-giao-hang">Chờ giao hàng</a>
             </li>
             <li class="nav-item">
@@ -28,7 +31,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="tab-tat-ca">
                 <!--Bự nhứt nè-->
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div>
                         <div class="col">
                             <div class="mb-0 card">
@@ -51,6 +54,7 @@
                                                         <span class="res-text">Shop</span></button></span></a>
                                         </span>
                                     </div>
+                                    <span class="text-end">{{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center gap-3 p-3"
                                     ng-repeat="o in groupedOrders">
@@ -59,9 +63,13 @@
                                             <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
                                     </div>
                                     <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
-                                        <p class="card-title fw-bold">{{o[2].productName}}</p>
+                                        <div class="card-title fw-bold">{{o[2].productName}}</div>
+                                        <span>
+                                            <span class="card-text">Số lượng: {{o[1].quantity}}</span>
+                                            <span class="card-text text-end">Màu: {{o[1].color}}</span>
+                                        </span>
                                         <p class="card-text">Màu: {{o[1].color}}</p>
-                                        <p class="card-text">x{{o[1].quantity}}</p>
+
                                     </div>
                                     <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
                                         <div class="totalAmount"
@@ -101,8 +109,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none"
-                    ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -232,9 +239,215 @@
                 </div>
 
             </div>
+            <div class="tab-pane fade" id="tab-cho-xet-duyet">
+                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                    <div ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
+                        <div class="col">
+                            <div class="mb-0 card">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <div class="d-flex"> <span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][3].username}}</span>
+                                        <span id="button-top">
+                                            <a style="cursor: pointer;"
+                                                ng-click="getMess(groupedOrders[0][3].userId)"><span
+                                                    style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                        <span class="res-text"> Nhắn
+                                                            tin</span></button></span></a>
+                                            <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><span
+                                                    style="margin-left: 12px;"><button type="button"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;"><i
+                                                            class="fa-sharp fa-regular fa-store ic"></i>
+                                                        <span class="res-text">Shop</span></button></span></a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3"
+                                    ng-repeat="o in groupedOrders">
+                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
+                                        <a href="#!/productdetails/{{groupedOrders[0][2].productId}}">
+                                            <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
+                                    </div>
+                                    <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title fw-bold">{{o[2].productName}}</p>
+                                        <p class="card-text">Màu: {{o[1].color}}</p>
+                                        <p class="card-text">x{{o[1].quantity}}</p>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <i class="fa-regular fa-hand-holding-dollar fa-2xl"
+                                                    style="margin-right: 1vh; color: #393e41;"></i>
+                                                <span class="fs-5">Thành tiền: &nbsp;</span>
+                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount}}
+                                                    VND
+                                                </h5>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-2">
+                                                    <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
+                                                            type="button" class="btn btn-outline-danger btn-sm"
+                                                            style="outline-color: #ff3f40;">
+                                                            <i class="fa-sharp fa-regular fa-store ic"></i>
+                                                            <span class="res-text">Xem các đánh
+                                                                giá</span></button></a>
+                                                </span>
+                                                <span>
+                                                    <a
+                                                        href="#!/mystore/{{groupedOrders[0][3].userId}}/{{currentPageMyStore}}"><button
+                                                            type="button" class="btn btn-danger btn-sm"
+                                                            style="background-color: #ff3f40;">
+                                                            <i class="fa-sharp fa-solid fa-rotate-right ic"></i>
+                                                            <span class="res-text">Mua lại</span></button></a>
+                                                </span>
 
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <!--Responsive Dưới 776px-->
+                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                    <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
+                        <div class="mb-0 card">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex">
+                                    <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><i
+                                            class="fa-sharp fa-regular fa-store"></i><span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][3].username}}</span></a>
+                                    <span id="button-top">
+                                        <a style="cursor: pointer;" ng-click="getMess(groupedOrders[0][3].userId)"><span
+                                                style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                    type="button" style="background-color: #ff3f40;"> <i
+                                                        class="fa-regular fa-message fa-xs ic"></i>
+                                                </button></span></a>
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center gap-3 p-3"
+                                ng-repeat="o in groupedOrders">
+                                <div class="col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                    <a href="#!/productdetails/{{groupedOrders[0][2].productId}}">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
+                                </div>
+                                <div class="col-sm-6 col-lg-3 col-xl-3 card-body">
+                                    <div class="card-title fs-bold" style="font-size: small;">{{o[2].productName}}
+                                    </div>
+                                    <div class="card-text" style="font-size: x-small;">Màu: {{o[1].color}}</div>
+                                    <div class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                    <div class="totalAmount"
+                                        style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                        <div class="d-flex">
+                                            <h5 class="mb-0 text-danger fs-6">{{o[0].totalAmount}}
+                                                VND
+                                            </h5>
+                                        </div>
+                                        <div class="mt-3">
+                                            <span class="me-6">
+                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
+                                                        type="button" class="btn btn-outline-danger btn-sm"
+                                                        style="outline-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-star"></i></button></a>
+                                            </span>
+                                            <span>
+                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
+                                                        type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button></a>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--Dưới nữa nè-->
+                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                    <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
+                        <div class="mb-0 card">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+
+                                <div class="d-flex">
+                                    <a href="#!/mystore/{{groupedOrders[0][3].userId}}/{{currentPageMyStore}}"><i
+                                            class="fa-sharp fa-regular fa-store"></i><span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][3].username}}</span></a>
+                                    <span id="button-top">
+                                        <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                type="button" style="background-color: #ff3f40;"> <i
+                                                    class="fa-regular fa-message fa-xs ic"></i>
+                                            </button></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center p-3"
+                                ng-repeat="o in groupedOrders">
+                                <div class="col-2 col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                    <a href="#!/productdetails/{{groupedOrders[0][2].productId}}">
+                                        <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
+                                </div>
+                                <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
+                                    <div class="card-title fw-bold" style="font-size: small;">{{o[2].productName}}
+                                    </div>
+                                    <div class="card-text" style="font-size: x-small;">Màu: {{o[1].color}}</div>
+                                    <div class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}
+                                    </div>
+                                </div>
+                                <div class="col-5 col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                    <div class="totalAmount"
+                                        style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                        <div class="d-flex">
+                                            <span class="mb-0 text-danger fs-9">{{o[0].totalAmount}}
+                                                VND
+                                            </span>
+                                        </div>
+                                        <div class="mt-3">
+                                            <span class="me-6">
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    style="outline-color: #ff3f40;">
+                                                    <i class="fa-sharp fa-solid fa-star"></i></button>
+                                            </span>
+                                            <span>
+                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
+                                                        type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;">
+                                                        <i class="fa-sharp fa-solid fa-rotate-right ic"></i>
+                                                        <span class="res-text">Mua lại</span></button></a>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
             <div class="tab-pane fade" id="tab-cho-giao-hang">
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
                         <div class="col">
                             <div class="mb-0 card">
@@ -311,8 +524,7 @@
 
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none"
-                    ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -442,9 +654,7 @@
 
             </div>
             <div class="tab-pane fade" id="tab-da-giao">
-                <h2>Đã giao</h2>
-
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div ng-if="groupedOrders[0][0].orderStatus.statusId === 4">
                         <div class="col">
                             <div class="mb-0 card">
@@ -517,8 +727,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none"
-                    ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 4">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -647,9 +856,8 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-da-huy">
-                <h2>Hủy hàng</h2>
 
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div ng-if="groupedOrders[0][0].orderStatus.statusId === 6">
                         <div class="col">
                             <div class="mb-0 card">
@@ -722,8 +930,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none"
-                    ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 6">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -854,9 +1061,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-tra-hang">
-                <h2>Trả hàng</h2>
-
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div ng-if="groupedOrders[0][0].orderStatus.statusId === 5">
                         <div class="col">
                             <div class="mb-0 card">
@@ -931,8 +1136,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none"
-                    ng-repeat="(userId, groupedOrders) in groupOrders(orders)">
+                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 5">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">

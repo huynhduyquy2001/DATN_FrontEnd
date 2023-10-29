@@ -1,57 +1,178 @@
-<div class="container">
-    <ul class="nav nav-tabs" id="myTabs" ng-if="listProductMyStore[0].user.userId == myAccount.user.userId">
-        <li class="nav-item">
-            <a ng-click="page(currentPageMyStore)" ng-class="{ 'nav-link': true, 'active': checkMystore===1 }" id="tab1"
-                data-bs-toggle="tab" href="#content1">Đang bán</a>
-        </li>
-        <li class="nav-item">
-            <a ng-click="pagePending(currentPagePending)" ng-class="{ 'nav-link': true, 'active': checkMystore===2 }"
-                id="tab2" data-bs-toggle="tab" href="#content2">Đang chờ duyệt</a>
-        </li>
-        <li class="nav-item">
-            <a ng-class="{ 'nav-link': true, 'active': checkMystore===3 }" id="tab3" data-bs-toggle="tab"
-                href="#content3">Thống kê cửa hàng</a>
-        </li>
+<div class="container" ng-if="myAccount.user.account.role.roleId == 4">
+    <ul class="nav nav-tabs" id="myTabs" ng-if="userId == myAccount.user.userId">
+      <li class="nav-item">
+        <a ng-click="page(currentPageMyStore)" ng-class="{ 'nav-link': true, 'active': checkMystore===1 }" id="tab1" data-bs-toggle="tab" href="#content1">Đang bán</a>
+      </li>
+      <li class="nav-item">
+        <a ng-click="pagePending(currentPagePending)" ng-class="{ 'nav-link': true, 'active': checkMystore===2 }" id="tab2" data-bs-toggle="tab" href="#content2">Đang chờ duyệt</a>
+      </li>
+      <li class="nav-item">
+        <a ng-class="{ 'nav-link': true, 'active': checkMystore===3 }" id="tab3" data-bs-toggle="tab" href="#content3">Thống kê cửa hàng</a>
+      </li>
     </ul>
 
     <div class="tab-content mt-2">
         <!-- Tabs sản phẩm đang bán -->
-        <div class="tab-pane fade show active" id="content1">
-            <div class="row col-md-11 animate__animated animate__fadeIn">
-                <div class="col-md-12 d-flex align-items-center mb-2">
-                    <div class="d-flex align-items-center me-2"
-                        ng-if="listProductMyStore[0].user.userId != myAccount.user.userId">
-                        <img ng-src="{{listProductMyStore[0].user.avatar}}" height="45" width="45"
-                            style="object-fit: cover;" class="rounded-circle me-2">
-                        <h6>{{listProductMyStore[0].user.username}}</h6>
+      <div class="tab-pane fade show active" id="content1">
+        <div class="row col-md-11 animate__animated animate__fadeIn">
+            <div class="col-md-12 d-flex align-items-center mb-2">
+                <div class="d-flex align-items-center me-2" ng-if="userId != myAccount.user.userId">
+                    <img ng-src="{{listProductMyStore[0].user.avatar}}" height="45" width="45" style="object-fit: cover;" class="rounded-circle me-2">
+                    <h6>{{listProductMyStore[0].user.username}}</h6>
+                </div>
+                <div class="col-4 me-2">
+                    <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
+                        style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
+                </div>
+                <li class="btn-group me-3">
+                    <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                            class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp; <span>{{filterStatus}}</span></a>
+                            <div class="dropdown-menu dropdown-menu-animate-up">
+                                <a ng-click="changeFilterStatus('Tất cả')"
+                                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;">
+                                    <i class="fa-solid fa-list fa-lg"></i> Tất cả</a>
+                                <a ng-click="changeFilterStatus('Giá  dưới 200.000₫')"
+                                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Giá  dưới 200.000₫</a>
+                                <a ng-click="changeFilterStatus('Giá từ 200.000₫ đến 500.000₫')"
+                                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Giá từ 200.000₫ đến 500.000₫</a>
+                                <a ng-click="changeFilterStatus('Giá từ 500.000₫ đến 1.000.000₫')"
+                                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i></i>Giá từ 500.000₫ đến 1.000.000₫</a>
+                                <a ng-click="changeFilterStatus('Trên 1.000.000₫')"
+                                    class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item" style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Trên 1.000.000₫</a>
+                            </div> 
+                </li>
+                <a ng-if="userId == myAccount.user.userId" href="#!/product/add-product"><i class="fa-solid fa-cart-plus"></i> Thêm sản
+                    phẩm</a>
+            </div>
+            <hr>
+            <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
+                style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
+                <div class="row frameProduct animate__animated animate__fadeIn">
+                    <div class="col-md-6" style="display: flex;max-height: 100%;">
+                        <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
+                                class="imghover animate__animated animate__fadeIn" width="100%"
+                                style="height: 100%; object-fit: cover; border-radius: 5px;"
+                                ng-src="{{product.media[0].mediaUrl}}"></a>
                     </div>
-                    <div class="col-4 me-2">
-                        <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
-                            style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
-                    </div>
-                    <li class="btn-group me-3">
-                        <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp;
-                            <span>{{filterStatus}}</span></a>
-                        <div class="dropdown-menu dropdown-menu-animate-up">
-                            <a ng-click="changeFilterStatus('Tất cả')"
-                                class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
-                                style="cursor: pointer;">
-                                <i class="fa-solid fa-list fa-lg"></i> Tất cả</a>
-                            <a ng-click="changeFilterStatus('Giá  dưới 200.000₫')"
-                                class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
-                                style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Giá dưới 200.000₫</a>
-                            <a ng-click="changeFilterStatus('Giá từ 200.000₫ đến 500.000₫')"
-                                class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
-                                style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Giá từ 200.000₫ đến
-                                500.000₫</a>
-                            <a ng-click="changeFilterStatus('Giá từ 500.000₫ đến 1.000.000₫')"
-                                class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
-                                style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i></i>Giá từ 500.000₫
-                                đến 1.000.000₫</a>
-                            <a ng-click="changeFilterStatus('Trên 1.000.000₫')"
-                                class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
-                                style="cursor: pointer;"><i class="fa-light fa-circle-dollar"></i> Trên 1.000.000₫</a>
+                    <div class="col-md-6 frame" style="cursor: pointer;">
+                        <div class="product__info">
+                            <div class="title">
+                                <h2 style="font-size: 1.5rem;">{{product.productName}}</h2>
+                            </div>
+                            <div class="description">
+                                <h3><small>{{product.datePost | date: 'dd/MM/yyyy'}}</small></h3>
+                                <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
+        
+                                </h3>
+                                <span>
+                                    <span ng-if="calculateAverageRating(product.ratings)==0">
+                                        <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="calculateAverageRating(product.ratings)==1">
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+        
+                                    </span>
+                                    <span ng-if="calculateAverageRating(product.ratings)==2">
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="calculateAverageRating(product.ratings)==3">
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="calculateAverageRating(product.ratings)==4">
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span ng-if="calculateAverageRating(product.ratings)==5">
+                                        <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                    </span>
+        
+                                    <!-- --------------------------------------------------------- -->
+        
+                                    <span
+                                        ng-if="calculateAverageRating(product.ratings) > 0 && calculateAverageRating(product.ratings) < 1">
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+        
+                                    <span
+                                        ng-if="calculateAverageRating(product.ratings) > 1 && calculateAverageRating(product.ratings) < 2">
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span
+                                        ng-if="calculateAverageRating(product.ratings) > 2 && calculateAverageRating(product.ratings) < 3">
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(2) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span
+                                        ng-if="calculateAverageRating(product.ratings) > 3 && calculateAverageRating(product.ratings) < 4">
+                                        <i ng-repeat="n in [].constructor(3) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                        <i ng-repeat="n in [].constructor(1) track by $index" class="fa-solid fa-star"
+                                            style="color: #c0c0c0;"></i>
+                                    </span>
+                                    <span
+                                        ng-if="calculateAverageRating(product.ratings) > 4 && calculateAverageRating(product.ratings) < 5">
+                                        <i ng-repeat="n in [].constructor(4) track by $index" class="fa-solid fa-star"
+                                            style="color: #ffc107;"></i>
+                                        <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="note mt-2">
+                                <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
+                                        aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-basket"
+                                        role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
+                                        <path fill="currentColor"
+                                            d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
+                                        </path>
+                                    </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->{{product.ratings.length}}
+                                    lượt đánh giá</span>
+                                <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
+                            </div>
+        
+                            <div class="price animate__animated animate__fadeInUp">
+                                <small ng-show="!product.promotion==0"><span
+                                        style="text-decoration: line-through; color: gray;">{{product.originalPrice
+                                        | currencyFormat}} 
+                                    </span> &nbsp; |&nbsp;</small>
+                                <span> {{getSalePrice(product.originalPrice, product.promotion) |
+                                    currencyFormat}}</span>
+                            </div>
+                            <div style="display: flex;">
+                                <a ng-if="userId == myAccount.user.userId" href="#!/product/add-product/{{product.productId}}"
+                                    class="buy--btn animate__animated animate__fadeInDown"
+                                    style="margin-top: 1.5rem; margin-right: 0.2rem;">
+                                    Chỉnh sửa</a>
+                                <button ng-if="userId == myAccount.user.userId" ng-click="hideProductMyStore(product.productId)"
+                                    class="buy--btn animate__animated animate__fadeInDown" style="margin-top: 1.5rem;">
+                                    Xóa</button>
+                                <button ng-if="userId != myAccount.user.userId" ng-click="getProduct(product.productId)" data-bs-toggle="modal"
+                                data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                                style="margin-top: 1.5rem;">Thêm vào
+                                giỏ hàng</button>
+                            </div>
                         </div>
                     </li>
                     <a ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
@@ -177,17 +298,17 @@
                                         currencyFormat}}</span>
                                 </div>
                                 <div style="display: flex;">
-                                    <a ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                                    <a ng-if="userId == myAccount.user.userId"
                                         href="#!/product/add-product/{{product.productId}}"
                                         class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem; margin-right: 0.2rem;">
                                         Chỉnh sửa</a>
-                                    <button ng-if="listProductMyStore[0].user.userId == myAccount.user.userId"
+                                    <button ng-if="userId == myAccount.user.userId"
                                         ng-click="hideProductMyStore(product.productId)"
                                         class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem;">
                                         Xóa</button>
-                                    <button ng-if="listProductMyStore[0].user.userId != myAccount.user.userId"
+                                    <button ng-if="userId != myAccount.user.userId"
                                         ng-click="getProduct(product.productId)" data-bs-toggle="modal"
                                         data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
                                         style="margin-top: 1.5rem;">Thêm vào
@@ -294,6 +415,18 @@
     </div>
 </div>
 
+<div class="row"
+    ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2">
+    <center style="padding: 25vh;">
+        <h5>Đăng ký cửa hàng để bắt đầu kinh doanh nào</h5>
+        <button ng-click="showProvince()" type="button" class="btn btn-primary mt-1" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            Đăng ký
+        </button>
+    </center>
+</div>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
@@ -345,7 +478,66 @@
     </div>
 </div>
 
-
+<!-- Modal đăng ký -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Đăng ký cửa hàng</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="mt-2 col-12">
+                        <div class="form-floating mt-1">
+                            <input type="text" id="phone" class="form-control">
+                            <label for="floatingSelect">Số điện thoại (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <label class="mt-3">Địa chỉ lấy hàng</label>
+                    <div class="mt-2 col-12">
+                        <div class="form-floating">
+                            <select ng-options="province as province.ProvinceName for province in listProvince"
+                                ng-model="selectedProvince" ng-change="onProvince()" class="form-select"
+                                id="floatingSelect" aria-label="Floating label select example">
+                            </select>
+                            <label for="floatingSelect">Tỉnh/Thành Phố (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-3">
+                        <div class="form-floating">
+                            <select ng-options="district as district.DistrictName for district in listDistrict"
+                                ng-model="selectedDistrict" ng-change="onDistrict()" class="form-select"
+                                id="floatingSelect" aria-label="Floating label select example">
+                            </select>
+                            <label for="floatingSelect">Quận/Huyện (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-3">
+                        <div class="form-floating">
+                            <select ng-options="ward as ward.WardName for ward in listWard" ng-model="selectedWard"
+                                class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                            </select>
+                            <label for="floatingSelect">Phường/Xã (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="form-floating">
+                            <textarea ng-model="textareaValue" class="form-control" placeholder="Leave a comment here"
+                                id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2">Chi tiết (<b class="text-danger">*</b>)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary"
+                    ng-click="addAddress(myAccount.user.account.phoneNumber)">Xong</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var modalId = document.getElementById('modalId');
 

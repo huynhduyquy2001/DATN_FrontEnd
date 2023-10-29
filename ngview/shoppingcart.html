@@ -2,28 +2,30 @@
     <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
-            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;">Đặt hàng</button>
+            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary"
+                style="background-color: #007ACC;">Đặt hàng</button>
             <a ng-click="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Xóa sản phẩm">Xóa</a>
             |
-            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Thêm vào danh sách yêu thích">Yêu thích</a>
+            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Thêm vào danh sách yêu thích">Yêu thích</a>
         </div>
-        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | currencyFormat}}</span> (<span class="count-product">0</span>) sản phẩm</p>
+        <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | currencyFormat}}</span> (<span
+                class="count-product">0</span>) sản phẩm</p>
     </div>
     <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
         <div class="card-header d-flex justify-content-between" style="background-color: white;">
             <h6 class="mt-1 fw-bolder gap-2 d-flex">
-               <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
-                <i class="fa-regular fa-store"></i>
-                {{ groupedProducts[0].product.user.username }}
-               </a>
-               <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
-                <i class="fa-regular fa-messages fa-xs"></i>
-               </a>
-            </h6> 
+                <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
+                    <i class="fa-regular fa-store"></i>
+                    {{ groupedProducts[0].product.user.username }}
+                </a>
+                <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
+                    <i class="fa-regular fa-messages fa-xs"></i>
+                </a>
+            </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
         </div>
         <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
@@ -41,12 +43,18 @@
                         style="max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
                         <span class="text-muted fs-8">Màu sắc: </span><small>{{ product.color }}</small>
                     </p>
-                    <small ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
-                     class="text-decoration-none text-dark">{{product.product.originalPrice | currencyFormat }}</small>
-                    <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
-                     class="text-decoration-line-through text-secondary">{{product.product.originalPrice | currencyFormat }}</small>
-                    <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
-                     class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice, product.product.promotion) | currencyFormat}}</small>
+                    <small
+                        ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-none text-dark">{{product.product.originalPrice | currencyFormat
+                        }}</small>
+                    <small
+                        ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-line-through text-secondary">{{product.product.originalPrice |
+                        currencyFormat }}</small>
+                    <small
+                        ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice,
+                        product.product.promotion) | currencyFormat}}</small>
                 </a>
                 <div class="col-md-3 col-lg-2 col-xl-3 mt-1">
                     <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | currencyFormat }}</a>
@@ -65,10 +73,13 @@
                     </button>
                 </div>
                 <div class="col-md-2 col-lg-2 col-xl-2 d-flex gap-3 justify-content-end mt-2">
-                     <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
-                    <input id="{{product.product.productId}}_{{ product.color }}" value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
-                        data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
+                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i
+                            class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
+                    <input id="{{product.product.productId}}_{{ product.color }}"
+                        value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox"
+                        class="form-check-input mt-1" style="cursor: pointer;" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Chọn sản phẩm">
                 </div>
             </div>
         </div>
@@ -79,14 +90,14 @@
     <div class="card-header d-flex gap-3 mb-3 p-3 justify-content-between align-items-center"
         style="background-color: white;">
         <div class="d-flex justify-content-between align-items-center gap-3">
-            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary" style="background-color: #007ACC;">Đặt hàng (<span class="count-product">0</span>)</button>
+            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary"
+                style="background-color: #007ACC;">Đặt hàng (<span class="count-product">0</span>)</button>
             <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Chọn tất cả sản phẩm">Chọn </a>
+                title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Xóa sản phẩm"><i
-                    class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
-            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
+                title="Xóa sản phẩm"><i class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
+            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
         </div>
         <p class="mb-0">Tổng tiền: <span class="text-danger">{{sumPrice | currencyFormat}}</span></p>
     </div>
@@ -96,16 +107,17 @@
                 <i class="fa-regular fa-store"></i>
                 <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
                     {{ groupedProducts[0].product.user.username }}
-                   </a>
-                   <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
+                </a>
+                <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
                     <i class="fa-regular fa-messages fa-xs"></i>
-                   </a>
+                </a>
             </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
         </div>
         <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
             <div class="row-cols-3 d-flex justify-content-between align-items-center mb-2">
-                <a href="#!productdetails/{{product.product.productId}}" class="col-sm-2" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                <a href="#!productdetails/{{product.product.productId}}" class="col-sm-2"
+                    ng-repeat="img in filterImagesByProductId(product.product.media)">
                     <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
                         style="object-fit: cover;">
                 </a>
@@ -118,12 +130,18 @@
                         <span class="text-muted">Màu sắc: </span>{{ product.color }}
                     </p>
 
-                    <small ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
-                    class="text-decoration-none text-dark">{{product.product.originalPrice | currencyFormat }}</small>
-                   <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
-                    class="text-decoration-line-through text-secondary">{{product.product.originalPrice | currencyFormat }}</small>
-                   <small ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
-                    class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice, product.product.promotion) | currencyFormat}}</small>
+                    <small
+                        ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-none text-dark">{{product.product.originalPrice | currencyFormat
+                        }}</small>
+                    <small
+                        ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-line-through text-secondary">{{product.product.originalPrice |
+                        currencyFormat }}</small>
+                    <small
+                        ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice,
+                        product.product.promotion) | currencyFormat}}</small>
 
                     <div class="input-group input-group-sm mt-1">
                         <button ng-click="decrementQuantity(product)" class="btn border rounded py-0 border-end-0"
@@ -143,10 +161,13 @@
                     <a class="text-decoration-none text-danger">{{ calculateSubtotal(product) | currencyFormat }}</a>
                 </div>
                 <div class="col-sm-2 d-flex gap-3 justify-content-end">
-                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
-                    <input id="{{product.product.productId}}_{{ product.color }}" value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
-                        data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm">
+                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i
+                            class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
+                    <input id="{{product.product.productId}}_{{ product.color }}"
+                        value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox"
+                        class="form-check-input mt-1" style="cursor: pointer;" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Chọn sản phẩm">
                 </div>
             </div>
         </div>
@@ -155,16 +176,17 @@
 <!-- Khi responsive tới 576px thì hiện -->
 <div class="container d-sm-none">
     <div class="card-header mb-3 p-3" style="background-color: white;">
-        <p class="mb-2" style="font-size: small;">Tổng tiền (<span class="count-product">0</span>): <span class="text-danger">{{sumPrice | currencyFormat}}</span></p>
+        <p class="mb-2" style="font-size: small;">Tổng tiền (<span class="count-product">0</span>): <span
+                class="text-danger">{{sumPrice | currencyFormat}}</span></p>
         <div class="d-flex align-items-center gap-3">
-            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary" style="background-color: #007ACC; font-size: x-small;">Đặt hàng</button>
+            <button ng-click="orderShoppingCart()" class="btn btn-sm btn- btn-primary"
+                style="background-color: #007ACC; font-size: x-small;">Đặt hàng</button>
             <a onclick="checkAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Chọn tất cả sản phẩm">Chọn </a>
+                title="Chọn tất cả sản phẩm">Chọn </a>
             <a ng-click="deleteAll()" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Xóa sản phẩm"><i
-                    class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
-            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
+                title="Xóa sản phẩm"><i class="fa-solid fa-trash-can fa-lg text-secondary"></i></a>
+            <a ng-click="addFavoriteProducts()" style="cursor: pointer;" class="text-danger" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Thêm vào danh sách yêu thích"><i class="fa-solid fa-heart fa-lg"></i></a>
         </div>
     </div>
     <div class="card mb-4" ng-repeat="(userId, groupedProducts) in listProducts">
@@ -173,34 +195,44 @@
                 <i class="fa-regular fa-store"></i>
                 <a href="#!/mystore/{{groupedProducts[0].product.user.userId}}/{{currentPageMyStore}}">
                     {{ groupedProducts[0].product.user.username }}
-                   </a>
-                   <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
+                </a>
+                <a style="cursor: pointer;" ng-click="getMess(groupedProducts[0].product.user.userId)">
                     <i class="fa-regular fa-messages fa-xs"></i>
-                   </a>
+                </a>
             </h6>
             <h6 class="mt-1">{{groupedProducts.length}} sản phẩm</h6>
         </div>
         <div class="card-body border-bottom" ng-repeat="product in groupedProducts">
             <div class="d-flex gap-3 mb-2">
                 <div class="col-1 mt-3 text-center">
-                    <input id="{{product.product.productId}}_{{ product.color }}" value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox" class="form-check-input mt-1" style="cursor: pointer;"
-                        data-bs-toggle="tooltip" data-bs-placement="top" title="Chọn sản phẩm"> <br>
-                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Xóa khỏi giỏ hàng"><i class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
+                    <input id="{{product.product.productId}}_{{ product.color }}"
+                        value="{{ calculateSubtotal(product) }}" ng-click="updateCount()" type="checkbox"
+                        class="form-check-input mt-1" style="cursor: pointer;" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Chọn sản phẩm"> <br>
+                    <a ng-click="deleteToCart(product.product.productId, product.color)" style="cursor: pointer;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa khỏi giỏ hàng"><i
+                            class="fa-solid fa-trash-can fa-sm text-secondary"></i></a>
                 </div>
-                <a href="#!productdetails/{{product.product.productId}}" class="col-3" ng-repeat="img in filterImagesByProductId(product.product.media)">
+                <a href="#!productdetails/{{product.product.productId}}" class="col-3"
+                    ng-repeat="img in filterImagesByProductId(product.product.media)">
                     <img ng-src="{{ img.mediaUrl }}" class="rounded-3 img-thumbnail" width="100%"
                         style="object-fit: cover;">
                 </a>
                 <div class="col-sm-6">
-                    <a href="#!productdetails/{{product.product.productId}}" class="fw-bolder mb-0" style="font-size: small;">{{
+                    <a href="#!productdetails/{{product.product.productId}}" class="fw-bolder mb-0"
+                        style="font-size: small;">{{
                         product.product.productName }} </a> <br>
-                    <a style="font-size: x-small;" ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
-                    class="text-decoration-none text-danger">{{product.product.originalPrice | currencyFormat }}</a>
-                    <a style="font-size: x-small;" ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
-                    class="text-decoration-line-through text-secondary">{{product.product.originalPrice | currencyFormat }}</a>
-                    <a style="font-size: x-small;" ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
-                    class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice, product.product.promotion) | currencyFormat}}</a>
+                    <a style="font-size: x-small;"
+                        ng-if="product.product.originalPrice == getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-none text-danger">{{product.product.originalPrice | currencyFormat }}</a>
+                    <a style="font-size: x-small;"
+                        ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-line-through text-secondary">{{product.product.originalPrice |
+                        currencyFormat }}</a>
+                    <a style="font-size: x-small;"
+                        ng-if="product.product.originalPrice > getSalePrice(product.product.originalPrice, product.product.promotion)"
+                        class="text-decoration-none text-dark">{{getSalePrice(product.product.originalPrice,
+                        product.product.promotion) | currencyFormat}}</a>
                     <p class="fw-normal mb-0" style="font-size: x-small;">
                         <span class="text-muted">Màu sắc: </span>{{ product.color }}
                     </p>
@@ -217,23 +249,26 @@
                             <i class="fa-regular fa-plus fa-2xs"></i>
                         </button>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 <div class="container text-center" ng-if="listProduct.length == 0">
-    <h5><i class="fa-solid fa-triangle-exclamation" style="color: #e30202;"></i> Không có sản phẩm nào trong giỏ hàng</h5>
+    <h5><i class="fa-solid fa-triangle-exclamation" style="color: #e30202;"></i> Không có sản phẩm nào trong giỏ hàng
+    </h5>
 </div>
-<a id="scrollToTopBtn" onclick="scrollToTop()" style="position: fixed; bottom: 20px; right: 7px; cursor: pointer; display: none;"> <i
+<a id="scrollToTopBtn" onclick="scrollToTop()"
+    style="position: fixed; bottom: 20px; right: 7px; cursor: pointer; display: none;"> <i
         class="fa-solid fa-circle-chevron-up fa-xl fa-shake" style="color:#007ACC;"></i></a>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Đặt hàng <span class="count-product">0</span> sản phẩm</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Đặt hàng <span class="count-product">0</span> sản phẩm
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -241,29 +276,34 @@
                     <div class="col-6">
                         <div ng-repeat="(userId, groupedProducts) in listProductOrder" class="mt-2">
                             <div class="d-flex justify-content-between mb-2 border-bottom py-2">
-                                <h6 class="mb-0"><i class="fa-regular fa-store"></i> {{ groupedProducts[0].product.user.username }}</h6>
+                                <h6 class="mb-0"><i class="fa-regular fa-store"></i> {{
+                                    groupedProducts[0].product.user.username }}</h6>
                             </div>
                             <div class="mb-3" ng-repeat="productOrder in groupedProducts">
-                                <div class="d-flex align-items-center gap-4 mb-2"  ng-repeat="img in filterImagesByProductId(productOrder.product.media)">
-                                    <img ng-src="{{img.mediaUrl}}"
-                                        alt="image" class="img-thumbnail avatar-100">
+                                <div class="d-flex align-items-center gap-4 mb-2"
+                                    ng-repeat="img in filterImagesByProductId(productOrder.product.media)">
+                                    <img ng-src="{{img.mediaUrl}}" alt="image" class="img-thumbnail avatar-100">
                                     <div class="mt-2">
-                                        <h6 class="mb-1 fw-bolder" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                        <h6 class="mb-1 fw-bolder"
+                                            style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
                                             {{productOrder.product.productName}} </h6>
                                         <p class="mb-1"><small>Màu sắc: {{productOrder.color}}</small></p>
-                                        <small class="mb-0 me-1">{{ calculateSubtotal(productOrder) | currencyFormat }}</small>
+                                        <small class="mb-0 me-1">{{ calculateSubtotal(productOrder) | currencyFormat
+                                            }}</small>
                                         <small>x{{productOrder.quantity}}</small>
                                     </div>
                                 </div>
-                            </div> 
-                            <div class="col-11 d-flex gap-3 justify-content-end align-items-center mb-1 border-top py-2">
+                            </div>
+                            <div
+                                class="col-11 d-flex gap-3 justify-content-end align-items-center mb-1 border-top py-2">
                                 <h6 class="fs-8 mb-0"><b>Tiền vận chuyển:</b></h6>
-                                <h6 class="fs-8 text-danger mb-0" ng-repeat="f in fee | filter:{ userId: userId }">{{f.total | currencyFormat}}</h6>
+                                <h6 class="fs-8 text-danger mb-0" ng-repeat="f in fee | filter:{ userId: userId }">
+                                    {{f.total | currencyFormat}}</h6>
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="d-flex justify-content-between mt-5">
+                        <div class="d-flex justify-content-between mt-4">
                             <h6 class="fw-bolder">Địa chỉ nhận hàng</h6>
                             <a ng-click="showAddress()" class="text-primary" style="cursor: pointer;">Chọn</a>
                         </div>
@@ -271,28 +311,47 @@
                             <small ng-if="checkShip == true" class="mb-1" style="word-spacing: 3px;">
                                 <p class="mb-0">{{oneAddress.user.username}} | {{oneAddress.deliveryPhone}}</p>
                                 {{oneAddress.detailAddress}} {{oneAddress.wardName}}
-                                {{oneAddress.districtName}}  {{oneAddress.provinceName}}
+                                {{oneAddress.districtName}} {{oneAddress.provinceName}}
                             </small>
                         </div>
-                        <div class="border-bottom mt-5">
+                        <div class="border-bottom mt-3">
                             <div class="d-flex justify-content-between mb-4">
                                 <h6>Tổng tiền hàng</h6>
                                 <h6 class="text-danger">{{sumPrice | currencyFormat}}</h6>
                             </div>
                             <div class="d-flex justify-content-between mb-4">
                                 <h6>Tổng tiền vận chuyển</h6>
-                                <h6 ng-if="checkShip == true" class="text-success" >{{totalFee | currencyFormat}}</h6>
-                                <h6 ng-if="checkShip == false" class="text-danger"><small>Chưa chọn nơi nhận</small></h6>
+                                <h6 ng-if="checkShip == true" class="text-success">{{totalFee | currencyFormat}}</h6>
+                                <h6 ng-if="checkShip == false" class="text-danger"><small>Chưa chọn nơi nhận</small>
+                                </h6>
                             </div>
                         </div>
                         <div class="mt-4">
                             <div class="d-flex justify-content-between mb-3">
                                 <h6 class="mb-0">Tổng thanh toán</h6>
-                                <h5 class="text-danger mb-0">{{sumPrice + totalFee | currencyFormat}}</h5>
+                                <h5 class="text-danger mb-0" id="vnpay">{{sumPrice + totalFee | currencyFormat}}</h5>
                             </div>
+                            <div class="mt-3 border-top pt-3">
+                                <h6 class="mb-0">Phương thức thanh toán</h6>
+                                <div class="mt-3 row">
+                                    <div class="col-12 d-flex gap-3">
+                                        <a style="cursor: pointer;" class="border border-primary p-2"
+                                            onclick="setPrimary(this)">
+                                            Thanh toán khi nhận hàng
+                                        </a>
+                                        <a style="cursor: pointer;" class="border p-2" onclick="setPrimary(this)">
+                                            Thanh toán Online VNPay
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex">
-                                <a id="place-order" class="btn btn-primary d-block mt-3 w-100">Thanh toán</a>
+                                <button ng-disabled="!checkShip" ng-class="{'d-none':checkPay===false}"
+                                    class="btn btn-primary mt-3 w-100" ng-click="paymentVNPay(false)">Thanh
+                                    toán</button>
+                                <button ng-disabled="!checkShip" ng-class="{'d-none':checkPay===true}"
+                                    class="btn btn-primary mt-3 w-100" ng-click="paymentVNPay(true)">Thanh
+                                    toán</button>
                             </div>
                         </div>
                     </div>
@@ -300,6 +359,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalAddress" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -312,80 +372,103 @@
             <div class="modal-body">
                 <div class="card-body">
                     <div class="bd-example">
-                        <ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fa-sharp fa-regular fa-location-dot"></i> Địa chỉ của bạn</button>
+                        <ul class="nav nav-tabs" data-toggle="slider-tab" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" ng-click="clearForm()" id="home-tab"
+                                    data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab"
+                                    aria-controls="home" aria-selected="true"><i
+                                        class="fa-sharp fa-regular fa-location-dot"></i>&nbsp; Địa chỉ của bạn</button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" ng-click="showProvince()" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fa-solid fa-plus"></i> Tạo địa chỉ mới</button>
+                            <li class="nav-item">
+                                <button class="nav-link" ng-click="showProvince()" id="profile-tab" data-bs-toggle="tab"
+                                    data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile"
+                                    aria-selected="false"><i class="fa-solid fa-plus"></i>&nbsp; Tạo địa chỉ
+                                    mới</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
                                 aria-labelledby="pills-home-tab1">
-                                        <div style="max-height: 350px; overflow-y: auto;">
-                                            <label class="d-flex gap-3 mt-2 ms-4 border-bottom" ng-repeat="deliveryAddress in deliveryAddress">
-                                                <input value="{{deliveryAddress.id}}" type="radio" name="address" class="form-check-input mt-1">
-                                                <div>
-                                                    <p class="mb-1 d-flex align-items-center">
-                                                        <i class="fa-regular fa-user fa-sm me-2"></i> <b>{{deliveryAddress.user.username}}</b>
-                                                        <i class="fa-regular fa-phone fa-sm ms-3 me-2"></i> <b>{{deliveryAddress.deliveryPhone}}</b> </p>
-                                                    <p class="mb-1">{{deliveryAddress.detailAddress}} &nbsp; {{deliveryAddress.wardName}}</p>
-                                                    <p>{{deliveryAddress.districtName}}, {{deliveryAddress.provinceName}}</p>
-                                                </div>
-                                            </label>
-                                            <div ng-if="deliveryAddress.length == 0" class="mt-4 mb-2">
-                                                <h5>Bạn chưa thêm địa chỉ nhận hàng</h5>
-                                            </div>
+                                <div style="max-height: 350px; overflow-y: auto;">
+                                    <label class="d-flex gap-3 mt-2 ms-4 border-bottom"
+                                        ng-repeat="d in deliveryAddress">
+                                        <input value="{{d.id}}" type="radio" name="address"
+                                            class="form-check-input mt-1" ng-checked="$first">
+                                        <div>
+                                            <p class="mb-1 d-flex align-items-center">
+                                                <i class="fa-regular fa-user fa-sm me-2"></i> <b>{{d.user.username}}</b>
+                                                <i class="fa-regular fa-phone fa-sm ms-3 me-2"></i>
+                                                <b>{{d.deliveryPhone}}</b>
+                                            </p>
+                                            <p class="mb-1">{{d.detailAddress}} &nbsp; {{d.wardName}}</p>
+                                            <p>{{d.districtName}}, {{d.provinceName}}</p>
                                         </div>
-                                        <div class="mt-3">
-                                            <button ng-click="checkedAddress()" class="btn btn-sm btn-primary me-2">Sử dụng địa chỉ</button>
-                                            <button ng-click="deleteAddress()" class="btn btn-sm btn-danger">Xóa</button>
-                                        </div>
+                                    </label>
+                                    <div ng-if="deliveryAddress.length == 0" class="mt-4 mb-2">
+                                        <h5>Bạn chưa thêm địa chỉ nhận hàng</h5>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button ng-click="checkedAddress()" class="btn btn-sm btn-primary me-2">Sử dụng địa
+                                        chỉ</button>
+                                    <button ng-click="deleteAddress()" ng-if="deliveryAddress.length != 1"
+                                        class="btn btn-sm btn-danger">Xóa</button>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
                                 aria-labelledby="pills-profile-tab1">
                                 <div class="row">
-                                        <div class="mt-2 col-12">
-                                            <div class="form-floating">
-                                                <input type="text" id="floatingSelect" class="form-control">
-                                                <label for="floatingSelect">Số điện thoại (<b class="text-danger">*</b>)</label>
-                                            </div>
-                                        </div>
-                                        <div class="mt-3 col-12">
-                                            <div class="form-floating">
-                                                <select ng-options="province as province.ProvinceName for province in listProvince" 
-                                                   ng-model="selectedProvince" ng-change="onProvince()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                                </select>
-                                                <label for="floatingSelect">Tỉnh/Thành Phố (<b class="text-danger">*</b>)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 mt-3">
-                                            <div class="form-floating">
-                                                <select ng-options="district as district.DistrictName for district in listDistrict" 
-                                                   ng-model="selectedDistrict" ng-change="onDistrict()" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                                </select>
-                                                <label for="floatingSelect">Quận/Huyện (<b class="text-danger">*</b>)</label>
-                                              </div>
-                                        </div>
-                                        <div class="col-6 mt-3">
-                                            <div class="form-floating">
-                                                <select ng-options="ward as ward.WardName for ward in listWard" 
-                                                   ng-model="selectedWard" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                                </select>
-                                                <label for="floatingSelect">Phường/Xã (<b class="text-danger">*</b>)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 mt-3">
-                                            <div class="form-floating">
-                                                <textarea ng-model="textareaValue" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                                                <label for="floatingTextarea2">Chi tiết</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 mt-3">
-                                            <button ng-click="addAddress()" class="btn btn-sm btn-primary">Thêm địa chỉ</button>
+                                    <div class="mt-2 col-12">
+                                        <div class="form-floating">
+                                            <input type="text" id="phone" class="form-control">
+                                            <label for="floatingSelect">Số điện thoại (<b
+                                                    class="text-danger">*</b>)</label>
                                         </div>
                                     </div>
+                                    <div class="mt-3 col-12">
+                                        <div class="form-floating">
+                                            <select
+                                                ng-options="province as province.ProvinceName for province in listProvince"
+                                                ng-model="selectedProvince" ng-change="onProvince()" class="form-select"
+                                                id="floatingSelect" aria-label="Floating label select example">
+                                            </select>
+                                            <label for="floatingSelect">Tỉnh/Thành Phố (<b
+                                                    class="text-danger">*</b>)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mt-3">
+                                        <div class="form-floating">
+                                            <select
+                                                ng-options="district as district.DistrictName for district in listDistrict"
+                                                ng-model="selectedDistrict" ng-change="onDistrict()" class="form-select"
+                                                id="floatingSelect" aria-label="Floating label select example">
+                                            </select>
+                                            <label for="floatingSelect">Quận/Huyện (<b
+                                                    class="text-danger">*</b>)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mt-3">
+                                        <div class="form-floating">
+                                            <select ng-options="ward as ward.WardName for ward in listWard"
+                                                ng-model="selectedWard" class="form-select" id="floatingSelect"
+                                                aria-label="Floating label select example">
+                                            </select>
+                                            <label for="floatingSelect">Phường/Xã (<b class="text-danger">*</b>)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <div class="form-floating">
+                                            <textarea ng-model="textareaValue" class="form-control"
+                                                placeholder="Leave a comment here" id="floatingTextarea2"
+                                                style="height: 100px"></textarea>
+                                            <label for="floatingTextarea2">Chi tiết</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <button ng-click="addAddress()" class="btn btn-sm btn-primary">Thêm địa
+                                            chỉ</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -412,4 +495,12 @@
         }
     });
 
+    function setPrimary(clickedButton) {
+        const buttons = document.querySelectorAll('.border');
+        buttons.forEach(button => {
+            button.classList.remove('border-primary');
+        });
+        clickedButton.classList.add('border-primary');
+
+    }
 </script>
