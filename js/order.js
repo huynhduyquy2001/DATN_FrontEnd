@@ -29,6 +29,12 @@ app.controller('OrdersController', function ($scope, $http, $translate, $rootSco
         .catch(function (error) {
             console.log(error);
         });
+    $scope.showOrderDetailsModal = function () {
 
+        // Logic để hiển thị modal đơn hàng
+
+        $('#orderDetailsModal').modal('show');
+
+    };
 
 });
