@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User 1</title>
+
+    <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <style>
+        #video-container {
+            position: relative;
+            margin: auto;
+            width: 640px;
+        }
+
+        video {
+            background: #F0F2F5;
+        }
+
+        #localVideo {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 180px;
+            z-index: 10;
+            background: gray;
+            border-radius: 10px;
+        }
+
+        #remoteVideo {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        #action-buttons {
+            margin: auto;
+            text-align: center;
+        }
+
+        .hidden-first {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12">
+                <!-- <div class="jumbotron">
+                    <div class="container">
+                        <div id="incoming-call-notice" style="display: none;">
+                            <div class="spinner-grow text-primary" role="status">
+                                <span class="sr-only">Incoming call...</span>
+                            </div>
+                            <h3>Incoming call...</h3>
+                        </div>
+                    </div>
+
+                </div> -->
+
+                <div>
+                    <div ng-show="checkCall===1 ||checkCall=3" style="display: flex;justify-content: center;">
+                        <img ng-src="{{yourAccount.avatar}}"
+                            style="width: 100px;height: 100px;object-fit: cover;border-radius: 100%;" alt="">
+                    </div>
+                    <div id="video-container">
+                        <video ng-show="checkCall===2" id="localVideo" autoplay muted></video>
+                        <video ng-show="checkCall===2" id="remoteVideo" autoplay
+                            style="border: 1px solid #3333;"></video>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <center class="mt-1">
+            <button ng-click="makeVideoCall()" ng-show="checkCall===1" class="btn btn-success"><i
+                    class="fa-regular fa-video"></i></button>
+            <button ng-click="makeCall()" ng-show="checkCall===1" class="btn btn-info"><i
+                    class="fa-regular fa-phone"></i></button>
+            <button ng-click="answerCall()" ng-show="checkCall===3" class="btn btn-info ">Trả lời</button>
+            <button ng-click="rejectCall()" ng-show="checkCall===3" class="btn btn-warning ">Từ chối</button>
+            <button ng-click="endCall()" ng-show="checkCall===2" class="btn btn-danger">Kết thúc</button>
+        </center>
+    </div>
+
+
+    <script src="/js/lib/jquery.js"></script>
+    <script src="/js/lib/socket.io-2.2.0.js"></script>
+    <script src="/js/StringeeSDK-1.5.10.js"></script>
+
+
+
+
+    <!-- <script>
+        var token = 'eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTSy4wLlllZW0xUzVObFo0ZWNPZFpqVUlRU24xclhkNUxrMDB5LTE2OTc5MTczNzUiLCJpc3MiOiJTSy4wLlllZW0xUzVObFo0ZWNPZFpqVUlRU24xclhkNUxrMDB5IiwiZXhwIjoxNjk3OTIwOTc1LCJ1c2VySWQiOiJORUJZMjQzMDU2MzYifQ.c99Lih_-MCxIb1vawbpmkQ-Kup4veLoIySjeEZHJCSc';
+
+        var callerId = 'NEBY24305636';
+        var calleeId = 'IKSX45792153';
+    </script> -->
+    <!-- <script src="js/code.js"></script> -->
+</body>
+
+</html>

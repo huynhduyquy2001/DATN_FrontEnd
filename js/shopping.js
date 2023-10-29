@@ -132,7 +132,6 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 		} else {
 			$anchorScroll();
 			$rootScope.currentPage = $rootScope.currentPage + 1; // Cập nhật trang hiện tại
-
 			$scope.getproductList($rootScope.currentPage);
 		}
 	}
@@ -339,6 +338,77 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			var SalePrice = originalPrice - (originalPrice * promotion / 100);
 			return SalePrice;
 		}
+	}
+
+	const searchInput = document.querySelector('#text-srh');
+	// Tro ly ao
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+	const recognition = new SpeechRecognition();
+	const synth = window.speechSynthesis;
+	recognition.lang = 'vi-VI';
+	recognition.continuous = false;
+
+	const microphone = document.querySelector('.microphone');
+
+	const speak = (text) => {
+		if (synth.speaking) {
+			console.error('Busy. Speaking...');
+			return;
+		}
+
+		const utter = new SpeechSynthesisUtterance(text);
+
+		utter.onend = () => {
+			console.log('SpeechSynthesisUtterance.onend');
+		}
+		utter.onerror = (err) => {
+			console.error('SpeechSynthesisUtterance.onerror', err);
+		}
+
+		synth.speak(utter);
+	};
+
+	const handleVoice = (text) => {
+		console.log('text', text);
+		// "thời tiết tại Đà Nẵng" => ["thời tiết tại", "Đà Nẵng"]
+		const handledText = text.toLowerCase();
+
+		const location = handledText[1];
+		console.log('location', location);
+		searchInput.value = handledText;
+		$scope.productName = handledText;
+		// const changeEvent = new Event('change');
+		// searchInput.dispatchEvent(changeEvent);
+		$scope.findProduct(0);
+		//searchInput.dispatchEvent($scope.findProduct(0));
+		return;
+
+
+		speak('Try again');
+	}
+
+	microphone.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		recognition.start();
+		microphone.classList.add('recording');
+	});
+
+	recognition.onspeechend = () => {
+		recognition.stop();
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onerror = (err) => {
+		console.error(err);
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onresult = (e) => {
+		console.log('onresult', e);
+		const text = e.results[0][0].transcript;
+		handleVoice(text);
 	}
 
 });

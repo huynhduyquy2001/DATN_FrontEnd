@@ -1,4 +1,4 @@
-<div class="animate__animated animate__fadeIn">
+<div>
     <!-- content -->
     <section style="padding-top: 0 !important">
         <div>
@@ -9,11 +9,6 @@
                             <div class="carousel">
                                 <input ng-repeat="media in product.media" type="radio" name="slides" checked="checked"
                                     id="slide-{{media.mediaId}}">
-                                <!-- <input type="radio" name="slides" id="slide-2">
-                                <input type="radio" name="slides" id="slide-3">
-                                <input type="radio" name="slides" id="slide-4">
-                                <input type="radio" name="slides" id="slide-5">
-                                <input type="radio" name="slides" id="slide-6"> -->
                                 <ul class="carousel__slides" style="max-height: 50vh;">
                                     <li class="carousel__slide" ng-repeat="media in product.media">
                                         <figure>
@@ -38,9 +33,57 @@
                 </aside>
                 <main class="col-lg-6">
                     <div class="ps-lg-3">
-                        <h4 class="title text-dark">
-                            {{product.productName}}
-                        </h4>
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 class="title text-dark">
+                                {{product.productName}}
+                            </h4>
+                            <button data-bs-toggle="modal" data-bs-target="#modalId"
+                                style="border: none; background-color: transparent;"><i
+                                    class="fa-regular fa-flag"></i></button>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="modalId" tabindex="-1" role="dialog"
+                                aria-labelledby="modalTitleId" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalTitleId">Tố cáo sản phẩm</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="" class="form-label">Nhập nội dung tố cáo sản phẩm:</label>
+                                                <input ng-model="reportContent" type="text" class="form-control" name=""
+                                                    id="" aria-describedby="helpId" placeholder="">
+                                                <small id="helpId" class="form-text text-muted">Help text</small>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Hủy</button>
+                                            <button ng-click="reportProduct()" type="button" class="btn btn-primary">Tố
+                                                cáo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                var modalId = document.getElementById('modalId');
+
+                                modalId.addEventListener('show.bs.modal', function (event) {
+                                    // Button that triggered the modal
+                                    let button = event.relatedTarget;
+                                    // Extract info from data-bs-* attributes
+                                    let recipient = button.getAttribute('data-bs-whatever');
+
+                                    // Use above variables to manipulate the DOM
+                                });
+                            </script>
+
+                        </div>
                         <div class="d-flex flex-row my-3">
                             <div class="text-warning mb-1 me-2">
 
@@ -145,7 +188,6 @@
                         </div>
 
                         <hr />
-
                         <div class="row">
                             <dt class="col-3">Màu sắc</dt>
                             <dd class="col-9">
@@ -160,6 +202,8 @@
                                     </div>
                                 </div>
                             </dd>
+                        </div>
+                        <div ng-show="product.productStatus.statusId==1">
                             <div class="col-md-4 col-6 mb-3">
                                 <label class="mb-2 d-block">Số lượng</label>
                                 <div class="input-group mb-3" style="width: 170px;">
@@ -181,20 +225,26 @@
                             <div class="col-md-7 col-5 mb-8 offset-1" ng-show="total!==-1">
                                 Kho: {{total}}
                             </div>
-                        </div>
 
-                        <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0"
-                            style="background-color: white ; color: #007ACC;">
-                            <i class=" fa fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
-                        <a ng-show="!favorite" ng-click="togglerFavorite()"
-                            class="btn btn-light border border-secondary  icon-hover px-3">
-                            ❤️ Yêu thích
-                        </a>
-                        <a ng-show="favorite" ng-click="togglerFavorite()"
-                            style="border:1px solid #ff3f40 !important; color: #ff3f40;"
-                            class="btn btn-light border border-secondary  icon-hover px-3">
-                            <i class="fa-solid fa-heart-crack"></i> Bỏ thích
-                        </a>
+                            <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0"
+                                style="background-color: white ; color: #007ACC;">
+                                <i class=" fa fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
+                            <a ng-show="!favorite" ng-click="togglerFavorite()"
+                                class="btn btn-light border border-secondary  icon-hover px-3">
+                                ❤️ Yêu thích
+                            </a>
+                            <a ng-show="favorite" ng-click="togglerFavorite()"
+                                style="border:1px solid #ff3f40 !important; color: #ff3f40;"
+                                class="btn btn-light border border-secondary  icon-hover px-3">
+                                <i class="fa-solid fa-heart-crack"></i> Bỏ thích
+                            </a>
+                        </div>
+                        <h2 ng-show="product.productStatus.statusId===2" style="color: #ff3f40;">
+                            NGƯNG KINH DOANH
+                        </h2>
+                        <h2 ng-show="product.productStatus.statusId===3" style="color: #ff3f40;">
+                            ĐANG KIỂM DUYỆT
+                        </h2>
                     </div>
                 </main>
             </div>
@@ -299,7 +349,7 @@
                                 </div>
                                 &nbsp;&nbsp;|&nbsp;&nbsp; <span>{{filterStatus}}</span>
                             </li>
- 
+
                         </center>
                         <div>
                             <div class="user-profile m-4"

@@ -1,4 +1,4 @@
-<div ng-controller="SearchController" class="animate__animated animate__fadeIn">
+<div class="animate__animated animate__fadeIn">
 	<!-- Bự nhất -->
 	<div class="d-md-block d-none">
 		<div class="row">
@@ -11,17 +11,24 @@
 						<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
 							<form class="position-relative" ng-submit="LS()" onsubmit="return validateSearch()">
 								<input type="search" class="form-control search-chat py-2 ps-5"
-									ng-value="showname.username" ng-keyup="searchUser()" ng-model="username"
-									id="text-srh" ng-keyup="TimKiem(key)" placeholder="Nhập tên người dùng..."
-									style="border: 1px solid #ccc; border-radius: 20px;"> <a><i
+									ng-value="showname.username" ng-keyup="findProduct(username)" ng-model="username"
+									id="text-srh" placeholder="Nhập tên người dùng..."
+									style="border: 1px solid #ccc; border-radius: 20px;">
+
+								<a><i
 										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
-								<!--  <button ng-click="LS()">Tìm kiếm</button> -->
+								<!-- ng-keyup="TimKiem(key)" <button ng-click="LS()">Tìm kiếm</button> -->
 							</form>
+							<span class="microphone">
+								<i class="fas fa-microphone"></i>
+								<span class="recording-icon"></span>
+							</span>
 						</div>
 					</div>
 				</center>
 
 				<center><b ng-if="searchnull">{{ searchnull }}</b></center>
+				<!-- Hiển thị người dùng -->
 				<div class="user-container" style="justify-content: space-evenly;">
 					<div class="user-card col-md-6" style="background: transparent; margin: 0"
 						ng-repeat="user in users">
@@ -30,7 +37,7 @@
 								<div class="username-dt dpbg-1"
 									style="background-image: url(images/{{user.background}}); background-size: cover;">
 									<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-											ng-src="images/{{user.avatar}}">
+											ng-src="{{user.avatar}}">
 									</a>
 								</div>
 								<div class="user-main-details" style="padding: 60px 0 2px 0;">
@@ -109,8 +116,6 @@
 				</div>
 		</div>
 	</div>
-
-
 	<!-- Giửa -->
 	<div class=" d-sm-block d-md-none d-none">
 		<div class="row">
@@ -142,7 +147,7 @@
 								<div class="username-dt dpbg-1"
 									style="background-image: url(images/{{user.background}}); background-size: cover;">
 									<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-											ng-src="images/{{user.avatar}}">
+											ng-src="{{user.avatar}}">
 									</a>
 								</div>
 								<div class="user-main-details" style="padding: 60px 0 2px 0;">
@@ -251,7 +256,7 @@
 								<div class="username-dt dpbg-1"
 									style="background-image: url(images/{{user.background}}); background-size: cover;">
 									<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-											ng-src="images/{{user.avatar}}">
+											ng-src="{{user.avatar}}">
 									</a>
 								</div>
 								<div class="user-main-details" style="padding: 60px 0 2px 0;">
@@ -369,13 +374,6 @@
 	}
 
 </script>
-<!-- <script type="module">
-	import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+<script>
 
-	// If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
-	import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js'
-
-	// Add Firebase products that you want to use
-	import { getAuth } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
-	import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js'
-</script> -->
+</script>

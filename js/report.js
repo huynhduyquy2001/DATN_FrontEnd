@@ -74,18 +74,18 @@ app.controller(
         console.log(error);
       });
 
-      $scope.detail = function(postId){
-     
-        $http.get(url + '/admin/report/detail/' + postId)
-              .then(function (response) {
-                  $scope.posts = response.data;
-              })
-              .catch(function (error) {
-                  console.log(error);
-              });
-              
-              $("#exampleModal").modal("show");
-      }
+    $scope.detail = function (postId) {
+
+      $http.get(url + '/admin/report/detail/' + postId)
+        .then(function (response) {
+          $scope.posts = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      $("#exampleModal").modal("show");
+    }
     //Tạo biểu đồ
 
     //Biểu đồ 1
@@ -149,7 +149,7 @@ app.controller(
           "Tháng 2",
           "Tháng 3",
           "Tháng 4",
-          " Tháng 5",
+          "Tháng 5",
           "Tháng 6",
           "Tháng 7",
           "Tháng 8",
