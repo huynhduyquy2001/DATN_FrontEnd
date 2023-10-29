@@ -132,7 +132,6 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 		} else {
 			$anchorScroll();
 			$rootScope.currentPage = $rootScope.currentPage + 1; // Cập nhật trang hiện tại
-
 			$scope.getproductList($rootScope.currentPage);
 		}
 	}
