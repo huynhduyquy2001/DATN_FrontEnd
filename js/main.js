@@ -72,6 +72,9 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/videocall/:userId', {
 		templateUrl: "ngview/videoCall.html",
 		controller: 'VideoCallController'
+	}).when('/staff/productsviolation', {
+		templateUrl: "ngview/ProductsViolation.html",
+		controller: 'productsViolationCtrl'
 	});
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
