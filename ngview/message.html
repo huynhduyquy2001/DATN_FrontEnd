@@ -46,11 +46,15 @@
 				</div>
 			</main>
 			<form class="msger-inputarea" style="background: transparent; border-top: 1px solid #ebf1f6;">
-				<input ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
+				<input id="text-srh" ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
 					placeholder="Nhập tin nhắn của bạn...">
 				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
 					href="#exampleModalToggle"><i style="margin: 0; padding: 0;padding-right: 1rem;"
 						class="fa-regular fa-camera-retro"></i></span>
+				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" class="microphone">
+					<i style="margin: 0; padding: 0;padding-right: 1rem;" class="fas fa-microphone"></i>
+					<span class="recording-icon"></span>
+				</span>
 				<a style="margin: 0; padding: 0; height: 0; cursor: pointer; " ng-click="openLink(userMess.userId)"><i
 						style="padding: 0;" class="fa-regular fa-phone"></i></a>
 				<button type="submit" class="msger-send-btn"
@@ -63,9 +67,6 @@
 	</div>
 	<div class="col-md-4" id="menuMessLeft"
 		style="border: 1px solid #ebf1f6; padding-top: 0.5rem; background-color: #fff; height: 89vh; overflow: scroll;">
-		<h4><b>Tin Nhắn</b></h4>
-		<input class="form-control" placeholder="{{ 'TK' | translate }}">
-		<br>
 		<ul class="list-unstyled mb-0">
 			<li ng-repeat="UsersMess in ListUsersMess" class="hver"
 				style="padding: 0.7rem!important; padding-right: 1.5rem!important; transition: 0.3s;"
@@ -84,9 +85,10 @@
 										UsersMess[11] }}</span></b>
 							</div>
 							<br>
-							<div style="display: flex; justify-content: space-between; height: 13px;">
+							<div style="display: flex; justify-content: space-between; height: 13px; flex-wrap: wrap;
+							flex-direction: column;">
 								<small
-									style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">{{
+									style="font-size: 13px; overflow: hidden; width: 40%; white-space: nowrap; text-overflow: ellipsis;">{{
 									UsersMess[6] }} </small>
 								<!-- <small ng-if="UsersMess[8] === 'Đã ẩn'"
 									style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">Tin
