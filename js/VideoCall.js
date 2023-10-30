@@ -5,8 +5,10 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
         call1.on('addremotestream', function (stream) {
             // reset srcObject to work around minor bugs in Chrome and Edge.
             console.log('addremotestream');
+            $scope.onMic = true;
             remoteVideo.srcObject = null;
             remoteVideo.srcObject = stream;
+            $scope.$apply();
         });
 
         call1.on('addlocalstream', function (stream) {
@@ -58,6 +60,8 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     $rootScope.client.connect($rootScope.token);
     $scope.localVideo = document.getElementById('localVideo');
     $scope.remoteVideo = document.getElementById('remoteVideo');
+    $scope.onMic = false;
+    $scope.checkVideo = false;
     var findMyAccount = "http://localhost:8080/findmyaccount";
     var url = "http://localhost:8080";
     $scope.callerId = "";
@@ -89,6 +93,7 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     $scope.makeVideoCall = function () {
         try {
             $rootScope.client.connect($rootScope.token);
+            $scope.checkVideo = true;
             $rootScope.currentCall = new StringeeCall($rootScope.client, $scope.callerId, $scope.calleeId, true);
             $scope.settingCallEvent($rootScope.currentCall, $scope.localVideo, $scope.remoteVideo);
             $rootScope.currentCall.makeCall(function (res) {
@@ -141,6 +146,8 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
             });
         }
         $rootScope.checkCall = 2;
+        $scope.checkVideo = true;
+        $scope.onMic = true;
         $scope.$apply();
     };
     //hàm từ chối
@@ -175,5 +182,28 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     });
     var asideLeft = document.getElementById('asideLeft');
     asideLeft.style.display = 'none';
+
+    // Lấy kích thước ban đầu của cửa sổ trình duyệt
+    var originalWidth = window.innerWidth;
+    var originalHeight = window.innerHeight;
+
+    // Ngăn trình duyệt thay đổi kích thước
+    window.onresize = function () {
+        window.resizeTo(originalWidth, originalHeight);
+    };
+
+    window.addEventListener('beforeunload', function (e) {
+        // Gọi hàm "endCall" của bạn ở đây.
+        $scope.endCall();
+        return true;
+    });
+
+    // Ngăn nút maximize trong một phạm vi cụ thể
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 900) {
+            window.resizeTo(800, window.innerHeight);
+        }
+    });
+
 }
 );

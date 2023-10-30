@@ -18,22 +18,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	var url = "http://localhost:8080";
 	var getUnseenMess = "http://localhost:8080/getunseenmessage";
 
-	//lấy chiều cao carousel
-	$scope.getHeightCarousel = function (images) {
-		var maxHeight = 0;
-		angular.forEach(images, function (image) {
-			var img = new Image();
-			img.src = image.imageUrl;
-			img.onload = function () {
-				if (img.height > maxHeight) {
-					maxHeight = img.height;
-				}
-			};
-		});
-		$timeout(function () {
-			return maxHeight + 'px';
-		}, 1000);
-	}
+
 
 	// var img = new Image();
 	// img.src = '/images/beach.jpg';

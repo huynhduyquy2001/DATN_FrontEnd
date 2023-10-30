@@ -126,8 +126,7 @@
 												aria-current="{{$index === 0}}" aria-label="Slide {{$index + 1}}"></li>
 										</ol>
 										<!-- Carousel items -->
-										<div class="carousel-inner" role="listbox"
-											ng-style="{ 'height': getHeightCarousel(post.images) }">
+										<div class="carousel-inner" role="listbox">
 											<div class="carousel-item" style="background-color: black;"
 												ng-repeat="image in post.images track by $index"
 												ng-class="{ 'active': $index === 0 }">
@@ -135,7 +134,7 @@
 												<img ng-click="getPostDetails(post.postId)" ng-if="image.type === true"
 													ng-src="{{ image.imageUrl }}" class="w-100 d-block"
 													alt="Slide {{$index + 1}}"
-													style="max-height: 90vh; object-fit: contain; width: 100%; height: 60vh;">
+													style="max-height: 90vh; object-fit: cover; width: 100%; height: 60vh;">
 
 												<video ng-if="image.type === false" autoplay controls
 													style="max-height: 80vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%;left: 50%; position: absolute;">
