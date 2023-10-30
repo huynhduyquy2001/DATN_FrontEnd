@@ -8,8 +8,9 @@
 				<center>
 					<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
 						<!--Tìm kiếm-->
-						<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
-							<form class="position-relative" ng-submit="LS()" onsubmit="return validateSearch()">
+						<div style="width: 100%; text-align: left; display: flex;" data-bs-toggle="modal">
+							<form class="position-relative" style="width: 100%;" ng-submit="LS()"
+								onsubmit="return validateSearch()">
 								<input type="search" class="form-control search-chat py-2 ps-5"
 									ng-value="showname.username" ng-keyup="findProduct(username)" ng-model="username"
 									id="text-srh" placeholder="Nhập tên người dùng..."
@@ -19,7 +20,9 @@
 										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
 								<!-- ng-keyup="TimKiem(key)" <button ng-click="LS()">Tìm kiếm</button> -->
 							</form>
-							<span class="microphone">
+							<span class="microphone" style="display: flex;
+                justify-content: center;
+                align-items: center; margin-left: 1rem;">
 								<i class="fas fa-microphone"></i>
 								<span class="recording-icon"></span>
 							</span>
