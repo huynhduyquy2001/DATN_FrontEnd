@@ -1,4 +1,4 @@
-app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $compile, $injector) {
+app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $window, $timeout, $location) {
   var url = "http://localhost:8080";
   var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
   $scope.listProducts = [];
@@ -647,8 +647,6 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $c
     Promise.all([dataListProduct, dataAddress]).then(function () {
       var listUserIdStore = [];
       var data = $scope.listProductOrder;
-      console.log(data)
-      console.log("---------------------")
       //Gom sản phẩm có cùng cửa hàng rồi tính tổng các giá trị của sản phẩm
       let aggregatedData = {};
       for (let userId in data) {
@@ -692,7 +690,6 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $c
 
       // Chuyển đổi aggregatedData từ đối tượng thành mảng
       var totalData = Object.values(aggregatedData);
-      console.log(totalData)
       //Lấy danh sách địa chỉ cửa hàng
       $http({
         method: "GET",
@@ -849,20 +846,23 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $c
     $scope.selectedWard = null;
     $scope.textareaValue = "";
     inputElement.value = "";
-  }
+  } 
 
   $scope.paymentVNPay = function (pay) {
     var element = document.getElementById("vnpay");
-    $scope.checkPay = pay;
+    var totalFeePay = document.getElementById("totalFeePay");
+    var addressPay = document.getElementById("addressPay");
     $scope.payment = element.textContent || element.innerText;
+    $scope.totalFeePay = totalFeePay.textContent || totalFeePay.innerText;
+    $scope.addressPay = addressPay.textContent || addressPay.innerText;
 
     // Loại bỏ các ký tự không phải số hoặc dấu chấm
     var numberOnly = $scope.payment.replace(/[^\d]/g, '');
 
     // Chuyển đổi chuỗi thành số
     var numericValue = parseInt(numberOnly);
-
-    console.log(numericValue);
+    var numericValueFeePay = parseFloat($scope.totalFeePay.replace(/[^\d]/g, ''));
+    var addressText = $scope.addressPay.trim();
 
     if (pay == true) {
       $http.post(url + "/create_payment/" + numericValue)
@@ -872,8 +872,50 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $c
           // Mở trang mới với URL nhận được
           window.location.href = newPageUrl;
         });
+    } else{
+            // Lấy tất cả các phần tử input có type là checkbox
+          var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+          // Lưu giá trị từ các checkbox
+          var listColorAndProductId = [];
+          // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
+          checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked && checkbox.offsetParent !== null) {
+              var productIdAndColor = checkbox.id.split("_");
+              var productId = productIdAndColor[0];
+              var color = productIdAndColor[1];
+              listColorAndProductId.push({ productId: productId, color: color });
+            }
+          });
+            //Thanh toán
+            $http({
+              method: "POST",
+              url: url + "/payShoppingCart/" + numericValue + "/"+ addressText + "/" + numericValueFeePay, 
+              data: listColorAndProductId, 
+              contentType: "application/json",
+            }).then(function (response) {
+                    Swal.fire({
+                    position: "top",
+                    icon: "success",
+                    text: response.data.body,
+                    showConfirmButton: false,
+                    timer: 1000,
+                  });
+                $scope.loadData();
+                //Ẩn modal đặt hàng
+                $("#exampleModal").modal("hide");
+                $location.path('/order/' + $rootScope.myAccount.user.userId);
+              })
+              .catch(function (error) {
+                console.error("Error:", error);
+              });
     }
 
   }
+
+  $scope.reloadPageAfterDelay = function (delayInSeconds) {
+    $timeout(function () {
+      $window.location.reload();
+    }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
+  };
 
 });

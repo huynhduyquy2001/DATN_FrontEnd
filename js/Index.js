@@ -161,19 +161,18 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		});
 
 
-	//xem chi tiết thông báo
+	//xem chi tiết bài viết
 	$scope.getPostDetails = function (postId) {
 		$http.get(url + '/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
 				$rootScope.postComments = postComments;
-				console.log(response.data);
 			}, function (error) {
 				// Xử lý lỗi
 				console.log(error);
 			});
 		$scope.isReplyEmpty = true;
-		$http.get('url+/postdetails/' + postId)
+		$http.get(url + '/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
 				$scope.postDetails = postDetails;
@@ -182,7 +181,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 			}, function (error) {
 				// Xử lý lỗi
-				console.log(error);
+				console.log(error); 
 			});
 	};
 	//định dạng ngày
@@ -214,7 +213,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			var formattedDate = activityTime.getDate();
 			var formattedMonth = activityTime.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
 			var formattedYear = activityTime.getFullYear();
-			return formattedDate + '-' + formattedMonth + '-' + formattedYear;
+			return formattedDate + '/' + formattedMonth + '/' + formattedYear;
 		}
 	};
 
@@ -318,7 +317,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$http.get(loadnotification)
 		.then(function (response) {
 			var data = response.data;
-			console.log(data)
 			for (var i = 0; i < data.length; i++) {
 				$scope.notification.push(data[i]);
 				$scope.notificationNumber = $scope.notification;
@@ -539,6 +537,33 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$scope.notificationNumber = [];
 	}
 
+	//Xem chi tiết thông báo
+	$scope.getNotificationDetail = function(postId, productId){
+		if(postId != null && productId == null){
+			$http.get(url + '/findpostcomments/' + postId)
+			.then(function (response) {
+				var postComments = response.data;
+				$rootScope.postComments = postComments;
+			}, function (error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+		$scope.isReplyEmpty = true;
+		$http.get(url + '/postdetails/' + postId)
+			.then(function (response) {
+				var postDetails = response.data;
+				$scope.postDetails = postDetails;
+				// Xử lý phản hồi thành công từ máy chủ
+				$('#chiTietBaiViet').modal('show');
+
+			}, function (error) {
+				// Xử lý lỗi
+				console.log(error); 
+			});
+		}else {
+			$location.path('/productdetails/' + productId);
+		}
+	}
 	//Xóa thông báo
 	$scope.deleteNotification = function (notificationId) {
 		$http.delete(url + '/deleteNotification/' + notificationId)
