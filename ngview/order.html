@@ -41,10 +41,10 @@
                 <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-giao-hang">Chờ giao hàng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-giao">Đã giao</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-giao" id="giao-hang">Đã giao</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-huy">Đã hủy</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-huy" id="huy-hang">Đã hủy</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="pill" href="#tab-tra-hang">Trả hàng</a>
@@ -57,7 +57,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="tab-tat-ca">
                 <!--Bự nhứt nè-->
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div>
                         <div class="col">
                             <div class="mb-0 card">
@@ -101,7 +101,7 @@
                                                 <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                                 <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                                 </div>
-                                                <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                                <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                     currencyFormat}}</div>
                                             </div>
                                         </div>
@@ -147,7 +147,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -186,7 +186,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -225,7 +225,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -263,7 +263,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -304,7 +304,7 @@
 
             </div>
             <div class="tab-pane fade" id="tab-cho-xet-duyet">
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -346,7 +346,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -365,21 +365,11 @@
                                         </div>
                                         <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                         <div class="mt-3">
-                                            <span class="me-2">
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-regular fa-store ic"></i>
-                                                        <span class="res-text">Xem các đánh
-                                                            giá</span></button></a>
-                                            </span>
-                                            <span>
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-danger btn-sm"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-rotate-right ic"></i>
-                                                        <span class="res-text">Mua lại</span></button></a>
-                                            </span>
+                                            <a><button type="button" class="btn btn-danger btn-sm"
+                                                    style="background-color: #ff3f40;"
+                                                    ng-click="cancelOrders(o[0].orderId)">
+                                                    <i class="fa-light fa-rectangle-xmark"></i>
+                                                    <span class="res-text">Hủy đơn hàng</span></button></a>
 
                                         </div>
                                     </div>
@@ -393,7 +383,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -432,7 +422,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -449,18 +439,11 @@
                                         </div>
                                         <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                         <div class="mt-3">
-                                            <span class="me-6">
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-star"></i></button></a>
-                                            </span>
-                                            <span>
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-danger btn-sm"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button></a>
-                                            </span>
+                                            <a><button type="button" class="btn btn-danger btn-sm"
+                                                    style="background-color: #ff3f40;"
+                                                    ng-click="cancelOrders(o[0].orderId)">
+                                                    <i class="fa-light fa-rectangle-xmark"></i>
+                                                    <span class="res-text"></span></button></a>
                                         </div>
                                     </div>
 
@@ -471,7 +454,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -509,7 +492,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -526,18 +509,11 @@
                                         </div>
                                         <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                         <div class="mt-3">
-                                            <span class="me-6">
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-star"></i></button></a>
-                                            </span>
-                                            <span>
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-danger btn-sm"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button></a>
-                                            </span>
+                                            <a><button type="button" class="btn btn-danger btn-sm"
+                                                    style="background-color: #ff3f40;"
+                                                    ng-click="cancelOrders(o[0].orderId)">
+                                                    <i class="fa-light fa-rectangle-xmark"></i>
+                                                    <span class="res-text"></span></button></a>
                                         </div>
                                     </div>
 
@@ -549,7 +525,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-cho-giao-hang">
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -591,7 +567,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -610,20 +586,12 @@
                                         </div>
                                         <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                         <div class="mt-3">
-                                            <span class="me-2">
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-regular fa-store ic"></i>
-                                                        <span class="res-text">Xem các đánh
-                                                            giá</span></button></a>
-                                            </span>
                                             <span>
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-danger btn-sm"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-rotate-right ic"></i>
-                                                        <span class="res-text">Mua lại</span></button></a>
+                                                <a><button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;"
+                                                        ng-click="acceptOrders(o[0].orderId)">
+                                                        <i class="fa-light fa-badge-check ic"></i>
+                                                        <span class="res-text">Đã nhận được hàng</span></button></a>
                                             </span>
 
                                         </div>
@@ -638,7 +606,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -677,7 +645,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -694,17 +662,12 @@
                                         </div>
                                         <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                         <div class="mt-3">
-                                            <span class="me-6">
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-star"></i></button></a>
-                                            </span>
                                             <span>
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-danger btn-sm"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button></a>
+                                                <a><button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;"
+                                                        ng-click="acceptOrders(o[0].orderId)">
+                                                        <i class="fa-light fa-badge-check ic"></i>
+                                                        <span class="res-text"></span></button></a>
                                             </span>
                                         </div>
                                     </div>
@@ -716,7 +679,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -754,7 +717,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -771,17 +734,12 @@
                                         </div>
                                         <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                         <div class="mt-3">
-                                            <span class="me-6">
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-star"></i></button></a>
-                                            </span>
                                             <span>
-                                                <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                        type="button" class="btn btn-danger btn-sm"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-rotate-right"></i></button></a>
+                                                <a><button type="button" class="btn btn-danger btn-sm"
+                                                        style="background-color: #ff3f40;"
+                                                        ng-click="acceptOrders(o[0].orderId)">
+                                                        <i class="fa-light fa-badge-check ic"></i>
+                                                        <span class="res-text"></span></button></a>
                                             </span>
                                         </div>
                                     </div>
@@ -796,7 +754,7 @@
 
             </div>
             <div class="tab-pane fade" id="tab-da-giao">
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 4">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -838,7 +796,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -885,7 +843,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 4">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -924,7 +882,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -963,7 +921,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 4">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1001,7 +959,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -1042,7 +1000,7 @@
             </div>
             <div class="tab-pane fade" id="tab-da-huy">
 
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 6">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1084,7 +1042,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -1131,7 +1089,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 6">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1170,7 +1128,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -1209,7 +1167,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 6">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1247,7 +1205,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -1287,7 +1245,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-tra-hang">
-                <div class="history d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 5">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1329,7 +1287,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -1376,7 +1334,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 5">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1415,7 +1373,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
@@ -1454,7 +1412,7 @@
                     </div>
                 </div>
                 <!--Dưới nữa nè-->
-                <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 5">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -1492,7 +1450,7 @@
                                             <div class="card-text">Mã đơn hàng: {{o[0].orderId}}</div>
                                             <div class="card-text">Giá gốc: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <div class="card-text">Phí vận chuyển: {{o[1].shippingFee |
+                                            <div class="card-text">Phí vận chuyển: {{o[0].shippingFee |
                                                 currencyFormat}}</div>
                                         </div>
                                     </div>
