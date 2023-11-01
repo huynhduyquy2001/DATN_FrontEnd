@@ -4,46 +4,52 @@
         <br> <br>
         <div class="mb-3" style="display: flex; justify-content: right;">
             <input type="text" class="form-control" name="" id="search-F" aria-describedby="helpId"
-                ng-model="productNameF" ng-keyup="findProductF(0)" placeholder="Nhập sản phẩm cần tìm...">
-            <span class="microphone">
+                style="border-radius: 20px; width: 50%;" ng-model="productNameF" ng-keyup="findProductF(0)"
+                placeholder="Nhập sản phẩm cần tìm...">
+            <span class="microphone" style="display: flex;
+                justify-content: center;
+                align-items: center; margin-left: 1rem;">
                 <i class="fas fa-microphone"></i>
                 <span class="recording-icon"></span>
             </span>
 
         </div>
         <br> <br>
-        <div class="col-lg-6" style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in favoriteProducts">
-            <div class="row frameProduct animate__animated animate__fadeIn">
-                <div class="col-md-6" style="display: flex; justify-content: center;align-items: center;">
+        <div class="row">
+            <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12"
+                style="z-index: 10; margin-bottom: 3rem; border-radius: 5px;" ng-repeat="product in favoriteProducts">
+                <div class="row frameProduct ">
                     <div class="col-md-6" style="display: flex;max-height: 100%;">
+
                         <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
-                                class="imghover animate__animated animate__fadeIn" width="100%"
+                                class="imghover" width="100%"
                                 style="height: 100%; object-fit: cover; border-radius: 5px;"
                                 ng-src="{{product.media[0].mediaUrl}}"></a>
                     </div>
-                </div>
-                <div class="col-md-6 frame" style="cursor: pointer;">
-                    <div class="product__info">
-                        <div class="user-profile">
-                            <a href="#!/profile/{{product.user.userId}}"><img ng-src="{{product.user.avatar}}"
-                                    style="border-radius: 100%;" alt=""></a>
-                            <div>
-                                <span
-                                    style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-                                    class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp; <span><small
-                                        style="font-size: 12px; color: #65676b" class="ng-binding">
-                                        <!-- {{getFormattedTimeAgo(product.favoriteDate)}} -->
-                                    </small></span>
+                    <div class="col-md-6 frame" style="cursor: pointer;">
+                        <div class="product__info">
+                            <div class="user-profile ">
+                                <a href="#!/profile/{{product.user.userId}}"><img ng-src="{{product.user.avatar}}"
+                                        style="border-radius: 100%;" alt=""></a>
+                                <div>
+                                    <span
+                                        style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+                                        class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp;
+                                    <span><small style="font-size: 12px; color: #65676b" class="ng-binding">
+                                            {{getFormattedTimeAgo(product.datePost)}}
+                                        </small></span>
+                                </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="title">
-                            <h2 style="font-size: 1.5rem; white-space: nowrap;
-                            text-overflow: ellipsis; overflow: hidden;">{{product.productName}}
-                            </h2>
-                        </div>
-                        <div class="description">
-                            <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
+                            <hr>
+                            <div class="title">
+                                <b
+                                    style="font-size: 1.2rem; white-space: nowrap;
+                        text-overflow: ellipsis;display: block; width: 100%; overflow: hidden;">{{product.productName}}</b>
+                            </div>
+                            <div class="description">
+                                <h3>Đánh giá <small>({{ calculateAverageRating(product.ratings) }})</small>
+
+                                </h3>
                                 <span>
                                     <span ng-if="calculateAverageRating(product.ratings)==0">
                                         <i ng-repeat="n in [].constructor(5) track by $index" class="fa-solid fa-star"
@@ -119,37 +125,39 @@
                                         <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
                                     </span>
                                 </span>
-                        </div>
-                        <div class="note">
-                            <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
-                                    aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shopping-basket"
-                                    role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
-                                    data-fa-i2svg="">
-                                    <path fill="currentColor"
-                                        d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
-                                    </path>
-                                </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->{{product.ratings.length}}
-                                lượt đánh giá</span>
-                            <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
+                            </div>
+                            <div class="note">
+                                <span class="text-muted"><svg class="svg-inline--fa fa-shopping-basket fa-sm mx-1"
+                                        aria-hidden="true" focusable="false" data-prefix="fas"
+                                        data-icon="shopping-basket" role="img" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 576 512" data-fa-i2svg="">
+                                        <path fill="currentColor"
+                                            d="M253.3 35.1c6.1-11.8 1.5-26.3-10.2-32.4s-26.3-1.5-32.4 10.2L117.6 192H32c-17.7 0-32 14.3-32 32s14.3 32 32 32L83.9 463.5C91 492 116.6 512 146 512H430c29.4 0 55-20 62.1-48.5L544 256c17.7 0 32-14.3 32-32s-14.3-32-32-32H458.4L365.3 12.9C359.2 1.2 344.7-3.4 332.9 2.7s-16.3 20.6-10.2 32.4L404.3 192H171.7L253.3 35.1zM192 304v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16zm96-16c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16zm128 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16V304c0-8.8 7.2-16 16-16s16 7.2 16 16z">
+                                        </path>
+                                    </svg><!-- <i class="fas fa-shopping-basket fa-sm mx-1"></i> -->{{product.ratings.length}}
+                                    lượt đánh giá</span>
+                                <span class="text-success ms-2">{{product.soldQuantity}} đã bán</span>
+                            </div>
+
+                            <div class="price animate__animated animate__fadeInUp">
+                                <small ng-show="!product.promotion==0"><span
+                                        style="text-decoration: line-through; color: gray;">{{product.originalPrice
+                                        | currencyFormat}}
+                                    </span> &nbsp; |&nbsp;</small>
+                                <span> {{getSalePrice(product.originalPrice, product.promotion) |
+                                    currencyFormat}}</span>
+                            </div>
+                            <button ng-click="getProduct(product.productId)" data-bs-toggle="modal"
+                                data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
+                                style="margin-top: 0.5rem;">Thêm vào
+                                giỏ hàng</button>
                         </div>
 
-                        <div class="price animate__animated animate__fadeInUp">
-                            <span ng-show="!product.promotion==0"><span
-                                    style="text-decoration: line-through; color: gray;">{{product.originalPrice |
-                                    currencyFormat}}
-                                    vnd </span> &nbsp; |&nbsp;</span>
-                            <span> {{getSalePrice(product.originalPrice, product.promotion) | currencyFormat}} </span>
-                        </div>
-                        <button ng-click="getProduct(product.productId)" data-bs-toggle="modal"
-                            data-bs-target="#modalId" class="add--btn" style="margin-top: 1.5rem;"><i
-                                class="fa-solid fa-cart-shopping"></i> Thêm </button>
-                        <button class="dislike--btn animate__animated animate__fadeInDown"
-                            ng-click="togglerFavorite(product.productId)" style="margin-top: 1.5rem;"><i
-                                class="fa-solid fa-heart-crack"></i> Bỏ thích</button>
                     </div>
-
                 </div>
+
             </div>
+
         </div>
     </div>
     <center>

@@ -117,7 +117,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="selectedColor in selectedColors">
-                                                    <td>{{ selectedColor }}</td>
+                                                    <td>Màu {{ selectedColor.color.colorName }}</td>
                                                     <td><input type="text" ng-model="selectedColor.quantity" min="1"
                                                             class="form-control" required></td>
                                                 </tr>
@@ -171,7 +171,7 @@
                                 nhật</button>
                         </div>
                     </form>
-                    <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button>
+                    <!-- <button ng-click="saveProductColor()" class="btn btn-light m-1">Thêm màu</button> -->
                 </div>
             </div>
         </div>
