@@ -58,30 +58,12 @@ app.controller(
           originalList = res.data.content;
           $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
           $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-          $rootScope.checkMystore = 1;
         })
         .catch(function (error) {
           console.log(error);
         });
+        $rootScope.checkMystore = 1;
     };
-
-    //Load từ đầu
-    $http
-      .get(
-        url +
-        "/mystore/" +
-        $routeParams.userId +
-        "/" +
-        $scope.currentPageMyStore
-      )
-      .then(function (res) {
-        originalList = res.data.content;
-        $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-        $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
 
     $scope.pagePending = function (currentPagePending) {
       $http
@@ -95,16 +77,27 @@ app.controller(
         .then(function (res) {
           $scope.listProductPending = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
           $scope.totalPagePending = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-          $rootScope.checkMystore = 2;
+          
         })
         .catch(function (error) {
           console.log(error);
         });
+        $rootScope.checkMystore = 2;
     };
+
+    //Load từ đầu
+    if($rootScope.checkMystore === 1){
+      $scope.page($rootScope.currentPageMyStore);
+    }else if($rootScope.checkMystore === 2){
+      $scope.pagePending($rootScope.currentPagePending)
+    }else if($rootScope.checkMystore === 3){
+      $scope.tabsReport();
+    }
 
     //Tìm kiếm
     $scope.searchProduct = function () {
       var search = $scope.searchValue;
+      console.log(search)
       if ($scope.searchValue === "") {
         $scope.listProductMyStore = originalList;
         return;
@@ -367,6 +360,10 @@ app.controller(
       }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
     };
 
+    //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
+    $scope.tabsReport = function(){
+    
+    $rootScope.checkMystore = 3;
 
     //thống kê của hàng của tôi 
     $scope.countorderperonal = [];
@@ -573,6 +570,6 @@ app.controller(
     }).catch(function (error) {
       console.error("Lỗi: " + error);
     });
-
+  }
   });
 

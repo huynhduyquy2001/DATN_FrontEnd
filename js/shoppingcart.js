@@ -10,7 +10,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
   $scope.fee = [];
   $scope.checkShip = false;
   $scope.oneAddress = {};
-  $scope.checkPay = true;
+  $scope.checkPay = false;
   var dataListProduct;
   var dataAddress;
   $scope.loadData = function () {
@@ -848,6 +848,10 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     inputElement.value = "";
   } 
 
+  $scope.clickStatusPay = function(status){
+      $scope.checkPay = status;
+  }
+
   $scope.paymentVNPay = function (pay) {
     var element = document.getElementById("vnpay");
     var totalFeePay = document.getElementById("totalFeePay");
@@ -865,14 +869,14 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     var addressText = $scope.addressPay.trim();
 
     if (pay == true) {
-      $http.post(url + "/create_payment/" + numericValue)
-        .then(function (response) {
-          // Lấy URL từ response data
-          var newPageUrl = response.data.body;
-          // Mở trang mới với URL nhận được
-          window.location.href = newPageUrl;
-        });
-    } else{
+          $http.post(url + "/create_payment/" + numericValue)
+            .then(function (response) {
+              // Lấy URL từ response data
+              var newPageUrl = response.data.body;
+              // Mở trang mới với URL nhận được
+              window.location.href = newPageUrl;
+            });
+      } else{
             // Lấy tất cả các phần tử input có type là checkbox
           var checkboxes = document.querySelectorAll('input[type="checkbox"]');
           // Lưu giá trị từ các checkbox

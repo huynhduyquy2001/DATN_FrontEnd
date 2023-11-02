@@ -275,6 +275,7 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 			$scope.getproductList($rootScope.currentPageTrending);
 		}
 	}
+	
 	if ($rootScope.checkShopping === 1) {
 		$scope.getproductListTrending($rootScope.currentPageTrending);
 	} else if ($rootScope.checkShopping === 2) {
