@@ -10,11 +10,8 @@ angular.module('myApp').controller('loginController', function ($scope, $http) {
         $http.post('http://localhost:8080/api/createToken', userData)
             .then(function (response) {
                 // Store the token in local storage
-                localStorage.setItem('jwtToken', response.data.accessToken);
-                $scope.error = "Đăng nhập thành công, đang chuyển đến trang chủ";
-                setTimeout(function () {
-                    window.location.href = "Index.html"
-                }, 1000)
+                localStorage.setItem('jwtToken', response.data.accessToken);        
+                window.location.href = "Index.html"
             })
             .catch(function (error) {
                 $scope.error = "Đăng nhập thất bại, kiểm tra lại tài khoản mật khẩu";

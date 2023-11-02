@@ -34,44 +34,48 @@ app.config(function ($httpProvider) {
 app.factory('AuthInterceptor', function ($q, $window) {
 	return {
 		responseError: function (rejection) {
-			if (rejection.status === 403) {
+			 if (rejection.status === 403) {
 				// Redirect to the login page
-				$window.location.href = 'login.html';
+				$window.location.href = 'Login.html';
 			}
 			return $q.reject(rejection);
 		}
 	}
-})
-app.factory('apiService', function ($http) {
-	// Function to get the JWT token from local storage
-	function getJwtToken() {
-		// Replace 'YOUR_JWT_TOKEN_KEY' with the key you used to store the token in local storage
-		console.log(localStorage.getItem('jwtToken'))
-		return localStorage.getItem('jwtToken');
-	}
-
-	// Function to set the JWT token in the HTTP headers of the API request
-	function setAuthorizationHeader() {
-		var jwtToken = getJwtToken();
-		if (jwtToken) {
-			$http.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
-		}
-	}
-
-	// Function to remove the JWT token from the HTTP headers
-	function removeAuthorizationHeader() {
-		delete $http.defaults.headers.common['Authorization'];
-	}
-
-	// Expose the public methods of the factory
-	return {
-		setAuthorizationHeader: setAuthorizationHeader,
-		removeAuthorizationHeader: removeAuthorizationHeader
-	};
 });
-app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScope, $location, $timeout, $interval, apiService) {
 
+app.factory('apiService', function ($http, $q) {
+    var apiService = {};
+
+    // Function to set the JWT token in the HTTP headers of the API request
+    apiService.setAuthorizationHeader = function () {
+		
+        var jwtToken = apiService.getJwtToken();
+        if (jwtToken) {
+            $http.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
+			$http.defaults.headers.common['isRefreshToken'] = 'true';
+        }
+    };
+
+
+    // Function to remove the JWT token from the HTTP headers
+    apiService.removeAuthorizationHeader = function () {
+        delete $http.defaults.headers.common['Authorization'];
+    };
+
+	
+	
+	  
+    apiService.getJwtToken = function () {
+        return localStorage.getItem('jwtToken');
+    };
+
+    return apiService;
+});
+
+app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScope, $location, $timeout, $interval, apiService) {
+		
 	apiService.setAuthorizationHeader();
+	
 
 	$scope.isAuthenticated = function () {
 		console.log("isAuthenticated", isAuthenticated);
