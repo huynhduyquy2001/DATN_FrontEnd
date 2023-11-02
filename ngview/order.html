@@ -120,22 +120,41 @@
                                             </div>
                                             <div class="card-text">Trạng thái: {{o[0].orderStatus.statusName}}</div>
                                             <div class="mt-3">
-                                                <span class="me-2">
-                                                    <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                            type="button" class="btn btn-outline-danger btn-sm"
-                                                            style="outline-color: #ff3f40;">
-                                                            <i class="fa-sharp fa-regular fa-store ic"></i>
-                                                            <span class="res-text">Xem các đánh
-                                                                giá</span></button></a>
-                                                </span>
-                                                <span>
-                                                    <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
-                                                            type="button" class="btn btn-danger btn-sm"
-                                                            style="background-color: #ff3f40;">
-                                                            <i class="fa-sharp fa-solid fa-rotate-right ic"></i>
-                                                            <span class="res-text">Mua lại</span></button></a>
-                                                </span>
-
+                                                <div
+                                                    ng-if="!(groupedOrders[0][0].orderStatus.statusId === 1 || groupedOrders[0][0].orderStatus.statusId === 3)">
+                                                    <span class="me-2">
+                                                        <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
+                                                                type="button" class="btn btn-outline-danger btn-sm"
+                                                                style="outline-color: #ff3f40;">
+                                                                <i class="fa-sharp fa-regular fa-store ic"></i>
+                                                                <span class="res-text">Xem các đánh
+                                                                    giá</span></button></a>
+                                                    </span>
+                                                    <span>
+                                                        <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
+                                                                type="button" class="btn btn-danger btn-sm"
+                                                                style="background-color: #ff3f40;">
+                                                                <i class="fa-sharp fa-solid fa-rotate-right ic"></i>
+                                                                <span class="res-text">Mua lại</span></button></a>
+                                                    </span>
+                                                </div>
+                                                <div ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
+                                                    <span>
+                                                        <a><button type="button" class="btn btn-danger btn-sm"
+                                                                style="background-color: #ff3f40;"
+                                                                ng-click="acceptOrders(o[0].orderId)">
+                                                                <i class="fa-light fa-badge-check ic"></i>
+                                                                <span class="res-text">Đã nhận được
+                                                                    hàng</span></button></a>
+                                                    </span>
+                                                </div>
+                                                <div ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
+                                                    <a><button type="button" class="btn btn-danger btn-sm"
+                                                            style="background-color: #ff3f40;"
+                                                            ng-click="cancelOrders(o[0].orderId)">
+                                                            <i class="fa-light fa-rectangle-xmark"></i>
+                                                            <span class="res-text">Hủy đơn hàng</span></button></a>
+                                                </div>
                                             </div>
                                         </div>
 
