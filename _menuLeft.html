@@ -14,9 +14,9 @@
 				<div class="simplebar-mask">
 					<div class="simplebar-offset" style="right: 0px; bottom: 0px;">
 						<div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden;">
-							<div class="simplebar-content" style="padding: 0px 24px;">
+							<div class="simplebar-content" style="padding-left: 24px;">
 
-								<div id="sidebar" style="max-height: 600px; overflow-y: auto;">
+								<div id="sidebar" style="max-height: 600px; overflow-y: auto; padding-right: 24px;">
 									<ul class="nav flex-column">
 										<li class="nav-item">
 											<a class="nav-link" data-bs-toggle="collapse" href="#general" role="button"
@@ -26,33 +26,38 @@
 											</a>
 											<ul class="sub-nav collapse show" id="general">
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/" active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/" active-link>
 														<i class="fas fa-house"></i>
 														<span>{{ 'home' | translate }}</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/shopping" active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/shopping" active-link>
 														<i class="fas fa-bag-shopping"></i>
 														<span>Mua sắm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/search" active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/search" active-link>
 														<i class="fas fa-magnifying-glass"></i>
 														<span>{{ 'TK' | translate }}</span>
 													</a>
 												</li>
 
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/recommend" active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/recommend" active-link>
 														<i class="fas fa-handshake"></i>
 														<span>{{ 'GY' | translate }}</span>
 													</a>
 												</li>
 
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/message" active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/message" active-link>
 														<i class="fas fa-messages"></i>
 														<span>{{ 'TN' | translate }}</span>
 														<div class="circle-shop fa-bounce" ng-show="check"
@@ -72,14 +77,14 @@
 											</a>
 											<ul class="sub-nav collapse" id="individual">
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/profile/{{myAccount.user.userId}}"
-														active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/profile/{{myAccount.user.userId}}" active-link>
 														<i class="fas fa-address-card"></i>
 														<span>Trang cá nhân</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link"
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
 														href="#!/mystore/{{myAccount.user.userId}}/{{currentPageMyStore}}"
 														active-link>
 														<i class="fas fa-store"></i>
@@ -87,26 +92,29 @@
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/favouriteProduct" active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/favouriteProduct" active-link>
 														<i class="fa-solid fa-heart"></i>
 														<span>Yêu thích</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" href="#!/order/{{myAccount.user.userId}}"
-														active-link>
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														href="#!/order/{{myAccount.user.userId}}" active-link>
 														<i class="fas fa-clipboard-list"></i>
 														<span>Đơn hàng của tôi</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link href="#!/ValidationOrder">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/ValidationOrder">
 														<i class="fa-solid fa-check"></i>
 														<span>Duyệt đơn cửa hàng</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link href="#!/personalStatistics">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/personalStatistics">
 														<i class="fas fa-chart-line"></i>
 														<span>Thống kê cá nhân</span>
 													</a>
@@ -122,19 +130,22 @@
 											</a>
 											<ul class="sub-nav collapse" id="manager">
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link href="#!/admin/report">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/admin/report">
 														<i class="fas fa-chart-line"></i>
 														<span>Thống kê</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link href="#!/admin/usermanager">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/admin/usermanager">
 														<i class="fas fa-users"></i>
 														<span>Người dùng</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link href="#!/admin/postsviolation">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/admin/postsviolation">
 														<i class="fas fa-square-list"></i>
 														<span>Bài viết vi phạm</span>
 													</a>
@@ -150,28 +161,29 @@
 											</a>
 											<ul class="sub-nav collapse" id="manage">
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link
-														href="#!/staff/postviolationmanagement">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/staff/postviolationmanagement">
 														<i class="fas fa-chart-line"></i>
 														<span>Tố cáo vi phạm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" active-link
-														href="#!/staff/violationtypemanagement">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														active-link href="#!/staff/violationtypemanagement">
 														<i class="fas fa-users"></i>
 														<span>Nội dung vi phạm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
-														href="#!/staff/productpost">
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														ng-click="handleLinkClick('')" href="#!/staff/productpost">
 														<i class="fa-solid fa-list"></i>
 														<span>Bài đăng sản phẩm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
-													<a class="sidebar-link" ng-click="handleLinkClick('')"
+													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
+														ng-click="handleLinkClick('')"
 														href="#!/staff/productsviolation">
 														<i class="fa fa-flag"></i>
 														<span>Sản phẩm vi phạm</span>

@@ -1246,6 +1246,7 @@ img {
 	position: relative;
 	transition: background-color 0.15s ease-out, color 0.15s ease-out;
 	border: 1px solid transparent;
+
 	/* Để có border ban đầu */
 }
 
@@ -2545,17 +2546,21 @@ th {
 
 .nav-tabs .nav-link.active {
 	background-size: 100% 2px;
-	transition: background-size 0.3s ease-in-out;
+	transition: background-size 1s;
 	background-color: transparent;
+	color: #6c63ff;
+	font-weight: 600;
+	transform: translateY(-3px);
+	transition: 0.5s;
 }
 
 .nav-tabs .nav-link {
 	border: none;
-	background-image: linear-gradient(to right, blue, blue);
-	background-size: 0% 2px;
+	background-image: linear-gradient(to right, #6c63ff, #6c63ff);
+	background-size: 0% 1px;
 	background-repeat: no-repeat;
 	background-position: 0 100%;
-	transition: background-size 0.3s ease-in-out;
+	transition: background-size 0.8s ease-in-out;
 }
 
 .nav-tabs {
