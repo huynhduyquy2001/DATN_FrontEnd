@@ -4,14 +4,18 @@
         <br> <br>
         <div class="mb-3" style="display: flex; justify-content: right;">
             <input type="text" class="form-control" name="" id="search-F" aria-describedby="helpId"
-                ng-model="productNameF" ng-keyup="findProductF(0)" placeholder="Nhập sản phẩm cần tìm...">
-            <span class="microphone">
+                ng-keyup="performSearch()" ng-model="productNameF" placeholder="Nhập sản phẩm cần tìm..."
+                style=" border-radius: 20px; width: 50%;">
+            <span class="microphone" style="display: flex;
+                justify-content: center;
+                align-items: center; margin-left: 1rem;">
                 <i class="fas fa-microphone"></i>
                 <span class="recording-icon"></span>
             </span>
-
+            <!-- ng-keyup="findProductF(0)" -->
         </div>
         <br> <br>
+        <center><b ng-if="searchnull">{{ searchnull }}</b></center>
         <div class="col-lg-6" style="z-index: 10; margin-bottom: 2rem;" ng-repeat="product in favoriteProducts">
             <div class="row frameProduct animate__animated animate__fadeIn">
                 <div class="col-md-6" style="display: flex; justify-content: center;align-items: center;">
@@ -152,7 +156,7 @@
             </div>
         </div>
     </div>
-    <center>
+    <center id="phantrangFavorite" ng-hide="isHidden">
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li class="page-item" ng-click="Previous()" style="cursor: pointer;">

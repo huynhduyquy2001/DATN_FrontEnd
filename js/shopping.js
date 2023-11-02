@@ -52,7 +52,6 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 	};
 
 	$scope.findProductNoSplitText = function (currentPageSearch) {
-
 		$rootScope.currentPageSearch = currentPageSearch;
 		$rootScope.key = $scope.productName;
 		$rootScope.checkShopping = 3;
@@ -71,7 +70,6 @@ app.controller('ShoppingController', function ($scope, $http, $translate, $rootS
 
 	$scope.findProduct = function (currentPageSearch) {
 		$scope.splitText($scope.productName);
-
 		$rootScope.currentPageSearch = currentPageSearch;
 		$rootScope.key = $scope.productName;
 		$rootScope.checkShopping = 3;
