@@ -1,4 +1,4 @@
-<div class="container" ng-if="myAccount.user.account.role.roleId == 4">
+<div class="container" ng-if="myAccount.user.account.role.roleId == 4 || userId != myAccount.user.userId">
     <ul class="nav nav-tabs" id="myTabs" ng-if="userId == myAccount.user.userId">
         <li class="nav-item">
             <a ng-click="page(currentPageMyStore)" ng-class="{ 'nav-link': true, 'active': checkMystore===1 }" id="tab1"
@@ -436,7 +436,7 @@
 </div>
 
 <div class="row"
-    ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2">
+    ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2 && userId == myAccount.user.userId">
     <center style="padding: 25vh;">
         <h5>Đăng ký cửa hàng để bắt đầu kinh doanh nào</h5>
         <button ng-click="showProvince()" type="button" class="btn btn-primary mt-1" data-bs-toggle="modal"
