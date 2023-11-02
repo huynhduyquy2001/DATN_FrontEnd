@@ -181,7 +181,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 			}, function (error) {
 				// Xử lý lỗi
-				console.log(error); 
+				console.log(error);
 			});
 	};
 	//định dạng ngày
@@ -217,12 +217,106 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		}
 	};
 
+	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
+	var socket = new SockJS(url + "/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
+
+	// Tạo một kết nối thông qua Stomp over SockJS
+	var stompClient = Stomp.over(socket);
+	stompClient.debug = false;
+	var jwt = localStorage.getItem('jwtToken');
+	// Khi kết nối WebSocket thành công
+
+
 	//tìm acc bản thân
 	$http.get(findMyAccount)
 		.then(function (response) {
 			$scope.myAccount = response.data;
-
 			$rootScope.myAccount = response.data;
+			stompClient.connect({}, function (frame) {
+				// Lắng nghe các tin nhắn được gửi về cho người dùng
+				//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
+				stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
+					try {
+						var newMess = JSON.parse(message.body);
+						// alert("tk người nhận: " + $scope.receiver.userId)
+						// alert("tk người nhận trong tin nhắn: " + newMess.receiver.userId)
+						// alert("tk người gửi trong tin nhắn: " + newMess.sender.userId)
+						// alert("tk của tôi hiện tại: " + $scope.myAccount.user.userId)
+						var checkMess = $scope.ListMessMini.find(function (obj) {
+							return obj.messId === newMess.messId;
+						});
+
+
+						// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
+						//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của mình
+						if (($scope.receiver.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+							$scope.ListMessMini.push(newMess);
+						}
+						if (($rootScope.userMess.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+							$rootScope.ListMess.push(newMess);
+						}
+						//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
+						if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
+							$scope.ListMessMini.push(newMess);
+
+
+						}
+						if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
+							$rootScope.ListMess.push(newMess);
+						}
+
+						if ($scope.myAccount.user.userId !== newMess.sender.userId) {
+							// Lấy số lượng tin nhắn nào chưa đọc
+							$http.get(getUnseenMess)
+								.then(function (response) {
+									$rootScope.check = response.data > 0;
+									$rootScope.unseenmess = response.data;
+								})
+								.catch(function (error) {
+									console.log(error);
+								});
+							//hiện popup thôg báo
+							if ("Notification" in window) {
+								// Yêu cầu quyền hiển thị thông báo
+								Notification.requestPermission().then(function (permission) {
+									if (permission === "granted") {
+										// Hiển thị thông báo
+										var notification = new Notification("Thông báo", {
+											body: newMess.sender.username + " vừa gửi tin nhắn đến bạn"
+										});
+
+										// Đặt hành động khi thông báo được nhấn
+										notification.onclick = function () {
+											// Xử lý hành động khi thông báo được nhấn
+											window.focus(); // Tập trung vào tab chính
+										};
+									}
+								});
+							}
+							//$scope.playNotificationSound();
+						}
+						//cập nhật lại danh sách người đang nhắn tin với mình
+						$http.get(url + '/chatlistwithothers')
+							.then(function (response) {
+								$scope.ListUsersMess = response.data;
+								//$scope.playNotificationSound();
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
+
+						$timeout(function () {
+							$scope.scrollToBottom();
+						}, 10);
+
+						$scope.$apply();
+					} catch (error) {
+						alert('Error handling received message:', error);
+					}
+				});
+			}, function (error) {
+				console.error('Lỗi kết nối WebSocket:', error);
+			});
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -377,99 +471,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	//Kết nối khi mở trang web
 	$scope.ConnectNotification();
 
-	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
-	var socket = new SockJS(url + "/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
 
-	// Tạo một kết nối thông qua Stomp over SockJS
-	var stompClient = Stomp.over(socket);
-	stompClient.debug = false;
-	var jwt = localStorage.getItem('jwtToken');
-	// Khi kết nối WebSocket thành công
-	stompClient.connect({}, function (frame) {
-		// Lắng nghe các tin nhắn được gửi về cho người dùng
-		//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
-		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
-			try {
-				var newMess = JSON.parse(message.body);
-				// alert("tk người nhận: " + $scope.receiver.userId)
-				// alert("tk người nhận trong tin nhắn: " + newMess.receiver.userId)
-				// alert("tk người gửi trong tin nhắn: " + newMess.sender.userId)
-				// alert("tk của tôi hiện tại: " + $scope.myAccount.user.userId)
-				var checkMess = $scope.ListMessMini.find(function (obj) {
-					return obj.messId === newMess.messId;
-				});
-
-
-				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của mình
-				if (($scope.receiver.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$scope.ListMessMini.push(newMess);
-				}
-				if (($rootScope.userMess.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$rootScope.ListMess.push(newMess);
-				}
-				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
-				if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
-					$scope.ListMessMini.push(newMess);
-
-
-				}
-				if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
-					$rootScope.ListMess.push(newMess);
-				}
-
-				if ($scope.myAccount.user.userId !== newMess.sender.userId) {
-					// Lấy số lượng tin nhắn nào chưa đọc
-					$http.get(getUnseenMess)
-						.then(function (response) {
-							$rootScope.check = response.data > 0;
-							$rootScope.unseenmess = response.data;
-						})
-						.catch(function (error) {
-							console.log(error);
-						});
-					//hiện popup thôg báo
-					if ("Notification" in window) {
-						// Yêu cầu quyền hiển thị thông báo
-						Notification.requestPermission().then(function (permission) {
-							if (permission === "granted") {
-								// Hiển thị thông báo
-								var notification = new Notification("Thông báo", {
-									body: newMess.sender.username + " vừa gửi tin nhắn đến bạn"
-								});
-
-								// Đặt hành động khi thông báo được nhấn
-								notification.onclick = function () {
-									// Xử lý hành động khi thông báo được nhấn
-									window.focus(); // Tập trung vào tab chính
-								};
-							}
-						});
-					}
-					//$scope.playNotificationSound();
-				}
-				//cập nhật lại danh sách người đang nhắn tin với mình
-				$http.get(url + '/chatlistwithothers')
-					.then(function (response) {
-						$scope.ListUsersMess = response.data;
-						//$scope.playNotificationSound();
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
-
-				$timeout(function () {
-					$scope.scrollToBottom();
-				}, 10);
-
-				$scope.$apply();
-			} catch (error) {
-				alert('Error handling received message:', error);
-			}
-		});
-	}, function (error) {
-		console.error('Lỗi kết nối WebSocket:', error);
-	});
 
 	// Hàm gửi tin nhắn và lưu vào csdl
 	$scope.sendMessage = function (content) {
@@ -538,29 +540,29 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	}
 
 	//Xem chi tiết thông báo
-	$scope.getNotificationDetail = function(postId, productId){
-		if(postId != null && productId == null){
+	$scope.getNotificationDetail = function (postId, productId) {
+		if (postId != null && productId == null) {
 			$http.get(url + '/findpostcomments/' + postId)
-			.then(function (response) {
-				var postComments = response.data;
-				$rootScope.postComments = postComments;
-			}, function (error) {
-				// Xử lý lỗi
-				console.log(error);
-			});
-		$scope.isReplyEmpty = true;
-		$http.get(url + '/postdetails/' + postId)
-			.then(function (response) {
-				var postDetails = response.data;
-				$scope.postDetails = postDetails;
-				// Xử lý phản hồi thành công từ máy chủ
-				$('#chiTietBaiViet').modal('show');
+				.then(function (response) {
+					var postComments = response.data;
+					$rootScope.postComments = postComments;
+				}, function (error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+			$scope.isReplyEmpty = true;
+			$http.get(url + '/postdetails/' + postId)
+				.then(function (response) {
+					var postDetails = response.data;
+					$scope.postDetails = postDetails;
+					// Xử lý phản hồi thành công từ máy chủ
+					$('#chiTietBaiViet').modal('show');
 
-			}, function (error) {
-				// Xử lý lỗi
-				console.log(error); 
-			});
-		}else {
+				}, function (error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+		} else {
 			$location.path('/productdetails/' + productId);
 		}
 	}
