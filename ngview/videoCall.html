@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User 1</title>
+
+    <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <style>
+        #video-container {
+            position: relative;
+            margin: auto;
+            width: 820px;
+        }
+
+        video {
+            background: #F0F2F5;
+        }
+
+        #localVideo {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 180px;
+            z-index: 10;
+            background: gray;
+            border-radius: 10px;
+        }
+
+        #remoteVideo {
+            width: 100%;
+            border-radius: 10px;
+            height: 617px;
+            width: 820px;
+        }
+
+        #action-buttons {
+            margin: auto;
+            text-align: center;
+        }
+
+        .hidden-first {
+            display: none;
+        }
+    </style>
+</head>
+
+<body style="padding-top: 0 !important;">
+
+    <!-- <div class="container">
+        <div class="row">
+
+            <div class="col-12">
+                <div>
+                    <div ng-show="checkCall===1 ||checkCall=3" style="display: flex;justify-content: center;">
+                        <img ng-src="{{yourAccount.avatar}}"
+                            style="width: 100px;height: 100px;object-fit: cover;border-radius: 100%;" alt="">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <center class="mt-1">
+            <button ng-click="makeVideoCall()" ng-show="checkCall===1" class="btn btn-success"><i
+                    class="fa-regular fa-video"></i></button>
+            <button ng-click="makeCall()" ng-show="checkCall===1" class="btn btn-info"><i
+                    class="fa-regular fa-phone"></i></button>
+            <button ng-click="answerCall()" ng-show="checkCall===3" class="btn btn-info ">Trả lời</button>
+            <button ng-click="rejectCall()" ng-show="checkCall===3" class="btn btn-warning ">Từ chối</button>
+            <button ng-click="endCall()" ng-show="checkCall===2" class="btn btn-danger">Kết thúc</button>
+        </center>
+    </div> -->
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>CodePen - Video call UI</title>
+        <link
+            href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+            rel="stylesheet">
+
+        <!-- Entire bundle -->
+        <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.8/lib/draggable.bundle.js"></script>
+        <style>
+            .call-view {
+                width: 100%;
+                height: 100vh;
+                position: absolute;
+                left: 0;
+                top: -70px;
+                z-index: 1000;
+                padding: 0;
+            }
+
+            /**
+ * Call view controls section
+ */
+            .call-view__controls-container {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-end;
+                pointer-events: none;
+                z-index: 2;
+            }
+
+            .call-view__controls-container .call-view__controls {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                padding-top: 120px;
+                padding-bottom: 32px;
+                /* Generated with https://larsenwork.com/easing-gradients */
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.247) 8.1%, rgba(0, 0, 0, 0.238) 15.5%, rgba(0, 0, 0, 0.224) 22.5%, rgba(0, 0, 0, 0.206) 29%, rgba(0, 0, 0, 0.185) 35.3%, rgba(0, 0, 0, 0.162) 41.2%, rgba(0, 0, 0, 0.137) 47.1%, rgba(0, 0, 0, 0.113) 52.9%, rgba(0, 0, 0, 0.088) 58.8%, rgba(0, 0, 0, 0.065) 64.7%, rgba(0, 0, 0, 0.044) 71%, rgba(0, 0, 0, 0.026) 77.5%, rgba(0, 0, 0, 0.012) 84.5%, rgba(0, 0, 0, 0.003) 91.9%, rgba(0, 0, 0, 0) 100%);
+            }
+
+            .call-view__controls-container .call-view__controls .call-view__controls__icon-btn {
+                height: 64px;
+                width: 64px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 8px;
+                transform: scale(1);
+                transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+                background-color: #FAFAFA;
+                border-radius: 50%;
+                pointer-events: all;
+                cursor: pointer;
+            }
+
+            .call-view__controls-container .call-view__controls .call-view__controls__icon-btn:hover {
+                transform: scale(1.25);
+            }
+
+            .call-view__controls-container .call-view__controls .call-view__controls__icon-btn.important {
+                background-color: #FF3346;
+            }
+
+            .call-view__controls-container .call-view__controls .call-view__controls__icon-btn>i {
+                font-size: 32px;
+            }
+
+            /**
+ * Call view tracks section
+ */
+            .call-view__tracks {
+                width: 100%;
+                height: 100%;
+                display: flex;
+            }
+
+            .remote-track--container {
+                position: relative;
+                flex: 1;
+            }
+
+            .remote-track--picture-placeholder--container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 400px;
+            }
+
+            .remote-track--picture-placeholder--container .remote-track--picture-placeholder__background {
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+            }
+
+            .remote-track--picture-placeholder--container .remote-track--picture-placeholder {
+                width: 196px;
+                height: 196px;
+                position: absolute;
+                border-radius: 50%;
+                -webkit-box-shadow: 0px 0px 64px -16px rgba(0, 0, 0, 0.6);
+                -moz-box-shadow: 0px 0px 64px -16px rgba(0, 0, 0, 0.6);
+                box-shadow: 0px 0px 64px -16px rgba(0, 0, 0, 0.6);
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: cover;
+            }
+
+            .remote-track--picture-placeholder--container .remote-track--picture-placeholder.speaking {
+                border: 6px solid #4CAF50;
+            }
+
+            .call-view__tracks__local-track-container {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 40px;
+                z-index: 1;
+            }
+
+            .call-view__tracks__local-track-container .call-view__tracks__local-track {
+                width: 350px;
+                height: 180px;
+                position: relative;
+                border-radius: 16px;
+                overflow: hidden;
+                background: #78909C;
+                -webkit-box-shadow: 0px 0px 64px -16px rgba(0, 0, 0, 0.6);
+                -moz-box-shadow: 0px 0px 64px -16px rgba(0, 0, 0, 0.6);
+                box-shadow: 0px 0px 64px -16px rgba(0, 0, 0, 0.6);
+            }
+
+            .call-view__tracks__local-track-container .call-view__tracks__local-track video {
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                background: #4CAF50;
+            }
+
+            /**
+ * Input status section
+ */
+            .input-status-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: flex;
+                border-bottom: 4px solid #FAFAFA;
+                border-right: 4px solid #FAFAFA;
+                border-radius: 0px 0px 16px 0px;
+                overflow: hidden;
+            }
+
+            .input-status-container .input-status {
+                height: 48px;
+                width: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #FF3346;
+            }
+
+            .input-status-container .input-status>i {
+                font-size: 28px;
+            }
+        </style>
+
+    </head>
+
+    <body style="padding-top: 0 !important;">
+        <!-- partial:index.partial.html -->
+        <div class="call-view col-lg-9">
+            <div class="call-view__tracks">
+                <div class="remote-track--container">
+                    <div class="remote-track--picture-placeholder--container">
+                        <div class="remote-track--picture-placeholder__background"
+                            style="background-image: url('{{yourAccount.avatar}}');">
+                            <div id="video-container">
+                                <video ng-show="checkCall===2 && onMic===true && checkVideo===true" id="localVideo"
+                                    autoplay muted></video>
+                                <video ng-show="checkCall===2 && onMic===true && checkVideo===true" id="remoteVideo"
+                                    autoplay style="border: 1px solid #3333;"></video>
+                            </div>
+                        </div>
+                        <div ng-show="checkVideo===false" class="remote-track--picture-placeholder"
+                            style="background-image: url('{{yourAccount.avatar}}');">
+                        </div>
+                    </div>
+
+                    <div class="input-status-container">
+                        <div class="input-status">
+                            <i class="material-icons-round" style="color: #FAFAFA;">mic_off</i>
+                        </div>
+                        <div class="input-status">
+                            <i class="material-icons-round" style="color: #FAFAFA;">videocam_off</i>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="call-view__controls-container">
+                <div class="call-view__controls">
+                    <div id="btn--end-call" ng-click="endCall()" ng-show="checkCall===2 "
+                        class="call-view__controls__icon-btn">
+                        <i style="color: #FF3346;" class="fa-solid fa-phone-hangup"></i>
+                    </div>
+
+                    <div id="btn--toggle-mic" ng-click="rejectCall()" ng-show="checkCall===3"
+                        class="call-view__controls__icon-btn">
+                        <i style="color: #FF3346;" class="fa-solid fa-phone-xmark"></i>
+                    </div>
+
+                    <div id="btn--toggle-cam" ng-click="answerCall()" ng-show="checkCall===3"
+                        class="call-view__controls__icon-btn">
+                        <i style="color: #27A4FD;" class="fa-solid fa-phone-volume"></i>
+                    </div>
+
+                    <div id="btn--toggle-screen-sharing" ng-click="makeVideoCall()" ng-show="checkCall=== 1"
+                        class="call-view__controls__icon-btn">
+                        <i class="fa-solid fa-video" style="color: #27A4FD;"></i>
+                    </div>
+
+                    <div id="btn--settings" ng-click="makeCall()" ng-show="checkCall===1"
+                        class="call-view__controls__icon-btn">
+                        <i style="color: #27A4FD;" class="fa-solid fa-phone"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- partial -->
+
+    </body>
+
+    </html>
+
+    <script src="/js/lib/jquery.js"></script>
+    <script src="/js/lib/socket.io-2.2.0.js"></script>
+    <script src="/js/StringeeSDK-1.5.10.js"></script>
+
+
+
+
+    <!-- <script>
+        var token = 'eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTSy4wLlllZW0xUzVObFo0ZWNPZFpqVUlRU24xclhkNUxrMDB5LTE2OTc5MTczNzUiLCJpc3MiOiJTSy4wLlllZW0xUzVObFo0ZWNPZFpqVUlRU24xclhkNUxrMDB5IiwiZXhwIjoxNjk3OTIwOTc1LCJ1c2VySWQiOiJORUJZMjQzMDU2MzYifQ.c99Lih_-MCxIb1vawbpmkQ-Kup4veLoIySjeEZHJCSc';
+
+        var callerId = 'NEBY24305636';
+        var calleeId = 'IKSX45792153';
+    </script> -->
+    <!-- <script src="js/code.js"></script> -->
+</body>
+
+</html>

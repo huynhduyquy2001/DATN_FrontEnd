@@ -31,7 +31,6 @@
 	<!-- Thêm thư viện SockJS và Stomp -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
 	<script
@@ -52,10 +51,24 @@
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js">
+	</script>
+	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" /> -->
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.20.0/dist/axios.min.js"></script>
+	<script src="https://cdn.stringee.com/sdk/web/2.2.1/stringee-web-sdk.min.js"></script>
+
+	<!-- <script src="https://cdn.jsdelivr.net/npm/franc-min"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script> -->
 
 	<!-- Thêm các script khác của Firebase nếu cần -->
-	<title>Trang chủ</title>
+	<!-- Biểu đồ -->
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/data.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	<link rel="stylesheet" href="css/chart.css">
+
+	<title>Viesonet</title>
 	<style type="text/css">
 		body {
 			font-family: 'Plus Jakarta Sans', sans-serif;
@@ -174,10 +187,7 @@
 		}
 
 		@media screen and (max-width: 1180px) {
-			#asideLeft {
-				opacity: 0;
-				left: -280px;
-			}
+
 
 			#view.offset-lg-3 {
 				margin-left: 0;
@@ -231,9 +241,43 @@
 		.star .active {
 			color: #ffc107;
 		}
+
+		#chiTietBaiViet {
+			padding: 0 !important;
+		}
+
+		.main-tilte {
+			display: flex;
+			justify-content: center;
+			color: #ff3f40;
+			font-size: x-large;
+			font-weight: bold;
+		}
+
+		.title-div {
+			font-size: medium;
+			font-weight: bold;
+		}
+
+		.title-element {
+			margin: 20px;
+			font-size: small;
+		}
+
+		.add-color {
+			border: 1px dashed black;
+			margin-top: 5px;
+		}
+
+		.color-detail {
+			border: 1px solid black;
+			margin-top: 5px;
+		}
+
+		.color-detail .add-color :hover {
+			background-color: #ff3f3f48;
+		}
 	</style>
-
-
 </head>
 
 <body style="padding-top: 70px;" ng-controller="myCtrl" ng-app="myApp">
@@ -242,61 +286,6 @@
 			<div id="menuLeft" ng-include="'_menuLeft.html'"></div>
 			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101">
-				<!-- <div class="container" style="width: 100%; padding: 0;">
-					<div class="collapse navbar-collapse" id="collapsibleNavId">
-						<ul class="navbar-nav me-auto mt-2 mt-lg-0">
-						</ul>
-						<div class="body-wrapper">
-							<header class="app-header">
-								<nav class="navbar navbar-expand-lg navbar-light">
-									<div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-										<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-											<li class="nav-item dropdown"><a data-bs-toggle="offcanvas"
-													data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-													class="nav-link nav-icon-hover" href="#">
-													<div class="notification-icon">
-														<i class="fa-regular fa-bell fa-lg"></i>
-														<div class="circle">
-															<span>5+</span>
-														</div>
-													</div>
-												</a></li>
-											<li class="nav-item dropdown"><a class="nav-link nav-icon-hover" href="#"
-													id="drop2" data-bs-toggle="dropdown" aria-expanded="false"> <img
-														src="images/duyQuy.jpg" alt="" width="35" height="35"
-														class="rounded-circle">
-												</a>
-												<div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
-													<div class="message-body">
-														<a href="#"
-															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-user fs-6"></i>
-															<p class="mb-0 fs-3">Đổi mật khẩu</p>
-														</a> <a href="#"
-															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-mail fs-6"></i>
-															<p class="mb-0 fs-3">Thông tin điều khoản</p>
-														</a> <a href="#"
-															class="d-flex align-items-center gap-2 dropdown-item">
-															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a> </a> <a ng-click="logout()"
-															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
-															xuất</a>
-
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</nav>
-							</header>
-							<div class="container-fluid">
-								<div class="row"></div>
-							</div>
-
-						</div>
-					</div>
-				</div> -->
 			</nav>
 			<div ng-view id="view" style="transition: 0.5s;" class="col-lg-9 offset-lg-3"></div>
 		</div>
@@ -485,7 +474,6 @@
 													style="background-image: url(images/{{obj.responder.avatar}}); transform: translateY(-100%); border: 1px solid #ebf1f6;">
 												</div>
 												<div class="msg-bubble" style="border-radius: 15px;">
-
 													<div>
 														<div>
 															<label class="nhan ng-binding"
@@ -567,6 +555,157 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal gửi ảnh bằng boxchat mini -->
+	<div class="modal fade" id="modalSendImages" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+		tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content" style="background-color: rgba(246, 245, 244, 1);">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>Chọn ảnh</b>
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="imagesForm" enctype="multipart/form-data">
+						<div id="dropArea1" ondrop="dropHandler1(event);" ondragover="dragOverHandler1(event);"
+							ondragleave="dragLeaveHandler1(event);">
+							<i class="fa-light fa-download" style="font-size: 4rem;"></i>
+						</div>
+
+						<div class="input-group mb-3">
+							<label class="input-group-text" for="inputGroupFile011">
+								<i class="fa-regular fa-image"></i>{{
+								'HAVD' | translate }}
+							</label> <input type="file" class="form-control" name="mediaFiles" id="inputGroupFile011"
+								multiple>
+						</div>
+
+						<div id="mediaList1"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button ng-click="uploadFile()" style="width: 500px; border: none; background-color: #007ACC ;"
+						class="btn-blue" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+						data-bs-dismiss="modal">Gửi ảnh</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var selectedMedia1 = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
+
+		document.getElementById('dropArea1').addEventListener('click',
+			function () {
+				document.getElementById('inputGroupFile011').click();
+			});
+
+		document.getElementById('inputGroupFile011').addEventListener('change',
+			function () {
+				handleFiles1(this.files);
+			});
+
+		function dropHandler1(event) {
+			event.preventDefault();
+			var files = event.dataTransfer.files;
+			handleFiles1(files);
+		}
+
+		function handleFiles1(files) {
+			var mediaType = /^image\//;
+			var videoType = /^video\//;
+			var mediaList1 = document.getElementById('mediaList1');
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (mediaType.test(file.type) || videoType.test(file.type)) {
+					var reader = new FileReader();
+					reader.onload = (function (file) {
+						return function () {
+							if (mediaType.test(file.type)) {
+								var media = new Image();
+								media.src = this.result;
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+									file);
+								mediaList1.appendChild(container);
+							} else if (videoType.test(file.type)) {
+								var media = document.createElement('video');
+								media.src = this.result;
+								media.setAttribute('controls', 'controls');
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+									file);
+								mediaList1.appendChild(container);
+							}
+						};
+					})(file);
+					reader.readAsDataURL(file);
+					selectedMedia1.push(file);
+				}
+			}
+
+			// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+			var dataTransfer = new DataTransfer();
+			for (var i = 0; i < selectedMedia1.length; i++) {
+				dataTransfer.items.add(selectedMedia1[i]);
+			}
+			document.getElementById('inputGroupFile011').files = dataTransfer.files;
+		}
+
+		function createMediaContainer(media, file) {
+			var container = document.createElement('div');
+			container.classList.add('previewMediaContainer');
+			container.appendChild(media);
+
+			var deleteButton = document.createElement('button');
+			deleteButton.innerHTML = 'X';
+			deleteButton.classList.add('deleteButton');
+			deleteButton
+				.addEventListener(
+					'click',
+					function () {
+						// Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia1 khi người dùng xóa
+						var index = selectedMedia1.indexOf(file);
+						if (index !== -1) {
+							selectedMedia1.splice(index, 1);
+						}
+						// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+						var dataTransfer = new DataTransfer();
+						for (var i = 0; i < selectedMedia1.length; i++) {
+							dataTransfer.items.add(selectedMedia1[i]);
+						}
+						document.getElementById('inputGroupFile011').files = dataTransfer.files;
+
+						container.remove();
+					});
+
+			container.appendChild(deleteButton);
+
+			return container;
+		}
+
+		function dragOverHandler1(event) {
+			event.preventDefault();
+			event.target.classList.add('active');
+		}
+
+		function dragLeaveHandler1(event) {
+			event.preventDefault();
+			event.target.classList.remove('active');
+		}
+		function toggleColor(link) {
+			var allLinks = document.getElementsByClassName("colorful-link");
+
+			for (var i = 0; i < allLinks.length; i++) {
+				var currentLink = allLinks[i];
+				currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+				if (currentLink === link) {
+					link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+				}
+			}
+		}
+	</script>
 	<!-- Thông báo -->
 	<div ng-include="'_notification.html'"></div>
 
@@ -598,7 +737,16 @@
 	<script src="js/main.js"></script>
 	<script src="js/favouriteProducts.js"></script>
 	<script src="js/shoppingcart.js"></script>
+	<script src="js/order.js"></script>
+	<script src="js/product.js"></script>
+	<script src="js/ValidationOrder.js"></script>
+	<script src="js/api.js"></script>
+	<script src="js/VideoCall.js"></script>
+	<script src="js/lib/jquery.js"></script>
+	<script src="js/lib/socket.io-2.2.0.js"></script>
+	<script src="js/StringeeSDK-1.5.10.js"></script>
 	<script src="js/productsViolation.js"></script>
+	<script src="js/personalStatistics.js"></script>
 </body>
 
 </html>

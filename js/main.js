@@ -42,7 +42,7 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/admin/postsviolation', {
 		templateUrl: "ngview/postsviolation.html",
 		controller: 'PostsViolationController'
-	}).when('/mystore', {
+	}).when('/mystore/:userId/:page', {
 		templateUrl: "ngview/myStore.html",
 		controller: 'MyStoreController'
 	}).when('/ValidationOrder', {
@@ -57,9 +57,27 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/staff/productpost', {
 		templateUrl: "ngview/PostsProduct.html",
 		controller: 'productPostCtrl'
+	}).when('/order/:userId', {
+		templateUrl: "ngview/order.html",
+		controller: 'OrdersController'
+	}).when('/product/add-product', {
+		templateUrl: "ngview/add-product.html",
+		controller: 'AddProductsController'
+	}).when('/product/add-product/:productId', {
+		templateUrl: "ngview/add-product.html",
+		controller: 'AddProductsController'
+	}).when('/order/update-order/:productId', {
+		templateUrl: "ngview/updateOrder.html",
+		controller: 'OrdersController'
+	}).when('/videocall/:userId', {
+		templateUrl: "ngview/videoCall.html",
+		controller: 'VideoCallController'
 	}).when('/staff/productsviolation', {
 		templateUrl: "ngview/ProductsViolation.html",
 		controller: 'productsViolationCtrl'
+	}).when('/personalStatistics', {
+		templateUrl: "ngview/personalStatistics.html",
+		controller: 'personalStatisticsController'
 	});
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';

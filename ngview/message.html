@@ -6,8 +6,7 @@
 		</center>
 		<div ng-show="!isEmptyObject" ng-cloak class="msger "
 			style="width: 100%; text-align: left; margin-left: 0; border-radius: 5px">
-			<header class="msger-header animate__animated animate__fadeIn">
-
+			<header class="msger-header">
 				<div class="msger-header-title">
 					<a href="#!/profile/{{userMess.userId}}" style="font-weight: 600; color: #212529"><img
 							ng-src="{{ userMess.avatar }}"
@@ -38,7 +37,7 @@
 						</div>
 						<div class="msg-text" ng-show="mess.status == 'Đã ẩn'" style="color: #adb5bd" ng-cloak>Tin nhắn
 							đã được thu hồi</div>
-						<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " ng-cloak src="{{mess.image}}"
+						<img alt="" ng-show="mess.image && mess.status != 'Đã ẩn' " ng-cloak ng-src="{{mess.image}}"
 							style="max-width: 20rem; border-radius: 5px">
 
 						<div class="msg-info-time">{{getFormattedTimeAgo(mess.sendDate)}}</div>
@@ -47,55 +46,59 @@
 				</div>
 			</main>
 			<form class="msger-inputarea" style="background: transparent; border-top: 1px solid #ebf1f6;">
-				<input ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
+				<input id="text-srh" ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
 					placeholder="Nhập tin nhắn của bạn...">
 				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
-					href="#exampleModalToggle"><i style="margin: 0; padding: 0;"
+					href="#exampleModalToggle"><i style="margin: 0; padding: 0;padding-right: 1rem;"
 						class="fa-regular fa-camera-retro"></i></span>
+				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" class="microphone">
+					<i style="margin: 0; padding: 0;padding-right: 1rem;" class="fas fa-microphone"></i>
+					<span class="recording-icon"></span>
+				</span>
+				<a style="margin: 0; padding: 0; height: 0; cursor: pointer; " ng-click="openLink(userMess.userId)"><i
+						style="padding: 0;" class="fa-regular fa-phone"></i></a>
 				<button type="submit" class="msger-send-btn"
 					style="background: transparent; padding: 0; border-radius: 10px; border: none; color: #3a57e8; height: 0;"
 					ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">
 					<i class="fa-regular fa-paper-plane" style="padding-top: 0; padding-bottom: 0;"></i>
 				</button>
-
 			</form>
 		</div>
 	</div>
 	<div class="col-md-4" id="menuMessLeft"
 		style="border: 1px solid #ebf1f6; padding-top: 0.5rem; background-color: #fff; height: 89vh; overflow: scroll;">
-		<h4><b>Tin Nhắn</b></h4>
-		<input class="form-control" placeholder="{{ 'TK' | translate }}">
-		<br>
 		<ul class="list-unstyled mb-0">
 			<li ng-repeat="UsersMess in ListUsersMess" class="hver"
 				style="padding: 0.7rem!important; padding-right: 1.5rem!important; transition: 0.3s;"
 				ng-style="{'background-color': UsersMess[2] === itemSelected ? 'rgba(93, 135, 255, 0.1)' : 'transparent'}">
-				<div class="user-profile" ng-click="getmess(UsersMess[0] , UsersMess[9], UsersMess[8])">
-					<!-- Nội dung khi UsersMess[0] = 'UI010' -->
-					<a href="#!/message/{{UsersMess[2]}}"><img ng-src="{{ UsersMess[5] }}"
-							class="animate__animated animate__fadeIn"
+				<a href="#!/message/{{UsersMess[2]}}" class="messLink">
+					<div class="user-profile">
+						<!-- Nội dung khi UsersMess[0] = 'UI010' -->
+						<img ng-src="{{ UsersMess[5] }}"
 							style="border-radius: 100%; border: 1px solid #ebf1f6; width: 3.5rem; height: 3.5rem; max-width: none;"
-							alt=""></a>
-					<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
-						<div style="display: flex;">
-							<b class="ng-binding" style=" color: #393e41; font-size: 14px;">{{
-								UsersMess[3] }} <span class="badge p-1" ng-show="
-								UsersMess[11]>0" style="font-size: 12px; background-color: red; border-radius: 50%; width: 20px; height: 20px;">{{
-									UsersMess[11] }}</span></b>
-						</div>
-						<br>
-						<div style="display: flex; justify-content: space-between; height: 13px;">
-							<small
-								style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">{{
-								UsersMess[6] }} </small>
-							<!-- <small ng-if="UsersMess[8] === 'Đã ẩn'"
-								style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">Tin
-								nhắn đã được thu hồi </small> -->
-							<small style="font-size: 12px; color: #65676b"
-								class="ng-binding">{{getFormattedTimeAgo(UsersMess[7]) }}</small>
+							alt="">
+						<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
+							<div style="display: flex;">
+								<b class="ng-binding" style=" color: #393e41; font-size: 14px;">{{
+									UsersMess[3] }} <span class="badge p-1" ng-show="
+									UsersMess[11]>0" style="font-size: 12px; background-color: red; border-radius: 50%; width: 20px; height: 20px;">{{
+										UsersMess[11] }}</span></b>
+							</div>
+							<br>
+							<div style="display: flex; justify-content: space-between; height: 13px; flex-wrap: wrap;
+							flex-direction: column;">
+								<small
+									style="font-size: 13px; overflow: hidden; width: 40%; white-space: nowrap; text-overflow: ellipsis;">{{
+									UsersMess[6] }} </small>
+								<!-- <small ng-if="UsersMess[8] === 'Đã ẩn'"
+									style="font-size: 13px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">Tin
+									nhắn đã được thu hồi </small> -->
+								<small style="font-size: 12px; color: #65676b; white-space: nowrap;"
+									class="ng-binding">{{getFormattedTimeAgo(UsersMess[7]) }}</small>
+							</div>
 						</div>
 					</div>
-				</div>
+				</a>
 			</li>
 		</ul>
 	</div>
@@ -117,13 +120,12 @@
 							ondragleave="dragLeaveHandler(event);">
 							<i class="fa-light fa-download" style="font-size: 4rem;"></i>
 						</div>
-						<div hidden class="input-group mb-3">
+						<div class="input-group mb-3">
 							<label class="input-group-text" for="inputGroupFile01"> <i
 									class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
 							</label> <input type="file" class="form-control" name="mediaFiles" id="inputGroupFile01"
 								multiple>
 						</div>
-
 						<div id="mediaList"></div>
 					</form>
 				</div>

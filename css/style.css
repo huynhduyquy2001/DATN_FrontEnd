@@ -736,7 +736,8 @@ a {
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus {
-	border: 1px solid #5d87ff;
+	border: none;
+	border-bottom: 1px solid #5d87ff;
 }
 
 .dropdown-item:focus,
@@ -1640,6 +1641,21 @@ img {
 	border-color: #00bfff;
 }
 
+#dropArea1 {
+	height: 200px;
+	border: 2px dashed #ccc;
+	text-align: center;
+	line-height: 200px;
+	font-size: 16px;
+	color: #666;
+	margin: 20px auto;
+}
+
+#dropArea1.active {
+	border-color: #00bfff;
+}
+
+
 #mediaList img {
 	width: 100%;
 	box-sizing: border-box;
@@ -1897,7 +1913,7 @@ h3 {
 	}
 }
 
-.accept--btn{
+.accept--btn {
 	padding: 0.8em 1em;
 	border-radius: 7px;
 	border: 1px solid #007ACC;
@@ -1906,10 +1922,10 @@ h3 {
 	letter-spacing: 1.3px;
 	color: #fff;
 	cursor: pointer;
-	background-color:  #007ACC;
+	background-color: #007ACC;
 }
 
-.decline--btn{
+.decline--btn {
 	padding: 0.8em 1em;
 	border-radius: 7px;
 	border: 1px solid #ff3f40;
@@ -1918,7 +1934,7 @@ h3 {
 	letter-spacing: 1.3px;
 	color: #fff;
 	cursor: pointer;
-	background-color:  #ff3f40;
+	background-color: #ff3f40;
 }
 
 
@@ -2421,6 +2437,10 @@ a {
 	transition: width 0.15s ease-out;
 }
 
+.hver:active {
+	background-color: rgba(93, 135, 255, 0.1) !important;
+}
+
 .hver::before {
 	top: 0;
 	left: 0;
@@ -2644,9 +2664,11 @@ th {
 	overflow: hidden;
 }
 
+
 .comments-list .comment-avatar img {
 	width: 100%;
 	height: 100%;
+	object-fit: cover;
 }
 
 .reply-list .comment-avatar {
@@ -2791,4 +2813,39 @@ th {
 .menu-item:hover {
 	border-bottom: 1px solid red;
 	transition: 0.3s ease-in-out;
+}
+
+.microphone {
+	cursor: pointer;
+}
+
+.microphone .recording-icon {
+	display: none;
+	width: 10px;
+	height: 10px;
+	background-color: #e22d2d;
+	border-radius: 50%;
+	animation: pulse 1.5s infinite linear;
+}
+
+.microphone.recording .recording-icon {
+	display: inline-block;
+}
+
+.microphone.recording .fa-microphone {
+	display: none;
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 3px 0 rgba(173, 0, 0, .3);
+	}
+
+	65% {
+		box-shadow: 0 0 3px 5px rgba(173, 0, 0, .3);
+	}
+
+	100% {
+		box-shadow: 0 0 3px 5px rgba(173, 0, 0, 0);
+	}
 }

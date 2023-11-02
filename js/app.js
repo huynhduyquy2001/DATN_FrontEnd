@@ -8,7 +8,7 @@ angular.module('myApp', [])
             responseError: function (rejection) {
                 if (rejection.status === 403) {
                     // Redirect to the login page
-                    $window.location.href = 'login.html';
+                    $window.location.href = 'Login.html';
                 }
                 return $q.reject(rejection);
             }

@@ -3,13 +3,42 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 
 	$scope.LikePost = [];
 	//đây là danh sách tin nhắn
-	//$scope.ListMess = [];
 	//đây là acc của ngta
-	$scope.userMess = {};
 	//đây coi là có đang nhắn vs ai khum
 	$scope.isEmptyObject = false;
 	var url = "http://localhost:8080";
 
+	$scope.openLink = function (userId) {
+		var width = 840;
+		var height = 600;
+		var left = (window.innerWidth - width) / 2;
+		var top = (window.innerHeight - height) / 2;
+		window.open("http://127.0.0.1:5501/Index.html#!/videocall/" + userId, '_blank', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+
+	};
+
+	angular.element(document).ready(function () {
+		// Lấy currentPath
+		var currentPath = $location.path();
+
+		// Lấy tất cả các thẻ <a> có class là "messLink"
+		var messLinks = angular.element(document).find('a.messLink');
+
+		// Duyệt qua từng thẻ <a> và kiểm tra href
+		angular.forEach(messLinks, function (link) {
+			var href = angular.element(link).attr('href');
+			// Loại bỏ tiền tố "#!"
+			href = href.replace('#!', '');
+			// So sánh href với currentPath
+			if (href === currentPath) {
+				// Nếu khớp, thay đổi CSS của thẻ <a>
+				angular.element(link).closest('li').css('background-color', 'rgba(93, 135, 255, 0.1)');
+				// angular.element(link).closest('li').css('border-top', '1px solid rgb(93, 135, 255)');
+				// angular.element(link).closest('li').css('border-bottom', '1px solid rgb(93, 135, 255)');
+				angular.element(link).closest('li').css('color', 'white');
+			}
+		});
+	});
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
 		authDomain: "viesonet-datn.firebaseapp.com",
@@ -81,7 +110,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 						}
 					}).then(function (response) {
 						var newListMess = response.data;
-						//$scope.ListMess = $scope.ListMess.concat(newListMess);
+						//$rootScope.ListMess = $rootScope.ListMess.concat(newListMess);
 
 						// Gửi từng tin nhắn trong danh sách newListMess bằng stompClient.send
 						for (var i = 0; i < newListMess.length; i++) {
@@ -122,16 +151,16 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	if ($routeParams.otherId) {
 		$http.get(url + '/getUser/' + $routeParams.otherId)
 			.then(function (response) {
-				$scope.userMess = response.data;
+				$rootScope.userMess = response.data;
 			})
 		$scope.seen();
 		//lấy danh sách tin nhắn với người đó
 		$http.get(url + '/getmess2/' + $routeParams.otherId)
 			.then(function (response) {
-				$scope.ListMess = response.data;
+				$rootScope.ListMess = response.data;
 				$timeout(function () {
 					$scope.scrollToBottom();
-				}, 100);
+				}, 1500);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -186,55 +215,6 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
-
-	// Khi kết nối WebSocket thành công
-	stompClient.connect({}, function (frame) {
-		// Đăng ký hàm xử lý khi nhận thông điệp từ server
-		// Lắng nghe các tin nhắn được gửi về cho người dùng
-		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
-			try {
-				var newMess = JSON.parse(message.body);
-
-				var checkMess = $scope.ListMess.find(function (obj) {
-					return obj.messId === newMess.messId;
-				});
-				// nếu là thu hồi tin nhắn thì
-				if (checkMess) {
-					checkMess.status = 'Đã ẩn';
-				}
-				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				else if (($scope.userMess.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$scope.ListMess.push(newMess);
-				}
-				//nếu không phải mình gửi cho chính mình và không phải hàm thu hồi
-				if ($scope.myAccount.user.userId !== newMess.sender.userId && !checkMess) {
-					$scope.getTotalUnseenMess();
-					$scope.playNotificationSound();
-				}
-				$scope.getUnseenMessage();
-				//cập nhật lại danh sách người đang nhắn tin với mình
-				$http.get(url + '/chatlistwithothers')
-					.then(function (response) {
-						$scope.ListUsersMess = response.data;
-						//$scope.playNotificationSound();
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
-
-				$timeout(function () {
-					$scope.scrollToBottom();
-				}, 10);
-
-				$scope.$apply();
-			} catch (error) {
-				alert('Error handling received message:', error);
-			}
-		});
-	}, function (error) {
-		console.error('Lỗi kết nối WebSocket:', error);
-	});
-
 
 	// Hàm gửi tin nhắn và lưu vào csdl
 	$scope.sendMessage = function (senderId, content, receiverId) {
@@ -353,5 +333,76 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 				console.log(error);
 			});
 	};
+
+
+	const searchInput = document.querySelector('#text-srh');
+	// Tro ly ao
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+	const recognition = new SpeechRecognition();
+	const synth = window.speechSynthesis;
+	recognition.lang = 'vi-VI';
+	recognition.continuous = false;
+
+	const microphone = document.querySelector('.microphone');
+
+	const speak = (text) => {
+		if (synth.speaking) {
+			console.error('Busy. Speaking...');
+			return;
+		}
+
+		const utter = new SpeechSynthesisUtterance(text);
+
+		utter.onend = () => {
+			console.log('SpeechSynthesisUtterance.onend');
+		}
+		utter.onerror = (err) => {
+			console.error('SpeechSynthesisUtterance.onerror', err);
+		}
+
+		synth.speak(utter);
+	};
+
+	const handleVoice = (text) => {
+		console.log('text', text);
+		// "thời tiết tại Đà Nẵng" => ["thời tiết tại", "Đà Nẵng"]
+		const handledText = text.toLowerCase();
+
+		const location = handledText[1];
+		console.log('location', location);
+		searchInput.value = handledText;
+		$scope.newMess = handledText;
+		// const changeEvent = new Event('change');
+		// searchInput.dispatchEvent(changeEvent);
+		//searchInput.dispatchEvent($scope.findProduct(0));
+		return;
+
+
+		speak('Try again');
+	}
+
+	microphone.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		recognition.start();
+		microphone.classList.add('recording');
+	});
+
+	recognition.onspeechend = () => {
+		recognition.stop();
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onerror = (err) => {
+		console.error(err);
+		microphone.classList.remove('recording');
+	}
+
+	recognition.onresult = (e) => {
+		console.log('onresult', e);
+		const text = e.results[0][0].transcript;
+		handleVoice(text);
+	}
 
 });

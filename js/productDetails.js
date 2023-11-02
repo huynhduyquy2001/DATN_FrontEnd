@@ -1,5 +1,5 @@
 
-app.controller('ProductDetailsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams) {
+app.controller('ProductDetailsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams, $anchorScroll) {
     var Url = "http://localhost:8080";
     //sản phẩm
     $scope.product = {};
@@ -10,28 +10,30 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
     $scope.myRatings = 0;
     $scope.AverageRating = 0;
     $scope.relatedProducts = [];
+    $scope.favorite = false;
 
-    //đánh giá sản phẩm
-    $scope.rate = function () {
+    // Biến để lưu trạng thái hiện tại ("Tất cả", "Tích cực", "Tiêu cực")
+    $scope.filterStatus = "Tất cả";
 
-        if ($scope.myRate) {
-            $scope.myRate.ratingValue = $scope.myRatings;
-        } else {
-            $scope.myRate = {
-                "ratingId": null,
-                "user": null,
-                "ratingValue": $scope.myRatings,
-                "ratingContent": $scope.myRate.ratingContent,
-                "ratingDate": new Date()
-            };
+    // Hàm để thay đổi trạng thái lọc
+    $scope.changeFilterStatus = function (status) {
+        $scope.filterStatus = status;
+    };
+
+    $scope.customFilter = function (rate) {
+        if ($scope.filterStatus === "Tất cả") {
+            return true; // Hiển thị tất cả
+        } else if ($scope.filterStatus === "Tích cực" && rate.ratingValue >= 3) {
+            return true; // Hiển thị đánh giá tích cực
+        } else if ($scope.filterStatus === "Tiêu cực" && rate.ratingValue < 3) {
+            return true; // Hiển thị đánh giá tiêu cực
         }
+        return false; // Ẩn đánh giá không phù hợp
+    };
 
-        $http.post(Url + "/rate-product/" + $scope.product.productId, $scope.myRate, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (response) {
-            $scope.myRate = response.data;
+    $scope.reportProduct = function () {
+        var reportContent = $scope.reportContent;
+        if (!reportContent) {
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -44,27 +46,163 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
                 }
             })
             Toast.fire({
-                icon: 'success',
-                title: 'Đánh giá thành công'
+                icon: 'warning',
+                title: 'Vui lòng nhập nội dung tố cáo'
             })
-        })
-            .catch(function (error) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+        } else {
+            var formData = new FormData();
+            var reportContent = $scope.reportContent;
+            formData.append('reportContent', reportContent); // Đặt tên là 'reportContent'
+            $http.post(Url + "/report-product/" + $routeParams.productId, formData,
+                {
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
                     }
                 })
-                Toast.fire({
-                    icon: 'warning',
-                    title: 'Đánh giá không thành công'
+                .then(function (res) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Sản phẩm thêm vào danh sách kiểm duyệt'
+                    });
                 })
+                .catch(function (error) {
+                    // Xử lý khi xảy ra lỗi
+                    console.error("Lỗi yêu cầu POST: ", error);
+                });
+
+        }
+
+    }
+
+    //đánh giá sản phẩm
+    $scope.rate = function () {
+        $http.post(Url + "/check-bought/" + $routeParams.productId)
+            .then(function (response) {
+                if (response.data === false) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: 'warning',
+                        title: 'Bạn chưa mua sản phẩm này'
+                    })
+                    return;
+                } else {
+                    if ($scope.myRatings == 0) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'Vui lòng chọn số sao'
+                        })
+                        return;
+                    }
+                    if ($scope.myRate) {
+
+                        $scope.myRate.ratingValue = $scope.myRatings;
+
+                    } else {
+                        try {
+                            var content = $scope.myRate.ratingContent;
+                        } catch (error) {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 1000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: 'warning',
+                                title: 'Vui lòng nhập nội dung đánh giá'
+                            })
+                            return;
+                        }
+                        $scope.myRate = {
+                            "ratingId": null,
+                            "user": null,
+                            "ratingValue": $scope.myRatings,
+                            "ratingContent": $scope.myRate.ratingContent,
+                            "ratingDate": new Date()
+                        };
+
+                    }
+                    $http.post(Url + "/rate-product/" + $scope.product.productId, $scope.myRate, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(function (response) {
+                        $scope.myRate = response.data;
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Đánh giá thành công'
+                        })
+                    })
+                        .catch(function (error) {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 1000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: 'warning',
+                                title: 'Đánh giá không thành công'
+                            })
+                        });
+                }
+
             });
+
     }
 
     $scope.addStars = function (index) {
@@ -108,6 +246,7 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
     //lấy thông tin sản phẩm
     $http.get(Url + "/get-product/" + $routeParams.productId)
         .then(function (response) {
+
             $scope.product = response.data;
             if ($scope.product.ratings.length > 0) {
                 //tính tổng số lượng các đánh giá
@@ -119,10 +258,8 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
                 var averageRating = totalRatings / $scope.product.ratings.length;
                 averageRating = averageRating.toFixed(1);
                 $scope.AverageRating = averageRating;
-                $http.get(Url + "/get-related-products/" + $scope.product.user.userId)
-                    .then(function (response) {
-                        $scope.relatedProducts = response.data;
-                    });
+
+
             }
             $scope.myRate = $scope.product.ratings.find(function (obj) {
                 if (obj.user.userId === $rootScope.myAccount.user.userId) {
@@ -130,7 +267,17 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
                     return obj;
                 }
             });
+            $http.get(Url + "/get-related-products/" + $scope.product.user.userId)
 
+                .then(function (response) {
+                    $scope.relatedProducts = response.data;
+
+                });
+            $http.get(Url + "/get-favorite-product/" + $scope.product.productId)
+                .then(function (response) {
+                    $scope.favorite = response.data;
+                });
+            $anchorScroll();
         });
 
     //tính lượt đánh giá trung bình
@@ -148,7 +295,58 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
     }
     //Thêm sản phẩm vào giỏ hàng
     $rootScope.addShoppingCart = function (productId) {
-        if ($scope.color === "" || $scope.quantity === 0) {
+        if ($scope.color === "") {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'warning',
+                title: 'Hãy chọn màu sắc cho sản phẩm'
+            })
+            return;
+        }
+        if ($scope.quantity === 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'warning',
+                title: 'Hãy chọn số lượng cho sản phẩm'
+            })
+            return;
+        }
+        if ($scope.quantity > $scope.total) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'warning',
+                title: 'Số lượng sản phẩm không đủ'
+            })
             return;
         }
         var formData = new FormData();
@@ -232,5 +430,11 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
         }
     };
 
+    $scope.togglerFavorite = function () {
+        $http.post(Url + "/add-favorite-product/" + $routeParams.productId)
+            .then(function (response) {
+                $scope.favorite = !$scope.favorite;
+            });
+    }
 
 });

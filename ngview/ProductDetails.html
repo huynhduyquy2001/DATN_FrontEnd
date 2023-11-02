@@ -1,4 +1,4 @@
-<div class="animate__animated animate__fadeIn">
+<div>
     <!-- content -->
     <section style="padding-top: 0 !important">
         <div>
@@ -9,11 +9,6 @@
                             <div class="carousel">
                                 <input ng-repeat="media in product.media" type="radio" name="slides" checked="checked"
                                     id="slide-{{media.mediaId}}">
-                                <!-- <input type="radio" name="slides" id="slide-2">
-                                <input type="radio" name="slides" id="slide-3">
-                                <input type="radio" name="slides" id="slide-4">
-                                <input type="radio" name="slides" id="slide-5">
-                                <input type="radio" name="slides" id="slide-6"> -->
                                 <ul class="carousel__slides" style="max-height: 50vh;">
                                     <li class="carousel__slide" ng-repeat="media in product.media">
                                         <figure>
@@ -26,7 +21,7 @@
                                         </figure>
                                     </li>
                                 </ul>
-                                <ul class="carousel__thumbnails">
+                                <ul class="carousel__thumbnails" style="justify-content: center;">
                                     <li style="margin-right: 2px;" ng-repeat="media in product.media">
                                         <label for="slide-{{media.mediaId}}"><img ng-src="{{media.mediaUrl}}"
                                                 style="max-height: 20vh;" alt=""></label>
@@ -38,9 +33,57 @@
                 </aside>
                 <main class="col-lg-6">
                     <div class="ps-lg-3">
-                        <h4 class="title text-dark">
-                            {{product.productName}}
-                        </h4>
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 class="title text-dark">
+                                {{product.productName}}
+                            </h4>
+                            <button data-bs-toggle="modal" data-bs-target="#modalId"
+                                style="border: none; background-color: transparent;"><i
+                                    class="fa-regular fa-flag"></i></button>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="modalId" tabindex="-1" role="dialog"
+                                aria-labelledby="modalTitleId" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalTitleId">Tố cáo sản phẩm</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="" class="form-label">Nhập nội dung tố cáo sản phẩm:</label>
+                                                <input ng-model="reportContent" type="text" class="form-control" name=""
+                                                    id="" aria-describedby="helpId" placeholder="">
+                                                <small id="helpId" class="form-text text-muted">Help text</small>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Hủy</button>
+                                            <button ng-click="reportProduct()" type="button" class="btn btn-primary">Tố
+                                                cáo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                var modalId = document.getElementById('modalId');
+
+                                modalId.addEventListener('show.bs.modal', function (event) {
+                                    // Button that triggered the modal
+                                    let button = event.relatedTarget;
+                                    // Extract info from data-bs-* attributes
+                                    let recipient = button.getAttribute('data-bs-whatever');
+
+                                    // Use above variables to manipulate the DOM
+                                });
+                            </script>
+
+                        </div>
                         <div class="d-flex flex-row my-3">
                             <div class="text-warning mb-1 me-2">
 
@@ -145,7 +188,6 @@
                         </div>
 
                         <hr />
-
                         <div class="row">
                             <dt class="col-3">Màu sắc</dt>
                             <dd class="col-9">
@@ -160,6 +202,8 @@
                                     </div>
                                 </div>
                             </dd>
+                        </div>
+                        <div ng-show="product.productStatus.statusId==1">
                             <div class="col-md-4 col-6 mb-3">
                                 <label class="mb-2 d-block">Số lượng</label>
                                 <div class="input-group mb-3" style="width: 170px;">
@@ -168,8 +212,8 @@
                                         id="button-addon1" data-mdb-ripple-color="dark">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="text" class="form-control text-center border border-secondary"
-                                        value="{{quantity}}" aria-label="Example text with button addon"
+                                    <input type="number" class="form-control text-center border border-secondary"
+                                        ng-model="quantity" aria-label="Example text with button addon"
                                         aria-describedby="button-addon1" />
                                     <button ng-click="increaseQuantity()"
                                         class="btn btn-white border border-secondary px-3" type="button"
@@ -181,14 +225,26 @@
                             <div class="col-md-7 col-5 mb-8 offset-1" ng-show="total!==-1">
                                 Kho: {{total}}
                             </div>
+
+                            <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0"
+                                style="background-color: white ; color: #007ACC;">
+                                <i class=" fa fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
+                            <a ng-show="!favorite" ng-click="togglerFavorite()"
+                                class="btn btn-light border border-secondary  icon-hover px-3">
+                                ❤️ Yêu thích
+                            </a>
+                            <a ng-show="favorite" ng-click="togglerFavorite()"
+                                style="border:1px solid #ff3f40 !important; color: #ff3f40;"
+                                class="btn btn-light border border-secondary  icon-hover px-3">
+                                <i class="fa-solid fa-heart-crack"></i> Bỏ thích
+                            </a>
                         </div>
-                        <a class="btn btn-warning shadow-0"
-                            style="background-color:white; color: #ff3f40; border: 1px solid #ff3f40;"> Mua ngay </a>
-                        <a ng-click="addShoppingCart(product.productId)" class="btn btn-primary shadow-0"
-                            style="background-color: white ; color: #007ACC;">
-                            <i class=" fa fa-shopping-basket"></i> Thêm vào giỏ hàng </a>
-                        <a class="btn btn-light border border-secondary  icon-hover px-3"> ❤️ Yêu thích
-                        </a>
+                        <h2 ng-show="product.productStatus.statusId===2" style="color: #ff3f40;">
+                            NGƯNG KINH DOANH
+                        </h2>
+                        <h2 ng-show="product.productStatus.statusId===3" style="color: #ff3f40;">
+                            ĐANG KIỂM DUYỆT
+                        </h2>
                     </div>
                 </main>
             </div>
@@ -204,62 +260,46 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Sản phẩm liên quan</h5>
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+                                <div ng-repeat="obj in relatedProducts" class="d-flex mb-3">
+                                    <a href="#!productdetails/{{obj.productId}}" class="me-3">
+                                        <img ng-src="{{obj.media[0].mediaUrl}}" style="min-width: 96px; height: 96px;"
+                                            class="img-md img-thumbnail" />
                                     </a>
                                     <div class="info">
-                                        <a href="#" class="nav-link mb-1">
-                                            Rucksack Backpack Large <br />
-                                            Line Mounts
+                                        <a href="#" class="nav-link " style="padding-left: 0;">
+                                            <b>{{obj.productName}}</b>
                                         </a>
-                                        <strong class="text-dark"> $38.90</strong>
+                                        <small class="text-dark" ng-show="obj.promotion!=0"
+                                            style="text-decoration: line-through;">
+                                            {{obj.originalPrice}}</small>
+                                        <span>{{getSalePrice(obj.originalPrice, obj.promotion) | currencyFormat}}</span>
                                     </div>
                                 </div>
 
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/9.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1">
-                                            Summer New Men's Denim <br />
-                                            Jeans Shorts
-                                        </a>
-                                        <strong class="text-dark"> $29.50</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex mb-3">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1"> T-shirts with multiple colors, for men and
-                                            lady </a>
-                                        <strong class="text-dark"> $120.00</strong>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex">
-                                    <a href="#" class="me-3">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp"
-                                            style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                                    </a>
-                                    <div class="info">
-                                        <a href="#" class="nav-link mb-1"> Blazer Suit Dress Jacket for Men, Blue color
-                                        </a>
-                                        <strong class="text-dark"> $339.90</strong>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-8 mb-4">
+                    <div class="border rounded-2 px-3 py-2 bg-white  mb-5">
+                        <center>
+                            <h5 class="card-title"
+                                style="text-align: left; font-weight: 600; display: flex; justify-content: space-between;">
+                                Mô tả chi tiết
+                            </h5>
+                            <ul style="text-align: left; margin-left: 2rem;">
+                                <li><b>Mã sản phẩm:</b> {{product.productId}}</li>
+                                <li><b>Tên sản phẩm:</b> {{product.productName}}</li>
+                                <li><b>Kích thước:</b> {{product.width}} x {{product.length}} x {{product.height}} |
+                                    <small>(dài x rộng x cao)</small>
+                                </li>
+                                <li><b>Chất liệu:</b> {{product.material}}</li>
+                                <li><b>Ngày đăng:</b> {{getFormattedTimeAgo(product.datePost)}}</li>
+                                <li><b>Mô tả chi tiết:</b> {{product.description}}</li>
+
+                            </ul>
+                        </center>
+                    </div>
                     <div class="border rounded-2 px-3 py-2 bg-white  mb-5">
                         <center>
                             <h5 class="card-title" ng-show="myRate.ratingId"
@@ -281,7 +321,7 @@
                                     class="fa-solid fa-star" style="color: #c0c0c0;"></i></button>
 
                             <textarea class="form-control mt-2" name="" id=""
-                                ng-model="myRate.ratingContent"></textarea>
+                                ng-model="myRate.ratingContent">Giá trị mặc định của textarea</textarea>
                             <a ng-click="rate()" class="btn btn-primary shadow-0 m-2"
                                 style="background-color: white ; color: #007ACC;">
                                 Đánh giá </a>
@@ -289,11 +329,32 @@
                     </div>
                     <div class="border rounded-2 px-3 py-2 bg-white">
                         <center>
-                            <h5 class="card-title">Đánh giá chung</h5>
+                            <h5 class="card-title">Đánh giá chung ({{product.ratings.length}})</h5>
+                            <li class="btn-group me-2">
+                                <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="fa-regular fa-filter-list fa-lg"></i> Lọc</a>
+                                <div class="dropdown-menu dropdown-menu-animate-up">
+                                    <a ng-click="changeFilterStatus('Tất cả')"
+                                        class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
+                                        style="cursor: pointer;"><i class="fa-solid fa-list"></i> Tất
+                                        cả</a>
+                                    <a ng-click="changeFilterStatus('Tích cực')"
+                                        class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
+                                        style="cursor: pointer;"><i class="fa-regular fa-face-smile-relaxed"></i> Tích
+                                        cực</a>
+                                    <a ng-click="changeFilterStatus('Tiêu cực')"
+                                        class="d-flex gap-3 px-3 py-2 align-items-center dropdown-item"
+                                        style="cursor: pointer;"><i class="fa-regular fa-face-smile-horns"></i> Tiêu
+                                        cực</a>
+                                </div>
+                                &nbsp;&nbsp;|&nbsp;&nbsp; <span>{{filterStatus}}</span>
+                            </li>
+
                         </center>
                         <div>
-                            <div class="user-profile m-4" ng-repeat="rate in product.ratings  | orderBy:'-ratingDate'">
-                                <div ng-show="rate.user.userId!==myRate.user.userId">
+                            <div class="user-profile m-4"
+                                ng-repeat="rate in product.ratings | orderBy:'-ratingDate' | filter: customFilter">
+                                <div style="display: flex;" ng-show="rate.user.userId!==myRate.user.userId">
                                     <a href="#!/profile/{{rate.user.userId}}"><img ng-src="{{rate.user.avatar}}"
                                             style="border-radius: 100%;" alt=""></a>
                                     <div>

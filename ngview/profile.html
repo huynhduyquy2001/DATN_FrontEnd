@@ -452,29 +452,37 @@
 								<div class="col-lg-4 order-last">
 									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
 										ng-if=" myAccount.user.userId == UserInfo.userId">
-										<li><button class="btn btn-primary text-end" data-bs-toggle="modal"
+										<li><button class="btn btn-primary text-end btn-sm" data-bs-toggle="modal"
 												data-bs-target="#exampleModal1">
 												<i class="fa-light fa-pen-to-square"></i> Thông tin
 											</button></li>
-										<li><button class="btn btn-secondary text-end" data-bs-toggle="modal"
+										<li><button class="btn btn-secondary text-end btn-sm" data-bs-toggle="modal"
 												data-bs-target="#exampleModal2">
-												<i class="fa-light fa-pen-to-square"></i> Tài khoản
+												<i class="fa-sharp fa-solid fa-shield"></i> Tài khoản
 											</button></li>
+										<li><button class="btn btn-warning text-end btn-sm" ng-click="showAddress()">
+												<i class="fa-sharp fa-solid fa-truck"></i> Giao hàng
+											</button></li>
+
 									</ul>
 
 									<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
 										ng-if="myAccount.user.userId != UserInfo.userId">
-										<button class="btn btn-outline-primary py-1 px-2 ms-auto"
+										<button class="btn btn-outline-primary py-1 px-2 ms-auto btn-sm"
 											ng-if="!isFollowing(UserInfo.userId)"
 											ng-click="followUser(UserInfo.userId)">
 											<span>Follow</span>
 										</button>
-										<button class="btn btn-outline-danger py-1 px-2 ms-auto"
+										<button class="btn btn-outline-danger py-1 px-2 ms-auto btn-sm"
 											ng-if="isFollowing(UserInfo.userId)"
 											ng-click="unfollowUser(UserInfo.userId)">
 
 											<span>Unfollow</span>
 										</button>
+										<a href="#!/message/{{UserInfo.userId}}"
+											class="btn btn-outline-success text-end btn-sm">
+											<i class="fa-solid fa-message"></i> Nhắn tin
+										</a>
 									</ul>
 								</div>
 							</div>
@@ -585,31 +593,11 @@
 									</div>
 								</div>
 								<div class="col-lg-8">
-									<div class="card shadow-none border"
-										ng-if=" myAccount.user.userId == UserInfo.userId">
-										<div class="card-body">
-											<div class="mb-3">
-												<textarea class="form-control" placeholder=" Bạn muốn đăng gì?"
-													style="height: 137px" data-bs-toggle="modal"
-													href="#exampleModalToggle"></textarea>
-
-											</div>
-											<div class="d-flex align-items-center gap-2">
-												<div class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle"
-													href="javascript:void(0)">
-													<i class="fa-solid fa-image fa-xs"></i>
-												</div>
-												<a href="javascript:void(0)" class="text-dark py-2 nav-link">Chọn
-													ảnh</a> <a href="javascript:void(0)"
-													class="d-flex align-items-center gap-2">
-													<div
-														class="text-white d-flex align-items-center justify-content-center bg-secondary p-2 fs-4 rounded-circle">
-														<i class="fa-solid fa-shop fa-xs"></i>
-													</div> <a href="javascript:void(0)"
-														class="text-dark py-2 nav-link">Cửa hàng</a>
-												</a>
-
-											</div>
+									<div class="card-body bg-white" ng-if="myAccount.user.userId == UserInfo.userId">
+										<div class="mb-3">
+											<textarea class="form-control" placeholder=" Bạn muốn đăng gì?"
+												style="height: 137px" data-bs-toggle="modal" href="#exampleModalToggle"
+												disabled></textarea>
 										</div>
 									</div>
 									<div class="post" style="margin-bottom: 20px" ng-repeat="myPost in myPosts">
@@ -1201,7 +1189,7 @@
 												<div
 													style="display: flex; align-items: center; justify-content: space-between;">
 													<div class="user-profile ">
-														<a href="/nguoiDung/{{postDetails.user.userId}}"><img
+														<a href="{{postDetails.user.userId}}"><img
 																ng-src="{{postDetails.user.avatar}}"
 																style="border-radius: 100%;" alt=""></a>
 														<div>
@@ -1563,11 +1551,136 @@
 										<button type="submit" class="btn btn-primary"
 											data-bs-dismiss="modal">Lưu</button>
 									</div>
-
 								</form>
-
 							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Modal chỉnh sửa thông tin địa chỉ giao hàng-->
+				<div class="modal fade" id="modalAddress" tabindex="-1" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Chọn địa chỉ giao hàng</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="card-body">
+									<div class="bd-example">
+										<ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
+											<li class="nav-item" role="presentation">
+												<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+													data-bs-target="#pills-home11" type="button" role="tab"
+													aria-controls="home" aria-selected="true"><i
+														class="fa-sharp fa-regular fa-location-dot"></i> Địa chỉ của
+													bạn</button>
+											</li>
+											<li class="nav-item" role="presentation">
+												<button class="nav-link" ng-click="showProvince()" id="profile-tab"
+													data-bs-toggle="tab" data-bs-target="#pills-profile11" type="button"
+													role="tab" aria-controls="profile" aria-selected="false"><i
+														class="fa-solid fa-plus"></i> Tạo địa chỉ mới</button>
+											</li>
 
+										</ul>
+										<div class="tab-content" id="pills-tabContent">
+											<div class="tab-pane fade show active" id="pills-home11" role="tabpanel"
+												aria-labelledby="pills-home-tab1">
+												<div style="max-height: 350px; overflow-y: auto;">
+													<label class="d-flex gap-3 mt-2 ms-4 border-bottom"
+														ng-repeat="deliveryAddress in deliveryAddress">
+														<input value="{{deliveryAddress.id}}" type="radio"
+															name="address" class="form-check-input mt-1">
+														<div>
+															<p class="mb-1 d-flex align-items-center">
+																<i class="fa-regular fa-user fa-sm me-2"></i>
+																<b>{{deliveryAddress.user.username}}</b>
+																<i class="fa-regular fa-phone fa-sm ms-3 me-2"></i>
+																<b>{{deliveryAddress.deliveryPhone}}</b>
+															</p>
+															<p class="mb-1">{{deliveryAddress.detailAddress}} &nbsp;
+																{{deliveryAddress.wardName}}</p>
+															<p>{{deliveryAddress.districtName}},
+																{{deliveryAddress.provinceName}}</p>
+														</div>
+													</label>
+													<div ng-if="deliveryAddress.length == 0" class="mt-4 mb-2">
+														<h5>Bạn chưa thêm địa chỉ nhận hàng</h5>
+													</div>
+												</div>
+												<div class="mt-3">
+													<button ng-click="checkedAddress()"
+														class="btn btn-sm btn-primary me-2">Sử dụng địa chỉ</button>
+													<button ng-click="deleteAddress()"
+														class="btn btn-sm btn-danger">Xóa</button>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="pills-profile11" role="tabpanel"
+												aria-labelledby="pills-profile-tab1">
+												<div class="row">
+													<div class="mt-2 col-12">
+														<div class="form-floating">
+															<input type="text" id="floatingSelect" class="form-control">
+															<label for="floatingSelect">Số điện thoại (<b
+																	class="text-danger">*</b>)</label>
+														</div>
+													</div>
+													<div class="mt-3 col-12">
+														<div class="form-floating">
+															<select
+																ng-options="province as province.ProvinceName for province in listProvince"
+																ng-model="selectedProvince" ng-change="onProvince()"
+																class="form-select" id="floatingSelect"
+																aria-label="Floating label select example">
+															</select>
+															<label for="floatingSelect">Tỉnh/Thành Phố (<b
+																	class="text-danger">*</b>)</label>
+														</div>
+													</div>
+													<div class="col-6 mt-3">
+														<div class="form-floating">
+															<select
+																ng-options="district as district.DistrictName for district in listDistrict"
+																ng-model="selectedDistrict" ng-change="onDistrict()"
+																class="form-select" id="floatingSelect"
+																aria-label="Floating label select example">
+															</select>
+															<label for="floatingSelect">Quận/Huyện (<b
+																	class="text-danger">*</b>)</label>
+														</div>
+													</div>
+													<div class="col-6 mt-3">
+														<div class="form-floating">
+															<select
+																ng-options="ward as ward.WardName for ward in listWard"
+																ng-model="selectedWard" class="form-select"
+																id="floatingSelect"
+																aria-label="Floating label select example">
+															</select>
+															<label for="floatingSelect">Phường/Xã (<b
+																	class="text-danger">*</b>)</label>
+														</div>
+													</div>
+													<div class="col-12 mt-3">
+														<div class="form-floating">
+															<textarea ng-model="textareaValue" class="form-control"
+																placeholder="Leave a comment here"
+																id="floatingTextarea2" style="height: 100px"></textarea>
+															<label for="floatingTextarea2">Chi tiết</label>
+														</div>
+													</div>
+													<div class="col-12 mt-3">
+														<button ng-click="addAddress()"
+															class="btn btn-sm btn-primary">Thêm địa chỉ</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -1582,21 +1695,18 @@
 						});
 					});
 				</script>
-				<script type="text/javascript" src="js/profile.js"></script>
-				<script src="js/addActive.js"></script>
+
 
 				<script>
 					var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
 
-					document.getElementById('dropArea').addEventListener(
-						'click',
+					document.getElementById('dropArea').addEventListener('click',
 						function () {
-							document.getElementById('inputGroupFile01')
-								.click();
+							document.getElementById('inputGroupFile01').click();
 						});
 
-					document.getElementById('inputGroupFile01')
-						.addEventListener('change', function () {
+					document.getElementById('inputGroupFile01').addEventListener('change',
+						function () {
 							handleFiles(this.files);
 						});
 
@@ -1613,8 +1723,7 @@
 
 						for (var i = 0; i < files.length; i++) {
 							var file = files[i];
-							if (mediaType.test(file.type)
-								|| videoType.test(file.type)) {
+							if (mediaType.test(file.type) || videoType.test(file.type)) {
 								var reader = new FileReader();
 								reader.onload = (function (file) {
 									return function () {
@@ -1622,18 +1731,16 @@
 											var media = new Image();
 											media.src = this.result;
 											media.classList.add('previewMedia');
-											var container = createMediaContainer(
-												media, file);
+											var container = createMediaContainer(media,
+												file);
 											mediaList.appendChild(container);
 										} else if (videoType.test(file.type)) {
-											var media = document
-												.createElement('video');
+											var media = document.createElement('video');
 											media.src = this.result;
-											media.setAttribute('controls',
-												'controls');
+											media.setAttribute('controls', 'controls');
 											media.classList.add('previewMedia');
-											var container = createMediaContainer(
-												media, file);
+											var container = createMediaContainer(media,
+												file);
 											mediaList.appendChild(container);
 										}
 									};
@@ -1664,19 +1771,16 @@
 								'click',
 								function () {
 									// Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
-									var index = selectedMedia
-										.indexOf(file);
+									var index = selectedMedia.indexOf(file);
 									if (index !== -1) {
 										selectedMedia.splice(index, 1);
 									}
 									// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
 									var dataTransfer = new DataTransfer();
 									for (var i = 0; i < selectedMedia.length; i++) {
-										dataTransfer.items
-											.add(selectedMedia[i]);
+										dataTransfer.items.add(selectedMedia[i]);
 									}
-									document
-										.getElementById('inputGroupFile01').files = dataTransfer.files;
+									document.getElementById('inputGroupFile01').files = dataTransfer.files;
 
 									container.remove();
 								});
@@ -1695,6 +1799,19 @@
 						event.preventDefault();
 						event.target.classList.remove('active');
 					}
+					function toggleColor(link) {
+						var allLinks = document.getElementsByClassName("colorful-link");
+
+						for (var i = 0; i < allLinks.length; i++) {
+							var currentLink = allLinks[i];
+							currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+							if (currentLink === link) {
+								link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+							}
+						}
+					}
+
 					function displayAvatar() {
 						var input = document.getElementById('inputGroupFile03');
 						var imgElement = document.getElementById('img');

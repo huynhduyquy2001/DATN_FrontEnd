@@ -83,9 +83,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	};
 
 	// Hàm để phát âm thanh
-	var sound = new Howl({
-		src: ['images/nhacchuong2.mp3']
-	});
+
 	$scope.playNotificationSound = function () {
 		sound.play();
 	};
@@ -106,15 +104,57 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.ListUsersMess = [];
 	$scope.receiver = {};
 	$scope.newMessMini = '';
-	$scope.ListMess = [];
+	$scope.ListMessMini = [];
 	$rootScope.myAccount = {};
-	$scope.listProduct = [];
+	$rootScope.listProduct = [];
 	//phân trang shopping
-	$rootScope.checkShopping = true;
+	$rootScope.checkShopping = 1;
 	$rootScope.currentPage = 0;
+	$rootScope.currentPageSearch = 0;
 	$rootScope.currentPageTrending = 0;
 	$rootScope.checkMenuLeft = true;
+	$rootScope.key = "";
+	$rootScope.keyS = "";
 
+	//
+
+	//Phân trang myStore
+	$rootScope.currentPageMyStore = 0;
+	$rootScope.currentPagePending = 0;
+	$rootScope.currentPageFilter = 0;
+	$rootScope.checkMystore = 1;
+	//nhắn tin
+	$rootScope.userMess = {};
+	$rootScope.ListMess = [];
+	//gọi điện
+	$rootScope.token = "";
+	$rootScope.callerId = "";
+	$rootScope.currentCall = null;
+	$rootScope.checkCall = 1;
+	// Kiểm tra xem trình duyệt hỗ trợ HTML5 Notifications hay không
+
+	$http.get(url + '/generateToken')
+		.then(function (response) {
+			$rootScope.token = response.data.token;
+
+		})
+		.catch(function (error) {
+			console.error("Error:", error);
+		});
+	var config = {
+		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
+		authDomain: "viesonet-datn.firebaseapp.com",
+		projectId: "viesonet-datn",
+		storageBucket: "viesonet-datn.appspot.com",
+		messagingSenderId: "178200608915",
+		appId: "1:178200608915:web:c1f600287711019b9bcd66",
+		measurementId: "G-Y4LXM5G0Y4"
+	};
+
+	// Kiểm tra xem Firebase đã được khởi tạo chưa trước khi khởi tạo nó
+	if (!firebase.apps.length) {
+		firebase.initializeApp(config);
+	}
 	//lấy danh sách người đã từng nhắn tin
 	$http.get(getChatlistwithothers)
 		.then(function (response) {
@@ -125,19 +165,18 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		});
 
 
-	//xem chi tiết thông báo
+	//xem chi tiết bài viết
 	$scope.getPostDetails = function (postId) {
 		$http.get(url + '/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
 				$rootScope.postComments = postComments;
-				console.log(response.data);
 			}, function (error) {
 				// Xử lý lỗi
 				console.log(error);
 			});
 		$scope.isReplyEmpty = true;
-		$http.get('url+/postdetails/' + postId)
+		$http.get(url + '/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
 				$scope.postDetails = postDetails;
@@ -146,7 +185,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 			}, function (error) {
 				// Xử lý lỗi
-				console.log(error);
+				console.log(error); 
 			});
 	};
 	//định dạng ngày
@@ -178,7 +217,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			var formattedDate = activityTime.getDate();
 			var formattedMonth = activityTime.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
 			var formattedYear = activityTime.getFullYear();
-			return formattedDate + '-' + formattedMonth + '-' + formattedYear;
+			return formattedDate + '/' + formattedMonth + '/' + formattedYear;
 		}
 	};
 
@@ -186,6 +225,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$http.get(findMyAccount)
 		.then(function (response) {
 			$scope.myAccount = response.data;
+
 			$rootScope.myAccount = response.data;
 		})
 		.catch(function (error) {
@@ -211,10 +251,33 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$http.get(url + '/getUser/' + receiverId)
 			.then(function (response) {
 				$scope.receiver = response.data;
+				$http.post(url + '/seen/' + receiverId)
+					.then(function (response) {
+						$http.get(getChatlistwithothers)
+							.then(function (response) {
+								$http.get(getUnseenMess)
+									.then(function (response) {
+										$rootScope.check = response.data > 0;
+										$rootScope.unseenmess = response.data;
+									})
+									.catch(function (error) {
+										console.log(error);
+									});
+								$timeout(function () {
+									$scope.scrollToBottom();
+								}, 100);
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
 			})
 		$http.get(url + '/getmess2/' + receiverId)
 			.then(function (response) {
-				$scope.ListMess = response.data;
+				$scope.ListMessMini = response.data;
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -240,7 +303,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.revokeMessage = function (messId) {
 		$http.post(url + '/removemess/' + messId)
 			.then(function (reponse) {
-				var messToUpdate = $scope.ListMess.find(function (mess) {
+				var messToUpdate = $scope.ListMessMini.find(function (mess) {
 					return mess.messId === messId;
 				})
 				messToUpdate.status = "Đã ẩn";
@@ -258,7 +321,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$http.get(loadnotification)
 		.then(function (response) {
 			var data = response.data;
-			console.log(data)
 			for (var i = 0; i < data.length; i++) {
 				$scope.notification.push(data[i]);
 				$scope.notificationNumber = $scope.notification;
@@ -282,6 +344,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.ConnectNotification = function () {
 		var socket = new SockJS(url + '/private-notification');
 		var stompClient = Stomp.over(socket);
+		stompClient.debug = false;
 		stompClient.connect({}, function (frame) {
 			stompClient.subscribe('/private-user', function (response) {
 
@@ -323,24 +386,42 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
+	stompClient.debug = false;
 	var jwt = localStorage.getItem('jwtToken');
 	// Khi kết nối WebSocket thành công
 	stompClient.connect({}, function (frame) {
 		// Lắng nghe các tin nhắn được gửi về cho người dùng
-		var jwt = localStorage.getItem('jwtToken')
 		//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
 		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
 			try {
 				var newMess = JSON.parse(message.body);
-
-				var checkMess = $scope.ListMess.find(function (obj) {
+				// alert("tk người nhận: " + $scope.receiver.userId)
+				// alert("tk người nhận trong tin nhắn: " + newMess.receiver.userId)
+				// alert("tk người gửi trong tin nhắn: " + newMess.sender.userId)
+				// alert("tk của tôi hiện tại: " + $scope.myAccount.user.userId)
+				var checkMess = $scope.ListMessMini.find(function (obj) {
 					return obj.messId === newMess.messId;
 				});
 
+
 				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-				if (($scope.receiver.userId === newMess.sender.userId || $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-					$scope.ListMess.push(newMess);
+				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của mình
+				if (($scope.receiver.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+					$scope.ListMessMini.push(newMess);
 				}
+				if (($rootScope.userMess.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+					$rootScope.ListMess.push(newMess);
+				}
+				//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
+				if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
+					$scope.ListMessMini.push(newMess);
+
+
+				}
+				if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
+					$rootScope.ListMess.push(newMess);
+				}
+
 				if ($scope.myAccount.user.userId !== newMess.sender.userId) {
 					// Lấy số lượng tin nhắn nào chưa đọc
 					$http.get(getUnseenMess)
@@ -351,7 +432,25 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 						.catch(function (error) {
 							console.log(error);
 						});
-					$scope.playNotificationSound();
+					//hiện popup thôg báo
+					if ("Notification" in window) {
+						// Yêu cầu quyền hiển thị thông báo
+						Notification.requestPermission().then(function (permission) {
+							if (permission === "granted") {
+								// Hiển thị thông báo
+								var notification = new Notification("Thông báo", {
+									body: newMess.sender.username + " vừa gửi tin nhắn đến bạn"
+								});
+
+								// Đặt hành động khi thông báo được nhấn
+								notification.onclick = function () {
+									// Xử lý hành động khi thông báo được nhấn
+									window.focus(); // Tập trung vào tab chính
+								};
+							}
+						});
+					}
+					//$scope.playNotificationSound();
 				}
 				//cập nhật lại danh sách người đang nhắn tin với mình
 				$http.get(url + '/chatlistwithothers')
@@ -442,6 +541,33 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		$scope.notificationNumber = [];
 	}
 
+	//Xem chi tiết thông báo
+	$scope.getNotificationDetail = function(postId, productId){
+		if(postId != null && productId == null){
+			$http.get(url + '/findpostcomments/' + postId)
+			.then(function (response) {
+				var postComments = response.data;
+				$rootScope.postComments = postComments;
+			}, function (error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+		$scope.isReplyEmpty = true;
+		$http.get(url + '/postdetails/' + postId)
+			.then(function (response) {
+				var postDetails = response.data;
+				$scope.postDetails = postDetails;
+				// Xử lý phản hồi thành công từ máy chủ
+				$('#chiTietBaiViet').modal('show');
+
+			}, function (error) {
+				// Xử lý lỗi
+				console.log(error); 
+			});
+		}else {
+			$location.path('/productdetails/' + productId);
+		}
+	}
 	//Xóa thông báo
 	$scope.deleteNotification = function (notificationId) {
 		$http.delete(url + '/deleteNotification/' + notificationId)
@@ -470,7 +596,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Load thông tin giỏ hàng
 	$http.get(url + '/get-product-shoppingcart').then(function (response) {
-		$scope.listProduct = response.data;
+		$rootScope.listProduct = response.data;
 	}).catch(function (error) {
 		console.error('Lỗi khi lấy dữ liệu:', error);
 	});
@@ -530,9 +656,116 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		}
 	}
 
+	// Hàm kiểm tra kích thước màn hình và ẩn thanh asideLeft khi cần
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+
+		} else {
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
 
 
 
+		}
+	}
+
+	// Gọi hàm kiểm tra khi trang được tải và khi cửa sổ thay đổi kích thước
+	window.onload = checkScreenWidth;
+	window.addEventListener('resize', checkScreenWidth);
+
+	// gửi ảnh qua tin nhắn
+	$scope.uploadFile = function () {
+		var fileInput = document.getElementById('inputGroupFile011');
+		// Check if no files are selected
+		if (fileInput.files.length === 0) {
+			// Handle empty file selection
+			return;
+		}
+		var storage = firebase.storage();
+		var storageRef = storage.ref();
+
+		var uploadMedia = function (fileIndex) {
+			if (fileIndex >= fileInput.files.length) {
+				// All files have been uploaded
+				$scope.content = '';
+				fileInput.value = null;
+				var mediaList = document.getElementById('mediaList1');
+				mediaList.innerHTML = '';
+				$window.selectedMedia1 = [];
+				return;
+			}
+
+			var file = fileInput.files[fileIndex];
+			var timestamp = new Date().getTime();
+			var fileName = file.name + '_' + timestamp;
+			var fileType = getFileExtensionFromFileName(file.name);
+
+			// Xác định nơi lưu trữ dựa trên loại tệp
+			var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+			// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+			var uploadTask = storageRef.child(storagePath + fileName).put(file);
+
+			// Xử lý sự kiện khi tải lên hoàn thành
+			uploadTask.on('state_changed', function (snapshot) {
+				// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+			}, function (error) {
+				alert("Lỗi tải");
+			}, function () {
+				// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+				uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+					var formData = new FormData();
+					formData.append('mediaUrl', downloadURL);
+
+					$http.post(url + '/sendimage/' + $scope.receiver.userId, formData, {
+						transformRequest: angular.identity,
+						headers: {
+							'Content-Type': undefined
+						}
+					}).then(function (response) {
+						var newListMessMini = response.data;
+						//$scope.ListMessMini = $scope.ListMessMini.concat(newListMessMini);
+
+						// Gửi từng tin nhắn trong danh sách newListMessMini bằng stompClient.send
+						for (var i = 0; i < newListMessMini.length; i++) {
+							var messageToSend = newListMessMini[i];
+							stompClient.send('/app/sendnewmess', {}, JSON.stringify(messageToSend));
+						}
+
+						// Tiếp tục tải và gửi ảnh tiếp theo
+						uploadMedia(fileIndex + 1);
+					})
+						.catch(function (error) {
+							console.error('Lỗi tải lên tệp:', error);
+						});
+
+				}).catch(function (error) {
+					console.error('Error getting download URL:', error);
+				});
+			});
+		};
+
+		// Bắt đầu tải và gửi ảnh từ fileInput.files[0]
+		uploadMedia(0);
+	};
+
+	// Hàm để lấy phần mở rộng từ tên tệp
+	function getFileExtensionFromFileName(fileName) {
+		return fileName.split('.').pop().toLowerCase();
+	}
 	// Ban đầu ẩn menu
 	var menu = angular.element(document.querySelector('.menu'));
 	menu.css("right", "-330px");
@@ -540,6 +773,40 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	// boxchatMini.css("bottom", "-500px");
 	// boxchatMini.css("opacity", "0");
 
+
+
+	// =================================================================================
+
+	$rootScope.client = new StringeeClient();
+	var generateToken = "http://localhost:8080/generateToken";
+	$rootScope.getToken = function () {
+		$http.get(generateToken)
+			.then(function (response) {
+				$rootScope.token = response.data.token;
+				$rootScope.client.connect($rootScope.token);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}
+	$rootScope.getToken();
+
+	//hàm thông báo người ta gọi
+	$rootScope.client.on('incomingcall', function (incomingcall) {
+		console.log("incomingcall", incomingcall)
+
+		//hiện popup thôg báo
+		var width = 840;
+		var height = 600;
+		var left = (window.innerWidth - width) / 2;
+		var top = (window.innerHeight - height) / 2;
+		var newWindow = window.open(
+			"http://127.0.0.1:5501/Index.html#!/videocall/" + incomingcall.fromNumber,
+			"_blank",
+			"width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",toolbar=no,location=no,status=no,menubar=no,resizable=no"
+		);
+		newWindow.focus();
+	});
 })
 
 
