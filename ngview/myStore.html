@@ -9,14 +9,13 @@
                 id="tab2" data-bs-toggle="tab" href="#content2">Đang chờ duyệt</a>
         </li>
         <li class="nav-item">
-            <a ng-class="{ 'nav-link': true, 'active': checkMystore===3 }" id="tab3" data-bs-toggle="tab"
-                href="#content3">Thống kê cửa hàng</a>
+            <a ng-click="tabsReport()" ng-class="{ 'nav-link': true, 'active': checkMystore===3 }" id="tab3"
+                data-bs-toggle="tab" href="#content3">Thống kê cửa hàng</a>
         </li>
     </ul>
-
     <div class="tab-content mt-2">
         <!-- Tabs sản phẩm đang bán -->
-        <div class="tab-pane fade show active" id="content1">
+        <div class="tab-pane fade" ng-class="{'active show': checkMystore===1 }" id="content1">
             <div class="row col-md-11 animate__animated animate__fadeIn">
                 <div class="col-md-12 d-flex align-items-center mb-2">
                     <div class="d-flex align-items-center me-2" ng-if="userId != myAccount.user.userId">
@@ -25,8 +24,8 @@
                         <h6>{{listProductMyStore[0].user.username}}</h6>
                     </div>
                     <div class="col-4 me-2">
-                        <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
-                            style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
+                        <input type="text" ng-keyup="searchProduct()" ng-model="$parent.searchValue"
+                            class="form-control" style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
                     </div>
                     <li class="btn-group me-3">
                         <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
@@ -58,6 +57,11 @@
                         phẩm</a>
                 </div>
                 <hr>
+                <div ng-if="listProductMyStore.length === 0">
+                    <center>
+                        <h4>Không có sản phẩm nào được tìm thấy</h4>
+                    </center>
+                </div>
                 <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
                     style="z-index: 10; margin-bottom: 2rem;"
                     ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
@@ -221,11 +225,11 @@
             </div>
         </div>
         <!-- Tabs đang chờ kiểm duyệt -->
-        <div class="tab-pane fade" id="content2">
+        <div class="tab-pane fade" ng-class="{'active show': checkMystore===2 }" id="content2">
             <div class="row col-md-11 animate__animated animate__fadeIn">
                 <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
                     style="z-index: 10; margin-bottom: 2rem;"
-                    ng-repeat="product in listProductPending | orderBy:'-datePost' | filter: customFilter">
+                    ng-repeat="product in listProductPending | orderBy:'-datePost'">
                     <div class="row frameProduct animate__animated animate__fadeIn">
                         <div class="col-md-6" style="display: flex;max-height: 100%;">
                             <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
@@ -287,7 +291,7 @@
             </div>
         </div>
         <!-- Tabs khác -->
-        <div class="tab-pane fade" id="content3">
+        <div class="tab-pane fade" ng-class="{'active show': checkMystore===3 }" id="content3">
             <div>
                 <div class="row">
                     <!-- <div class="col-lg-4">

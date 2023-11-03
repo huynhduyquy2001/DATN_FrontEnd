@@ -10,7 +10,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
   $scope.fee = [];
   $scope.checkShip = false;
   $scope.oneAddress = {};
-  $scope.checkPay = true;
+  $scope.checkPay = false;
   var dataListProduct;
   var dataAddress;
   $scope.loadData = function () {
@@ -846,7 +846,11 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     $scope.selectedWard = null;
     $scope.textareaValue = "";
     inputElement.value = "";
-  } 
+  }
+
+  $scope.clickStatusPay = function (status) {
+    $scope.checkPay = status;
+  }
 
   $scope.paymentVNPay = function (pay) {
     var element = document.getElementById("vnpay");
@@ -872,42 +876,42 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
           // Mở trang mới với URL nhận được
           window.location.href = newPageUrl;
         });
-    } else{
-            // Lấy tất cả các phần tử input có type là checkbox
-          var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-          // Lưu giá trị từ các checkbox
-          var listColorAndProductId = [];
-          // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
-          checkboxes.forEach(function (checkbox) {
-            if (checkbox.checked && checkbox.offsetParent !== null) {
-              var productIdAndColor = checkbox.id.split("_");
-              var productId = productIdAndColor[0];
-              var color = productIdAndColor[1];
-              listColorAndProductId.push({ productId: productId, color: color });
-            }
-          });
-            //Thanh toán
-            $http({
-              method: "POST",
-              url: url + "/payShoppingCart/" + numericValue + "/"+ addressText + "/" + numericValueFeePay, 
-              data: listColorAndProductId, 
-              contentType: "application/json",
-            }).then(function (response) {
-                    Swal.fire({
-                    position: "top",
-                    icon: "success",
-                    text: response.data.body,
-                    showConfirmButton: false,
-                    timer: 1000,
-                  });
-                $scope.loadData();
-                //Ẩn modal đặt hàng
-                $("#exampleModal").modal("hide");
-                $location.path('/order/' + $rootScope.myAccount.user.userId);
-              })
-              .catch(function (error) {
-                console.error("Error:", error);
-              });
+    } else {
+      // Lấy tất cả các phần tử input có type là checkbox
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      // Lưu giá trị từ các checkbox
+      var listColorAndProductId = [];
+      // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
+      checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked && checkbox.offsetParent !== null) {
+          var productIdAndColor = checkbox.id.split("_");
+          var productId = productIdAndColor[0];
+          var color = productIdAndColor[1];
+          listColorAndProductId.push({ productId: productId, color: color });
+        }
+      });
+      //Thanh toán
+      $http({
+        method: "POST",
+        url: url + "/payShoppingCart/" + numericValue + "/" + addressText + "/" + numericValueFeePay,
+        data: listColorAndProductId,
+        contentType: "application/json",
+      }).then(function (response) {
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          text: response.data.body,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        $scope.loadData();
+        //Ẩn modal đặt hàng
+        $("#exampleModal").modal("hide");
+        $location.path('/order/' + $rootScope.myAccount.user.userId);
+      })
+        .catch(function (error) {
+          console.error("Error:", error);
+        });
     }
 
   }

@@ -277,12 +277,16 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 								});
 							//hiện popup thôg báo
 							if ("Notification" in window) {
-								// Yêu cầu quyền hiển thị thông báo
 								Notification.requestPermission().then(function (permission) {
 									if (permission === "granted") {
-										// Hiển thị thông báo
+										// Tạo một đối tượng hình ảnh cho thông báo
+										var img = new Image();
+										img.src = newMess.sender.avatar; // Thay đổi đường dẫn đến ảnh thực tế
+
+										// Hiển thị thông báo với ảnh
 										var notification = new Notification("Thông báo", {
-											body: newMess.sender.username + " vừa gửi tin nhắn đến bạn"
+											body: newMess.sender.username + " vừa gửi tin nhắn đến bạn",
+											icon: img.src // Sử dụng đường dẫn hình ảnh cho biểu tượng thông báo
 										});
 
 										// Đặt hành động khi thông báo được nhấn

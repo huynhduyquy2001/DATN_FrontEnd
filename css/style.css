@@ -736,8 +736,7 @@ a {
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus {
-	border: none;
-	border-bottom: 1px solid #5d87ff;
+	border: 1px solid #5d87ff;
 }
 
 .dropdown-item:focus,
@@ -2853,4 +2852,16 @@ th {
 	100% {
 		box-shadow: 0 0 3px 5px rgba(173, 0, 0, 0);
 	}
+}
+
+.ip-bot {
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-radius: 0px;
+}
+
+.title-element {
+	font-weight: 600;
+	margin-left: 0;
 }
