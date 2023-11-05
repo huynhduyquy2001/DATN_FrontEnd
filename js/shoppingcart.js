@@ -846,7 +846,11 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     $scope.selectedWard = null;
     $scope.textareaValue = "";
     inputElement.value = "";
-  } 
+  }
+
+  $scope.clickStatusPay = function (status) {
+    $scope.checkPay = status;
+  }
 
   $scope.clickStatusPay = function(status){
       $scope.checkPay = status;
