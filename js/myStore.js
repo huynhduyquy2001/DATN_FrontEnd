@@ -85,15 +85,6 @@ app.controller(
         $rootScope.checkMystore = 2;
     };
 
-    //Load từ đầu
-    if($rootScope.checkMystore === 1){
-      $scope.page($rootScope.currentPageMyStore);
-    }else if($rootScope.checkMystore === 2){
-      $scope.pagePending($rootScope.currentPagePending)
-    }else if($rootScope.checkMystore === 3){
-      $scope.tabsReport();
-    }
-
     //Tìm kiếm
     $scope.searchProduct = function () {
       var search = $scope.searchValue;
@@ -362,9 +353,7 @@ app.controller(
 
     //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
     $scope.tabsReport = function(){
-    
     $rootScope.checkMystore = 3;
-
     //thống kê của hàng của tôi 
     $scope.countorderperonal = [];
     $scope.sumorderperonal = [];
@@ -570,6 +559,16 @@ app.controller(
     }).catch(function (error) {
       console.error("Lỗi: " + error);
     });
-  }
+    }
+
+
+    //Load từ đầu
+    if($rootScope.checkMystore === 1){
+      $scope.page($rootScope.currentPageMyStore);
+    }else if($rootScope.checkMystore === 2){
+      $scope.pagePending($rootScope.currentPagePending)
+    }else if($rootScope.checkMystore === 3){
+      $scope.tabsReport();
+    }
   });
 
