@@ -1,4 +1,4 @@
-app.controller('OrdersController', function ($scope, $http, $timeout) {
+app.controller('OrdersController', function ($scope, $http, $window) {
     var Url = "http://localhost:8080";
     var orderUrl = "http://localhost:8080/myOrders";
     var orders = {};

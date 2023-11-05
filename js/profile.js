@@ -941,32 +941,8 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 
 
 	$scope.changeBackground = function () {
-		var formData = new FormData();
-		var fileInput = document.getElementById('inputGroupFile02');
-
-		for (var i = 0; i < fileInput.files.length; i++) {
-			formData.append('photoFiles2', fileInput.files[i]);
-		}
-		formData.append('content', $scope.content);
-
-		$http.post('/updateBackground', formData, {
-			transformRequest: angular.identity,
-			headers: {
-				'Content-Type': undefined
-			}
-		}).then(function (response) {
-			// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh bìa)
-			$scope.content = '';
-			alert("Đăng bài và cập nhật ảnh bìa thành công!");
-		}, function (error) {
-			// Xử lý lỗi
-			console.log(error);
-			alert("Đăng bài và cập nhật ảnh bìa thành công!");
-		});
-	};
-	$scope.changeAvatar = function () {
 		var form = new FormData();
-		var fileInput = document.getElementById('inputGroupFile03');
+		var fileInput = document.getElementById('inputGroupFile02');
 
 		if (fileInput.files.length === 0) {
 			const Toast = Swal.mixin({
@@ -1079,6 +1055,202 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 							}).catch(function (error) {
 								console.error('Lỗi tải lên tệp:', error);
 							});
+
+
+							$http.post(url + '/updateBackground', downloadURL, {
+								withCredentials: true,
+								transformRequest: angular.identity,
+								headers: {
+									'Content-Type': 'text/plain'  // Đặt Content-Type là text/plain
+								}
+							}).then(function (response) {
+								// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh đại diện)
+								$scope.content = '';
+								const Toast = Swal.mixin({
+									toast: true,
+									position: 'top-end',
+									showConfirmButton: false,
+									timer: 3000,
+									timerProgressBar: true,
+									didOpen: (toast) => {
+										toast.addEventListener('mouseenter', Swal.stopTimer)
+										toast.addEventListener('mouseleave', Swal.resumeTimer)
+									}
+								});
+
+								Toast.fire({
+									icon: 'success',
+									title: 'Cập nhật ảnh bìa thành công!'
+								});
+							}, function (error) {
+								// Xử lý lỗi
+								console.log(error);
+								alert("Đã xảy ra lỗi. Vui lòng thử lại!" + error);
+							});
+
+						}).catch(function (error) {
+							console.error('Error getting download URL:', error);
+						});
+					});
+				};
+
+				// Bắt đầu tải và gửi ảnh từ fileInput.files[0]
+				uploadNextImage(0);
+			})
+			.catch(function (error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+	};
+	$scope.changeAvatar = function () {
+		var form = new FormData();
+		var fileInput = document.getElementById('inputGroupFile03');
+
+		if (fileInput.files.length === 0) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Bạn phải thêm ảnh vào bài viết'
+			})
+			return; // Return without doing anything
+		}
+		for (var i = 0; i < fileInput.files.length; i++) {
+			var file = fileInput.files[i];
+			var fileSizeMB = file.size / (1024 * 1024); // Kích thước tệp tin tính bằng megabyte (MB)
+
+			if (fileSizeMB > 1000) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				});
+
+				Toast.fire({
+					icon: 'warning',
+					title: 'Kích thước tệp tin quá lớn (giới hạn 1GB)'
+				});
+
+				return; // Return without doing anything
+			}
+
+		}
+
+		if ($scope.content === null || $scope.content === undefined) {
+			$scope.content = '';
+		}
+		if ($scope.content === null || $scope.content === undefined) {
+			$scope.content = '';
+		}
+
+		var content = $scope.content.trim();
+		form.append('content', content);
+		$http.post(url + '/post', form, {
+			transformRequest: angular.identity,
+			headers: {
+				'Content-Type': undefined
+			}
+		})
+			.then(function (response) {
+				var postId = response.data.postId;
+				var storage = firebase.storage();
+				var storageRef = storage.ref();
+
+				var uploadNextImage = function (fileIndex) {
+					if (fileIndex >= fileInput.files.length) {
+						// All files have been uploaded
+						$scope.content = '';
+						fileInput.value = null;
+						var mediaList = document.getElementById('mediaList');
+						mediaList.innerHTML = '';
+						$window.selectedMedia = [];
+						return;
+					}
+
+					var file = fileInput.files[fileIndex];
+					var timestamp = new Date().getTime();
+					var fileName = file.name + '_' + timestamp;
+					var fileType = getFileExtensionFromFileName(file.name);
+
+					// Xác định nơi lưu trữ dựa trên loại tệp
+					var storagePath = fileType === 'mp4' ? 'videos/' : 'images/';
+
+					// Tạo tham chiếu đến nơi lưu trữ tệp trên Firebase Storage
+					var uploadTask = storageRef.child(storagePath + fileName).put(file);
+
+					// Xử lý sự kiện khi tải lên hoàn thành
+					uploadTask.on('state_changed', function (snapshot) {
+						// Sự kiện theo dõi tiến trình tải lên (nếu cần)
+					}, function (error) {
+						// Xử lý lỗi tải lên
+						alert("Lỗi tải");
+					}, function () {
+						// Tải lên thành công, lấy URL của tệp từ Firebase Storage
+						uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+							var formData = new FormData();
+							formData.append('imagesUrl', downloadURL);
+							console.log(downloadURL);
+
+							$http.post(url + '/postimage/' + postId, formData, {
+								transformRequest: angular.identity,
+								headers: {
+									'Content-Type': undefined
+								}
+							}).then(function (response) {
+								// Tiếp tục tải và gửi ảnh tiếp theo
+								uploadNextImage(fileIndex + 1);
+							}).catch(function (error) {
+								console.error('Lỗi tải lên tệp:', error);
+							});
+
+
+							$http.post(url + '/updateAvatar', downloadURL, {
+								withCredentials: true,
+								transformRequest: angular.identity,
+								headers: {
+									'Content-Type': 'text/plain'  // Đặt Content-Type là text/plain
+								}
+							}).then(function (response) {
+								// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh đại diện)
+								$scope.content = '';
+								const Toast = Swal.mixin({
+									toast: true,
+									position: 'top-end',
+									showConfirmButton: false,
+									timer: 3000,
+									timerProgressBar: true,
+									didOpen: (toast) => {
+										toast.addEventListener('mouseenter', Swal.stopTimer)
+										toast.addEventListener('mouseleave', Swal.resumeTimer)
+									}
+								});
+
+								Toast.fire({
+									icon: 'warning',
+									title: 'Cập nhật ảnh đại diện thành công!'
+								});
+							}, function (error) {
+								// Xử lý lỗi
+								console.log(error);
+								alert("Đã xảy ra lỗi. Vui lòng thử lại!" + error);
+							});
+
 						}).catch(function (error) {
 							console.error('Error getting download URL:', error);
 						});
