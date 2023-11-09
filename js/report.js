@@ -361,7 +361,7 @@ app.controller(
         });
       }
     );
-  
+
     $scope.onYear = function () {
 
       var getData1 = $http.get(url + "/admin/report/filterYearViolationsPosts/" + $scope.selectedYear.years).then(function (response) {

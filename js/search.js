@@ -1,32 +1,5 @@
 
-
-
-
 app.controller('SearchController', function ($scope, $http, $translate, $rootScope, $location) {
-
-	const firebaseConfig = {
-		apiKey: "AIzaSyB_nFfKhlG0KP5lU6d3gqQwniuDHnnI8JE",
-		authDomain: "search-history-453d4.firebaseapp.com",
-		databaseURL: "https://search-history-453d4-default-rtdb.firebaseio.com",
-		projectId: "search-history-453d4",
-		storageBucket: "search-history-453d4.appspot.com",
-		messagingSenderId: "308907237461",
-		appId: "1:308907237461:web:97a517ea4387f1df4af4dc",
-		measurementId: "G-J3T65DFKHD"
-	};
-	if (!firebase.apps.length) {
-		firebase.initializeApp(firebaseConfig);
-	}
-	// firebase.auth().signInWithEmailAndPassword('daynewtran@gmail.com', 'daynewtran123')
-	// 	.then(function (userCredential) {
-	// 		// Người dùng đã đăng nhập thành công
-	// 		const user = userCredential.user;
-	// 	})
-	// 	.catch(function (error) {
-	// 		// Xử lý lỗi xác thực, bao gồm cả lỗi 401
-	// 		console.error("Lỗi xác thực:", error);
-	// 	});
-
 	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
 	var Url = "http://localhost:8080";
 	$scope.Posts = [];
@@ -36,6 +9,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	$scope.item = {};
 	$scope.listFollow = [];
 	$scope.usernameS = $rootScope.keyS;
+	$scope.showDropdown = true;
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -114,8 +88,11 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			});
 	};
 	$scope.findProduct = function (username) {
+		$scope.showDropdown = false;
 		if (username === "") {
 			$scope.users = []; // Đặt danh sách người dùng thành rỗng
+			$scope.showDropdown = true;
+			$scope.searchnull = "";
 			return; // Không gọi API, dừng hàm tìm kiếm ở đây
 		}
 		$scope.splitText($scope.usernameS);
@@ -175,15 +152,15 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		searchInput.value = handledText;
 		// const changeEvent = new Event('change');
 		// searchInput.dispatchEvent(changeEvent);
+		$scope.addToSearchHistory(handledText);
 		$scope.findProduct(handledText);
 		searchInput.dispatchEvent($scope.findProduct(handledText));
 		return;
-
-
 		speak('Try again');
 	}
 
 	microphone.addEventListener('click', (e) => {
+		$scope.showDropdown = true;
 		e.preventDefault();
 
 		recognition.start();
@@ -205,45 +182,6 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		const text = e.results[0][0].transcript;
 		handleVoice(text);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	//đây là code hiện lên lịch sử người dùng
@@ -338,6 +276,8 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			});
 	};
 
+
+	//Follw người dùng
 	$http.get(Url + '/ListFollowing')
 		.then(function (response) {
 			$scope.followings = response.data;
@@ -431,5 +371,54 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			return days + ' ngày trước';
 		}
 	};
+	$scope.chontimkiem = function () {
+		$scope.showDropdown = false;
+	}
+	$scope.chontimkiem1 = function () {
+		$scope.showDropdown = true;
+	}
+	$scope.searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
+	$scope.currentUserId = $rootScope.myAccount.user.userId;
 
+	$scope.addToSearchHistory = function (searchTerm) {
+		if (searchTerm) {
+			const userId = $scope.currentUserId;
+
+			if (!$scope.searchHistory[userId]) {
+				$scope.searchHistory[userId] = [searchTerm];
+			} else {
+				const userSearchHistory = $scope.searchHistory[userId];
+				if (userSearchHistory.indexOf(searchTerm) === -1) {
+					userSearchHistory.unshift(searchTerm);
+					if (userSearchHistory.length > 10) {
+						userSearchHistory.pop();
+					}
+				}
+			}
+
+			localStorage.setItem('searchHistory', JSON.stringify($scope.searchHistory));
+		}
+	};
+
+	$scope.removeFromSearchHistory = function (searchTerm) {
+		const userId = $scope.currentUserId;
+
+		if ($scope.searchHistory[userId]) {
+			const userSearchHistory = $scope.searchHistory[userId];
+			const index = userSearchHistory.indexOf(searchTerm);
+			if (index !== -1) {
+				userSearchHistory.splice(index, 1);
+				localStorage.setItem('searchHistory', JSON.stringify($scope.searchHistory));
+			}
+		}
+	};
+
+
+	$scope.chonten = function (searchTerm) {
+		// Gán tên đã chọn vào $scope.selectedSearchTerm và ẩn dropdown
+		$scope.username = searchTerm;
+		$scope.findProduct(searchTerm);
+		$scope.showDropdown = false;
+	};
+	console.log("user ID người dùng" + $rootScope.myAccount.user.userId)
 });

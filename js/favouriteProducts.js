@@ -111,6 +111,10 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 			$scope.isHidden = true;
 
 		}
+		else {
+			$scope.searchnull = "";
+		}
+
 
 		// Gán kết quả tìm kiếm cho $scope.favoriteProducts
 		$scope.favoriteProducts = searchResults;
@@ -214,8 +218,9 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 
 		// searchInputF.dispatchEvent(changeEvent);
 		$rootScope.keyF = $scope.productNameF;
-		$scope.findProductF(0);
+		$scope.searchFavoriteProducts($scope.productNameF);
 		//searchInputF.dispatchEvent($scope.findProductF($scope.productNameF));
+		console.log("Nói ra nè " + $scope.productNameF);
 		return;
 	}
 

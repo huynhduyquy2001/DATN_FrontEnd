@@ -58,30 +58,12 @@ app.controller(
           originalList = res.data.content;
           $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
           $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-          $rootScope.checkMystore = 1;
         })
         .catch(function (error) {
           console.log(error);
         });
+      $rootScope.checkMystore = 1;
     };
-
-    //Load từ đầu
-    $http
-      .get(
-        url +
-        "/mystore/" +
-        $routeParams.userId +
-        "/" +
-        $scope.currentPageMyStore
-      )
-      .then(function (res) {
-        originalList = res.data.content;
-        $scope.listProductMyStore = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-        $scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
 
     $scope.pagePending = function (currentPagePending) {
       $http
@@ -95,16 +77,20 @@ app.controller(
         .then(function (res) {
           $scope.listProductPending = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
           $scope.totalPagePending = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-          $rootScope.checkMystore = 2;
+
         })
         .catch(function (error) {
           console.log(error);
         });
+      $rootScope.checkMystore = 2;
     };
+
+
 
     //Tìm kiếm
     $scope.searchProduct = function () {
       var search = $scope.searchValue;
+      console.log(search)
       if ($scope.searchValue === "") {
         $scope.listProductMyStore = originalList;
         return;
@@ -119,6 +105,91 @@ app.controller(
           });
       }
     };
+    //Tìm kiếm bằng giọng nói 
+    $scope.searchProductMic = function () {
+      //Tìm kiếm bằng giọng nói 
+      const searchInput = document.querySelector('#text-srh');
+      // Tro ly ao
+      var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+      const recognition = new SpeechRecognition();
+      const synth = window.speechSynthesis;
+      recognition.lang = 'vi-VI';
+      recognition.continuous = false;
+
+      const microphone = document.querySelector('.microphone');
+
+      const speak = (text) => {
+        if (synth.speaking) {
+          console.error('Busy. Speaking...');
+          return;
+        }
+
+        const utter = new SpeechSynthesisUtterance(text);
+
+        utter.onend = () => {
+          console.log('SpeechSynthesisUtterance.onend');
+        }
+        utter.onerror = (err) => {
+          console.error('SpeechSynthesisUtterance.onerror', err);
+        }
+
+        synth.speak(utter);
+      };
+
+      const handleVoice = (text) => {
+        console.log('text', text);
+        const handledText = text.toLowerCase();
+
+        const location = handledText[1];
+
+        console.log('location', location);
+        searchInput.value = handledText;
+        var search = handledText;
+        console.log(search)
+        if (handledText === "") {
+          $scope.listProductMyStore = originalList;
+          return;
+        } else {
+          $http
+            .get(
+              url + "/searchProductMyStore/" + $routeParams.userId + "/" + search
+            )
+            .then(function (response) {
+              $scope.listProductMyStore = response.data.content;
+              $scope.totalPages = response.data.totalPages;
+            });
+        }
+        return;
+
+
+        speak('Try again');
+      }
+
+      microphone.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        recognition.start();
+        microphone.classList.add('recording');
+      });
+
+      recognition.onspeechend = () => {
+        recognition.stop();
+        microphone.classList.remove('recording');
+      }
+
+      recognition.onerror = (err) => {
+        console.error(err);
+        microphone.classList.remove('recording');
+      }
+
+      recognition.onresult = (e) => {
+        console.log('onresult', e);
+        const text = e.results[0][0].transcript;
+        handleVoice(text);
+      }
+
+    }
 
     //Xóa sản phẩm
     $scope.hideProductMyStore = function (productId) {
@@ -367,212 +438,327 @@ app.controller(
       }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
     };
 
+    //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
+    $scope.tabsReport = function () {
 
-    //thống kê của hàng của tôi 
-    $scope.countorderperonal = [];
-    $scope.sumorderperonal = [];
-    $scope.Orderstatus = [];
-    $scope.bestselling = [];
-    var Url = "http://localhost:8080/personalStatisticsCoutOrder";
-    var Url2 = "http://localhost:8080/personalStatisticsSumTotalAmout";
-    var Url3 = "http://localhost:8080/personalStatisticsCoutOrderStatus";
-    var Url4 = "http://localhost:8080/productbestSelling";
-    var categories2 = [];
-    var data2 = [];
+      $rootScope.checkMystore = 3;
 
-    //biểu đồ 1 
-    $http.get(Url2).then(function (response) {
-      $scope.sumorderperonal = response.data;
-      console.log("Load dữ liệu1" + $scope.sumorderperonal);
-      $scope.sumorderperonal.forEach(function (item) {
-        categories2.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
-        data2.push(parseInt(item[1]));
-      });
+      //thống kê của hàng của tôi 
+      $scope.countorderperonal = [];
+      $scope.sumorderperonal = [];
+      $scope.Orderstatus = [];
+      $scope.bestselling = [];
+      var Url = "http://localhost:8080/personalStatisticsCoutOrder";
+      var Url2 = "http://localhost:8080/personalStatisticsSumTotalAmout";
+      var Url3 = "http://localhost:8080/personalStatisticsCoutOrderStatus";
+      var productbestSelling = "http://localhost:8080/productbestSelling/";
+      var getyear = "http://localhost:8080/getyear";
+      var gettotalamout = "http://localhost:8080/totalamount/";
+      var getcoutorder = "http://localhost:8080/getcoutorder/";
+      var getcoutcanceldrder = "http://localhost:8080/getcoutcancelorder/"
+      var categories2 = [];
+      var data2 = [];
 
-      console.log("Data2: " + JSON.stringify(data2));
-      Highcharts.chart('container', option);
-
-    }).catch(function (error) {
-      console.error("Lỗi: " + error);
-    });
-    var categories = [];
-    var data = [];
-    // Highcharts.setOptions({
-    //   lang: {
-    //     thousandsSep: ','
-    //   }
-    // });
-    var option = {
-      chart: {
-        zoomType: 'xy'
-      },
-      title: {
-        text: '',
-        align: 'left'
-      },
-      subtitle: {
-
-        align: 'left'
-      },
-      xAxis: {
-        categories: categories,
-      },
-      yAxis: [{ // Primary yAxis
-        labels: {
-          format: '{value:.0f}',
-          style: {
-            color: Highcharts.getOptions().colors[1]
-          }
-        },
-        title: {
-          text: 'Tổng số lượng đơn hàng',
-          style: {
-            color: Highcharts.getOptions().colors[1]
-          }
-        }
-      }, { // Secondary yAxis
-        title: {
-          text: 'Doanh thu',
-          style: {
-            color: Highcharts.getOptions().colors[0]
-          }
-        },
-        labels: {
-          formatter: function () {
-            return Highcharts.numberFormat(this.value, 0, '', '.') + ' VND';
-          },
-          style: {
-            color: Highcharts.getOptions().colors[0]
-          }
-        },
-        opposite: true
-      }],
-      tooltip: {
-        shared: true
-      },
-      legend: {
-        align: 'left',
-        x: 80,
-        verticalAlign: 'top',
-        y: 60,
-        floating: false,
-        backgroundColor:
-          Highcharts.defaultOptions.legend.backgroundColor || // theme
-          'rgba(255,255,255,0.25)'
-      },
-      series: [{
-        name: 'Doanh thu',
-        type: 'column',
-        yAxis: 1,
-        data: data2,
-        tooltip: {
-          valueSuffix: ' VND'
-        }
-
-      }, {
-        name: 'Tổng số lượng đơn hàng',
-        type: 'spline',
-        data: data,
-        tooltip: {
-          valueSuffix: ' đơn hàng'
-        }
-      }]
-    }
-    $http.get(Url)
-      .then(function (response) {
-        $scope.countorderperonal = response.data;
-        console.log("Load dữ liệu" + $scope.countorderperonal);
-        // Tạo mảng categories và data từ dữ liệu
-        $scope.countorderperonal.forEach(function (item) {
-          categories.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
-          data.push(parseInt(item[1]));
+      //biểu đồ 1 
+      $http.get(Url2).then(function (response) {
+        $scope.sumorderperonal = response.data;
+        // console.log("Load dữ liệu1" + $scope.sumorderperonal);
+        $scope.sumorderperonal.forEach(function (item) {
+          categories2.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
+          data2.push(parseInt(item[1]));
         });
-        console.log("Data: " + JSON.stringify(data));
+
+        // console.log("Data2: " + JSON.stringify(data2));
         Highcharts.chart('container', option);
-      })
-      .catch(function (error) {
+
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+      var categories = [];
+      var data = [];
+      // Highcharts.setOptions({
+      //   lang: {
+      //     thousandsSep: ','
+      //   }
+      // });
+      var option = {
+        chart: {
+          zoomType: 'xy'
+        },
+        title: {
+          text: '',
+          align: 'left'
+        },
+        subtitle: {
+
+          align: 'left'
+        },
+        xAxis: {
+          categories: categories,
+        },
+        yAxis: [{ // Primary yAxis
+          labels: {
+            format: '{value:.0f}',
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            }
+          },
+          title: {
+            text: 'Tổng số lượng đơn hàng',
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            }
+          }
+        }, { // Secondary yAxis
+          title: {
+            text: 'Doanh thu',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+          labels: {
+            formatter: function () {
+              return Highcharts.numberFormat(this.value, 0, '', '.') + ' VND';
+            },
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+          opposite: true
+        }],
+        tooltip: {
+          shared: true
+        },
+        legend: {
+          align: 'left',
+          x: 80,
+          verticalAlign: 'top',
+          y: 60,
+          floating: false,
+          backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || // theme
+            'rgba(255,255,255,0.25)'
+        },
+        series: [{
+          name: 'Doanh thu',
+          type: 'column',
+          yAxis: 1,
+          data: data2,
+          tooltip: {
+            valueSuffix: ' VND'
+          }
+
+        }, {
+          name: 'Tổng số lượng đơn hàng',
+          type: 'spline',
+          data: data,
+          tooltip: {
+            valueSuffix: ' đơn hàng'
+          }
+        }]
+      }
+      $http.get(Url)
+        .then(function (response) {
+          $scope.countorderperonal = response.data;
+          // console.log("Load dữ liệu" + $scope.countorderperonal);
+          // Tạo mảng categories và data từ dữ liệu
+          $scope.countorderperonal.forEach(function (item) {
+            categories.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
+            data.push(parseInt(item[1]));
+          });
+          // console.log("Data: " + JSON.stringify(data));
+          Highcharts.chart('container', option);
+        })
+        .catch(function (error) {
+          console.error("Lỗi: " + error);
+        });
+
+
+
+
+      //biểu đò 2 
+      var nameOrderStatus = [];
+      var data3 = [];
+      $http.get(Url3).then(function (response) {
+        $scope.Orderstatus = response.data;
+        // console.log("Load dữ liệu3" + $scope.Orderstatus);
+        $scope.Orderstatus.forEach(function (item) {
+          nameOrderStatus.push((item[0]));
+          data3.push((item[1]));
+        });
+        // Highcharts.chart('container', option);
+        var names = nameOrderStatus;
+        var values = data3;
+
+        // Tạo mảng dữ liệu từ hai mảng riêng biệt
+        var dataOrderstatus = names.map(function (name, index) {
+          return {
+            name: name,
+            y: values[index]
+          };
+        });
+        // Build the chart
+        Highcharts.chart('container1', {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+          },
+          title: {
+            text: '',
+            align: 'left'
+          },
+          tooltip: {
+            // pointFormat: '{series.name}: <b>{point.percentage:.0f} đơn</b>'
+          },
+          accessibility: {
+            point: {
+              valueSuffix: ' đơn'
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<br>{point.percentage:.0f} %',
+                distance: -50,
+                filter: {
+                  property: 'percentage',
+                  operator: '>',
+                  value: 4
+                }
+              },
+              showInLegend: true
+            }
+          },
+          series: [{
+            name: 'Đơn hàng',
+            colorByPoint: true,
+            data: dataOrderstatus
+          }]
+        });
+      }).catch(function (error) {
         console.error("Lỗi: " + error);
       });
 
 
 
 
-    //biểu đò 2 
-    var nameOrderStatus = [];
-    var data3 = [];
-    $http.get(Url3).then(function (response) {
-      $scope.Orderstatus = response.data;
-      console.log("Load dữ liệu3" + $scope.Orderstatus);
-      $scope.Orderstatus.forEach(function (item) {
-        nameOrderStatus.push((item[0]));
-        data3.push((item[1]));
-      });
-      console.log("Data3: " + JSON.stringify(data3));
-      // Highcharts.chart('container', option);
-      var names = nameOrderStatus;
-      var values = data3;
+      $scope.selectedYear = "";
+      $scope.getyear = [];
 
-      // Tạo mảng dữ liệu từ hai mảng riêng biệt
-      var dataOrderstatus = names.map(function (name, index) {
-        return {
-          name: name,
-          y: values[index]
-        };
+      $http.get(getyear).then(function (resp) {
+        $scope.getyear = resp.data;
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
       });
-      // Build the chart
-      Highcharts.chart('container1', {
-        chart: {
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false,
-          type: 'pie'
-        },
-        title: {
-          text: '',
-          align: 'left'
-        },
-        tooltip: {
-          // pointFormat: '{series.name}: <b>{point.percentage:.0f} đơn</b>'
-        },
-        accessibility: {
-          point: {
-            valueSuffix: ' đơn'
-          }
-        },
-        plotOptions: {
-          pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-              enabled: true,
-              format: '<br>{point.percentage:.0f} %',
-              distance: -50,
-              filter: {
-                property: 'percentage',
-                operator: '>',
-                value: 4
-              }
-            },
-            showInLegend: true
-          }
-        },
-        series: [{
-          name: 'Đơn hàng',
-          colorByPoint: true,
-          data: dataOrderstatus
-        }]
+      $scope.currentYear = new Date().getFullYear();
+      var selectedYearInt1 = parseInt($scope.currentYear);
+      //Tổng tiền
+      $http.get(gettotalamout + selectedYearInt1).then(function (resp) {
+        $scope.gettotalamout = resp.data;
+        if ($scope.gettotalamout === "") {
+          $scope.gettotalamout = "0";
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
       });
-    }).catch(function (error) {
-      console.error("Lỗi: " + error);
-    });
+      //Sô đơn hàng đã giao
+      $http.get(getcoutorder + selectedYearInt1).then(function (resp) {
+        if (resp.data.length === 0) {
+          $scope.getcoutorder = "0"; // Gán giá trị mặc định khi mảng rỗng
+        } else {
+          $scope.getcoutorder = resp.data;
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+      //bestselling Product
+      $http.get(productbestSelling + selectedYearInt1).then(function (resp) {
+        $scope.productbestSelling = resp.data;
+        if ($scope.productbestSelling === "") {
+          $scope.productbestSelling = "0";
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+      //Lấy số đơn hàng đã hủy 
+      $http.get(getcoutcanceldrder + selectedYearInt1).then(function (resp) {
+        if (resp.data.length === 0) {
+          $scope.getcoutcanceldrder = "0"; // Gán giá trị mặc định khi mảng rỗng
+        } else {
+          $scope.getcoutcanceldrder = resp.data;
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
 
-    //bestselling Product
-    $http.get(Url4).then(function (response) {
-      $scope.bestselling = response.data;
-      console.log("bestselling" + $scope.bestselling);
-    }).catch(function (error) {
-      console.error("Lỗi: " + error);
-    });
 
+
+      $scope.useSelectedYear = function () {
+        console.log("Giá trị đã chọn: " + $scope.selectedYear);
+        // Bạn có thể thực hiện các tác vụ khác dựa trên giá trị đã chọn ở đây 
+        var selectedYearInt = parseInt($scope.selectedYear);
+
+        if (!isNaN(selectedYearInt)) {
+          console.log("Giá trị đã chọn (kiểu int): " + selectedYearInt);
+          // Sử dụng selectedYearInt trong yêu cầu $http.get
+          $http.get(gettotalamout + selectedYearInt).then(function (resp) {
+            $scope.gettotalamout = resp.data;
+            if ($scope.gettotalamout === "") {
+              $scope.gettotalamout = "0";
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+          //Sô đơn hàng đã giao
+          $http.get(getcoutorder + selectedYearInt).then(function (resp) {
+            if (resp.data.length === 0) {
+              $scope.getcoutorder = "0"; // Gán giá trị mặc định khi mảng rỗng
+            } else {
+              $scope.getcoutorder = resp.data;
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+          //Lấy số đơn hàng đã hủy 
+          $http.get(getcoutcanceldrder + selectedYearInt).then(function (resp) {
+            if (resp.data.length === 0) {
+              $scope.getcoutcanceldrder = "0"; // Gán giá trị mặc định khi mảng rỗng
+            } else {
+              $scope.getcoutcanceldrder = resp.data;
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+          //bestselling Product
+          $http.get(productbestSelling + selectedYearInt).then(function (resp) {
+            $scope.productbestSelling = resp.data;
+            if ($scope.productbestSelling === "") {
+              $scope.productbestSelling = "0";
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+
+        }
+        else {
+          console.error("Lựa chọn không hợp lệ. Vui lòng chọn một năm hợp lệ.");
+        }
+      };
+    }
+
+
+    //Load từ đầu
+    if ($rootScope.checkMystore === 1) {
+      $scope.page($rootScope.currentPageMyStore);
+    } else if ($rootScope.checkMystore === 2) {
+      $scope.pagePending($rootScope.currentPagePending)
+    } else if ($rootScope.checkMystore === 3) {
+      $scope.tabsReport();
+    }
   });
 

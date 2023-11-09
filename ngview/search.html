@@ -9,11 +9,13 @@
 					<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
 						<!--Tìm kiếm-->
 						<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
-							<form class="position-relative" ng-submit="LS()" onsubmit="return validateSearch()">
+							<form class="position-relative" ng-submit="addToSearchHistory(username)"
+								onsubmit="return validateSearch()">
 								<input type="search" class="form-control search-chat py-2 ps-5"
 									ng-value="showname.username" ng-keyup="findProduct(username)" ng-model="username"
 									id="text-srh" placeholder="Nhập tên người dùng..."
-									style="border: 1px solid #ccc; border-radius: 20px;">
+									style="border: 1px solid #ccc; border-radius: 20px;" ng-focus="chontimkiem()"
+									ng-blur="chontimkiem1()">
 
 								<a><i
 										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
@@ -59,12 +61,14 @@
 					</div>
 				</div>
 				<br><br>
-				<div class="row">
+				<div class="row" ng-show="showDropdown">
 					<b>{{ 'LSTK' | translate }}</b>
-					<div class="col-lg-12" ng-repeat="(key,name) in items"
+					<!-- <div ng-repeat="userHistory in searchHistory"> -->
+					<div class="col-lg-12" ng-repeat="searchTerm in searchHistory[currentUserId]"
 						style="display: flex; justify-content: space-between;">
-						<a ng-click="TimKiem(key)" style="cursor: pointer;">{{name.username}}</a>
-						<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
+						<a ng-click="chonten(searchTerm)" style="cursor: pointer;">{{ searchTerm }}</a>
+						<a ng-click="removeFromSearchHistory(searchTerm)" style="cursor: pointer;">x</a>
+						<!-- </div> -->
 					</div>
 				</div>
 			</div>
@@ -72,8 +76,12 @@
 			<dDiv class="col-md-6 p-3">
 				<!--GỢI Ý Ở ĐÂY NÈ-->
 				<div ng-controller="RecommendController">
-					<label style="font-size: 20px; font: bold; color: #393e41;">{{ 'GYTD' |
-						translate }}</label>
+					<div class="d-flex align-items-center justify-content-between">
+						<label style="font-size: 20px; font-weight: bold; color: #393e41;">{{ 'GYTD' | translate
+							}}</label>
+						<a href="#!/recommend">Xem tất cả >></a>
+					</div>
+
 					<br> <br>
 					<div class="col-md-12">
 						<div class="col-md-6" ng-repeat="user in users"

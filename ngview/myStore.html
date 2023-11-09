@@ -1,4 +1,4 @@
-<div class="container" ng-if="myAccount.user.account.role.roleId == 4">
+<div class="container" ng-if="myAccount.user.account.role.roleId == 4 || userId != myAccount.user.userId">
     <ul class="nav nav-tabs" id="myTabs" ng-if="userId == myAccount.user.userId">
         <li class="nav-item">
             <a ng-click="page(currentPageMyStore)" ng-class="{ 'nav-link': true, 'active': checkMystore===1 }" id="tab1"
@@ -9,14 +9,13 @@
                 id="tab2" data-bs-toggle="tab" href="#content2">Đang chờ duyệt</a>
         </li>
         <li class="nav-item">
-            <a ng-class="{ 'nav-link': true, 'active': checkMystore===3 }" id="tab3" data-bs-toggle="tab"
-                href="#content3">Thống kê cửa hàng</a>
+            <a ng-click="tabsReport()" ng-class="{ 'nav-link': true, 'active': checkMystore===3 }" id="tab3"
+                data-bs-toggle="tab" href="#content3">Thống kê cửa hàng</a>
         </li>
     </ul>
-
     <div class="tab-content mt-2">
         <!-- Tabs sản phẩm đang bán -->
-        <div class="tab-pane fade show active" id="content1">
+        <div class="tab-pane fade" ng-class="{'active show': checkMystore===1 }" id="content1">
             <div class="row col-md-11 animate__animated animate__fadeIn">
                 <div class="col-md-12 d-flex align-items-center mb-2">
                     <div class="d-flex align-items-center me-2" ng-if="userId != myAccount.user.userId">
@@ -24,11 +23,15 @@
                             style="object-fit: cover;" class="rounded-circle me-2">
                         <h6>{{listProductMyStore[0].user.username}}</h6>
                     </div>
-                    <div class="col-4 me-2">
-                        <input type="text" ng-keyup="searchProduct()" ng-model="searchValue" class="form-control"
-                            style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
+                    <div class="col-4 me-2 d-flex align-items-center gap-2">
+                        <input type="text" ng-keyup="searchProduct()" ng-model="$parent.searchValue" id="text-srh"
+                            class="form-control" style="border-radius: 15px;" placeholder="Nhập sản phẩm cần tìm...">
+                        <span class="microphone" ng-click="searchProductMic()">
+                            <i class="fas fa-microphone"></i>
+                            <span class="recording-icon"></span>
+                        </span>
                     </div>
-                    <li class="btn-group me-3">
+                    <li class="btn-group me-3 ms-2">
                         <a style="cursor: pointer;" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
                                 class="fa-regular fa-filter-list fa-lg"></i> Lọc &nbsp;&nbsp;|&nbsp;&nbsp;
                             <span>{{filterStatus}}</span></a>
@@ -58,6 +61,11 @@
                         phẩm</a>
                 </div>
                 <hr>
+                <div ng-if="listProductMyStore.length === 0">
+                    <center>
+                        <h4>Không có sản phẩm nào được tìm thấy</h4>
+                    </center>
+                </div>
                 <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
                     style="z-index: 10; margin-bottom: 2rem;"
                     ng-repeat="product in listProductMyStore | orderBy:'-datePost' | filter: customFilter">
@@ -221,11 +229,11 @@
             </div>
         </div>
         <!-- Tabs đang chờ kiểm duyệt -->
-        <div class="tab-pane fade" id="content2">
+        <div class="tab-pane fade" ng-class="{'active show': checkMystore===2 }" id="content2">
             <div class="row col-md-11 animate__animated animate__fadeIn">
                 <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
                     style="z-index: 10; margin-bottom: 2rem;"
-                    ng-repeat="product in listProductPending | orderBy:'-datePost' | filter: customFilter">
+                    ng-repeat="product in listProductPending | orderBy:'-datePost'">
                     <div class="row frameProduct animate__animated animate__fadeIn">
                         <div class="col-md-6" style="display: flex;max-height: 100%;">
                             <a href="#!productdetails/{{product.productId}}" style="height: 100%; width: 100%;"><img
@@ -287,7 +295,7 @@
             </div>
         </div>
         <!-- Tabs khác -->
-        <div class="tab-pane fade" id="content3">
+        <div class="tab-pane fade" ng-class="{'active show': checkMystore===3 }" id="content3">
             <div>
                 <div class="row">
                     <!-- <div class="col-lg-4">
@@ -364,6 +372,11 @@
                     <div class="col-lg-8 d-flex align-items-stretch">
                         <div class="card w-100">
                             <div class="card-body p-4">
+                                <div class="d-flex justify-content-end">
+                                    <select class="border-white" ng-model="$parent.selectedYear"
+                                        ng-options="year for year in getyear" ng-change="useSelectedYear()">
+                                    </select>
+                                </div>
                                 <h5 class="card-title fw-semibold mb-4">Top 5 sản phẩm bán nhiều nhất</h5>
                                 <div class="table-responsive">
                                     <table class="table text-nowrap mb-0 align-middle">
@@ -380,11 +393,12 @@
                                                 </th>
                                                 <th class="border-bottom-0">
                                                     <h6 class="fw-semibold mb-0">Tổng tiền bán được</h6>
-                                                </th>       
+                                                </th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="t in bestselling | limitTo:5">
+                                            <tr ng-repeat="t in productbestSelling | limitTo:5">
                                                 <td class="border-bottom-0">
                                                     <p class="mb-0 fw-normal text-center">{{t[0]}}</p>
                                                 </td>
@@ -398,23 +412,57 @@
                                                 </td>
                                                 <td class="border-bottom-0 text-center"
                                                     style="max-width: 120px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                                                    <span class="fw-normal ">{{t[4]}}</span>
+                                                    <span class="fw-normal "> {{t[4] | currencyFormat}}</span>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <!-- <select class="border-white" ng-model="selectedYear"
+                                        ng-options="year for year in getyear" ng-change="useSelectedYear()">
+                                    </select> -->
+                                    <hr>
+                                    <div>
+                                        <label for="">Tổng số tiền đã bán : <b>{{gettotalamout |
+                                                currencyFormat}}</b></label>
+                                        <hr>
+                                        <label for="">Số lượng đơn hàng đã bán : <b>{{getcoutorder[0]}} đơn</b></label>
+                                        <hr>
+                                        <label for="">Số lượng đơn hàng đã bị hủy : <b>{{getcoutcanceldrder[0]}}
+                                                đơn</b></label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <nav class="d-flex justify-content-center" aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
+                            <a class="page-link" style="color: #313131;" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item" aria-current="page"><a
+                                style="font-weight: 600; color: #313131 !important; "
+                                class="page-link">{{currentPageMyStore+1}} /
+                                {{totalPages}}</a>
+                        </li>
+                        <li class="page-item" ng-click="Next()" style="cursor: pointer;">
+                            <a class="page-link" style="color: #313131;" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
             </div>
         </div>
     </div>
 </div>
 
 <div class="row"
-    ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2">
+    ng-if="myAccount.user.account.role.roleId != 4 && myAccount.user.account.role.roleId != 1 && myAccount.user.account.role.roleId != 2 && userId == myAccount.user.userId">
     <center style="padding: 25vh;">
         <h5>Đăng ký cửa hàng để bắt đầu kinh doanh nào</h5>
         <button ng-click="showProvince()" type="button" class="btn btn-primary mt-1" data-bs-toggle="modal"
