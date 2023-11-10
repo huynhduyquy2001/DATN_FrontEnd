@@ -1,5 +1,5 @@
 app.controller('AddProductsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams, $window) {
-    var Url = "http://localhost:8080";
+    var Url = "https://viesonetapi2.azurewebsites.net";
     $scope.product = {};
     $scope.colors = [];
     $scope.selectedColors = [];

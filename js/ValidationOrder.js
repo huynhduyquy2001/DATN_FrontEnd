@@ -1,5 +1,5 @@
 app.controller('ValidationOrderController', function ($scope, $http, $translate, $rootScope, $location) {
-	//var Url = "http://localhost:8080";
+	//var Url = "https://viesonetapi2.azurewebsites.net";
 	if (!$location.path().startsWith('/profile/')) {
 		// Tạo phần tử link stylesheet
 		var styleLink = document.createElement('link');
@@ -9,8 +9,8 @@ app.controller('ValidationOrderController', function ($scope, $http, $translate,
 		// Thêm phần tử link vào thẻ <head>
 		document.head.appendChild(styleLink);
 	}
-	var Url = "http://localhost:8080/pending-confirmation";
-	var Url2 = "http://localhost:8080/approveorders/";
+	var Url = "https://viesonetapi2.azurewebsites.net/pending-confirmation";
+	var Url2 = "https://viesonetapi2.azurewebsites.net/approveorders/";
 	var orderwaitforconfirmation = {};
 	$http.get(Url)
 		.then(function (response) {

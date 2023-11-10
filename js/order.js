@@ -1,6 +1,6 @@
 app.controller('OrdersController', function ($scope, $http, $timeout) {
-    var Url = "http://localhost:8080";
-    var orderUrl = "http://localhost:8080/myOrders";
+    var Url = "https://viesonetapi2.azurewebsites.net";
+    var orderUrl = "https://viesonetapi2.azurewebsites.net/myOrders";
     var orders = {};
     $http.get(orderUrl)
         .then(function (response) {

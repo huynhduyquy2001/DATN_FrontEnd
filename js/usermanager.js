@@ -3,7 +3,7 @@ app.controller(
 	function ($scope, $http, $translate, $rootScope, $location) {
 		$scope.listUsers = [];
 		$scope.profile = [];
-		var url = "http://localhost:8080"
+		var url = "https://viesonetapi2.azurewebsites.net"
 		$http.get(url + '/admin/usermanager/load')
 			.then(function(response) {
 				$scope.listUsers = response.data;

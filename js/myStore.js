@@ -1,7 +1,7 @@
 app.controller(
   "MyStoreController",
   function ($scope, $http, $routeParams, $rootScope, $timeout, $window) {
-    var url = "http://localhost:8080";
+    var url = "https://viesonetapi2.azurewebsites.net";
     var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
     $scope.listProductMyStore = [];
     $scope.listProductPending = [];
@@ -63,6 +63,7 @@ app.controller(
           console.log(error);
         });
       $rootScope.checkMystore = 1;
+      
     };
 
     $scope.pagePending = function (currentPagePending) {
@@ -84,14 +85,7 @@ app.controller(
       $rootScope.checkMystore = 2;
     };
 
-    //Load từ đầu
-    if ($rootScope.checkMystore === 1) {
-      $scope.page($rootScope.currentPageMyStore);
-    } else if ($rootScope.checkMystore === 2) {
-      $scope.pagePending($rootScope.currentPagePending)
-    } else if ($rootScope.checkMystore === 3) {
-      $scope.tabsReport();
-    }
+    
 
     //Tìm kiếm
     $scope.searchProduct = function () {
@@ -111,6 +105,9 @@ app.controller(
           });
       }
     };
+
+    
+
 
     //Xóa sản phẩm
     $scope.hideProductMyStore = function (productId) {
@@ -369,10 +366,10 @@ app.controller(
       $scope.sumorderperonal = [];
       $scope.Orderstatus = [];
       $scope.bestselling = [];
-      var Url = "http://localhost:8080/personalStatisticsCoutOrder";
-      var Url2 = "http://localhost:8080/personalStatisticsSumTotalAmout";
-      var Url3 = "http://localhost:8080/personalStatisticsCoutOrderStatus";
-      var Url4 = "http://localhost:8080/productbestSelling";
+      var Url = "https://viesonetapi2.azurewebsites.net/personalStatisticsCoutOrder";
+      var Url2 = "https://viesonetapi2.azurewebsites.net/personalStatisticsSumTotalAmout";
+      var Url3 = "https://viesonetapi2.azurewebsites.net/personalStatisticsCoutOrderStatus";
+      var Url4 = "https://viesonetapi2.azurewebsites.net/productbestSelling";
       var categories2 = [];
       var data2 = [];
 
@@ -570,5 +567,15 @@ app.controller(
         console.error("Lỗi: " + error);
       });
     }
+
+    //Load từ đầu
+    if ($rootScope.checkMystore === 1) {
+      $scope.page($rootScope.currentPageMyStore);
+    } else if ($rootScope.checkMystore === 2) {
+      $scope.pagePending($rootScope.currentPagePending)
+    } else if ($rootScope.checkMystore === 3) {
+      $scope.tabsReport();
+    }
+    
   });
 

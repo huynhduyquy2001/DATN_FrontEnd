@@ -6,7 +6,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	//đây là acc của ngta
 	//đây coi là có đang nhắn vs ai khum
 	$scope.isEmptyObject = false;
-	var url = "http://localhost:8080";
+	var url = "https://viesonetapi2.azurewebsites.net";
 
 	$scope.openLink = function (userId) {
 		var width = 840;

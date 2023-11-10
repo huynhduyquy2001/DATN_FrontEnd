@@ -28,7 +28,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	// 	});
 
 	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
-	var Url = "http://localhost:8080";
+	var Url = "https://viesonetapi2.azurewebsites.net";
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.myAccount = {};

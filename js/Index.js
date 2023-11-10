@@ -83,12 +83,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.playNotificationSound = function () {
 		sound.play();
 	};
-	var url = "http://localhost:8080";
-	var findMyAccount = "http://localhost:8080/findmyaccount";
-	var getUnseenMess = "http://localhost:8080/getunseenmessage";
-	var getChatlistwithothers = "http://localhost:8080/chatlistwithothers";
-	var loadnotification = "http://localhost:8080/loadnotification";
-	var loadallnotification = "http://localhost:8080/loadallnotification";
+	var url = "https://viesonetapi2.azurewebsites.net";
+	var findMyAccount = "https://viesonetapi2.azurewebsites.net/findmyaccount";
+	var getUnseenMess = "https://viesonetapi2.azurewebsites.net/getunseenmessage";
+	var getChatlistwithothers = "https://viesonetapi2.azurewebsites.net/chatlistwithothers";
+	var loadnotification = "https://viesonetapi2.azurewebsites.net/loadnotification";
+	var loadallnotification = "https://viesonetapi2.azurewebsites.net/loadallnotification";
 
 	$scope.myAccount = {};
 	$rootScope.unseenmess = 0;
@@ -544,8 +544,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	}
 
 	//Xem chi tiết thông báo
-	$scope.getNotificationDetail = function (postId, productId) {
-		if (postId != null && productId == null) {
+	$scope.getNotificationDetail = function (postId) {
+		if (postId != null ) {
 			$http.get(url + '/findpostcomments/' + postId)
 				.then(function (response) {
 					var postComments = response.data;
@@ -567,7 +567,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 					console.log(error);
 				});
 		} else {
-			$location.path('/productdetails/' + productId);
+			// $location.path();
 		}
 	}
 	//Xóa thông báo
@@ -780,7 +780,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	// =================================================================================
 
 	$rootScope.client = new StringeeClient();
-	var generateToken = "http://localhost:8080/generateToken";
+	var generateToken = "https://viesonetapi2.azurewebsites.net/generateToken";
 	$rootScope.getToken = function () {
 		$http.get(generateToken)
 			.then(function (response) {

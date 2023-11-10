@@ -1,5 +1,5 @@
 app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $window, $timeout, $location) {
-  var url = "http://localhost:8080";
+  var url = "https://viesonetapi2.azurewebsites.net";
   var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
   $scope.listProducts = [];
   $scope.listProductOrder = [];

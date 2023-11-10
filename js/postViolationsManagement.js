@@ -7,7 +7,7 @@ app.controller('PvmCtrl', function ($scope, $http, $translate, $rootScope, $loca
 		$scope.pageSize = 9;
 		$scope.selectedCountText = 0; // Số lượng mục đã chọn
 
-        var url = "http://localhost:8080";
+        var url = "https://viesonetapi2.azurewebsites.net";
 
 		$http.get(url + '/staff/postsviolations/load').then(function (response) {
 			// Gán dữ liệu từ API vào biến $scope.listViolations

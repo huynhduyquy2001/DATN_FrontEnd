@@ -15,8 +15,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	$scope.totalFollowing = 0;
 	$scope.currentHeight = 0;
 	$scope.totalPages = 0;
-	var url = "http://localhost:8080";
-	var getUnseenMess = "http://localhost:8080/getunseenmessage";
+	var url = "https://viesonetapi2.azurewebsites.net";
+	var getUnseenMess = "https://viesonetapi2.azurewebsites.net/getunseenmessage";
 
 
 
@@ -60,7 +60,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	}
 	$scope.findFollowings();
 	//Lấy danh sách vi phạm
-	$http.get('http://localhost:8080/getviolations')
+	$http.get('https://viesonetapi2.azurewebsites.net/getviolations')
 		.then(function (response) {
 			$scope.violations = response.data;
 
@@ -71,7 +71,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.loadMore = function () {
 		if ($scope.page <= $scope.totalPages) {
-			$http.get('http://localhost:8080/get-more-posts/' + $scope.page)
+			$http.get('https://viesonetapi2.azurewebsites.net/get-more-posts/' + $scope.page)
 				.then(function (response) {
 					if (response.data && response.data.content.length > 0) {
 						if ($scope.page === 0) {
@@ -141,7 +141,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 
 
-	$http.get('http://localhost:8080/findlikedposts')
+	$http.get('https://viesonetapi2.azurewebsites.net/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
 			$scope.likedPosts = likedPosts;
@@ -176,7 +176,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			})
 			return;
 		}
-		$http.post('http://localhost:8080/report/' + postId + '/' + $scope.selectedViolationType)
+		$http.post('https://viesonetapi2.azurewebsites.net/report/' + postId + '/' + $scope.selectedViolationType)
 			.then(function (response) {
 				const Toast = Swal.mixin({
 					toast: true,
@@ -213,8 +213,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());
-		var likeEndpoint = 'http://localhost:8080/likepost/' + postId;
-		var dislikeEndpoint = 'http://localhost:8080/didlikepost/' + postId;
+		var likeEndpoint = 'https://viesonetapi2.azurewebsites.net/likepost/' + postId;
+		var dislikeEndpoint = 'https://viesonetapi2.azurewebsites.net/didlikepost/' + postId;
 
 		// Nếu postId chưa tồn tại trong mảng likedPosts
 		if (likedIndex === -1) {
@@ -266,7 +266,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	};
 
 
-	$http.get('http://localhost:8080/findlikedposts')
+	$http.get('https://viesonetapi2.azurewebsites.net/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
 			$scope.likedPosts = likedPosts;
@@ -275,7 +275,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			console.log(error);
 		});
 
-	$http.get('http://localhost:8080/findmyaccount')
+	$http.get('https://viesonetapi2.azurewebsites.net/findmyaccount')
 		.then(function (response) {
 			var myAccount = response.data;
 			$scope.myAccount = myAccount;
@@ -286,8 +286,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());
-		var likeEndpoint = 'http://localhost:8080/likepost/' + postId;
-		var dislikeEndpoint = 'http://localhost:8080/didlikepost/' + postId;
+		var likeEndpoint = 'https://viesonetapi2.azurewebsites.net/likepost/' + postId;
+		var dislikeEndpoint = 'https://viesonetapi2.azurewebsites.net/didlikepost/' + postId;
 
 		// Nếu postId chưa tồn tại trong mảng likedPosts
 		if (likedIndex === -1) {
@@ -506,7 +506,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	}
 
 	$scope.getPostDetails = function (postId) {
-		$http.get('http://localhost:8080/findpostcomments/' + postId)
+		$http.get('https://viesonetapi2.azurewebsites.net/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
 				$scope.postComments = postComments;
@@ -516,7 +516,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 				console.log(error);
 			});
 		$scope.isReplyEmpty = true;
-		$http.get('http://localhost:8080/postdetails/' + postId)
+		$http.get('https://viesonetapi2.azurewebsites.net/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
 				$scope.postDetails = postDetails;
@@ -553,7 +553,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			return;
 		}
 
-		$http.post('http://localhost:8080/addcomment/' + postId + '?myComment=' + myComment.trim())
+		$http.post('https://viesonetapi2.azurewebsites.net/addcomment/' + postId + '?myComment=' + myComment.trim())
 			.then(function (response) {
 				$scope.postComments.unshift(response.data);
 				var postToUpdate = $scope.Posts.find(function (post) {
@@ -574,7 +574,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 
 	$scope.logout = function () {
-		$http.get('http://localhost:8080/logout')
+		$http.get('https://viesonetapi2.azurewebsites.net/logout')
 			.then(function () {
 				window.location.href = '/login';
 			}, function (error) {

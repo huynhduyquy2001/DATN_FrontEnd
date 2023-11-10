@@ -36,13 +36,13 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.fee = 0;
 	$scope.checkShip = false;
 	$scope.oneAddress = {};
-	var url = "http://localhost:8080";
-	var countpost = "http://localhost:8080/countmypost/";
-	var findMyAccount = "http://localhost:8080/findmyaccount";
-	var getUnseenMess = "http://localhost:8080/getunseenmessage";
-	var getChatlistwithothers = "http://localhost:8080/chatlistwithothers";
-	var loadnotification = "http://localhost:8080/loadnotification";
-	var loadallnotification = "http://localhost:8080/loadallnotification";
+	var url = "https://viesonetapi2.azurewebsites.net";
+	var countpost = "https://viesonetapi2.azurewebsites.net/countmypost/";
+	var findMyAccount = "https://viesonetapi2.azurewebsites.net/findmyaccount";
+	var getUnseenMess = "https://viesonetapi2.azurewebsites.net/getunseenmessage";
+	var getChatlistwithothers = "https://viesonetapi2.azurewebsites.net/chatlistwithothers";
+	var loadnotification = "https://viesonetapi2.azurewebsites.net/loadnotification";
+	var loadallnotification = "https://viesonetapi2.azurewebsites.net/loadallnotification";
 	var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",

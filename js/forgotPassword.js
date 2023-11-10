@@ -1,6 +1,6 @@
 app.controller('forgotPassCtrl', function($scope, $http, $translate, $rootScope, $location) {
 
-    var url = "http://localhost:8080";
+    var url = "https://viesonetapi2.azurewebsites.net";
 
     $scope.guiMa = function() {
         var email = $scope.email;

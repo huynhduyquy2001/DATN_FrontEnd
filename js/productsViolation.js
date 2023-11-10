@@ -11,7 +11,7 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 	$scope.pageSize = 9;
 	$scope.selectedCountText = 0; // Số lượng mục đã chọn
 
-	var url = "http://localhost:8080";
+	var url = "https://viesonetapi2.azurewebsites.net";
 
 
 

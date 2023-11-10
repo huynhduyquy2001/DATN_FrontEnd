@@ -1,6 +1,6 @@
 
 app.controller('ShoppingController', function ($scope, $http, $translate, $rootScope, $location, $anchorScroll) {
-	var url = "http://localhost:8080";
+	var url = "https://viesonetapi2.azurewebsites.net";
 	$scope.productList = [];
 	$scope.totalPages = 0;
 	$scope.totalPagesTrending = 0;
