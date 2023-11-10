@@ -1,10 +1,10 @@
-app.controller('ChangePassController', function($scope, $http, $translate, $rootScope, $location) {
+app.controller('ChangePassController', function($scope, $http) {
+	var url = "http://localhost:8080";
+
     $scope.submitForm = function() {
         var matKhau = $scope.matKhau;
         var matKhauMoi = $scope.matKhauMoi;
         var matKhauXacNhan = $scope.matKhauXacNhan;
-
-        var url = "http://localhost:8080";
 
         var data = {
         	matKhau: matKhau,
@@ -12,17 +12,9 @@ app.controller('ChangePassController', function($scope, $http, $translate, $root
         	matKhauXacNhan: matKhauXacNhan
         };
 
-        $http({
-            method: 'POST',
-            url: url + '/doimatkhau',
-            data: data,
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(function(response) {
-                var result = response.data;
-                if (result.message) {
-                    $scope.errorMessage = result.message;                 
-                } else {
+		$http
+          .post(url + "/api/changePassword", data)
+            .then(function(response) { 
                 	Swal.fire({
                 	    title: 'Thành công!',
                 	    text: 'Đổi mật khẩu thành công!',
@@ -33,14 +25,23 @@ app.controller('ChangePassController', function($scope, $http, $translate, $root
                 	    // Check if the user clicked the "OK" button
                 	    if (result.isConfirmed) {
                 	        // Redirect to another page
-                	        window.location.href = '/'; // Replace '/another-page' with the desired URL
+                	        window.location.href = 'Index.html'; // Replace '/another-page' with the desired URL
                 	    }
                 	});
-                }
+            
                 
             })
-            .catch(function(error) {
-                console.log(error);
-            });
+            .catch(function (error) {
+            // Xử lý lỗi ở đây
+            if (error.data.message) {
+              Swal.fire({
+                title: "Lỗi!",
+                text: error.data.message,
+                icon: "error",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+              });
+            }
+          });
     };
 });

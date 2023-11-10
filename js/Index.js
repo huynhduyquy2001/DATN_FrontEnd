@@ -43,7 +43,7 @@ app.factory('AuthInterceptor', function ($q, $window) {
 	}
 });
 
-app.factory('apiService', function ($http, $q) {
+app.factory('apiService', function ($http, $q, $window) {
     var apiService = {};
 
     // Function to set the JWT token in the HTTP headers of the API request
@@ -54,6 +54,9 @@ app.factory('apiService', function ($http, $q) {
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
 			$http.defaults.headers.common['isRefreshToken'] = 'true';
         }
+		else{
+			$window.location.href = 'Login.html';
+		}
     };
 
 
