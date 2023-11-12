@@ -78,6 +78,9 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/personalStatistics', {
 		templateUrl: "ngview/personalStatistics.html",
 		controller: 'personalStatisticsController'
+	}).when('/changePassword',{
+		templateUrl: "ChangePassword.html",
+		controller: 'ChangePassController'
 	});
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
