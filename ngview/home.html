@@ -127,7 +127,7 @@
 										</ol>
 										<!-- Carousel items -->
 										<div class="carousel-inner" role="listbox">
-											<div class="carousel-item" style="background-color: black;"
+											<div class="carousel-item" style="background-color: white;"
 												ng-repeat="image in post.images track by $index"
 												ng-class="{ 'active': $index === 0 }">
 
@@ -305,14 +305,41 @@
 		aria-labelledby="modalTitleId" aria-hidden="true">
 		<div class="modal-dialog modal-fullscreen" role="document">
 			<div class="modal-content">
-				<div class="modal-body" style=" padding: 0;">
+				<div class="modal-body">
 					<div class="row">
-						<div class="col-md-7 trai " style="background-color: black; padding: 0;">
+						<div class="col-lg-7 col-md-6" style="background-color: white; padding: 0;">
+							<div>
+
+								<div style="display: flex; align-items: center; justify-content: space-between;">
+
+									<div class="user-profile ">
+										<a href="/profile/{{postDetails.user.userId}}"><img
+												ng-src="{{postDetails.user.avatar}}" style="border-radius: 100%;"
+												alt=""></a>
+										<div>
+
+											<span
+												style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
+												class="ng-binding">{{postDetails.user.username}}</span>
+											&nbsp;&nbsp; <span><small style="font-size: 12px; color: #65676b"
+													class="ng-binding">
+													{{getFormattedTimeAgo(postDetails.postDate)}} </small></span>
+										</div>
+									</div>
+
+									<div data-bs-dismiss="modal"
+										style="cursor: pointer;color: #313131; display: flex; justify-content: flex-end;">
+										x
+									</div>
+								</div>
+								<div style="padding: 10px">{{postDetails.content}}</div>
+
+							</div>
 							<div ng-if="postDetails.images.length > 1">
 								<!-- Carousel HTML code -->
 								<div id="postDetails{{postDetails.postid}}" class="carousel slide"
 									data-bs-ride="carousel"
-									style="display: flex; justify-items: center; height: 100vh; background-color: black; margin-top: 0; margin-bottom: 0;">
+									style="display: flex; justify-items: center;  background-color: black; margin-top: 0; margin-bottom: 0;">
 									<!-- Carousel indicators -->
 									<ol class="carousel-indicators">
 										<li data-bs-target="#postDetails{{postDetails.postid}}"
@@ -326,7 +353,8 @@
 											ng-repeat="image in postDetails.images track by $index"
 											ng-class="{ 'active': $index === 0 }">
 											<img ng-src="{{ image.imageUrl }}" class="w-100 d-block"
-												alt="Slide {{$index + 1}} " style="height: 100vh; object-fit: contain;">
+												alt="Slide {{$index + 1}} "
+												style="max-height: 100vh; object-fit: contain;">
 										</div>
 									</div>
 									<!-- Carousel controls -->
@@ -351,55 +379,21 @@
 							</div>
 
 						</div>
-						<div class="col-md-5 phai" style="height: 100vh; overflow: scroll;">
+						<div class="col-lg-5 col-md-6" style="height: 100vh; overflow: scroll;">
 							<div>
-								<div>
-									<div data-bs-dismiss="modal"
-										style="cursor: pointer;color: #313131; display: flex; justify-content: flex-end;">
-										x
+								<form>
+									<div style="display: flex;">
+										<input ng-model="myComment" type="text" class="ip form-control"
+											style="width: 80%; border: 1px solid #ced4da; border-radius: 20px;"
+											placeholder="{{ 'BLCB' | translate }}">
+										<button class="btn01 buy--btn" type="submit"
+											style=" height: 60%; transform: translateY(30%); border-radius: 20px; margin-left: 5px; padding: 6px; display: block;"
+											ng-click="addComment(postDetails.postId)">{{ 'BL' |
+											translate }}</button>
 									</div>
-									<div style="display: flex; align-items: center; justify-content: space-between;">
 
-										<div class="user-profile ">
-											<a href="/nguoiDung/{{postDetails.user.userId}}"><img
-													ng-src="{{postDetails.user.avatar}}" style="border-radius: 100%;"
-													alt=""></a>
-											<div>
-
-												<span
-													style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-													class="ng-binding">{{postDetails.user.username}}</span>
-												&nbsp;&nbsp; <span><small style="font-size: 12px; color: #65676b"
-														class="ng-binding">
-														{{getFormattedTimeAgo(postDetails.postDate)}} </small></span>
-											</div>
-										</div>
-
-										<div>
-											<div class="btn-group">
-												<span class="btn dropdown-toggle" type="button" id="triggerId"
-													data-bs-toggle="dropdown" aria-haspopup="true"
-													aria-expanded="false"></span>
-												<div class="dropdown-menu" aria-labelledby="triggerId">
-													<a class="dropdown-item" href="#">{{ 'BCVP' | translate
-														}}</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div style="padding: 10px">{{postDetails.content}}</div>
-									<form>
-										<div style="display: flex;">
-											<input ng-model="myComment" type="text" class="ip form-control"
-												style="width: 80%;" placeholder="{{ 'BLCB' | translate }}">
-											<button class="btn01 buy--btn" type="submit"
-												style=" height: 60%; transform: translateY(30%); border-radius: 3px; margin-left: 5px; padding: 6px; display: block;"
-												ng-click="addComment(postDetails.postId)">{{ 'BL' |
-												translate }}</button>
-										</div>
-
-									</form>
-								</div>
+								</form>
+								<strong>Danh sách bình luận</strong>
 
 								<!-- Contenedor Principal -->
 								<div class="comments-container"

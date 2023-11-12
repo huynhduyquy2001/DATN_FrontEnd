@@ -21,7 +21,7 @@ app.controller('ValidationOrderController', function ($scope, $http, $translate,
 		.catch(function (error) {
 			console.error("Lỗi: " + error.data);
 		});
-	$scope.getOrders = function (orderID) {
+	$scope.addapproveorders = function (orderID) {
 		$http.post(Url2 + orderID)
 			.then(function (resp) {
 				$http.get(Url)

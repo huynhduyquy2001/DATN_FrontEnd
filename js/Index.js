@@ -218,15 +218,11 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	};
 
 	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
-	var socket = new SockJS(url + "/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
+	var socket = new SockJS("http://localhost:8080/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
 	stompClient.debug = false;
-	var jwt = localStorage.getItem('jwtToken');
-	// Khi kết nối WebSocket thành công
-
-
 	//tìm acc bản thân
 	$http.get(findMyAccount)
 		.then(function (response) {
@@ -238,10 +234,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
 					try {
 						var newMess = JSON.parse(message.body);
-						// alert("tk người nhận: " + $scope.receiver.userId)
-						// alert("tk người nhận trong tin nhắn: " + newMess.receiver.userId)
-						// alert("tk người gửi trong tin nhắn: " + newMess.sender.userId)
-						// alert("tk của tôi hiện tại: " + $scope.myAccount.user.userId)
+
 						var checkMess = $scope.ListMessMini.find(function (obj) {
 							return obj.messId === newMess.messId;
 						});
@@ -796,14 +789,13 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	//hàm thông báo người ta gọi
 	$rootScope.client.on('incomingcall', function (incomingcall) {
 		console.log("incomingcall", incomingcall)
-
 		//hiện popup thôg báo
 		var width = 840;
 		var height = 600;
 		var left = (window.innerWidth - width) / 2;
 		var top = (window.innerHeight - height) / 2;
 		var newWindow = window.open(
-			"http://127.0.0.1:5501/Index.html#!/videocall/" + incomingcall.fromNumber,
+			"http://127.0.0.1:5501/#!/videocall/" + incomingcall.fromNumber,
 			"_blank",
 			"width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",toolbar=no,location=no,status=no,menubar=no,resizable=no"
 		);

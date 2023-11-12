@@ -173,7 +173,8 @@
                             </span>
                             <span class="text-muted">/sản phẩm</span> &nbsp; <span
                                 ng-show="getSalePrice(product.originalPrice, product.promotion)!==product.originalPrice"
-                                style="text-decoration: line-through; color: red;">{{product.originalPrice}} VND</span>
+                                style="text-decoration: line-through; color: red;">{{product.originalPrice |
+                                currencyFormat}}</span>
                         </div>
 
                         <p>
@@ -271,7 +272,7 @@
                                         </a>
                                         <small class="text-dark" ng-show="obj.promotion!=0"
                                             style="text-decoration: line-through;">
-                                            {{obj.originalPrice}}</small>
+                                            {{obj.originalPrice | currencyFormat}}</small>
                                         <span>{{getSalePrice(obj.originalPrice, obj.promotion) | currencyFormat}}</span>
                                     </div>
                                 </div>

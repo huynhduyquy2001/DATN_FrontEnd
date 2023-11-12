@@ -36,6 +36,7 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	$scope.item = {};
 	$scope.listFollow = [];
 	$scope.usernameS = $rootScope.keyS;
+	var findMyAccount = "http://localhost:8080/findmyaccount";
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -94,17 +95,30 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		console.log($scope.words);
 	};
 	$scope.findProductNoSplitText = function () {
+		if (username === "") {
+			$scope.users = []; // Đặt danh sách người dùng thành rỗng
+			return; // Không gọi API, dừng hàm tìm kiếm ở đây
+		}
 		$rootScope.keyS = $scope.usernameS;
 		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào UR
 		$http.get(Url + '/user/search/' + $scope.usernameS)
 			.then(function (res) {
 				$scope.users = res.data;
+				if ($scope.users.length === 0) {
+					$scope.searchnull = "Không tìm thấy người dùng"; // Thông báo khi không tìm thấy người dùng
+				} else {
+					$scope.searchnull = ""; // Ẩn thông báo khi tìm thấy người dùng
+				}
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	};
 	$scope.findProduct = function (username) {
+		if (username === "") {
+			$scope.users = []; // Đặt danh sách người dùng thành rỗng
+			return; // Không gọi API, dừng hàm tìm kiếm ở đây
+		}
 		$scope.splitText($scope.usernameS);
 
 		$rootScope.keyS = $scope.usernameS;
@@ -112,6 +126,11 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		$http.get(Url + '/user/search/' + username)
 			.then(function (res) {
 				$scope.users = res.data;
+				if ($scope.users.length === 0) {
+					$scope.searchnull = "Không tìm thấy người dùng"; // Thông báo khi không tìm thấy người dùng
+				} else {
+					$scope.searchnull = ""; // Ẩn thông báo khi tìm thấy người dùng
+				}
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -149,7 +168,6 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 
 	const handleVoice = (text) => {
 		console.log('text', text);
-		// "thời tiết tại Đà Nẵng" => ["thời tiết tại", "Đà Nẵng"]
 		const handledText = text.toLowerCase();
 
 		const location = handledText[1];
@@ -414,5 +432,13 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 			return days + ' ngày trước';
 		}
 	};
+
+	$http.get(findMyAccount)
+		.then(function (response) {
+			$scope.myAccount = response.data;
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 
 });

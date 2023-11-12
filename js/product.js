@@ -163,6 +163,25 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 var productId = response.data.productId;
                 $scope.saveProductColor(productId);
                 $scope.sendMedia(productId);
+
+                var productTemp = {
+                    'tempId': null,
+                    'productId': response.data.productId,
+                    'productName': response.data.productName,
+                    'originalPrice': response.data.originalPrice,
+                    'datePost': response.data.datePost,
+                    'userName': response.data.user.userName
+                };
+
+                $http.post(Url + '/add-product-temp', productTemp)
+                    .then(function (response) {
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+
             })
             .catch(function (error) {
                 // Xử lý lỗi (nếu có)

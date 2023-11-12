@@ -7,16 +7,14 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 	//đây coi là có đang nhắn vs ai khum
 	$scope.isEmptyObject = false;
 	var url = "http://localhost:8080";
-
 	$scope.openLink = function (userId) {
 		var width = 840;
 		var height = 600;
 		var left = (window.innerWidth - width) / 2;
 		var top = (window.innerHeight - height) / 2;
-		window.open("http://127.0.0.1:5501/Index.html#!/videocall/" + userId, '_blank', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+		window.open("http://127.0.0.1:5501/#!/videocall/" + userId, '_blank', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
 
 	};
-
 	angular.element(document).ready(function () {
 		// Lấy currentPath
 		var currentPath = $location.path();

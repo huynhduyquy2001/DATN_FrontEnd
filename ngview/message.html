@@ -28,8 +28,11 @@
 						<div class="msg-info">
 							<!-- Hiển thị nút "Thu hồi" -->
 							<button class="btn-revoke btn btn-outline-danger py-1 px-2 ms-auto ng-scope"
+								style="transition: 0.3s ease-in-out;"
 								ng-show="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
-								ng-cloak ng-click="revokeMessage(mess.messId)"><b>Thu hồi</b></button>
+								ng-cloak ng-click="revokeMessage(mess.messId)"><span><i
+										class="fa-regular fa-rotate-right fa-flip-horizontal"></i> Thu
+									hồi</span></button>
 						</div>
 						<div class="msg-text mess" style="font-weight: 510;"
 							ng-show="mess.status != 'Đã ẩn' && mess.content!=''" ng-cloak>

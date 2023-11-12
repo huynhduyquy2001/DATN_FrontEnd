@@ -8,185 +8,211 @@
 				<center>
 					<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
 						<!--Tìm kiếm-->
-						<div style="width: 100%; text-align: left; display: flex;" data-bs-toggle="modal">
-							<form class="position-relative" style="width: 100%;" ng-submit="LS()"
+						<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
+							<form class="position-relative" ng-submit="addToSearchHistory(username)"
 								onsubmit="return validateSearch()">
-								<input type="search" class="form-control search-chat py-2 ps-5"
-									ng-value="showname.username" ng-keyup="findProduct(username)" ng-model="username"
-									id="text-srh" placeholder="Nhập tên người dùng..."
-									style="border: 1px solid #ccc; border-radius: 20px;">
+								<div class="d-flex align-items-center gap-2">
+									<input type="text" class="form-control search-chat py-2 ps-5"
+										ng-value="showname.username" ng-keyup="findProduct(username)"
+										ng-model="username" id="text-srh" placeholder="Nhập tên người dùng..."
+										style="border: 1px solid #ccc; border-radius: 20px;" ng-focus="chontimkiem()"
+										ng-blur="chontimkiem1()">
 
-								<a><i
-										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
-								<!-- ng-keyup="TimKiem(key)" <button ng-click="LS()">Tìm kiếm</button> -->
+									<!-- <input type="text" ng-keyup="searchProduct()" ng-model="$parent.searchValue"
+									id="text-srh" class="form-control" style="border-radius: 15px;"
+									placeholder="Nhập sản phẩm cần tìm..."> -->
+
+									<a><i
+											class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+									<!-- ng-keyup="TimKiem(key)" <button ng-click="LS()">Tìm kiếm</button> -->
 							</form>
-							<span class="microphone" style="display: flex;
-                justify-content: center;
-                align-items: center; margin-left: 1rem;">
+							<span class="microphone">
 								<i class="fas fa-microphone"></i>
 								<span class="recording-icon"></span>
 							</span>
 						</div>
 					</div>
-				</center>
+			</div>
+			</center>
 
-				<center><b ng-if="searchnull">{{ searchnull }}</b></center>
-				<!-- Hiển thị người dùng -->
-				<div class="user-container" style="justify-content: space-evenly;">
-					<div class="user-card col-md-6" style="background: transparent; margin: 0"
-						ng-repeat="user in users">
-						<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
-							<div class="user-profile" style="display: block;">
-								<div class="username-dt dpbg-1"
-									style="background-image: url(images/{{user.background}}); background-size: cover;">
-									<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-											ng-src="{{user.avatar}}">
-									</a>
-								</div>
-								<div class="user-main-details" style="padding: 60px 0 2px 0;">
-									<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
-									<!-- <span><i class="feather-map-pin"></i>India</span> -->
-								</div>
-								<center>
-									<button style="margin: 3px"
-										ng-if="followings.indexOf(user.userId.toString()) === -1"
-										ng-click="followUser(user.userId)" id="follow-btn"
-										class="btn btn-outline-primary py-1 px-2">Follow</button>
-									<button style="margin: 3px;"
-										ng-if="followings.indexOf(user.userId.toString()) !== -1"
-										ng-click="unfollowUser(user.userId)" id="follow-btn"
-										class="btn btn-outline-danger py-1 px-2">Unfollow</button>
-								</center>
+			<center><b ng-if="searchnull">{{ searchnull }}</b></center>
+			<!-- Hiển thị người dùng -->
+			<div class="user-container" style="justify-content: space-evenly;">
+				<div class="user-card col-md-6" style="background: transparent; margin: 0" ng-repeat="user in users">
+					<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
+						<div class="user-profile" style="display: block;">
+							<div class="username-dt dpbg-1"
+								style="background-image: url(images/{{user.background}}); background-size: cover;">
+								<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
+										ng-src="{{user.avatar}}">
+								</a>
 							</div>
+							<div class="user-main-details" style="padding: 60px 0 2px 0;">
+								<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
+								<!-- <span><i class="feather-map-pin"></i>India</span> -->
+							</div>
+							<center>
+								<button style="margin: 3px" ng-if="followings.indexOf(user.userId.toString()) === -1"
+									ng-click="followUser(user.userId)" id="follow-btn"
+									class="btn btn-outline-primary py-1 px-2">Follow</button>
+								<button style="margin: 3px;" ng-if="followings.indexOf(user.userId.toString()) !== -1"
+									ng-click="unfollowUser(user.userId)" id="follow-btn"
+									class="btn btn-outline-danger py-1 px-2">Unfollow</button>
+							</center>
 						</div>
 					</div>
 				</div>
-				<br><br>
-				<div class="row">
-					<b>{{ 'LSTK' | translate }}</b>
-					<div class="col-lg-12" ng-repeat="(key,name) in items"
-						style="display: flex; justify-content: space-between;">
-						<a ng-click="TimKiem(key)" style="cursor: pointer;">{{name.username}}</a>
-						<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
-					</div>
+			</div>
+			<br><br>
+			<div class="row" ng-show="showDropdown">
+				<b>{{ 'LSTK' | translate }}</b>
+				<!-- <div ng-repeat="userHistory in searchHistory"> -->
+				<div class="col-lg-12" ng-repeat="searchTerm in searchHistory[currentUserId]"
+					style="display: flex; justify-content: space-between;">
+					<a ng-click="chonten(searchTerm)" style="cursor: pointer;">{{ searchTerm }}</a>
+					<a ng-click="removeFromSearchHistory(searchTerm)" style="cursor: pointer;">x</a>
+					<!-- </div> -->
 				</div>
 			</div>
+		</div>
 
-			<dDiv class="col-md-6 p-3">
-				<!--GỢI Ý Ở ĐÂY NÈ-->
-				<div ng-controller="RecommendController">
-					<label style="font-size: 20px; font: bold; color: #393e41;">{{ 'GYTD' |
-						translate }}</label>
-					<br> <br>
-					<div class="col-md-12">
-						<div class="col-md-6" ng-repeat="user in users"
-							ng-if="followings.indexOf(user.userId.toString())===-1">
-							<div class="user-data">
-								<div class="col-sm-12 user-profile" style="display: block;">
-									<div class="col-sm-12" style="display: flex; width: 100%;">
-										<div class="col-md-5">
-											<a href="#!/profile/{{user.userId}}" class="img-fluid"
-												style="object-fit: cover;">
-												<img alt="" ng-src="{{user.avatar}}" style=" width: 10vh;
+		<div class="col-md-6 p-3">
+			<!--GỢI Ý Ở ĐÂY NÈ-->
+			<div ng-controller="RecommendController">
+				<div class="d-flex align-items-center justify-content-between">
+					<label style="font-size: 20px; font-weight: bold; color: #393e41;">{{ 'GYTD' | translate
+						}}</label>
+					<a href="#!/recommend">Xem tất cả >></a>
+				</div>
+
+				<br> <br>
+				<div class="col-md-12">
+					<div class="col-md-6" ng-repeat="user in users"
+						ng-if="followings.indexOf(user.userId.toString())===-1">
+						<div class="user-data">
+							<div class="col-sm-12 user-profile" style="display: block;">
+								<div class="col-sm-12" style="display: flex; width: 100%;">
+									<div class="col-md-5">
+										<a href="#!/profile/{{user.userId}}" class="img-fluid"
+											style="object-fit: cover;">
+											<img alt="" ng-src="{{user.avatar}}" style=" width: 10vh;
 										height: 10vh;
 										margin: 10px;">
-											</a>
-										</div>
-										<div class="col-md-1" style="padding-top: 4vh; width: 100%;">
-											<b style="font-size: 2.3vh;" class="ng-binding">{{user.username}}
-											</b>
-											<small style="display: block; font-size: 2vh;">
-												{{user.introduction.length > 10 ?
-												(user.introduction | limitTo: 10) + '...' : user.introduction
-												}}
-											</small>
-										</div>
-										<div class="col-md-2 mt-4">
-											<a href="" role="button" class="btn btn-primary"
-												ng-if="!isFollowing(follower.userId)" ng-click="followUser(user.userId)"
-												style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem; width: 16vh;
-										height:5.5vh;">
-												<span style="align-items: center;">Follow</span>
-											</a>
-										</div>
+										</a>
 									</div>
-
+									<div class="col-md-1" style="padding-top: 4vh; width: 100%;">
+										<b style="font-size: 2.3vh;" class="ng-binding">{{user.username}}
+										</b>
+										<small style="display: block; font-size: 2vh;">
+											{{user.introduction.length > 10 ?
+											(user.introduction | limitTo: 10) + '...' : user.introduction
+											}}
+										</small>
+									</div>
+									<div class="col-md-2 mt-4">
+										<a href="" role="button" class="btn btn-primary"
+											ng-if="!isFollowing(follower.userId)" ng-click="followUser(user.userId)"
+											style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem; width: 16vh;
+										height:5.5vh;">
+											<span style="align-items: center;">Follow</span>
+										</a>
+									</div>
 								</div>
+
 							</div>
 						</div>
-
 					</div>
+
 				</div>
+			</div>
 		</div>
 	</div>
-	<!-- Giửa -->
-	<div class=" d-sm-block d-md-none d-none">
-		<div class="row">
-			<div class="col-md-6 p-3" style="border: 1px solid #ebf1f6;background-color: white; height: 89vh;">
-				<b>Tìm kiếm</b>
-				<br><br>
-				<center>
-					<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
-						<!--Tìm kiếm-->
-						<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
-							<form class="position-relative" ng-submit="LS()" onsubmit="return validateSearch()">
-								<input type="search" class="form-control search-chat py-2 ps-5"
-									ng-value="showname.username" ng-keyup="searchUser()" ng-model="username"
-									id="text-srh" ng-keyup="TimKiem(key)" placeholder="Nhập tên người dùng..."
-									style="border: 1px solid #ccc; border-radius: 20px;"> <a><i
-										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
-								<!--  <button ng-click="LS()">Tìm kiếm</button> -->
-							</form>
-						</div>
-					</div>
-				</center>
+</div>
+<!-- Giửa -->
+<div class=" d-sm-block d-md-none d-none">
+	<div class="row">
+		<div class="col-md-6 p-3" style="border: 1px solid #ebf1f6;background-color: white; height: 89vh;">
+			<b>Tìm kiếm</b>
+			<br><br>
+			<center>
+				<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
+					<!--Tìm kiếm-->
 
-				<center><b ng-if="searchnull">{{ searchnull }}</b></center>
-				<div class="user-container" style="justify-content: space-evenly;">
-					<div class="user-card col-md-6" style="background: transparent; margin: 0"
-						ng-repeat="user in users">
-						<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
-							<div class="user-profile" style="display: block;">
-								<div class="username-dt dpbg-1"
-									style="background-image: url(images/{{user.background}}); background-size: cover;">
-									<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-											ng-src="{{user.avatar}}">
-									</a>
-								</div>
-								<div class="user-main-details" style="padding: 60px 0 2px 0;">
-									<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
-									<!-- <span><i class="feather-map-pin"></i>India</span> -->
-								</div>
-								<center>
-									<button style="margin: 3px"
-										ng-if="followings.indexOf(user.userId.toString()) === -1"
-										ng-click="followUser(user.userId)" id="follow-btn"
-										class="btn btn-outline-primary py-1 px-2">Follow</button>
-									<button style="margin: 3px;"
-										ng-if="followings.indexOf(user.userId.toString()) !== -1"
-										ng-click="unfollowUser(user.userId)" id="follow-btn"
-										class="btn btn-outline-danger py-1 px-2">Unfollow</button>
-								</center>
+					<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
+						<form class="position-relative" ng-submit="addToSearchHistory(username)"
+							onsubmit="return validateSearch()">
+							<div class="d-flex align-items-center gap-2">
+								<input type="text" class="form-control search-chat py-2 ps-5"
+									ng-value="showname.username" ng-keyup="findProduct(username)" ng-model="username"
+									id="text-srh" placeholder="Nhập tên người dùng..."
+									style="border: 1px solid #ccc; border-radius: 20px;" ng-focus="chontimkiem()"
+									ng-blur="chontimkiem1()">
+
+								<!-- <input type="text" ng-keyup="searchProduct()" ng-model="$parent.searchValue"
+								id="text-srh" class="form-control" style="border-radius: 15px;"
+								placeholder="Nhập sản phẩm cần tìm..."> -->
+
+								<a><i
+										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+								<!-- ng-keyup="TimKiem(key)" <button ng-click="LS()">Tìm kiếm</button> -->
+						</form>
+						<span class="microphone">
+							<i class="fas fa-microphone"></i>
+							<span class="recording-icon"></span>
+						</span>
+					</div>
+				</div>
+			</center>
+
+			<center><b ng-if="searchnull">{{ searchnull }}</b></center>
+			<div class="user-container" style="justify-content: space-evenly;">
+				<div class="user-card col-md-6" style="background: transparent; margin: 0" ng-repeat="user in users">
+					<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
+						<div class="user-profile" style="display: block;">
+							<div class="username-dt dpbg-1"
+								style="background-image: url(images/{{user.background}}); background-size: cover;">
+								<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
+										ng-src="{{user.avatar}}">
+								</a>
 							</div>
+							<div class="user-main-details" style="padding: 60px 0 2px 0;">
+								<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
+								<!-- <span><i class="feather-map-pin"></i>India</span> -->
+							</div>
+							<center>
+								<button style="margin: 3px" ng-if="followings.indexOf(user.userId.toString()) === -1"
+									ng-click="followUser(user.userId)" id="follow-btn"
+									class="btn btn-outline-primary py-1 px-2">Follow</button>
+								<button style="margin: 3px;" ng-if="followings.indexOf(user.userId.toString()) !== -1"
+									ng-click="unfollowUser(user.userId)" id="follow-btn"
+									class="btn btn-outline-danger py-1 px-2">Unfollow</button>
+							</center>
 						</div>
 					</div>
 				</div>
-				<br><br>
-				<div class="row">
+
+			</div>
+			<br><br>
+			<div class="row" ng-show="showDropdown">
+				<div class="col-lg-1">
 					<b>{{ 'LSTK' | translate }}</b>
-					<div class="col-lg-12" ng-repeat="(key,name) in items"
+					<!-- <div ng-repeat="userHistory in searchHistory"> -->
+					<div class="col-lg-1" ng-repeat="searchTerm in searchHistory[currentUserId]"
 						style="display: flex; justify-content: space-between;">
-						<a ng-click="TimKiem(key)" style="cursor: pointer;">{{name.username}}</a>
-						<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
+						<a ng-click="chonten(searchTerm)" style="cursor: pointer;">{{ searchTerm }}</a>
+						<a ng-click="removeFromSearchHistory(searchTerm)" style="cursor: pointer;">x</a>
+						<!-- </div> -->
 					</div>
 				</div>
 			</div>
-
-			<dDiv class="col-md-6 p-3">
+			<div class="col-md-6 p-3">
 				<!--GỢI Ý Ở ĐÂY NÈ-->
 				<div ng-controller="RecommendController">
-					<label style="font-size: 20px; font: bold; color: #393e41;">{{ 'GYTD' |
-						translate }}</label>
+					<div class="d-flex align-items-center justify-content-between">
+						<label style="font-size: 20px; font-weight: bold; color: #393e41;">{{ 'GYTD' | translate
+							}}</label>
+						<a href="#!/recommend">Xem tất cả ></a>
+					</div>
 					<br> <br>
 					<div class="col-md-12">
 						<div class="col-md-6" ng-repeat="user in users"
@@ -225,77 +251,93 @@
 
 					</div>
 				</div>
+			</div>
 		</div>
 	</div>
-
-	<!-- Nhỏ nhất -->
-	<div class="d-sm-none">
-		<div class="row">
-			<div class="col-md-6 p-3" style="border: 1px solid #ebf1f6;background-color: white; height: 89vh;">
-				<b>Tìm kiếm</b>
-				<br><br>
-				<center>
+</div>
+<!-- Nhỏ nhất -->
+<div class="d-sm-none">
+	<div class="row">
+		<div class="col-md-6 p-3" style="border: 1px solid #ebf1f6;background-color: white; height: 89vh;">
+			<b>Tìm kiếm</b>
+			<br><br>
+			<center>
+				<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
+					<!--Tìm kiếm-->
 					<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
-						<!--Tìm kiếm-->
-						<div style="width: 100%; text-align: left;" data-bs-toggle="modal">
-							<form class="position-relative" ng-submit="LS()" onsubmit="return validateSearch()">
-								<input type="search" class="form-control search-chat py-2 ps-5"
-									ng-value="showname.username" ng-keyup="searchUser()" ng-model="username"
-									id="text-srh" ng-keyup="TimKiem(key)" placeholder="Nhập tên người dùng..."
-									style="border: 1px solid #ccc; border-radius: 20px;"> <a><i
-										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
-								<!--  <button ng-click="LS()">Tìm kiếm</button> -->
-							</form>
-						</div>
-					</div>
-				</center>
+						<form class="position-relative" ng-submit="addToSearchHistory(username)"
+							onsubmit="return validateSearch()">
+							<div class="d-flex align-items-center gap-2">
+								<input type="text" class="form-control search-chat py-2 ps-5"
+									ng-value="showname.username" ng-keyup="findProduct(username)" ng-model="username"
+									id="text-srh" placeholder="Nhập tên người dùng..."
+									style="border: 1px solid #ccc; border-radius: 20px;" ng-focus="chontimkiem()"
+									ng-blur="chontimkiem1()">
 
-				<center><b ng-if="searchnull">{{ searchnull }}</b></center>
-				<div class="user-container" style="justify-content: space-evenly;">
-					<div class="user-card col-md-6" style="background: transparent; margin: 0"
-						ng-repeat="user in users">
-						<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
-							<div class="user-profile" style="display: block;">
-								<div class="username-dt dpbg-1"
-									style="background-image: url(images/{{user.background}}); background-size: cover;">
-									<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
-											ng-src="{{user.avatar}}">
-									</a>
-								</div>
-								<div class="user-main-details" style="padding: 60px 0 2px 0;">
-									<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
-									<!-- <span><i class="feather-map-pin"></i>India</span> -->
-								</div>
-								<center>
-									<button style="margin: 3px"
-										ng-if="followings.indexOf(user.userId.toString()) === -1"
-										ng-click="followUser(user.userId)" id="follow-btn"
-										class="btn btn-outline-primary py-1 px-2">Follow</button>
-									<button style="margin: 3px;"
-										ng-if="followings.indexOf(user.userId.toString()) !== -1"
-										ng-click="unfollowUser(user.userId)" id="follow-btn"
-										class="btn btn-outline-danger py-1 px-2">Unfollow</button>
-								</center>
-							</div>
-						</div>
+								<!-- <input type="text" ng-keyup="searchProduct()" ng-model="$parent.searchValue"
+								id="text-srh" class="form-control" style="border-radius: 15px;"
+								placeholder="Nhập sản phẩm cần tìm..."> -->
+
+								<a><i
+										class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+								<!-- ng-keyup="TimKiem(key)" <button ng-click="LS()">Tìm kiếm</button> -->
+						</form>
+						<span class="microphone">
+							<i class="fas fa-microphone"></i>
+							<span class="recording-icon"></span>
+						</span>
 					</div>
 				</div>
-				<br><br>
-				<div class="row">
-					<b>{{ 'LSTK' | translate }}</b>
-					<div class="col-lg-12" ng-repeat="(key,name) in items"
-						style="display: flex; justify-content: space-between;">
-						<a ng-click="TimKiem(key)" style="cursor: pointer;">{{name.username}}</a>
-						<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
+			</center>
+
+			<center><b ng-if="searchnull">{{ searchnull }}</b></center>
+			<div class="user-container" style="justify-content: space-evenly;">
+				<div class="user-card col-md-6" style="background: transparent; margin: 0" ng-repeat="user in users">
+					<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
+						<div class="user-profile" style="display: block;">
+							<div class="username-dt dpbg-1"
+								style="background-image: url(images/{{user.background}}); background-size: cover;">
+								<a href="#!/profile/{{user.userId}}" class="usr-pic"> <img alt=""
+										ng-src="{{user.avatar}}">
+								</a>
+							</div>
+							<div class="user-main-details" style="padding: 60px 0 2px 0;">
+								<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
+								<!-- <span><i class="feather-map-pin"></i>India</span> -->
+							</div>
+							<center>
+								<button style="margin: 3px" ng-if="followings.indexOf(user.userId.toString()) === -1"
+									ng-click="followUser(user.userId)" id="follow-btn"
+									class="btn btn-outline-primary py-1 px-2">Follow</button>
+								<button style="margin: 3px;" ng-if="followings.indexOf(user.userId.toString()) !== -1"
+									ng-click="unfollowUser(user.userId)" id="follow-btn"
+									class="btn btn-outline-danger py-1 px-2">Unfollow</button>
+							</center>
+						</div>
 					</div>
 				</div>
 			</div>
+			<br><br>
+			<div class="row" ng-show="showDropdown">
+				<b>{{ 'LSTK' | translate }}</b>
+				<!-- <div ng-repeat="userHistory in searchHistory"> -->
+				<div class="col-lg-1" ng-repeat="searchTerm in searchHistory[currentUserId]"
+					style="display: flex; justify-content: space-between;">
+					<a ng-click="chonten(searchTerm)" style="cursor: pointer;">{{ searchTerm }}</a>
+					<a ng-click="removeFromSearchHistory(searchTerm)" style="cursor: pointer;">x</a>
+					<!-- </div> -->
+				</div>
+			</div>
 
-			<dDiv class="col-md-6 p-3">
+
+			<div class="col-md-6 p-3">
 				<!--GỢI Ý Ở ĐÂY NÈ-->
 				<div ng-controller="RecommendController">
-					<label style="font-size: 20px; font: bold; color: #393e41;">{{ 'GYTD' |
-						translate }}</label>
+					<div class="d-flex align-items-center justify-content-between">
+						<label style="font-size: 20px; font-weight: bold; color: #393e41;">{{ 'GYTD' | translate
+							}}</label>
+						<a href="#!/recommend">Xem tất cả >></a>
+					</div>
 					<br> <br>
 					<div class="col-12">
 						<div class="col-6" ng-repeat="user in users"
@@ -307,8 +349,8 @@
 											<a href="#!/profile/{{user.userId}}" class="round-cirle"
 												style="object-fit: cover;">
 												<img alt="" ng-src="{{user.avatar}}" style=" width: 10vh;
-									height: 10vh;
-									margin: 10px;">
+								height: 10vh;
+								margin: 10px;">
 											</a>
 										</div>
 										<div class="col-1" style="padding-top: 4vh; width: 100%;">
@@ -324,7 +366,7 @@
 											<a href="" role="button" class="btn btn-primary fs-9"
 												ng-if="!isFollowing(follower.userId)" ng-click="followUser(user.userId)"
 												style="background-color: #5D87FF; color: #fff; width: 12vh;
-									height:6vh;"><span style="align-items: center;">Follow</span></a>
+								height:6vh;"><span style="align-items: center;">Follow</span></a>
 										</div>
 									</div>
 
@@ -334,49 +376,49 @@
 
 					</div>
 				</div>
+			</div>
 		</div>
 	</div>
-</div>
-<script>
-	const searchInputDropdown = document.getElementById('search-input-dropdown');
-	const dropdownOptions = document.querySelectorAll('.input-group-dropdown-item');
+	<script>
+		const searchInputDropdown = document.getElementById('search-input-dropdown');
+		const dropdownOptions = document.querySelectorAll('.input-group-dropdown-item');
 
-	searchInputDropdown.addEventListener('input', () => {
-		const filter = searchInputDropdown.value.toLowerCase();
-		showOptions();
-		const valueExist = !!filter.length;
+		searchInputDropdown.addEventListener('input', () => {
+			const filter = searchInputDropdown.value.toLowerCase();
+			showOptions();
+			const valueExist = !!filter.length;
 
-		if (valueExist) {
+			if (valueExist) {
+				dropdownOptions.forEach((el) => {
+					const elText = el.textContent.trim().toLowerCase();
+					const isIncluded = elText.includes(filter);
+					if (!isIncluded) {
+						el.style.display = 'none';
+					}
+				});
+			}
+		});
+		const showOptions = () => {
 			dropdownOptions.forEach((el) => {
-				const elText = el.textContent.trim().toLowerCase();
-				const isIncluded = elText.includes(filter);
-				if (!isIncluded) {
-					el.style.display = 'none';
-				}
-			});
+				el.style.display = 'flex';
+			})
 		}
-	});
-	const showOptions = () => {
-		dropdownOptions.forEach((el) => {
-			el.style.display = 'flex';
-		})
-	}
 
-	function validateSearch() {
-		var inputElement = document.getElementById("text-srh");
+		function validateSearch() {
+			var inputElement = document.getElementById("text-srh");
 
-		// Lấy giá trị của input (username)
-		var username = inputElement.value.trim();
+			// Lấy giá trị của input (username)
+			var username = inputElement.value.trim();
 
-		// Kiểm tra nếu người dùng không nhập kí tự
-		if (username === "") {
-			return false; // Ngăn chặn việc submit form
+			// Kiểm tra nếu người dùng không nhập kí tự
+			if (username === "") {
+				return false; // Ngăn chặn việc submit form
+			}
+			// Nếu người dùng đã nhập kí tự thì cho phép submit form
+			return true;
 		}
-		// Nếu người dùng đã nhập kí tự thì cho phép submit form
-		return true;
-	}
 
-</script>
-<script>
+	</script>
+	<script>
 
-</script>
+	</script>
