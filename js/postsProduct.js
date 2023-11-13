@@ -29,7 +29,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			.then(function (res) {
 				$scope.listReject = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi		
-				console.log($scope.listReject);		
+				console.log($scope.listReject);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -189,13 +189,13 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 	$scope.reject = function (productId) {
 		// Lấy lý do từ chối từ input field. Giả sử input field có id là 'reason'
 		var reason = $scope.reasonRejection;
-		if(!reason){
+		if (!reason) {
 			Swal.fire(
 				'Lỗi!',
 				'Vui lòng nhập vào lí do từ chối!',
 				'error'
 			)
-		}else{
+		} else {
 			$http({
 				method: 'POST',
 				url: url + '/staff/rejectproduct/reject/' + productId,
@@ -204,7 +204,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 					productId: productId
 				}
 			}).then(function (response) {
-				if(response.status === 400){
+				if (response.status === 400) {
 					Swal.fire(
 						'Không được bỏ trống lý do!',
 						response.data,
@@ -228,10 +228,37 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			});
 		}
 	}
-	
-	
+
+
 	$scope.reloadPage = function () {
 		location.reload();
 	}
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+
+		} else {
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
+
+		}
+	}
+	checkScreenWidth();
 
 })

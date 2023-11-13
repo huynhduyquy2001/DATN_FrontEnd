@@ -366,70 +366,30 @@ app.controller(
 
     $scope.buyTicket = function () {
       // Lấy giá trị số lượt từ input
+
       var numberOfTickets = $scope.soLuot;
-      if (numberOfTickets <= 0) {
-        // Hiển thị thông báo lỗi
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: 'Vui lòng nhập số lượng lớn hơn 0.'
-        });
-        return;
-      }
-      // Dữ liệu gửi đi (đơn giản là một giá trị nguyên thủy)
-      var requestData = numberOfTickets;
-      // Kiểm tra số lượt có phải là số dương không
 
-      // Gọi API mua vé
-      $http.post(url + '/buyTicket', requestData)
+      // Tính toán totalAmount
+      var totalAmount = numberOfTickets * 10000;
+      var numericValue = parseInt(totalAmount);
+
+      $http.post(url + "/create_payment_ticket/" + numberOfTickets + "/" + numericValue)
         .then(function (response) {
-          // Xử lý kết quả thành công từ server
-          $scope.soLuot = '';
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          });
-          $('#mua-luot-dang-bai').modal('hide');
-          Toast.fire({
-            icon: 'success',
-            title: 'Đã mua thành công!'
-          });
-          $http.get(url + '/getUserTicketCount')
-            .then(function (response) {
-              $scope.ticketCount = response.data;
-            })
-            .catch(function (error) {
-              console.error('Lỗi lấy số lượt đăng bài:', error);
-            });
-          // Thực hiện các bước tiếp theo nếu cần
-        })
+          // Lấy URL từ response data
+          var newPageUrl = response.data.url;
 
-        .catch(function (error) {
-          // Xử lý lỗi từ server
-          // Hiển thị thông báo lỗi hoặc thực hiện các xử lý khác nếu cần
-          if (error.status === 400) {
-            // Nếu là lỗi mã HTTP 400, hiển thị thông báo lỗi cụ thể
-            Swal.fire({
-              icon: 'error',
-              title: 'Lỗi',
-              text: 'Số lượng lượt đăng bài không hợp lệ.'
-            });
-          } else {
-            // Nếu là lỗi khác, hiển thị thông báo lỗi chung
-            Swal.fire({
-              icon: 'error',
-              title: 'Lỗi',
-              text: 'Có lỗi xảy ra. Vui lòng thử lại sau.'
-            });
-          }
+          // Mở trang mới với URL nhận được
+          window.location.href = newPageUrl;
+        }).catch(function (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Vui lòng nhập số lượng lớn hơn 0.'
+          });
+          return;
+
         });
+
     };
 
     //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
@@ -643,12 +603,12 @@ app.controller(
         console.error("Lỗi: " + error);
       });
     }
+    //Load từ đầu
+    if ($rootScope.checkMystore === 1) {
+      $scope.page($rootScope.currentPageMyStore);
+    } else if ($rootScope.checkMystore === 2) {
+      $scope.pagePending($rootScope.currentPagePending)
+    } else if ($rootScope.checkMystore === 3) {
+      $scope.tabsReport();
+    }
   });
-//Load từ đầu
-if ($rootScope.checkMystore === 1) {
-  $scope.page($rootScope.currentPageMyStore);
-} else if ($rootScope.checkMystore === 2) {
-  $scope.pagePending($rootScope.currentPagePending)
-} else if ($rootScope.checkMystore === 3) {
-  $scope.tabsReport();
-}

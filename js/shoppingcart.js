@@ -868,28 +868,36 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     var numericValueFeePay = parseFloat($scope.totalFeePay.replace(/[^\d]/g, ''));
     var addressText = $scope.addressPay.trim();
 
+    // Lấy tất cả các phần tử input có type là checkbox
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    // Lưu giá trị từ các checkbox
+    var listColorAndProductId = [];
+    // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked && checkbox.offsetParent !== null) {
+        var productIdAndColor = checkbox.id.split("_");
+        var productId = productIdAndColor[0];
+        var color = productIdAndColor[1];
+        listColorAndProductId.push({ productId: productId, color: color });
+      }
+    });
     if (pay == true) {
-      $http.post(url + "/create_payment/" + numericValue)
-        .then(function (response) {
-          // Lấy URL từ response data
-          var newPageUrl = response.data.body;
-          // Mở trang mới với URL nhận được
-          window.location.href = newPageUrl;
-        });
-    } else {
+      //Thanh toán
       // Lấy tất cả các phần tử input có type là checkbox
-      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      // Lưu giá trị từ các checkbox
-      var listColorAndProductId = [];
-      // Duyệt qua từng checkbox và kiểm tra xem nó có được chọn và hiển thị không
-      checkboxes.forEach(function (checkbox) {
-        if (checkbox.checked && checkbox.offsetParent !== null) {
-          var productIdAndColor = checkbox.id.split("_");
-          var productId = productIdAndColor[0];
-          var color = productIdAndColor[1];
-          listColorAndProductId.push({ productId: productId, color: color });
-        }
+      $http({
+        method: "POST",
+        url: url + "/create_payment_shoppingcart/" + numericValue + "/" + addressText + "/" + numericValueFeePay,
+        data: listColorAndProductId,
+        contentType: "application/json",
+      }).then(function (response) {
+        // Lấy URL từ response data
+        var newPageUrl = response.data.url;
+
+        // Mở trang mới với URL nhận được
+        window.location.href = newPageUrl;
       });
+    } else {
+
       //Thanh toán
       $http({
         method: "POST",
@@ -913,7 +921,6 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
           console.error("Error:", error);
         });
     }
-
   }
 
   $scope.reloadPageAfterDelay = function (delayInSeconds) {
@@ -921,5 +928,33 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
       $window.location.reload();
     }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
   };
+  function checkScreenWidth() {
+    var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
+    var asideLeft = document.getElementById('asideLeft');
+    var view = document.getElementById('view');
+    if (screenWidth <= 1080) {
+      asideLeft.style.left = '-280px';
+
+      asideLeft.style.opacity = '0';
+      view.classList.remove('col-lg-9', 'offset-lg-3');
+      view.classList.add('col-lg-11', 'offset-lg-1');
+
+    } else {
+      if (view) {
+        view.classList.remove('col-lg-11', 'offset-lg-1');
+        view.classList.add('col-lg-9', 'offset-lg-3');
+        asideLeft.style.opacity = '1';
+        asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+        $rootScope.checkMenuLeft = true;
+        $scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+      }
+
+
+
+    }
+  }
+  setTimeout(function () {
+    checkScreenWidth();
+  }, 100);
 });
