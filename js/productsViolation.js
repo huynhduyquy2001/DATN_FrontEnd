@@ -13,31 +13,29 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 
 	var url = "https://viesonetapi2.azurewebsites.net";
 
-
-
 	$scope.getproductList = function (currentPage) {
 
 		$http.get(url + "/staff/violationsproduct/" + currentPage)
 			.then(function (res) {
 				var products = res.data.content; // Lấy danh sách sản phẩm từ phản hồi
-				
+
 				// Sử dụng một đối tượng để theo dõi các sản phẩm đã xuất hiện
 				var uniqueProductMap = {};
-				
+
 				// Tạo danh sách sản phẩm đã gom lại
 				var groupedProducts = [];
-	
-				products.forEach(function(product) {
+
+				products.forEach(function (product) {
 					if (!uniqueProductMap[product.product.productId]) {
 						uniqueProductMap[product.product.productId] = true;
 						groupedProducts.push(product);
 					}
 				});
-	
+
 				$scope.listProducts = groupedProducts;
 				$scope.listProduct = groupedProducts;
-				$scope.totalPages = res.data.totalPages; 
-				console.log($scope.listProducts);			
+				$scope.totalPages = res.data.totalPages;
+				console.log($scope.listProducts);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -49,24 +47,24 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 		$http.get(url + "/staff/alreadyviolationsproduct/" + currentPage)
 			.then(function (res) {
 				var products = res.data.content; // Lấy danh sách sản phẩm từ phản hồi
-				
+
 				// Sử dụng một đối tượng để theo dõi các sản phẩm đã xuất hiện
 				var uniqueProductMap = {};
-				
+
 				// Tạo danh sách sản phẩm đã gom lại
 				var groupedProducts = [];
-	
-				products.forEach(function(product) {
+
+				products.forEach(function (product) {
 					if (!uniqueProductMap[product.product.productId]) {
 						uniqueProductMap[product.product.productId] = true;
 						groupedProducts.push(product);
 					}
 				});
-	
+
 				$scope.listViolationProducts = groupedProducts;
 				$scope.listViolationProduct = groupedProducts;
-				$scope.totalPages = res.data.totalPages; 
-				console.log($scope.listProducts);			
+				$scope.totalPages = res.data.totalPages;
+				console.log($scope.listProducts);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -77,8 +75,8 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 
 		$http.get(url + "/staff/violationsproduct/listDescription/" + productId)
 			.then(function (res) {
-				$scope.listDescription = res.data; 
-				
+				$scope.listDescription = res.data;
+
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -88,15 +86,15 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 	$scope.getCountViolation = function (productId) {
 		$http.get(url + "/staff/violationsproduct/countViolations/" + productId)
 			.then(function (res) {
-				$scope.violation = res.data; 
-				
+				$scope.violation = res.data;
+
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	}
 
-	
+
 
 	$scope.getproductList($scope.currentPage);
 	$scope.getproductViolationList($scope.currentPage);
@@ -151,31 +149,31 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 	$scope.searchProduct = function () {
 		var name = $scope.searchText;
 		name = name.trim();
-		
+
 		$scope.listProducts = $scope.listProduct;
 		if (!name) {
 			// Nếu ô tìm kiếm rỗng, sử dụng danh sách sản phẩm ban đầu
-			 $scope.listProducts;
-			 return;
-			
+			$scope.listProducts;
+			return;
+
 		}
 		$http.get(url + '/staff/searchViolationProduct', { params: { name: name } })
 			.then(function (response) {
 				var products = response.data; // Lấy danh sách sản phẩm từ phản hồi
-				
+
 				// Sử dụng một đối tượng để theo dõi các sản phẩm đã xuất hiện
 				var uniqueProductMap = {};
-				
+
 				// Tạo danh sách sản phẩm đã gom lại
 				var groupedProducts = [];
-	
-				products.forEach(function(product) {
+
+				products.forEach(function (product) {
 					if (!uniqueProductMap[product.product.productId]) {
 						uniqueProductMap[product.product.productId] = true;
 						groupedProducts.push(product);
 					}
 				});
-	
+
 				$scope.listProducts = groupedProducts;
 			})
 			.catch(function (error) {
@@ -186,31 +184,31 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 	$scope.searchProductViolation = function () {
 		var name = $scope.searchViolationText;
 		name = name.trim();
-		
+
 		$scope.listViolationProducts = $scope.listViolationProduct;
 		if (!name) {
 			// Nếu ô tìm kiếm rỗng, sử dụng danh sách sản phẩm ban đầu
 			$scope.listViolationProducts;
-			 return;
-			
+			return;
+
 		}
 		$http.get(url + '/staff/searchAlreadyViolationProduct', { params: { name: name } })
 			.then(function (response) {
 				var products = response.data; // Lấy danh sách sản phẩm từ phản hồi
-				
+
 				// Sử dụng một đối tượng để theo dõi các sản phẩm đã xuất hiện
 				var uniqueProductMap = {};
-				
+
 				// Tạo danh sách sản phẩm đã gom lại
 				var groupedProducts = [];
-	
-				products.forEach(function(product) {
+
+				products.forEach(function (product) {
 					if (!uniqueProductMap[product.product.productId]) {
 						uniqueProductMap[product.product.productId] = true;
 						groupedProducts.push(product);
 					}
 				});
-	
+
 				$scope.listViolationProducts = groupedProducts;
 			})
 			.catch(function (error) {
@@ -225,8 +223,8 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 				$scope.product = response.data;
 				$scope.getDescriptionList(response.data.product.productId);
 				$scope.getCountViolation(response.data.product.productId)
-				$('#exampleModal').modal('show'); 			
-				
+				$('#exampleModal').modal('show');
+
 			})
 			.catch(function (error) {
 				console.error('Lỗi khi lấy thông tin chi tiết bài viết:', error);
@@ -239,8 +237,8 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 			.then(function (response) {
 				$scope.product = response.data;
 				$scope.getDescriptionList(response.data.product.productId);
-				$('#reasonModal').modal('show'); 			
-				
+				$('#reasonModal').modal('show');
+
 			})
 			.catch(function (error) {
 				console.error('Lỗi khi lấy thông tin chi tiết bài viết:', error);
@@ -264,7 +262,7 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 			method: 'GET',
 			url: url + '/staff/violationsproduct/getProductId/' + violationId
 		}).then(function (response) {
-			
+
 			Swal.fire({
 				text: 'Bạn có chắc muốn chấp nhận tố cáo sản phẩm này không?',
 				icon: 'warning',
@@ -280,23 +278,23 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 						url: url + '/staff/violationsproduct/accept/' + response.data
 					}).then(function (acceptResponse) {
 						// Xử lý phản hồi sau khi chấp nhận
-					
+
 						Swal.fire({
-								title: 'Thành công!',
-								text: 'Đã xử lý bài đăng sản phẩm này!',
-								icon: 'success',
-								showCancelButton: false,
-								confirmButtonText: 'OK'
+							title: 'Thành công!',
+							text: 'Đã xử lý bài đăng sản phẩm này!',
+							icon: 'success',
+							showCancelButton: false,
+							confirmButtonText: 'OK'
 						}).then((result) => {
 							// Check if the user clicked the "OK" button
 							if (result.isConfirmed) {
 								// Loại bỏ sản phẩm có violationId khỏi danh sách listProducts
 								$scope.listProducts = $scope.listProducts.filter(function (product) {
-								return product.violationId !== violationId;
+									return product.violationId !== violationId;
+								});
+								$scope.reloadPage();
+							}
 						});
-						$scope.reloadPage();
-					}
-					});		
 					}).catch(function (acceptError) {
 						console.error('Lỗi khi chấp nhận yêu cầu các bài viết:', acceptError);
 						Swal.fire({
@@ -314,9 +312,9 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 			// Xử lý lỗi khi lấy productId
 		});
 	};
-	
 
-	
+
+
 
 	$scope.reject = function (violationId) {
 		$http({
@@ -327,33 +325,59 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 				method: 'POST',
 				url: url + '/staff/violationsproduct/delete/' + response.data,
 			}).then(function (res) {
-					Swal.fire({
-						title: 'Thành công!',
-						text: 'Đã từ chối bài đăng sản phẩm này!',
-						icon: 'success',
-						showCancelButton: false,
-						confirmButtonText: 'OK'
-					}).then((result) => {
-						// Check if the user clicked the "OK" button
-						if (result.isConfirmed) {
-							$scope.listProducts = $scope.listProducts.filter(function (product) {
-								return product.violationId !== violationId;
+				Swal.fire({
+					title: 'Thành công!',
+					text: 'Đã từ chối bài đăng sản phẩm này!',
+					icon: 'success',
+					showCancelButton: false,
+					confirmButtonText: 'OK'
+				}).then((result) => {
+					// Check if the user clicked the "OK" button
+					if (result.isConfirmed) {
+						$scope.listProducts = $scope.listProducts.filter(function (product) {
+							return product.violationId !== violationId;
 						});
 						$scope.reloadPage();
-						}
-					});
-				
+					}
+				});
+
 			});
 		}).catch(function (error) {
 			console.error('Lỗi khi lấy productId:', error);
 			// Xử lý lỗi khi lấy productId
 		});
-		
+
 	}
-	
-	
+
+
 	$scope.reloadPage = function () {
 		location.reload();
 	}
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+
+		} else {
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
+
+		}
+	}
+	checkScreenWidth();
 })

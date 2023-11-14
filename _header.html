@@ -1,6 +1,6 @@
 <div class="container" style="width: 100%; padding: 0;">
 	<button ng-click="togglerMenuLeft()"
-		style="border: none; background-color: transparent; position: absolute; top: 0; left: 0;"><i
+		style="border: none; background-color: transparent; position: absolute; top: 0.5rem; left: 0.5rem; font-size: 18px; color: gray;"><i
 			class="fa-solid fa-bars"></i></button>
 	<div id="collapsibleNavId">
 		<ul class="navbar-nav me-auto mt-2 mt-lg-0">
@@ -160,7 +160,8 @@
 												<p class="mb-0 fs-3">English</p>
 											</a>
 										</div>
-										<a href="/logout" class="btn btn-outline-primary mx-3 mt-2 d-block">{{ 'DX' |
+										<a ng-click="logout()" class="btn btn-outline-primary mx-3 mt-2 d-block">{{ 'DX'
+											|
 											translate }}
 										</a>
 									</div>

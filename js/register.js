@@ -1,42 +1,36 @@
-app.controller('registerCtrl', function ($scope, $http, $translate, $rootScope, $location) {
-    var url = "https://viesonetapi2.azurewebsites.net";
+var app = angular.module("registerApp", []);
 
-    $scope.gender = 'true';
+app.controller("registerCtrl", function ($scope, $http) {
+    var url = "http://localhost:8080";
+    $scope.gender = "true";
 
     $scope.guiMa = function (event) {
         var email = $scope.email;
         var username = $scope.username;
         var data = {
             email: email,
-            username: username
+            username: username,
         };
-
-        $http({
-            method: 'POST',
-            url: '/dangky/guima',
-            data: data,
-            headers: { 'Content-Type': 'application/json' }
-        })
+        $http
+            .post(url + "/api/register/sendCode", data)
             .then(function (response) {
-                var result = response.data;
-                if (result.message) {
-                    $scope.errorMessage = result.message;
-                } else {
-                    $scope.errorMessage = '',
-                        Swal.fire(
-                            'Đã gửi!',
-                            'Mật mã đã gửi đến bạn!',
-                            'success'
-                        )
-                }
+                Swal.fire("Đã gửi!", "Mã xác nhận đã gửi đến bạn!", "success");
             })
             .catch(function (error) {
-                console.log(error);
+                // Xử lý lỗi ở đây
+                if (error.data.message) {
+                    Swal.fire({
+                        title: "Lỗi!",
+                        text: error.data.message,
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                    });
+                }
             });
 
         event.preventDefault();
     };
-
 
     $scope.submitForm = function () {
         // Lấy giá trị từ các trường nhập liệu
@@ -58,31 +52,39 @@ app.controller('registerCtrl', function ($scope, $http, $translate, $rootScope, 
             email: email,
             gender: gender,
             accept: accept,
-            code: code
+            code: code,
         };
 
         // Gửi yêu cầu HTTP đến URL /dangky với phương thức POST
-        $http.post(url + '/dangky', data).then(function (response) {
-            // Xử lý phản hồi từ máy chủ tại đây
-            if (response.data.message) {
-                // Hiển thị thông báo lỗi cho người dùng
-                $scope.errorMessage = response.data.message;
-            } else {
+        $http
+            .post(url + "/api/register", data)
+            .then(function (response) {
                 Swal.fire({
-                    title: 'Thành công!',
-                    text: 'Đăng ký tài khoản!',
-                    icon: 'success',
+                    title: "Thành công!",
+                    text: "Đăng ký tài khoản!",
+                    icon: "success",
                     showCancelButton: false,
-                    confirmButtonText: 'OK'
+                    confirmButtonText: "OK",
                 }).then((result) => {
                     // Check if the user clicked the "OK" button
                     if (result.isConfirmed) {
                         // Redirect to another page
-                        window.location.href = '/login'; // Replace '/another-page' with the desired URL
+                        window.location.href = "/Login.html"; // Replace '/another-page' with the desired URL
                     }
                 });
-            }
-        });
+            })
+            .catch(function (error) {
+                // Xử lý lỗi ở đây
+                if (error.data.message) {
+                    Swal.fire({
+                        title: "Lỗi!",
+                        text: error.data.message,
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                    });
+                }
+            });
     };
 
     $scope.openModal = function () {

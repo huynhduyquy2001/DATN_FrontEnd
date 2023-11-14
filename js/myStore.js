@@ -10,7 +10,8 @@ app.controller(
     $scope.listWard = [];
     $scope.totalPages = 0;
     $scope.totalPagePending = 0;
-
+    $scope.ticketCount = 0;
+    $scope.soLuot = 1;
     //Biến check xem có phải cửa hàng của mình không
     $scope.userId = $routeParams.userId;
     //Biến lưu trạng thái lọc
@@ -85,7 +86,6 @@ app.controller(
       $rootScope.checkMystore = 2;
     };
 
-    
 
     //Tìm kiếm
     $scope.searchProduct = function () {
@@ -356,6 +356,44 @@ app.controller(
       }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
     };
 
+
+    $http.get(url + '/getUserTicketCount')
+      .then(function (response) {
+        $scope.ticketCount = response.data;
+      })
+      .catch(function (error) {
+        console.error('Lỗi lấy số lượt đăng bài:', error);
+      });
+
+
+    $scope.buyTicket = function () {
+      // Lấy giá trị số lượt từ input
+
+      var numberOfTickets = $scope.soLuot;
+
+      // Tính toán totalAmount
+      var totalAmount = numberOfTickets * 10000;
+      var numericValue = parseInt(totalAmount);
+
+      $http.post(url + "/create_payment_ticket/" + numberOfTickets + "/" + numericValue)
+        .then(function (response) {
+          // Lấy URL từ response data
+          var newPageUrl = response.data.url;
+
+          // Mở trang mới với URL nhận được
+          window.location.href = newPageUrl;
+        }).catch(function (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Vui lòng nhập số lượng lớn hơn 0.'
+          });
+          return;
+
+        });
+
+    };
+
     //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
     $scope.tabsReport = function () {
 
@@ -567,7 +605,6 @@ app.controller(
         console.error("Lỗi: " + error);
       });
     }
-
     //Load từ đầu
     if ($rootScope.checkMystore === 1) {
       $scope.page($rootScope.currentPageMyStore);
@@ -576,6 +613,4 @@ app.controller(
     } else if ($rootScope.checkMystore === 3) {
       $scope.tabsReport();
     }
-    
   });
-

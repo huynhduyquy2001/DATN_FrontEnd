@@ -3,11 +3,15 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 	var Url = "https://viesonetapi2.azurewebsites.net";
 	$scope.totalPagesF = 0;
 	$scope.favoriteProducts = [];
+	var originalFavoriteProducts = [];
+	$scope.color = "";
+
 
 	$scope.spiuthich = function (currentPage) {
 		$http.get(Url + "/get-favoriteProducts/" + currentPage) // Sử dụng biến Url
 			.then(function (res) {
-				$scope.favoriteProducts = res.data.content;
+				originalFavoriteProducts = res.data.content;
+				$scope.favoriteProducts = originalFavoriteProducts;
 				$scope.totalPagesF = res.data.totalPages;
 			})
 			.catch(function (error) {
@@ -75,8 +79,101 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		});
 	};
 
+	// Tạo hàm tìm kiếm
+	$scope.searchFavoriteProducts = function (searchTerm) {
+		// Chia chuỗi tìm kiếm thành các từ riêng lẻ
+		var searchTerms = searchTerm.toLowerCase().split(' ');
+
+		// Khởi tạo danh sách kết quả
+		var searchResults = [];
+
+		// Duyệt qua từng từ trong danh sách từ tìm kiếm
+		for (var i = 0; i < searchTerms.length; i++) {
+			var term = searchTerms[i];
+			var termResults = originalFavoriteProducts.filter(function (product) {
+				return product.productName.toLowerCase().includes(term);
+			});
+
+			// Nếu danh sách kết quả rỗng, gán kết quả từ từng từ vào danh sách kết quả chung
+			if (searchResults.length === 0) {
+				searchResults = termResults;
+			} else {
+				// Nếu danh sách kết quả chung không rỗng, thực hiện giao của danh sách kết quả chung và danh sách từng từ
+				searchResults = searchResults.filter(function (product) {
+					return termResults.includes(product);
+				});
+			}
+		}
+
+		// Kiểm tra xem danh sách kết quả cuối cùng có trống không
+		if (searchResults.length === 0) {
+			// Xử lý trường hợp không tìm thấy sản phẩm, ví dụ, hiển thị thông báo cho người dùng
+			$scope.searchnull = "Không tìm thấy sản phẩm phù hợp";
+			$scope.isHidden = true;
+
+		}
+		else {
+			$scope.searchnull = "";
+		}
+
+
+		// Gán kết quả tìm kiếm cho $scope.favoriteProducts
+		$scope.favoriteProducts = searchResults;
+	};
+
+	// Biến lưu từ khóa tìm kiếm
+	$scope.productNameF = "";
+
+	// Hàm gọi khi người dùng thực hiện tìm kiếm
+	$scope.performSearch = function () {
+		$scope.searchFavoriteProducts($scope.productNameF);
+	};
+
+
+
+
 	$rootScope.addShoppingCart = function (productId) {
+		if ($scope.color === "") {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn màu sắc sản phẩm'
+			})
+			return;
+		}
+		if ($scope.quantity === 0) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn số lượng cần mua'
+			})
+			return;
+		}
+
 		var formData = new FormData();
+
 		formData.append("productId", productId);
 		formData.append("quantity", $scope.quantity);
 		formData.append("color", $scope.color);
@@ -84,11 +181,17 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		$http.post(Url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
-		})
-			.then(function (res) {
-				alert("ok")
+		}).then(function (res) {
+			//Load thông tin giỏ hàng
+			$http.get(Url + '/get-product-shoppingcart').then(function (response) {
+				$rootScope.listProduct = response.data;
+			}).catch(function (error) {
+				console.error('Lỗi khi lấy dữ liệu:', error);
 			});
+		});
+
 	}
+
 	$scope.togglerFavorite = function (productId) {
 		$http.post(Url + "/addfavoriteproduct/" + productId)
 			.then(function (response) {
@@ -102,7 +205,6 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 					});
 			});
 	}
-
 	$scope.Previous = function () {
 		if ($rootScope.currentPage === 0) {
 			return;
@@ -123,80 +225,6 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 			$scope.spiuthich($rootScope.currentPage);
 		}
 	}
-
-	$scope.chooseKey = function (word) {
-		$scope.productNameF = word;
-		$scope.findProductNoSplitText(0);
-	}
-	//Tìm kiếm 
-	// Khởi tạo biến $scope.words là một mảng để lưu trữ các từ
-	$scope.words = [];
-
-	// Hàm để tách chuỗi thành danh từ, tính từ và động từ
-	$scope.splitText = function (sentence) {
-		var words = sentence.split(/[ ,.]+/); // Tách chuỗi thành các từ
-
-		// Xóa nội dung cũ của $scope.words
-		$scope.words.length = 0;
-
-		// Lặp qua từng từ để xác định loại (danh từ, tính từ hoặc động từ)
-		for (var i = 0; i < words.length; i++) {
-			var word = words[i];
-			var nextWord = words[i + 1];
-
-			if (word.match(/[a-zA-Z]/)) {
-				// Kiểm tra nếu từ chứa chữ cái (tiếng Việt)
-				if (nextWord) {
-					var combinedWord = word + ' ' + nextWord;
-
-					if (nextWord.endsWith("ng")) {
-						$scope.words.push(combinedWord);
-						i++; // Bỏ qua từ tiếp theo vì đã kết hợp thành động từ
-					} else {
-						$scope.words.push(word);
-					}
-				} else {
-					$scope.words.push(word);
-				}
-			}
-			// console.log($scope.words);
-		}
-	};
-
-	$scope.findProductNoSplitText = function (currentPage) {
-
-		$rootScope.currentPageSearchFavorite = currentPage;
-		$rootScope.keyF = $scope.productNameF;
-		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào Url
-		$http.get(Url + "/find-productFavorite-by-name/" + currentPage, {
-			params: { keyF: $scope.productNameF }
-		})
-			.then(function (res) {
-				$scope.favoriteProducts = res.data.content;
-				$scope.totalPagesF = res.data.totalPages;
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	};
-
-	$scope.findProductF = function (currentPage) {
-		$scope.splitText($scope.productNameF);
-
-		$rootScope.currentPageSearchFavorite = currentPage;
-		$rootScope.keyF = $scope.productNameF;
-		// Sử dụng tham số truy vấn 'name' bằng cách thêm vào Url
-		$http.get(Url + "/find-productFavorite-by-name/" + currentPage, {
-			params: { keyF: $scope.productNameF }
-		})
-			.then(function (res) {
-				$scope.favoriteProducts = res.data.content;
-				$scope.totalPagesF = res.data.totalPages;
-			})
-			.catch(function (error) {
-				console.log(error.data);
-			});
-	};
 
 	const searchInputF = document.querySelector('#search-F');
 	// Tro ly ao
@@ -229,6 +257,7 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 
 	const handleVoice = (text) => {
 		console.log('text', text);
+
 		$scope.productNameF = text.toLowerCase();
 
 
@@ -236,12 +265,10 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 
 		// searchInputF.dispatchEvent(changeEvent);
 		$rootScope.keyF = $scope.productNameF;
-		$scope.findProductF(0);
+		$scope.searchFavoriteProducts($scope.productNameF);
 		//searchInputF.dispatchEvent($scope.findProductF($scope.productNameF));
+		console.log("Nói ra nè " + $scope.productNameF);
 		return;
-
-
-		speak('Try again');
 	}
 
 	microphone.addEventListener('click', (e) => {
@@ -266,4 +293,59 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		const text = e.results[0][0].transcript;
 		handleVoice(text);
 	}
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+
+		} else {
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
+
+		}
+	}
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+
+		} else {
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
+
+		}
+	}
+	setTimeout(function () {
+		checkScreenWidth();
+	}, 100);
 });

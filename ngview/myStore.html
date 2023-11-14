@@ -55,6 +55,12 @@
                     <a ng-if="userId == myAccount.user.userId" href="#!/product/add-product"><i
                             class="fa-solid fa-cart-plus"></i> Thêm sản
                         phẩm</a>
+                    &nbsp;&nbsp; |
+                    <a class="ms-3" ng-if="userId == myAccount.user.userId" data-bs-toggle="modal"
+                        data-bs-target="#mua-luot-dang-bai" style="cursor: pointer;"><i class="fa-solid fa-ticket"></i>
+                        Mua lượt đăng bài
+                    </a>
+                    &nbsp;&nbsp;
                 </div>
                 <hr>
                 <div ng-class="{'col-lg-6': checkMenuLeft, 'col-lg-4': !checkMenuLeft}" class="col-sm-12 mt-2"
@@ -557,6 +563,31 @@
         </div>
     </div>
 </div>
+
+<!-- Modal mua lượt đăng bài-->
+<div class="modal fade" id="mua-luot-dang-bai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mua lượt đăng bài</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="soLuot"><i class="fa-solid fa-ticket"></i> &nbsp; Số lượt đăng bài hiện tại : {{ ticketCount
+                    }}</label>
+                <input type="number" id="soLuot" name="soLuot" min="1" ng-model="soLuot" class="form-control" required
+                    placeholder="Số lượt">
+                <div class="m-1" style="color: gray;">Giá: 10.000 vnđ/lượt</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" ng-click="buyTicket()">Mua lượt</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     var modalId = document.getElementById('modalId');
 

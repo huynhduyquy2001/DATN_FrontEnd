@@ -28,8 +28,11 @@
 						<div class="msg-info">
 							<!-- Hiển thị nút "Thu hồi" -->
 							<button class="btn-revoke btn btn-outline-danger py-1 px-2 ms-auto ng-scope"
+								style="transition: 0.3s ease-in-out;"
 								ng-show="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
-								ng-cloak ng-click="revokeMessage(mess.messId)"><b>Thu hồi</b></button>
+								ng-cloak ng-click="revokeMessage(mess.messId)"><span><i
+										class="fa-regular fa-rotate-right fa-flip-horizontal"></i> Thu
+									hồi</span></button>
 						</div>
 						<div class="msg-text mess" style="font-weight: 510;"
 							ng-show="mess.status != 'Đã ẩn' && mess.content!=''" ng-cloak>
@@ -75,7 +78,7 @@
 					<div class="user-profile">
 						<!-- Nội dung khi UsersMess[0] = 'UI010' -->
 						<img ng-src="{{ UsersMess[5] }}"
-							style="border-radius: 100%; border: 1px solid #ebf1f6; width: 3.5rem; height: 3.5rem; max-width: none;"
+							style="border-radius: 100%; border: 1px solid #ebf1f6; width: 3.5rem; height: 3.5rem; max-width: none; min-width: 3.5rem;"
 							alt="">
 						<div style="width: 100%; line-height: 0.7rem; margin-left: 0.3rem;">
 							<div style="display: flex;">

@@ -36,42 +36,50 @@ app.factory('AuthInterceptor', function ($q, $window) {
 		responseError: function (rejection) {
 			if (rejection.status === 403) {
 				// Redirect to the login page
+
 				$window.location.href = 'Login.html';
 			}
+
 			return $q.reject(rejection);
 		}
 	}
-})
-app.factory('apiService', function ($http) {
-	// Function to get the JWT token from local storage
-	function getJwtToken() {
-		// Replace 'YOUR_JWT_TOKEN_KEY' with the key you used to store the token in local storage
-		console.log(localStorage.getItem('jwtToken'))
-		return localStorage.getItem('jwtToken');
-	}
+});
+
+app.factory('apiService', function ($http, $q, $window) {
+	var apiService = {};
 
 	// Function to set the JWT token in the HTTP headers of the API request
-	function setAuthorizationHeader() {
-		var jwtToken = getJwtToken();
+	apiService.setAuthorizationHeader = function () {
+		var jwtToken = apiService.getJwtToken();
 		if (jwtToken) {
 			$http.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
+			$http.defaults.headers.common['isRefreshToken'] = 'true';
 		}
-	}
+		else {
+			$window.location.href = 'Login.html';
+		}
+	};
+
 
 	// Function to remove the JWT token from the HTTP headers
-	function removeAuthorizationHeader() {
+	apiService.removeAuthorizationHeader = function () {
 		delete $http.defaults.headers.common['Authorization'];
-	}
-
-	// Expose the public methods of the factory
-	return {
-		setAuthorizationHeader: setAuthorizationHeader,
-		removeAuthorizationHeader: removeAuthorizationHeader
 	};
+
+
+
+
+	apiService.getJwtToken = function () {
+		return localStorage.getItem('jwtToken');
+	};
+
+	return apiService;
 });
+
 app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScope, $location, $timeout, $interval, apiService) {
 
 	apiService.setAuthorizationHeader();
+
 
 	$scope.isAuthenticated = function () {
 		console.log("isAuthenticated", isAuthenticated);
@@ -218,15 +226,11 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	};
 
 	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
-	var socket = new SockJS(url + "/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
+	var socket = new SockJS("http://localhost:8080/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
 	stompClient.debug = false;
-	var jwt = localStorage.getItem('jwtToken');
-	// Khi kết nối WebSocket thành công
-
-
 	//tìm acc bản thân
 	$http.get(findMyAccount)
 		.then(function (response) {
@@ -238,10 +242,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
 					try {
 						var newMess = JSON.parse(message.body);
-						// alert("tk người nhận: " + $scope.receiver.userId)
-						// alert("tk người nhận trong tin nhắn: " + newMess.receiver.userId)
-						// alert("tk người gửi trong tin nhắn: " + newMess.sender.userId)
-						// alert("tk của tôi hiện tại: " + $scope.myAccount.user.userId)
+
 						var checkMess = $scope.ListMessMini.find(function (obj) {
 							return obj.messId === newMess.messId;
 						});
@@ -796,19 +797,25 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	//hàm thông báo người ta gọi
 	$rootScope.client.on('incomingcall', function (incomingcall) {
 		console.log("incomingcall", incomingcall)
-
 		//hiện popup thôg báo
 		var width = 840;
 		var height = 600;
 		var left = (window.innerWidth - width) / 2;
 		var top = (window.innerHeight - height) / 2;
 		var newWindow = window.open(
-			"http://127.0.0.1:5501/Index.html#!/videocall/" + incomingcall.fromNumber,
+			"http://127.0.0.1:5501/#!/videocall/" + incomingcall.fromNumber,
 			"_blank",
 			"width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",toolbar=no,location=no,status=no,menubar=no,resizable=no"
 		);
 		newWindow.focus();
 	});
+
+	$scope.logout = function () {
+		apiService.removeAuthorizationHeader();
+		localStorage.removeItem("jwtToken");
+		window.location.href = "Login.html";
+	};
+
 })
 
 

@@ -22,6 +22,8 @@ angular.module('myApp', [])
             return localStorage.getItem('jwtToken');
         }
 
+        
+
         // Function to set the JWT token in the HTTP headers of the API request
         function setAuthorizationHeader() {
             var jwtToken = getJwtToken();
@@ -38,6 +40,7 @@ angular.module('myApp', [])
         // Expose the public methods of the factory
         return {
             setAuthorizationHeader: setAuthorizationHeader,
-            removeAuthorizationHeader: removeAuthorizationHeader
+            removeAuthorizationHeader: removeAuthorizationHeader,
+            refreshToken: refreshToken
         };
     });

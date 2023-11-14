@@ -54,7 +54,7 @@
                                             <div class="card-text">Đơn giá: {{o[1].originalPrice}}</div>
                                             <span class="card-text">Số lượng: {{o[2].quantity}}</span>
                                         </div>
-                                        <div class="card-text">Phí ship: {{o[2].shippingFee}}</div>
+                                        <!-- <div class="card-text">Phí ship: {{o[2].shippingFee}}</div> -->
 
                                     </div>
                                     <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
@@ -64,8 +64,8 @@
                                                 <i class="fa-regular fa-hand-holding-dollar fa-2xl"
                                                     style="margin-right: 1vh; color: #393e41;"></i>
                                                 <span class="fs-5">Thành tiền: &nbsp;</span>
-                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount}}
-                                                    VND
+                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount | currencyFormat}}
+
                                                 </h5>
                                             </div>
                                             <div class="mt-3">
@@ -130,14 +130,14 @@
                                             <div class="card-text">Đơn giá: {{o[1].originalPrice}}</div>
                                             <span class="card-text">Số lượng: {{o[2].quantity}}</span>
                                         </div>
-                                        <div class="card-text">Phí ship: {{o[2].shippingFee}}</div>
+                                        <!-- <div class="card-text">Phí ship: {{o[2].shippingFee}}</div> -->
                                     </div>
                                     <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
                                         <div class="totalAmount"
                                             style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
                                             <div class="d-flex">
-                                                <h5 class="mb-0 text-danger fs-6">{{o[0].totalAmount}}
-                                                    VND
+                                                <h5 class="mb-0 text-danger fs-6">{{o[0].totalAmount | currencyFormat}}
+
                                                 </h5>
                                             </div>
                                             <div class="mt-3">
@@ -170,7 +170,7 @@
                                     <div class="d-flex">
                                         <span id="shopname"
                                             style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}</span>
-                                        {{o[0].orderId}}
+
                                         <span id="button-top">
                                             <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
                                                     type="button" style="background-color: #ff3f40;"> <i
@@ -198,8 +198,9 @@
                                         <div class="totalAmount"
                                             style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
                                             <div class="d-flex">
-                                                <span class="mb-0 text-danger fs-9">{{o[0].totalAmount}}
-                                                    VND
+                                                <span class="mb-0 text-danger fs-9">{{o[0].totalAmount |
+                                                    currencyFormat}}
+
                                                 </span>
                                             </div>
                                             <div class="mt-3">
@@ -263,7 +264,7 @@
                                             <div class="card-text">Đơn giá: {{o[1].originalPrice}}</div>
                                             <span class="card-text">Số lượng: {{o[2].quantity}}</span>
                                         </div>
-                                        <div class="card-text">Phí ship: {{o[2].shippingFee}}</div>
+                                        <!-- <div class="card-text">Phí ship: {{o[2].shippingFee}}</div> -->
 
                                     </div>
                                     <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
@@ -273,8 +274,8 @@
                                                 <i class="fa-regular fa-hand-holding-dollar fa-2xl"
                                                     style="margin-right: 1vh; color: #393e41;"></i>
                                                 <span class="fs-5">Thành tiền: &nbsp;</span>
-                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount}}
-                                                    VND
+                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount | currencyFormat}}
+
                                                 </h5>
 
                                             </div>
@@ -337,19 +338,20 @@
                                     <div class="col-12 col-sm-6 col-md-6 col-lg-3 card-body">
                                         <p class="card-title fw-bold">{{o[1].productName}}</p>
                                         <span class="card-text">Màu: {{o[1].productColors[0].color.colorName}}</span>
-                                        <div class="d-flex justify-content align-items-center">
+                                        <div>
                                             <div class="card-text">Đơn giá: {{o[1].originalPrice}}</div>
                                             <span class="card-text">Số lượng: {{o[2].quantity}}</span>
                                         </div>
-                                        <div class="card-text">Phí ship: {{o[2].shippingFee}}</div>
+                                        <!-- <div class="card-text">Phí ship: {{o[2].shippingFee}}</div> -->
                                     </div>
 
                                     <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
                                         <div class="totalAmount"
                                             style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
                                             <div class="d-flex">
-                                                <h5 class="mb-0 text-danger fs-6">Thành tiền: {{o[0].totalAmount}}
-                                                    VND
+                                                <h5 class="mb-0 text-danger fs-6">Thành tiền: {{o[0].totalAmount |
+                                                    currencyFormat}}
+
                                                 </h5>
                                             </div>
                                             <!-- <div class="mt-3">
@@ -399,7 +401,7 @@
                                         <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
                                     </div>
                                     <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
-                                        <p class="card-title" style="font-size: small;">{{o[1].productName}}</p>
+                                        <p class="card-title fw-bold" style="font-size: small;">{{o[1].productName}}</p>
                                         <div class="card-text" style="font-size: x-small;">Số lượng: {{o[2].quantity}}
                                         </div>
                                         <div class="card-text" style="font-size: x-small;">Màu:
@@ -409,8 +411,9 @@
                                         <div class="totalAmount"
                                             style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
                                             <div class="d-flex">
-                                                <span class="mb-0 text-danger fs-9"> Thành tiền {{o[0].totalAmount}}
-                                                    VND
+                                                <span class="mb-0 text-danger fs-9"> Thành tiền {{o[0].totalAmount |
+                                                    currencyFormat}}
+
                                                 </span>
                                             </div>
                                             <!-- <div class="mt-3">

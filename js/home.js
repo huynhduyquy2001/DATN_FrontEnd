@@ -60,7 +60,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	}
 	$scope.findFollowings();
 	//Lấy danh sách vi phạm
-	$http.get('https://viesonetapi2.azurewebsites.net/getviolations')
+	$http.get(url + '/getviolations')
 		.then(function (response) {
 			$scope.violations = response.data;
 
@@ -71,7 +71,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.loadMore = function () {
 		if ($scope.page <= $scope.totalPages) {
-			$http.get('https://viesonetapi2.azurewebsites.net/get-more-posts/' + $scope.page)
+			$http.get(url + '/get-more-posts/' + $scope.page)
 				.then(function (response) {
 					if (response.data && response.data.content.length > 0) {
 						if ($scope.page === 0) {
@@ -141,7 +141,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 
 
-	$http.get('https://viesonetapi2.azurewebsites.net/findlikedposts')
+	$http.get(url + '/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
 			$scope.likedPosts = likedPosts;
@@ -176,7 +176,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			})
 			return;
 		}
-		$http.post('https://viesonetapi2.azurewebsites.net/report/' + postId + '/' + $scope.selectedViolationType)
+		$http.post(url + '/report/' + postId + '/' + $scope.selectedViolationType)
 			.then(function (response) {
 				const Toast = Swal.mixin({
 					toast: true,
@@ -213,8 +213,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());
-		var likeEndpoint = 'https://viesonetapi2.azurewebsites.net/likepost/' + postId;
-		var dislikeEndpoint = 'https://viesonetapi2.azurewebsites.net/didlikepost/' + postId;
+		var likeEndpoint = url + '/likepost/' + postId;
+		var dislikeEndpoint = url + '/didlikepost/' + postId;
 
 		// Nếu postId chưa tồn tại trong mảng likedPosts
 		if (likedIndex === -1) {
@@ -266,7 +266,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	};
 
 
-	$http.get('https://viesonetapi2.azurewebsites.net/findlikedposts')
+	$http.get(url + '/findlikedposts')
 		.then(function (response) {
 			var likedPosts = response.data;
 			$scope.likedPosts = likedPosts;
@@ -275,7 +275,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			console.log(error);
 		});
 
-	$http.get('https://viesonetapi2.azurewebsites.net/findmyaccount')
+	$http.get(url + '/findmyaccount')
 		.then(function (response) {
 			var myAccount = response.data;
 			$scope.myAccount = myAccount;
@@ -286,8 +286,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.likePost = function (postId) {
 		var likedIndex = $scope.likedPosts.indexOf(postId.toString());
-		var likeEndpoint = 'https://viesonetapi2.azurewebsites.net/likepost/' + postId;
-		var dislikeEndpoint = 'https://viesonetapi2.azurewebsites.net/didlikepost/' + postId;
+		var likeEndpoint = url + '/likepost/' + postId;
+		var dislikeEndpoint = url + '/didlikepost/' + postId;
 
 		// Nếu postId chưa tồn tại trong mảng likedPosts
 		if (likedIndex === -1) {
@@ -506,7 +506,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	}
 
 	$scope.getPostDetails = function (postId) {
-		$http.get('https://viesonetapi2.azurewebsites.net/findpostcomments/' + postId)
+		$http.get(url + '/findpostcomments/' + postId)
 			.then(function (response) {
 				var postComments = response.data;
 				$scope.postComments = postComments;
@@ -516,7 +516,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 				console.log(error);
 			});
 		$scope.isReplyEmpty = true;
-		$http.get('https://viesonetapi2.azurewebsites.net/postdetails/' + postId)
+		$http.get(url + '/postdetails/' + postId)
 			.then(function (response) {
 				var postDetails = response.data;
 				$scope.postDetails = postDetails;
@@ -532,7 +532,6 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 	$scope.addComment = function (postId) {
 		var myComment = $scope.myComment;
-
 		if (myComment === undefined || myComment.trim() === '') {
 			const Toast = Swal.mixin({
 				toast: true,
@@ -553,7 +552,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 			return;
 		}
 
-		$http.post('https://viesonetapi2.azurewebsites.net/addcomment/' + postId + '?myComment=' + myComment.trim())
+		$http.post(url + '/addcomment/' + postId + '?myComment=' + myComment.trim())
 			.then(function (response) {
 				$scope.postComments.unshift(response.data);
 				var postToUpdate = $scope.Posts.find(function (post) {
@@ -574,7 +573,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 
 
 	$scope.logout = function () {
-		$http.get('https://viesonetapi2.azurewebsites.net/logout')
+		$http.get(url + '/logout')
 			.then(function () {
 				window.location.href = '/login';
 			}, function (error) {
@@ -692,5 +691,34 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 		}
 	};
 
+	function checkScreenWidth() {
+		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+		var asideLeft = document.getElementById('asideLeft');
+		var view = document.getElementById('view');
+		if (screenWidth <= 1080) {
+			asideLeft.style.left = '-280px';
+
+			asideLeft.style.opacity = '0';
+			view.classList.remove('col-lg-9', 'offset-lg-3');
+			view.classList.add('col-lg-11', 'offset-lg-1');
+
+		} else {
+			if (view) {
+				view.classList.remove('col-lg-11', 'offset-lg-1');
+				view.classList.add('col-lg-9', 'offset-lg-3');
+				asideLeft.style.opacity = '1';
+				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
+				$rootScope.checkMenuLeft = true;
+				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
+			}
+
+
+
+		}
+	}
+	setTimeout(function () {
+		checkScreenWidth();
+	}, 100);
 });
 

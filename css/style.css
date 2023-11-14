@@ -2726,7 +2726,6 @@ th {
 }
 
 .comment-box .comment-head {
-	background: #FCFCFC;
 	overflow: hidden;
 	-webkit-border-radius: 4px 4px 0 0;
 	-moz-border-radius: 4px 4px 0 0;
@@ -2769,7 +2768,6 @@ th {
 }
 
 .comment-box .comment-content {
-	background: #FFF;
 	/* padding: 12px; */
 	font-size: 15px;
 	max-width: 80% !important;
