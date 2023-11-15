@@ -7,7 +7,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 	$scope.pageSize = 9;
 	$scope.selectedCountText = 0; // Số lượng mục đã chọn
 
-	var url = "https://viesonetapi2.azurewebsites.net";
+	var url = "http://localhost:8080";
 
 
 
@@ -259,6 +259,8 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 
 		}
 	}
-	checkScreenWidth();
+	setTimeout(function () {
+		checkScreenWidth();
+	  }, 100);
 
 })

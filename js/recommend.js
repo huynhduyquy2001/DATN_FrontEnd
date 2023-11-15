@@ -9,7 +9,7 @@ app.controller('RecommendController', function ($scope, $http, $translate, $root
 	$scope.followings = [];
 	$scope.users = [];
 	$scope.listFollow = [];
-	var Url = "https://viesonetapi2.azurewebsites.net";
+	var Url = "http://localhost:8080";
 	if (!$location.path().startsWith('/profile/')) {
 		// Tạo phần tử link stylesheet
 		var styleLink = document.createElement('link');

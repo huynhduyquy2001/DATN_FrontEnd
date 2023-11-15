@@ -1,4 +1,4 @@
-<div ng-controller="ReportController">
+<div>
     <div class="row">
         <div class="col-lg-8 d-flex align-items-strech">
             <div class="card w-100">
@@ -64,10 +64,11 @@
                     <ul class="timeline-widget mb-0 position-relative mt-5">
                         <li ng-repeat="t in totalPosts"
                             class="timeline-item d-flex position-relative overflow-hidden mb-3">
-                            <a> <img ng-src="{{t.avatar}}" alt=""
+                            <a> 
+                                <img ng-src="{{t.avatar}}" alt=""
                                 width="45" height="45" class="rounded-circle"
                                 style="object-fit: cover;">
-                        </a>
+                            </a>
                             <div class="timeline-desc fs-5 text-dark mt-2 ms-3"
                                 style="max-width: 170px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
                                 <a>{{t.username}}</a>
@@ -173,11 +174,11 @@
 									<div class="carousel-inner">
 										<div ng-if="posts.images.length > 1" class="carousel-item" ng-repeat="image in posts.images track by $index"
 													ng-class="{ 'active': $index === 0 }">
-											<img width="75%" src="{{ image.imageUrl }}" class="d-block w-100"
+											<img width="75%" ng-src="{{ image.imageUrl }}" class="d-block w-100"
                                            >
 										</div>
 										<div ng-if="posts.images.length === 1" class="carousel-item active">
-											<img width="75%" src="{{posts.images[0].imageUrl}}" class="d-block w-100"
+											<img width="75%" ng-src="{{posts.images[0].imageUrl}}" class="d-block w-100"
 												>
 										</div>
 									</div>

@@ -1,6 +1,6 @@
 
 app.controller('FavouriteProductsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams, $anchorScroll) {
-	var Url = "https://viesonetapi2.azurewebsites.net";
+	var Url = "http://localhost:8080";
 	$scope.totalPagesF = 0;
 	$scope.favoriteProducts = [];
 	var originalFavoriteProducts = [];

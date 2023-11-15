@@ -15,8 +15,8 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	$scope.totalFollowing = 0;
 	$scope.currentHeight = 0;
 	$scope.totalPages = 0;
-	var url = "https://viesonetapi2.azurewebsites.net";
-	var getUnseenMess = "https://viesonetapi2.azurewebsites.net/getunseenmessage";
+	var url = "http://localhost:8080";
+	var getUnseenMess = "http://localhost:8080/getunseenmessage";
 
 
 

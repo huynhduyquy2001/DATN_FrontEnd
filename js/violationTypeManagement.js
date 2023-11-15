@@ -3,7 +3,7 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
     $scope.listViolation = {};
     $scope.violation = {};
 
-    var url = "https://viesonetapi2.azurewebsites.net";
+    var url = "http://localhost:8080";
 
     $http.get(url + '/staff/violationtype/load').then(function (response) {
         // Gán dữ liệu từ API vào biến $scope.listViolations
@@ -155,4 +155,5 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
     };
 
 
+    
 });

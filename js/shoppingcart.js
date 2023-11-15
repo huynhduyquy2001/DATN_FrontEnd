@@ -1,5 +1,5 @@
 app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $window, $timeout, $location) {
-  var url = "https://viesonetapi2.azurewebsites.net";
+  var url = "http://localhost:8080";
   var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
   $scope.listProducts = [];
   $scope.listProductOrder = [];
@@ -166,7 +166,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
 
   function checked() {
     isChecked = !isChecked;
-    $('input[type="checkbox"]').prop("checked", isChecked);
+    $('input[type="checkbox"]:not(:disabled)').prop("checked", isChecked);
     updateCountChecked();
   }
 
@@ -920,6 +920,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
         //Ẩn modal đặt hàng
         $("#exampleModal").modal("hide");
         $location.path('/order/' + $rootScope.myAccount.user.userId);
+        $rootScope.checkOrderPage = 2;
       })
         .catch(function (error) {
           console.error("Error:", error);
@@ -932,6 +933,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
       $window.location.reload();
     }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
   };
+
   function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 

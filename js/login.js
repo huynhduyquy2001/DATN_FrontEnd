@@ -7,7 +7,7 @@ angular.module('myApp').controller('loginController', function ($scope, $http) {
             phoneNumber: $scope.user.phoneNumber,
             password: $scope.user.password
         };
-        $http.post('https://viesonetapi2.azurewebsites.net/api/createToken', userData)
+        $http.post('http://localhost:8080/api/createToken', userData)
             .then(function (response) {
                 // Store the token in local storage
                 localStorage.setItem('jwtToken', response.data.accessToken);        

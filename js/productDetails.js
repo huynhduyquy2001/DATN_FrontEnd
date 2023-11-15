@@ -1,6 +1,6 @@
 
 app.controller('ProductDetailsController', function ($scope, $http, $translate, $rootScope, $location, $routeParams, $anchorScroll) {
-    var Url = "https://viesonetapi2.azurewebsites.net";
+    var Url = "http://localhost:8080";
     //sản phẩm
     $scope.product = {};
     $scope.quantity = 0;

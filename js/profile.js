@@ -1,4 +1,4 @@
-app.controller('ProfileController', function ($scope, $http, $translate, $location, $routeParams, $timeout, $window) {
+app.controller('ProfileController', function ($scope, $http, $translate, $rootScope, $routeParams, $timeout, $window) {
 
 	// if ($location.path().startsWith('/profile/')) {
 	// 	setTimeout(function () {
@@ -36,13 +36,13 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 	$scope.fee = 0;
 	$scope.checkShip = false;
 	$scope.oneAddress = {};
-	var url = "https://viesonetapi2.azurewebsites.net";
-	var countpost = "https://viesonetapi2.azurewebsites.net/countmypost/";
-	var findMyAccount = "https://viesonetapi2.azurewebsites.net/findmyaccount";
-	var getUnseenMess = "https://viesonetapi2.azurewebsites.net/getunseenmessage";
-	var getChatlistwithothers = "https://viesonetapi2.azurewebsites.net/chatlistwithothers";
-	var loadnotification = "https://viesonetapi2.azurewebsites.net/loadnotification";
-	var loadallnotification = "https://viesonetapi2.azurewebsites.net/loadallnotification";
+	var url = "http://localhost:8080";
+	var countpost = "http://localhost:8080/countmypost/";
+	var findMyAccount = "http://localhost:8080/findmyaccount";
+	var getUnseenMess = "http://localhost:8080/getunseenmessage";
+	var getChatlistwithothers = "http://localhost:8080/chatlistwithothers";
+	var loadnotification = "http://localhost:8080/loadnotification";
+	var loadallnotification = "http://localhost:8080/loadallnotification";
 	var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
 	var config = {
 		apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
@@ -155,103 +155,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $locati
 			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
 		};
 
-		//Load thông báo
-		$scope.hasNewNotification = false;
-		$scope.notificationNumber = [];
-		//Load thông báo chưa đọc
-		$http.get(url + '/loadnotification')
-			.then(function (response) {
-				var data = response.data;
-				for (var i = 0; i < data.length; i++) {
-					$scope.notification.push(data[i]);
-					$scope.notificationNumber = $scope.notification;
-					if ($scope.notificationNumber.length != 0) {
-						$scope.hasNewNotification = true;
-					}
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-		//Load tất cả thông báo
-		$http.get(url + '/loadallnotification')
-			.then(function (response) {
-				$scope.allNotification = response.data;
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-		//Kết nối websocket
-		$scope.ConnectNotification = function () {
-			var socket = new SockJS('/private-notification');
-			var stompClient = Stomp.over(socket);
-			stompClient.debug = false;
-			stompClient.connect({}, function (frame) {
-				stompClient.subscribe('/private-user', function (response) {
-
-					var data = JSON.parse(response.body)
-					// Kiểm tra điều kiện đúng với user hiện tại thì thêm thông báo mới
-					if ($scope.myAccount.user.userId === data.receiver.userId) {
-						//thêm vào thông báo mới
-						$scope.notification.push(data);
-						//thêm vào tất cả thông báo
-						$scope.allNotification.push(data);
-						//thêm vào mảng để đếm độ số thông báo
-						$scope.notificationNumber.push(data);
-						//cho hiện thông báo mới
-						$scope.hasNewNotification = true;
-					}
-					$scope.$apply();
-
-				});
-			});
-		};
-		//xem chi tiết thông báo
-		$scope.seen = function (notificationId) {
-			$scope.getPostDetails(notificationId);
-		}
-
-		//Ẩn tất cả thông báo khi click vào xem
-		$scope.hideNotification = function () {
-			$http.post('/setHideNotification', $scope.notification)
-				.then(function (response) {
-					// Xử lý phản hồi từ backend nếu cần
-				})
-				.catch(function (error) {
-					// Xử lý lỗi nếu có
-				});
-			$scope.hasNewNotification = false;
-			$scope.notificationNumber = [];
-		}
-
-		//Xóa thông báo
-		$scope.deleteNotification = function (notificationId) {
-			$http.delete('/deleteNotification/' + notificationId)
-				.then(function (response) {
-					$scope.allNotification = $scope.allNotification.filter(function (allNotification) {
-						return allNotification.notificationId !== notificationId;
-					});
-				})
-				.catch(function (error) {
-					// Xử lý lỗi nếu có
-				});
-		}
-
-		//Ẩn thông báo 
-		$scope.hideNotificationById = function (notificationId) {
-			// Ví dụ xóa phần tử có notificationId là 123
-			$scope.removeNotificationById(notificationId);
-		}
-		//Hàm xóa theo ID của mảng
-		$scope.removeNotificationById = function (notificationIdToRemove) {
-			// Lọc ra các phần tử có notificationId khác với notificationIdToRemove
-			$scope.notification = $scope.notification.filter(function (notification) {
-				return notification.notificationId !== notificationIdToRemove;
-			});
-		};
-		//Kết nối khi mở trang web
-		$scope.ConnectNotification();
-
+	
 
 		$http.get(url + '/findusers')
 			.then(function (response) {

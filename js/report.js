@@ -8,7 +8,7 @@ app.controller(
     $scope.topPostsLikes = [];
     $scope.totalPosts = [];
     $scope.posts = {};
-    var url = "https://viesonetapi2.azurewebsites.net"
+    var url = "http://localhost:8080"
     $http
       .get(url + "/admin/reportListYear")
       .then(function (response) {

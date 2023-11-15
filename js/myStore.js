@@ -1,7 +1,7 @@
 app.controller(
   "MyStoreController",
   function ($scope, $http, $routeParams, $rootScope, $timeout, $window) {
-    var url = "https://viesonetapi2.azurewebsites.net";
+    var url = "http://localhost:8080";
     var token = "ad138b51-6784-11ee-a59f-a260851ba65c";
     $scope.listProductMyStore = [];
     $scope.listProductPending = [];
@@ -404,10 +404,10 @@ app.controller(
       $scope.sumorderperonal = [];
       $scope.Orderstatus = [];
       $scope.bestselling = [];
-      var Url = "https://viesonetapi2.azurewebsites.net/personalStatisticsCoutOrder";
-      var Url2 = "https://viesonetapi2.azurewebsites.net/personalStatisticsSumTotalAmout";
-      var Url3 = "https://viesonetapi2.azurewebsites.net/personalStatisticsCoutOrderStatus";
-      var Url4 = "https://viesonetapi2.azurewebsites.net/productbestSelling";
+      var Url = "http://localhost:8080/personalStatisticsCoutOrder";
+      var Url2 = "http://localhost:8080/personalStatisticsSumTotalAmout";
+      var Url3 = "http://localhost:8080/personalStatisticsCoutOrderStatus";
+      var Url4 = "http://localhost:8080/productbestSelling";
       var categories2 = [];
       var data2 = [];
 

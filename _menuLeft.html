@@ -51,14 +51,6 @@
 
 												<li class="sidebar-item">
 													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
-														href="#!/recommend" active-link>
-														<i class="fas fa-handshake"></i>
-														<span>{{ 'GY' | translate }}</span>
-													</a>
-												</li>
-
-												<li class="sidebar-item">
-													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
 														href="#!/message" active-link>
 														<i class="fas fa-messages"></i>
 														<span>{{ 'TN' | translate }}</span>
@@ -107,23 +99,16 @@
 														<span>Đơn hàng của tôi</span>
 													</a>
 												</li>
-												<li class="sidebar-item">
+												<li class="sidebar-item" ng-if="myAccount.user.account.role.roleId == 4">
 													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
 														active-link href="#!/ValidationOrder">
 														<i class="fa-solid fa-check"></i>
 														<span>Duyệt đơn cửa hàng</span>
 													</a>
 												</li>
-												<li class="sidebar-item">
-													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
-														active-link href="#!/personalStatistics">
-														<i class="fas fa-chart-line"></i>
-														<span>Thống kê cá nhân</span>
-													</a>
-												</li>
 											</ul>
 										</li>
-										<li class="nav-item mt-3">
+										<li class="nav-item mt-3" ng-if="myAccount.user.account.role.roleId == 1">
 											<a class="nav-link" data-bs-toggle="collapse" href="#manager" role="button"
 												active-link style="padding-left: 0;" aria-expanded="false"
 												aria-controls="manager">
@@ -154,7 +139,7 @@
 												</li>
 											</ul>
 										</li>
-										<li class="nav-item mt-3">
+										<li class="nav-item mt-3" ng-if="myAccount.user.account.role.roleId == 1 || myAccount.user.account.role.roleId == 2">
 											<a class="nav-link" data-bs-toggle="collapse" href="#manage" role="button"
 												active-link style="padding-left: 0;" aria-expanded="false"
 												aria-controls="manager">
