@@ -81,20 +81,27 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
 
   //tính tổng giá tiền khi click button +
   $scope.incrementQuantity = function (product) {
-    if(product.product.soldQuantity <= product.quantity){
-      Swal.fire({
-        position: "top",
-        icon: "warning",
-        text: "Số lượng trong cửa hàng không đủ!",
-        showConfirmButton: false,
-        timer: 1800,
+    var totalQuantity = product.quantity + 1;
+    $http.get(url + "/checkQuantity/" + product.product.productId + "/" + product.color + "/" + totalQuantity)
+      .then(function (response) {
+        if(response.data == false){
+          Swal.fire({
+            position: "top",
+            icon: "warning",
+            text: "Số lượng trong cửa hàng không đủ!",
+            showConfirmButton: false,
+            timer: 1800,
+          });
+        }else{
+            product.quantity++;
+            $scope.recalculatePrice(product);
+            //tăng số lượng trong giỏ hàng
+            $scope.addQuantity(product, 1);
+        }
+      })
+      .catch(function (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
       });
-    }else{
-        product.quantity++;
-        $scope.recalculatePrice(product);
-        //tăng số lượng trong giỏ hàng
-        $scope.addQuantity(product, 1);
-    }
   };
 
   //tính tổng giá tiền khi click button -
