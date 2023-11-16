@@ -81,10 +81,20 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
 
   //tính tổng giá tiền khi click button +
   $scope.incrementQuantity = function (product) {
-    product.quantity++;
-    $scope.recalculatePrice(product);
-    //tăng số lượng trong giỏ hàng
-    $scope.addQuantity(product, 1);
+    if(product.product.soldQuantity <= product.quantity){
+      Swal.fire({
+        position: "top",
+        icon: "warning",
+        text: "Số lượng trong cửa hàng không đủ!",
+        showConfirmButton: false,
+        timer: 1800,
+      });
+    }else{
+        product.quantity++;
+        $scope.recalculatePrice(product);
+        //tăng số lượng trong giỏ hàng
+        $scope.addQuantity(product, 1);
+    }
   };
 
   //tính tổng giá tiền khi click button -
@@ -146,7 +156,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
         transformRequest: angular.identity,
         headers: { "Content-Type": undefined },
       })
-      .then(function (res) {
+      .then(function (response) {
         // Xử lý phản hồi từ máy chủ
       });
   };
@@ -166,7 +176,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
 
   function checked() {
     isChecked = !isChecked;
-    $('input[type="checkbox"]').prop("checked", isChecked);
+    $('input[type="checkbox"]:not(:disabled)').prop("checked", isChecked);
     updateCountChecked();
   }
 
@@ -852,6 +862,10 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     $scope.checkPay = status;
   }
 
+  $scope.clickStatusPay = function(status){
+      $scope.checkPay = status;
+  }
+
   $scope.paymentVNPay = function (pay) {
     var element = document.getElementById("vnpay");
     var totalFeePay = document.getElementById("totalFeePay");
@@ -916,6 +930,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
         //Ẩn modal đặt hàng
         $("#exampleModal").modal("hide");
         $location.path('/order/' + $rootScope.myAccount.user.userId);
+        $rootScope.checkOrderPage = 2;
       })
         .catch(function (error) {
           console.error("Error:", error);
@@ -928,6 +943,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
       $window.location.reload();
     }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
   };
+
   function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 

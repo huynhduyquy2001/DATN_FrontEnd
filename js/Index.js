@@ -120,7 +120,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.key = "";
 	$rootScope.keyS = "";
 
-	//
+	//Phân trang order
+	$rootScope.checkOrderPage = 1;
 
 	//Phân trang myStore
 	$rootScope.currentPageMyStore = 0;
@@ -427,6 +428,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		.catch(function (error) {
 			console.log(error);
 		});
+
 	//Load tất cả thông báo
 	$http.get(loadallnotification)
 		.then(function (response) {
@@ -435,6 +437,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 		.catch(function (error) {
 			console.log(error);
 		});
+
 	//Kết nối websocket
 	$scope.ConnectNotification = function () {
 		var socket = new SockJS(url + '/private-notification');
@@ -545,8 +548,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	}
 
 	//Xem chi tiết thông báo
-	$scope.getNotificationDetail = function (postId, productId) {
-		if (postId != null && productId == null) {
+	$scope.getNotificationDetail = function (postId) {
+		if (postId != null ) {
 			$http.get(url + '/findpostcomments/' + postId)
 				.then(function (response) {
 					var postComments = response.data;
@@ -568,7 +571,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 					console.log(error);
 				});
 		} else {
-			$location.path('/productdetails/' + productId);
+			$location.path('/ValidationOrder');
 		}
 	}
 	//Xóa thông báo

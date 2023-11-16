@@ -259,6 +259,8 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 
 		}
 	}
-	checkScreenWidth();
+	setTimeout(function () {
+		checkScreenWidth();
+	  }, 100);
 
 })

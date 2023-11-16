@@ -379,5 +379,7 @@ app.controller('productsViolationCtrl', function ($scope, $http, $translate, $ro
 
 		}
 	}
-	checkScreenWidth();
+	setTimeout(function () {
+		checkScreenWidth();
+	  }, 100);
 })

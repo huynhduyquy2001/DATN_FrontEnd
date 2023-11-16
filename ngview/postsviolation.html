@@ -1,4 +1,4 @@
-<div ng-controller="PostsViolationController">
+<div>
   <div class="row">
     <div class="card-title fw-semibold mb-2">
       <nav class="navbar navbar-expand-lg navbar-light">
@@ -16,14 +16,14 @@
         </ul>
           <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
             <!-- Nút chuyển đến trang trước -->
-            <a class="me-2" ng-click="prevPage()"> <i
+            <a style="cursor: pointer;" class="me-2" ng-click="prevPage()"> <i
                 class="fa-solid fa-chevron-left fa-xs"></i>
             </a>
             <!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
             <small class="me-2">{{currentPage + 1}} /
               {{totalPages}}</small>
             <!-- Nút chuyển đến trang kế tiếp -->
-            <a class="me-3" ng-click="nextPage()"> <i
+            <a style="cursor: pointer;" class="me-3" ng-click="nextPage()"> <i
                 class="fa-solid fa-chevron-right fa-xs"></i>
             </a>
 

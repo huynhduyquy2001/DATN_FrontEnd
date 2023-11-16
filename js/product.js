@@ -468,5 +468,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
 
         }
     }
-    checkScreenWidth();
+    setTimeout(function () {
+        checkScreenWidth();
+      }, 100);
 });

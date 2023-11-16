@@ -63,6 +63,7 @@ app.controller(
           console.log(error);
         });
       $rootScope.checkMystore = 1;
+      
     };
 
     $scope.pagePending = function (currentPagePending) {
@@ -77,14 +78,12 @@ app.controller(
         .then(function (res) {
           $scope.listProductPending = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
           $scope.totalPagePending = res.data.totalPages; // Lấy tổng số trang từ phản hồi
-
         })
         .catch(function (error) {
           console.log(error);
         });
       $rootScope.checkMystore = 2;
     };
-
 
 
     //Tìm kiếm
@@ -190,6 +189,9 @@ app.controller(
       }
 
     }
+
+    
+
 
     //Xóa sản phẩm
     $scope.hideProductMyStore = function (productId) {

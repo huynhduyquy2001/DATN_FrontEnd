@@ -298,5 +298,7 @@ app.controller('PvmCtrl', function ($scope, $http, $translate, $rootScope, $loca
 
 		}
 	}
-	checkScreenWidth();
+	setTimeout(function () {
+		checkScreenWidth();
+	  }, 100);
 });
