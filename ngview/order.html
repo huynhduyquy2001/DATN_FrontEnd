@@ -32,22 +32,34 @@
         <!-- Nav pill -->
         <ul class="nav nav-pills justify-content-center align-items-center">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="pill" href="#tab-tat-ca">Tất cả</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-tat-ca"
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 1 }" ng-click="currentOrderPage(1)">Tất
+                    cả</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-xet-duyet">Chờ xác nhận</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-xet-duyet"
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 2 }" ng-click="currentOrderPage(2)">Chờ
+                    xác nhận</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-giao-hang">Chờ giao hàng</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-giao-hang"
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 3 }" ng-click="currentOrderPage(3)">Chờ
+                    giao hàng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-giao" id="giao-hang">Đã giao</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-giao" id="giao-hang"
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 4 }" ng-click="currentOrderPage(4)">Đã
+                    giao</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-huy" id="huy-hang">Đã hủy</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-da-huy" id="huy-hang"
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 5 }" ng-click="currentOrderPage(5)">Đã
+                    hủy</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#tab-tra-hang">Trả hàng</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab-tra-hang"
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 6 }" ng-click="currentOrderPage(6)">Trả
+                    hàng</a>
             </li>
         </ul>
     </header>
@@ -55,9 +67,9 @@
     <main>
         <!-- Danh sách mua hàng -->
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tab-tat-ca">
+            <div class="tab-pane fade" id="tab-tat-ca" ng-class="{'active show': checkOrderPage === 1 }">
                 <!--Bự nhứt nè-->
-                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders ">
                     <div>
                         <div class="col">
                             <div class="mb-0 card">
@@ -166,7 +178,7 @@
                     </div>
                 </div>
                 <!--Responsive Dưới 776px-->
-                <div class="d-sm-block d-md-none d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
+                <div class="d-sm-block d-md-none d-none mt-4" ng-repeat="(userId, groupedOrders) in orders ">
                     <div class="col">
                         <div class="mb-0 card">
                             <div class="card-header d-flex align-items-center justify-content-between">
@@ -322,7 +334,7 @@
                 </div>
 
             </div>
-            <div class="tab-pane fade" id="tab-cho-xet-duyet">
+            <div class="tab-pane fade" id="tab-cho-xet-duyet" ng-class="{'active show': checkOrderPage === 2 }">
                 <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
                         <div class="mb-0 card">
@@ -543,7 +555,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-cho-giao-hang">
+            <div class="tab-pane fade" id="tab-cho-giao-hang" ng-class="{'active show': checkOrderPage === 3 }">
                 <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 3">
                         <div class="mb-0 card">
@@ -772,7 +784,7 @@
 
 
             </div>
-            <div class="tab-pane fade" id="tab-da-giao">
+            <div class="tab-pane fade" id="tab-da-giao" ng-class="{'active show': checkOrderPage === 4 }">
                 <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 4">
                         <div class="mb-0 card">
@@ -1017,7 +1029,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-da-huy">
+            <div class="tab-pane fade" id="tab-da-huy" ng-class="{'active show': checkOrderPage === 5 }">
 
                 <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 6">
@@ -1263,7 +1275,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-tra-hang">
+            <div class="tab-pane fade" id="tab-tra-hang" ng-class="{'active show': checkOrderPage === 6 }">
                 <div class="d-md-block d-none mt-4" ng-repeat="(userId, groupedOrders) in orders">
                     <div class="col" ng-if="groupedOrders[0][0].orderStatus.statusId === 5">
                         <div class="mb-0 card">

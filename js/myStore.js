@@ -10,8 +10,7 @@ app.controller(
     $scope.listWard = [];
     $scope.totalPages = 0;
     $scope.totalPagePending = 0;
-    $scope.ticketCount = 0;
-    $scope.soLuot = 1;
+
     //Biến check xem có phải cửa hàng của mình không
     $scope.userId = $routeParams.userId;
     //Biến lưu trạng thái lọc
@@ -106,6 +105,91 @@ app.controller(
           });
       }
     };
+    //Tìm kiếm bằng giọng nói 
+    $scope.searchProductMic = function () {
+      //Tìm kiếm bằng giọng nói 
+      const searchInput = document.querySelector('#text-srh');
+      // Tro ly ao
+      var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+
+      const recognition = new SpeechRecognition();
+      const synth = window.speechSynthesis;
+      recognition.lang = 'vi-VI';
+      recognition.continuous = false;
+
+      const microphone = document.querySelector('.microphone');
+
+      const speak = (text) => {
+        if (synth.speaking) {
+          console.error('Busy. Speaking...');
+          return;
+        }
+
+        const utter = new SpeechSynthesisUtterance(text);
+
+        utter.onend = () => {
+          console.log('SpeechSynthesisUtterance.onend');
+        }
+        utter.onerror = (err) => {
+          console.error('SpeechSynthesisUtterance.onerror', err);
+        }
+
+        synth.speak(utter);
+      };
+
+      const handleVoice = (text) => {
+        console.log('text', text);
+        const handledText = text.toLowerCase();
+
+        const location = handledText[1];
+
+        console.log('location', location);
+        searchInput.value = handledText;
+        var search = handledText;
+        console.log(search)
+        if (handledText === "") {
+          $scope.listProductMyStore = originalList;
+          return;
+        } else {
+          $http
+            .get(
+              url + "/searchProductMyStore/" + $routeParams.userId + "/" + search
+            )
+            .then(function (response) {
+              $scope.listProductMyStore = response.data.content;
+              $scope.totalPages = response.data.totalPages;
+            });
+        }
+        return;
+
+
+        speak('Try again');
+      }
+
+      microphone.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        recognition.start();
+        microphone.classList.add('recording');
+      });
+
+      recognition.onspeechend = () => {
+        recognition.stop();
+        microphone.classList.remove('recording');
+      }
+
+      recognition.onerror = (err) => {
+        console.error(err);
+        microphone.classList.remove('recording');
+      }
+
+      recognition.onresult = (e) => {
+        console.log('onresult', e);
+        const text = e.results[0][0].transcript;
+        handleVoice(text);
+      }
+
+    }
 
     //Xóa sản phẩm
     $scope.hideProductMyStore = function (productId) {
@@ -354,44 +438,6 @@ app.controller(
       }, delayInSeconds * 1000); // Chuyển đổi giây thành mili giây
     };
 
-
-    $http.get(url + '/getUserTicketCount')
-      .then(function (response) {
-        $scope.ticketCount = response.data;
-      })
-      .catch(function (error) {
-        console.error('Lỗi lấy số lượt đăng bài:', error);
-      });
-
-
-    $scope.buyTicket = function () {
-      // Lấy giá trị số lượt từ input
-
-      var numberOfTickets = $scope.soLuot;
-
-      // Tính toán totalAmount
-      var totalAmount = numberOfTickets * 10000;
-      var numericValue = parseInt(totalAmount);
-
-      $http.post(url + "/create_payment_ticket/" + numberOfTickets + "/" + numericValue)
-        .then(function (response) {
-          // Lấy URL từ response data
-          var newPageUrl = response.data.url;
-
-          // Mở trang mới với URL nhận được
-          window.location.href = newPageUrl;
-        }).catch(function (error) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: 'Vui lòng nhập số lượng lớn hơn 0.'
-          });
-          return;
-
-        });
-
-    };
-
     //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
     $scope.tabsReport = function () {
 
@@ -405,20 +451,24 @@ app.controller(
       var Url = "http://localhost:8080/personalStatisticsCoutOrder";
       var Url2 = "http://localhost:8080/personalStatisticsSumTotalAmout";
       var Url3 = "http://localhost:8080/personalStatisticsCoutOrderStatus";
-      var Url4 = "http://localhost:8080/productbestSelling";
+      var productbestSelling = "http://localhost:8080/productbestSelling/";
+      var getyear = "http://localhost:8080/getyear";
+      var gettotalamout = "http://localhost:8080/totalamount/";
+      var getcoutorder = "http://localhost:8080/getcoutorder/";
+      var getcoutcanceldrder = "http://localhost:8080/getcoutcancelorder/"
       var categories2 = [];
       var data2 = [];
 
       //biểu đồ 1 
       $http.get(Url2).then(function (response) {
         $scope.sumorderperonal = response.data;
-        console.log("Load dữ liệu1" + $scope.sumorderperonal);
+        // console.log("Load dữ liệu1" + $scope.sumorderperonal);
         $scope.sumorderperonal.forEach(function (item) {
           categories2.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
           data2.push(parseInt(item[1]));
         });
 
-        console.log("Data2: " + JSON.stringify(data2));
+        // console.log("Data2: " + JSON.stringify(data2));
         Highcharts.chart('container', option);
 
       }).catch(function (error) {
@@ -510,13 +560,13 @@ app.controller(
       $http.get(Url)
         .then(function (response) {
           $scope.countorderperonal = response.data;
-          console.log("Load dữ liệu" + $scope.countorderperonal);
+          // console.log("Load dữ liệu" + $scope.countorderperonal);
           // Tạo mảng categories và data từ dữ liệu
           $scope.countorderperonal.forEach(function (item) {
             categories.push("Tháng " + (item[0])); // Cộng thêm 1 vào giá trị tháng
             data.push(parseInt(item[1]));
           });
-          console.log("Data: " + JSON.stringify(data));
+          // console.log("Data: " + JSON.stringify(data));
           Highcharts.chart('container', option);
         })
         .catch(function (error) {
@@ -531,12 +581,11 @@ app.controller(
       var data3 = [];
       $http.get(Url3).then(function (response) {
         $scope.Orderstatus = response.data;
-        console.log("Load dữ liệu3" + $scope.Orderstatus);
+        // console.log("Load dữ liệu3" + $scope.Orderstatus);
         $scope.Orderstatus.forEach(function (item) {
           nameOrderStatus.push((item[0]));
           data3.push((item[1]));
         });
-        console.log("Data3: " + JSON.stringify(data3));
         // Highcharts.chart('container', option);
         var names = nameOrderStatus;
         var values = data3;
@@ -595,14 +644,114 @@ app.controller(
         console.error("Lỗi: " + error);
       });
 
-      //bestselling Product
-      $http.get(Url4).then(function (response) {
-        $scope.bestselling = response.data;
-        console.log("bestselling" + $scope.bestselling);
+
+
+
+      $scope.selectedYear = "";
+      $scope.getyear = [];
+
+      $http.get(getyear).then(function (resp) {
+        $scope.getyear = resp.data;
       }).catch(function (error) {
         console.error("Lỗi: " + error);
       });
+      $scope.currentYear = new Date().getFullYear();
+      var selectedYearInt1 = parseInt($scope.currentYear);
+      //Tổng tiền
+      $http.get(gettotalamout + selectedYearInt1).then(function (resp) {
+        $scope.gettotalamout = resp.data;
+        if ($scope.gettotalamout === "") {
+          $scope.gettotalamout = "0";
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+      //Sô đơn hàng đã giao
+      $http.get(getcoutorder + selectedYearInt1).then(function (resp) {
+        if (resp.data.length === 0) {
+          $scope.getcoutorder = "0"; // Gán giá trị mặc định khi mảng rỗng
+        } else {
+          $scope.getcoutorder = resp.data;
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+      //bestselling Product
+      $http.get(productbestSelling + selectedYearInt1).then(function (resp) {
+        $scope.productbestSelling = resp.data;
+        if ($scope.productbestSelling === "") {
+          $scope.productbestSelling = "0";
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+      //Lấy số đơn hàng đã hủy 
+      $http.get(getcoutcanceldrder + selectedYearInt1).then(function (resp) {
+        if (resp.data.length === 0) {
+          $scope.getcoutcanceldrder = "0"; // Gán giá trị mặc định khi mảng rỗng
+        } else {
+          $scope.getcoutcanceldrder = resp.data;
+        }
+      }).catch(function (error) {
+        console.error("Lỗi: " + error);
+      });
+
+
+
+      $scope.useSelectedYear = function () {
+        console.log("Giá trị đã chọn: " + $scope.selectedYear);
+        // Bạn có thể thực hiện các tác vụ khác dựa trên giá trị đã chọn ở đây 
+        var selectedYearInt = parseInt($scope.selectedYear);
+
+        if (!isNaN(selectedYearInt)) {
+          console.log("Giá trị đã chọn (kiểu int): " + selectedYearInt);
+          // Sử dụng selectedYearInt trong yêu cầu $http.get
+          $http.get(gettotalamout + selectedYearInt).then(function (resp) {
+            $scope.gettotalamout = resp.data;
+            if ($scope.gettotalamout === "") {
+              $scope.gettotalamout = "0";
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+          //Sô đơn hàng đã giao
+          $http.get(getcoutorder + selectedYearInt).then(function (resp) {
+            if (resp.data.length === 0) {
+              $scope.getcoutorder = "0"; // Gán giá trị mặc định khi mảng rỗng
+            } else {
+              $scope.getcoutorder = resp.data;
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+          //Lấy số đơn hàng đã hủy 
+          $http.get(getcoutcanceldrder + selectedYearInt).then(function (resp) {
+            if (resp.data.length === 0) {
+              $scope.getcoutcanceldrder = "0"; // Gán giá trị mặc định khi mảng rỗng
+            } else {
+              $scope.getcoutcanceldrder = resp.data;
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+          //bestselling Product
+          $http.get(productbestSelling + selectedYearInt).then(function (resp) {
+            $scope.productbestSelling = resp.data;
+            if ($scope.productbestSelling === "") {
+              $scope.productbestSelling = "0";
+            }
+          }).catch(function (error) {
+            console.error("Lỗi: " + error);
+          });
+
+        }
+        else {
+          console.error("Lựa chọn không hợp lệ. Vui lòng chọn một năm hợp lệ.");
+        }
+      };
     }
+
+
     //Load từ đầu
     if ($rootScope.checkMystore === 1) {
       $scope.page($rootScope.currentPageMyStore);
@@ -612,3 +761,4 @@ app.controller(
       $scope.tabsReport();
     }
   });
+
