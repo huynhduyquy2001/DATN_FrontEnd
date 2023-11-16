@@ -81,10 +81,20 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
 
   //tính tổng giá tiền khi click button +
   $scope.incrementQuantity = function (product) {
-    product.quantity++;
-    $scope.recalculatePrice(product);
-    //tăng số lượng trong giỏ hàng
-    $scope.addQuantity(product, 1);
+    if(product.product.soldQuantity <= product.quantity){
+      Swal.fire({
+        position: "top",
+        icon: "warning",
+        text: "Số lượng trong cửa hàng không đủ!",
+        showConfirmButton: false,
+        timer: 1800,
+      });
+    }else{
+        product.quantity++;
+        $scope.recalculatePrice(product);
+        //tăng số lượng trong giỏ hàng
+        $scope.addQuantity(product, 1);
+    }
   };
 
   //tính tổng giá tiền khi click button -
@@ -146,7 +156,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
         transformRequest: angular.identity,
         headers: { "Content-Type": undefined },
       })
-      .then(function (res) {
+      .then(function (response) {
         // Xử lý phản hồi từ máy chủ
       });
   };

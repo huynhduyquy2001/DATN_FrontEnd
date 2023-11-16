@@ -6,9 +6,52 @@ app.controller(
     $scope.numberReport = [];
     $scope.listCountAcc = [];
     $scope.topPostsLikes = [];
+    $scope.topTicket = {};
+    $scope.ticketByMonth = {};
+    $scope.ticketCountByMonth = {};
     $scope.totalPosts = [];
+    $scope.ticketCountUser = {};
     $scope.posts = {};
+    $scope.currentMonth = new Date().getMonth() + 1;
+    
     var url = "http://localhost:8080"
+    
+    $http
+      .get(url + "/admin/reportCountTicketUser")
+      .then(function (response) {
+        $scope.ticketCountUser = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    $http
+      .get(url + "/admin/reportTotalTicket")
+      .then(function (response) {
+        $scope.ticketByMonth = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    $http
+      .get(url + "/admin/reportCountTicket")
+      .then(function (response) {
+        $scope.ticketCountByMonth = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    $http
+      .get(url + "/admin/reportTicket")
+      .then(function (response) {
+        $scope.topTicket = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     $http
       .get(url + "/admin/reportListYear")
       .then(function (response) {
@@ -274,56 +317,6 @@ app.controller(
     chart2 = new ApexCharts(document.querySelector("#breakup"), breakup);
     chart2.render();
 
-    //Biểu đồ 3
-    var chart3;
-    var earning = {
-      chart: {
-        id: "sparkline3",
-        type: "area",
-        height: 180,
-        sparkline: {
-          enabled: true,
-        },
-        group: "sparklines",
-        fontFamily: "Plus Jakarta Sans', sans-serif",
-        foreColor: "#adb0bb",
-      },
-      series: [
-        {
-          name: "Số lượng",
-          color: "#49BEFF",
-          data: [],
-        },
-      ],
-      stroke: {
-        curve: "smooth",
-        width: 3,
-      },
-      fill: {
-        colors: ["#f3feff"],
-        type: "solid",
-        opacity: 0.05,
-      },
-      markers: {
-        size: 4,
-      },
-      tooltip: {
-        theme: "dark",
-        fixed: {
-          enabled: true,
-          position: "right",
-        },
-        x: {
-          show: true,
-        },
-      },
-      xaxis: {
-        categories: [],
-      },
-    };
-    chart3 = new ApexCharts(document.querySelector("#earning"), earning);
-    chart3.render();
-
     Promise.all([ViolationsPosts, NumberReport, age, age2, age3, listAcc]).then(
       function () {
         //Biểu đồ 1
@@ -349,16 +342,59 @@ app.controller(
         for (var i = 0; i < $scope.listCountAcc.length; i++) {
           day.push($scope.listCountAcc[i].day);
         }
-        chart3.updateOptions({
-          xaxis: {
-            categories: day,
-          },
-          series: [
-            {
-              data: acc,
-            },
-          ],
-        });
+        
+        //Biểu đồ 3
+    var chart3;
+    var earning = {
+      chart: {
+        id: "sparkline3",
+        type: "area",
+        height: 180,
+        sparkline: {
+          enabled: true,
+        },
+        group: "sparklines",
+        fontFamily: "Plus Jakarta Sans', sans-serif",
+        foreColor: "#adb0bb",
+      },
+      series: [
+        {
+          name: "Số lượng",
+          color: "#49BEFF",
+          data: acc,
+        },
+      ],
+      stroke: {
+        curve: "smooth",
+        width: 4,
+      },
+      fill: {
+        colors: ["#f3feff"],
+        type: "solid",
+        opacity: 0.05,
+      },
+      markers: {
+        size: 4,
+      },
+      tooltip: {
+        theme: "dark",
+        fixed: {
+          enabled: true,
+          position: "right",
+        },
+        x: {
+          show: true,
+        },
+      },
+      xaxis: {
+        categories: day,
+      },
+    };
+
+    
+    chart3 = new ApexCharts(document.querySelector("#earning"), earning);
+    chart3.render();
+        
       }
     );
   
@@ -387,5 +423,6 @@ app.controller(
     };
 
     //
+    
   }
 );
