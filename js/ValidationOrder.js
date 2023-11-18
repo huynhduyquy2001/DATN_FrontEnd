@@ -1,25 +1,65 @@
 app.controller('ValidationOrderController', function ($scope, $http, $translate, $rootScope, $location) {
 	var Url = "http://localhost:8080/pending-confirmation";
 	var Url2 = "http://localhost:8080/approveorders/";
-	var orderwaitforconfirmation = {};
+	$scope.sumPrice = 0;
+	// Hiện những đơn hàng cần duyệt 
 	$http.get(Url)
 		.then(function (response) {
-			orderwaitforconfirmation = response.data;
-			$scope.orderwaitforconfirmation = orderwaitforconfirmation;
-			console.log("Load dữ liệu" + orderwaitforconfirmation);
+			// Dữ liệu trả về từ API sẽ nằm trong response.data
+			console.log(response.data);
+			var grouped = {};
+			angular.forEach(response.data, function (order) {
+				if (order && order[0] && order[0].orderDate && order[3] && order[3].userId && order[0].orderStatus.statusId) {
+					var userId = order[3].userId;
+					var orderDate = order[0].orderDate;
+					var statusId = order[0].orderStatus.statusId;
+					var key = userId + '-' + orderDate + '-' + statusId;
+
+					if (!grouped[key]) {
+						grouped[key] = [];
+					}
+					grouped[key].push(order);
+
+				}
+			});
+			$scope.orders = grouped;
+			console.log($scope.orders);
 		})
 		.catch(function (error) {
-			console.error("Lỗi: " + error.data);
+			console.log(error);
 		});
+
+
+	//Duyệt đơn hàng
 	$scope.addapproveorders = function (orderID) {
 		$http.post(Url2 + orderID)
 			.then(function (resp) {
 				$http.get(Url)
 					.then(function (response) {
-						orderwaitforconfirmation = response.data;
-						$scope.orderwaitforconfirmation = orderwaitforconfirmation;
-						console.log("Load dữ liệu" + orderwaitforconfirmation);
+						// Dữ liệu trả về từ API sẽ nằm trong response.data
+						console.log(response)
+						var grouped = {};
+						angular.forEach(response.data, function (order) {
+							if (order && order[0] && order[0].orderDate && order[3] && order[3].userId && order[0].orderStatus.statusId) {
+								var userId = order[3].userId;
+								var orderDate = order[0].orderDate;
+								var statusId = order[0].orderStatus.statusId;
+								var key = userId + '-' + orderDate + '-' + statusId;
+
+								if (!grouped[key]) {
+									grouped[key] = [];
+								}
+
+								grouped[key].push(order);
+							}
+						});
+						$scope.orders = grouped;
+						console.log($scope.orders);
+
 					})
+					.catch(function (error) {
+						console.log(error);
+					});
 			}).catch(function (error) {
 				console.error("Lỗi: " + error.data);
 			});

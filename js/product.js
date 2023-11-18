@@ -4,7 +4,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
     $scope.colors = [];
     $scope.selectedColors = [];
     $scope.productId = "";
-
+    $scope.addAndUpdate = 1;
     $scope.deleteMedia = function (mediaId) {
         Swal.fire({
             text: 'Bạn muốn xóa ảnh khỏi sản phẩm? Dữ liệu sẽ không được phục hồi',
@@ -53,6 +53,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
         });
     };
     if ($routeParams.productId) {
+        $scope.addAndUpdate = 2;
         $http.get(Url + '/get-product/' + $routeParams.productId)
             .then(function (response) {
                 $scope.product = response.data;
@@ -470,5 +471,5 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
     }
     setTimeout(function () {
         checkScreenWidth();
-      }, 100);
+    }, 100);
 });

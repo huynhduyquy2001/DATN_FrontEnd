@@ -128,6 +128,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.currentPagePending = 0;
 	$rootScope.currentPageFilter = 0;
 	$rootScope.checkMystore = 1;
+	//trang sản phẩm iu thích
+	$rootScope.currentPagefavoriteProducts = 0;
 	//nhắn tin
 	$rootScope.userMess = {};
 	$rootScope.ListMess = [];
@@ -549,7 +551,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Xem chi tiết thông báo
 	$scope.getNotificationDetail = function (postId) {
-		if (postId != null ) {
+		if (postId != null) {
 			$http.get(url + '/findpostcomments/' + postId)
 				.then(function (response) {
 					var postComments = response.data;

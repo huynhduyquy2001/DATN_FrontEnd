@@ -18,16 +18,282 @@
                 <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <h4>Danh sách tất cả đơn hàng</h4>
                     <!--Bự nhứt nè-->
-                    <div class="history d-md-block d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 1">
+                    <div class="history d-md-block d-none" ng-repeat="(userId, groupedOrders) in orders">
+                        <div class="col mt-3" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
                                     <div class="d-flex"> <span
-                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}
-
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][0].customer.username}}
                                         </span>
                                         <span id="button-top">
-                                            <a href="#!/message/{{o[0].customer.userId}}">
+                                            <a href="#!/message/{{groupedOrders[0][0].customer.userId}}">
+                                                <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                        <span class="res-text"> Nhắn
+                                                            tin</span></button></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <span id="statusName" class="text-end">Ngày mua
+                                        {{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3"
+                                    ng-repeat="o in groupedOrders">
+                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
+                                        <a href="#!/productdetails/{{o[2].productId}}"><img class="img-thumbnail"
+                                                ng-src="{{o[2].media[0].mediaUrl}}"></a>
+                                    </div>
+                                    <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title fw-bold fs-5">{{o[2].productName}}</p>
+
+                                        <span class="card-text">Màu:
+                                            {{o[1].color}}</span>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="card-text">Đơn giá: {{o[1].originalPrice | currencyFormat}}
+                                            </div>
+                                            <span class="card-text">Số lượng: {{o[1].quantity}}</span>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <i class="fa-regular fa-hand-holding-dollar fa-2xl"
+                                                    style="margin-right: 1vh; color: #393e41;"></i>
+                                                <span class="fs-5">Thành tiền: &nbsp;</span>
+                                                <h5 class="mb-0 text-danger">{{((o[2].originalPrice * o[1].quantity) +
+                                                    o[0].shippingFee) |
+                                                    currencyFormat}}
+
+                                                </h5>
+
+                                            </div>
+                                            <div class="card-text" style="font-size: small;">Phí ship:
+                                                {{o[0].shippingFee |
+                                                currencyFormat}}
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-2">
+                                                    <a href="#!/productdetails/{{o[2].productId}}">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                                            style="outline-color: #ff3f40;">
+                                                            <i class="fa-sharp fa-regular fa-store ic"></i>
+                                                            <span class="res-text">Xem các đánh giá</span></button></a>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="mt-3 d-flex justify-content-end m-3">
+                                    <span class="me-6">
+                                        <span class="fs-5">Tổng tiền: &nbsp;</span>
+                                        <h5 class="mb-0 text-danger">{{ groupedOrders[0][0].totalAmount
+                                            | currencyFormat}}
+
+                                    </span>
+                                    <span class="me-4 ms-3">
+                                        <button type="button" class="btn btn-danger btn-sm mb-3"
+                                            ng-click="addapproveorders(groupedOrders[0][0].orderId)"
+                                            style="background-color: #ff3f40;">
+                                            <i class="fa-sharp fa-solid fa-check"></i> <span class="res-text">Xác
+                                                nhận</span></button>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <!--Responsive Dưới 776px-->
+                    <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                        <div class="col mt-3" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
+                            <div class="mb-0 card">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex">
+                                        <span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][0].customer.username}}</span>
+                                        <span id="button-top">
+                                            <a href="#!/message/{{groupedOrders[0][0].customer.userId}}">
+                                                <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                    </button></span></a>
+
+                                        </span>
+                                    </div>
+
+                                    <span id="statusName" class="text-end">Ngày mua
+                                        {{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3"
+                                    ng-repeat="o in groupedOrders">
+                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
+                                        <a href="#!/productdetails/{{o[2].productId}}">
+                                            <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
+                                    </div>
+                                    <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title fw-bold">{{o[2].productName}}</p>
+                                        <!-- <p class="card-text">{{groupedOrders[0][0].customer.username}}</p> -->
+                                        <span class="card-text">Màu:
+                                            {{o[1].color}}</span>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="card-text">Đơn giá: {{o[1].originalPrice | currencyFormat}}
+                                            </div>
+                                            <span class="card-text">Số lượng: {{o[1].quantity}}</span>
+                                        </div>
+                                        <div class="card-text">Phí ship: {{o[0].shippingFee | currencyFormat}}</div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <h5 class="mb-0 text-danger fs-6">{{(o[2].originalPrice * o[1].quantity)
+                                                    + o[0].shippingFee |
+                                                    currencyFormat}}
+
+                                                </h5>
+                                            </div>
+                                            <div class="mt-3">
+                                                <span class="me-6">
+                                                    <a href="#!/productdetails/{{o[2].productId}}">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                                            style="outline-color: #ff3f40;">
+                                                            <i class="fa-sharp fa-solid fa-star"></i></button></a>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="mt-3 d-flex justify-content-end m-3">
+                                    <span class="me-6">
+                                        <span class="fs-6">Tổng tiền: &nbsp;</span>
+                                        <h5 class="mb-0 text-danger fs-5">{{ groupedOrders[0][0].totalAmount
+                                            | currencyFormat}}
+
+                                    </span>
+                                    <span class="ms-3">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            ng-click="addapproveorders(groupedOrders[0][0].orderId)"
+                                            style="background-color: #ff3f40;">
+                                            <i class="fa-sharp fa-solid fa-check"></i></button>
+                                    </span>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Dưới nữa nè-->
+                    <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                        <div class="col mt-3" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
+                            <div class="mb-0 card">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex">
+                                        <span id="shopname"
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][0].customer.username}}</span>
+
+                                        <span id="button-top">
+                                            <a href="#!/message/{{groupedOrders[0][0].customer.userId}}">
+                                                <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
+                                                        type="button" style="background-color: #ff3f40;"> <i
+                                                            class="fa-regular fa-message fa-xs ic"></i>
+                                                    </button></span></a>
+                                        </span>
+                                    </div>
+
+                                    <span id="statusName" class="text-end">
+                                        {{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center p-3"
+                                    ng-repeat="o in groupedOrders">
+                                    <div class="col-2 col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
+                                        <a href="#!/productdetails/{{o[2].productId}}">
+                                            <img class="img-thumbnail" ng-src="{{o[2].media[0].mediaUrl}}"></a>
+                                    </div>
+                                    <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
+                                        <p class="card-title" style="font-size: small;">{{o[2].productName}}</p>
+                                        <div class="card-text" style="font-size: x-small;">Đơn giá: {{o[1].originalPrice
+                                            | currencyFormat}}
+                                        </div>
+                                        <div class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}
+                                        </div>
+                                        <div class="card-text" style="font-size: x-small;">Màu:
+                                            {{o[1].color}}</div>
+                                        <div class="card-text" style="font-size: x-small;">Phí ship:
+                                            {{o[0].shippingFee | currencyFormat}}</div>
+                                    </div>
+                                    <div class="col-5 col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
+                                        <div class="totalAmount"
+                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
+                                            <div class="d-flex">
+                                                <span class="mb-0 text-danger fs-9">{{(o[2].originalPrice *
+                                                    o[1].quantity) + o[0].shippingFee
+                                                    |
+                                                    currencyFormat}}
+                                                </span>
+                                            </div>
+
+                                            <div class="mt-3">
+                                                <span class="me-6">
+                                                    <a href="#!/productdetails/{{o[2].productId}}">
+
+                                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                                            style="outline-color: #ff3f40;">
+                                                            <i class="fa-sharp fa-solid fa-star"></i></button></a>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex justify-content-end m-3">
+                                    <span class="me-6">
+                                        <span class="fs-7">Tổng tiền: &nbsp;</span>
+                                        <div style="font-size: x-small;" class="mb-0 text-danger fs-6">{{
+                                            groupedOrders[0][0].totalAmount
+                                            | currencyFormat}}
+                                        </div>
+                                    </span>
+                                    <span class="ms-3">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            ng-click="addapproveorders(groupedOrders[0][0].orderId)"
+                                            style="background-color: #ff3f40;">
+                                            <i class="fa-sharp fa-solid fa-check"></i></button>
+                                    </span>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fede" id="tab-da-duyet" role="tabpanel" aria-labelledby="tab-da-duyet">
+                    <h4>Danh sách tất cả đơn hàng đã duyệt</h4>
+                    <!--Bự nhứt nè-->
+                    <div class="history d-md-block d-none" ng-repeat="(userId, groupedOrders) in orders">
+                        <div class="col mt-3" ng-if="groupedOrders[0][0].orderStatus.statusId === 2">
+                            <div class="mb-0 card">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <div class="d-flex"> <span
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][0].customer.username}}
+                                        </span>
+                                        <span id="button-top">
+                                            <a href="#!/message/{{groupedOrders[0][0].customer.userId}}">
                                                 <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
                                                         type="button" style="background-color: #ff3f40;"> <i
                                                             class="fa-regular fa-message fa-xs ic"></i>
@@ -39,23 +305,25 @@
                                     </div>
 
                                     <span id="statusName" class="text-end">Ngày mua
-                                        {{getFormattedTimeAgo(o[0].orderDate)}}</span>
+                                        {{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
 
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3"
+                                    ng-repeat="o in groupedOrders">
                                     <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
-                                        <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
+                                        <a href="#!/productdetails/{{o[2].productId}}"> <img class="img-thumbnail"
+                                                ng-src="{{o[2].media[0].mediaUrl}}"></a>
                                     </div>
                                     <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
-                                        <p class="card-title fw-bold fs-5">{{o[1].productName}}</p>
+                                        <p class="card-title fw-bold fs-5">{{o[2].productName}}</p>
 
                                         <span class="card-text">Màu:
-                                            {{o[1].productColors[0].color.colorName}}</span>
+                                            {{o[1].color}}</span>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="card-text">Đơn giá: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <span class="card-text">Số lượng: {{o[2].quantity}}</span>
+                                            <span class="card-text">Số lượng: {{o[1].quantity}}</span>
                                         </div>
                                         <div class="card-text">Phí ship: {{o[0].shippingFee | currencyFormat}}</div>
 
@@ -67,26 +335,16 @@
                                                 <i class="fa-regular fa-hand-holding-dollar fa-2xl"
                                                     style="margin-right: 1vh; color: #393e41;"></i>
                                                 <span class="fs-5">Thành tiền: &nbsp;</span>
-                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount | currencyFormat}}
+                                                <h5 class="mb-0 text-danger">{{(o[2].originalPrice * o[1].quantity) +
+                                                    o[0].shippingFee |
+                                                    currencyFormat}}
 
                                                 </h5>
                                             </div>
-                                            <div class="mt-3">
-                                                <span class="me-2">
-                                                    <a href="#!/productdetails/{{o[1].productId}}">
-                                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                                            style="outline-color: #ff3f40;">
-                                                            <i class="fa-sharp fa-regular fa-store ic"></i>
-                                                            <span class="res-text">Xem các đánh giá</span></button></a>
-                                                </span>
-                                                <span class="me-2">
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        ng-click="addapproveorders(o[0].orderId)"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-check"></i> <span
-                                                            class="res-text">Xác nhận</span></button>
-                                                </span>
-
+                                            <div>
+                                                <h6>
+                                                    Trạng thái: {{o[0].orderStatus.statusName}}
+                                                </h6>
                                             </div>
                                         </div>
 
@@ -97,18 +355,17 @@
                         </div>
                         <div></div>
                     </div>
-
                     <!--Responsive Dưới 776px-->
-                    <div class="history d-sm-block d-md-none d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 1">
+                    <div class="history d-sm-block d-md-none d-none" ng-repeat="(userId, groupedOrders) in orders">
+                        <div class="col mt-3" ng-if="groupedOrders[0][0].orderStatus.statusId === 2">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
 
                                     <div class="d-flex">
                                         <span id="shopname"
-                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}</span>
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][0].customer.username}}</span>
                                         <span id="button-top">
-                                            <a href="#!/message/{{o[0].customer.userId}}">
+                                            <a href="#!/message/{{groupedOrders[0][0].customer.userId}}">
                                                 <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
                                                         type="button" style="background-color: #ff3f40;"> <i
                                                             class="fa-regular fa-message fa-xs ic"></i>
@@ -118,47 +375,42 @@
                                     </div>
 
                                     <span id="statusName" class="text-end">Ngày mua
-                                        {{getFormattedTimeAgo(o[0].orderDate)}}</span>
+                                        {{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
 
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
+                                <div class="d-flex justify-content-between align-items-center gap-3 p-3"
+                                    ng-repeat="o in groupedOrders">
                                     <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
-                                        <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
+                                        <a href="#!/productdetails/{{o[2].productId}}"><img class="img-thumbnail"
+                                                ng-src="{{o[2].media[0].mediaUrl}}"></a>
                                     </div>
                                     <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
-                                        <p class="card-title fw-bold">{{o[1].productName}}</p>
-                                        <!-- <p class="card-text">{{o[0].customer.username}}</p> -->
+                                        <p class="card-title fw-bold">{{o[2].productName}}</p>
+                                        <!-- <p class="card-text">{{groupedOrders[0][0].customer.username}}</p> -->
                                         <span class="card-text">Màu:
-                                            {{o[1].productColors[0].color.colorName}}</span>
+                                            {{o[1].color}}</span>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="card-text">Đơn giá: {{o[1].originalPrice | currencyFormat}}
                                             </div>
-                                            <span class="card-text">Số lượng: {{o[2].quantity}}</span>
+                                            <span class="card-text">Số lượng: {{o[1].quantity}}</span>
                                         </div>
                                         <div class="card-text">Phí ship: {{o[0].shippingFee | currencyFormat}}</div>
                                     </div>
                                     <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
                                         <div class="totalAmount"
                                             style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
-                                            <div class="d-flex">
-                                                <h5 class="mb-0 text-danger fs-6">{{o[0].totalAmount | currencyFormat}}
+                                            <div class="d-flex justify-content-center">
+                                                <h5 class="mb-0 text-danger fs-6">{{(o[2].originalPrice * o[1].quantity)
+                                                    + o[0].shippingFee |
+                                                    currencyFormat}}
 
                                                 </h5>
                                             </div>
-                                            <div class="mt-3">
-                                                <span class="me-6">
-                                                    <a href="#!/productdetails/{{o[1].productId}}">
-                                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                                            style="outline-color: #ff3f40;">
-                                                            <i class="fa-sharp fa-solid fa-star"></i></button></a>
-                                                </span>
-                                                <span>
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        ng-click="addapproveorders(o[0].orderId)"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-check"></i></button>
-                                                </span>
+                                            <div class="fs-6">
+                                                <h6>
+                                                    Trạng thái: {{o[0].orderStatus.statusName}}
+                                                </h6>
                                             </div>
                                         </div>
 
@@ -169,17 +421,17 @@
                         </div>
                     </div>
                     <!--Dưới nữa nè-->
-                    <div class="history d-sm-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 1">
+                    <div class="history d-sm-none" ng-repeat="(userId, groupedOrders) in orders">
+                        <div class="col mt-3" ng-if="groupedOrders[0][0].orderStatus.statusId === 1">
                             <div class="mb-0 card">
                                 <div class="card-header d-flex align-items-center justify-content-between">
 
                                     <div class="d-flex">
                                         <span id="shopname"
-                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}</span>
+                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{groupedOrders[0][0].customer.username}}</span>
 
                                         <span id="button-top">
-                                            <a href="#!/message/{{o[0].customer.userId}}">
+                                            <a href="#!/message/{{groupedOrders[0][0].customer.userId}}">
                                                 <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
                                                         type="button" style="background-color: #ff3f40;"> <i
                                                             class="fa-regular fa-message fa-xs ic"></i>
@@ -188,269 +440,39 @@
                                     </div>
 
                                     <span id="statusName" class="text-end">
-                                        {{getFormattedTimeAgo(o[0].orderDate)}}</span>
+                                        {{getFormattedTimeAgo(groupedOrders[0][0].orderDate)}}</span>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center p-3">
+                                <div class="d-flex justify-content-between align-items-center p-3"
+                                    ng-repeat="o in groupedOrders">
                                     <div class="col-2 col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
-                                        <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
+                                        <a href="#!/productdetails/{{o[2].productId}}"><img class="img-thumbnail"
+                                                ng-src="{{o[2].media[0].mediaUrl}}"></a>
                                     </div>
                                     <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
-                                        <p class="card-title" style="font-size: small;">{{o[1].productName}}</p>
+                                        <p class="card-title" style="font-size: small;">{{o[2].productName}}</p>
                                         <div class="card-text" style="font-size: x-small;">Đơn giá: {{o[1].originalPrice
                                             | currencyFormat}}
                                         </div>
-                                        <div class="card-text" style="font-size: x-small;">Số lượng: {{o[2].quantity}}
+                                        <div class="card-text" style="font-size: x-small;">Số lượng: {{o[1].quantity}}
                                         </div>
                                         <div class="card-text" style="font-size: x-small;">Màu:
-                                            {{o[1].productColors[0].color.colorName}}</div>
+                                            {{o[1].color}}</div>
                                     </div>
                                     <div class="col-5 col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
                                         <div class="totalAmount"
                                             style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
-                                            <div class="d-flex">
+                                            <div class="d-flex justify-content-center">
                                                 <span class="mb-0 text-danger fs-9">{{o[0].totalAmount |
                                                     currencyFormat}}
 
                                                 </span>
                                             </div>
-                                            <div class="mt-3">
-                                                <span class="me-6">
-                                                    <a href="#!/productdetails/{{o[1].productId}}">
-
-                                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                                            style="outline-color: #ff3f40;">
-                                                            <i class="fa-sharp fa-solid fa-star"></i></button></a>
-                                                </span>
-                                                <span>
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        ng-click="addapproveorders(o[0].orderId)"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-check"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fede" id="tab-da-duyet" role="tabpanel" aria-labelledby="tab-da-duyet">
-                    <h4>Danh sách tất cả đơn hàng đã duyệt</h4>
-                    <!--Bự nhứt nè-->
-                    <div class="history d-md-block d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 2">
-                            <div class="mb-0 card">
-                                <div class="card-header d-flex align-items-center justify-content-between">
-                                    <div class="d-flex"> <span
-                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}
-
-                                        </span>
-                                        <span id="button-top">
-                                            <a href="#!/message/{{o[0].customer.userId}}">
-                                                <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
-                                                        type="button" style="background-color: #ff3f40;"> <i
-                                                            class="fa-regular fa-message fa-xs ic"></i>
-                                                        <span class="res-text"> Nhắn
-                                                            tin</span></button></span></a>
-                                        </span>
-
-                                    </div>
-
-                                    <span id="statusName" class="text-end">Ngày mua
-                                        {{getFormattedTimeAgo(o[0].orderDate)}}</span>
-
-                                </div>
-
-                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
-                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
-                                        <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
-                                    </div>
-                                    <div class="col-sm-3 col-lg-3 col-xl-3 card-body">
-                                        <p class="card-title fw-bold fs-5">{{o[1].productName}}</p>
-
-                                        <span class="card-text">Màu:
-                                            {{o[1].productColors[0].color.colorName}}</span>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="card-text">Đơn giá: {{o[1].originalPrice | currencyFormat}}
-                                            </div>
-                                            <span class="card-text">Số lượng: {{o[2].quantity}}</span>
-                                        </div>
-                                        <div class="card-text">Phí ship: {{o[0].shippingFee | currencyFormat}}</div>
-
-                                    </div>
-                                    <div class="col-sm-6 col-lg-6 col-xl-4" style="text-align: center;">
-                                        <div class="totalAmount"
-                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
-                                            <div class="d-flex">
-                                                <i class="fa-regular fa-hand-holding-dollar fa-2xl"
-                                                    style="margin-right: 1vh; color: #393e41;"></i>
-                                                <span class="fs-5">Thành tiền: &nbsp;</span>
-                                                <h5 class="mb-0 text-danger">{{o[0].totalAmount | currencyFormat}}
-
-                                                </h5>
-
-                                            </div>
-                                            <div>
+                                            <div class="fs-9">
                                                 <h6>
                                                     Trạng thái: {{o[0].orderStatus.statusName}}
                                                 </h6>
                                             </div>
-                                            <!-- <div class="mt-3">
-                                                <span class="me-2">
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-regular fa-store ic"></i>
-                                                        <span class="res-text">Xem các đánh giá</span></button>
-                                                </span>
-                                                <span class="me-2">
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        ng-click="addapproveorders(o[0].orderId)"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-check"></i> <span
-                                                            class="res-text">Xác nhận</span></button>
-                                                </span>
-
-                                            </div> -->
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!--Responsive Dưới 776px-->
-                    <div class="history d-sm-block d-md-none d-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 2">
-                            <div class="mb-0 card">
-                                <div class="card-header d-flex align-items-center justify-content-between">
-
-                                    <div class="d-flex">
-                                        <span id="shopname"
-                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}</span>
-                                        <span id="button-top">
-                                            <a href="#!/message/{{o[0].customer.userId}}">
-                                                <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
-                                                        type="button" style="background-color: #ff3f40;"> <i
-                                                            class="fa-regular fa-message fa-xs ic"></i>
-                                                    </button></span>
-                                            </a>
-                                        </span>
-                                    </div>
-
-                                    <span id="statusName" class="text-end">Ngày mua
-                                        {{getFormattedTimeAgo(o[0].orderDate)}}</span>
-
-                                </div>
-
-                                <div class="d-flex justify-content-between align-items-center gap-3 p-3">
-                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 text-center">
-                                        <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
-                                    </div>
-                                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 card-body">
-                                        <p class="card-title fw-bold">{{o[1].productName}}</p>
-                                        <span class="card-text">Màu: {{o[1].productColors[0].color.colorName}}</span>
-                                        <div>
-                                            <div class="card-text">Đơn giá: {{o[1].originalPrice | currencyFormat}}
-                                            </div>
-                                            <span class="card-text">Số lượng: {{o[2].quantity}}</span>
-                                        </div>
-                                        <div class="card-text">Phí ship: {{o[0].shippingFee | currencyFormat}}</div>
-                                    </div>
-
-                                    <div class="col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
-                                        <div class="totalAmount"
-                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
-                                            <div class="d-flex">
-                                                <h5 class="mb-0 text-danger fs-6">Thành tiền: {{o[0].totalAmount |
-                                                    currencyFormat}}
-
-                                                </h5>
-                                            </div>
-                                            <!-- <div class="mt-3">
-                                                <span class="me-6">
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-star"></i></button>
-                                                </span>
-                                                <span>
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        ng-click="addapproveorders(o[0].orderId)"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-check"></i></button>
-                                                </span>
-                                            </div> -->
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!--Dưới nữa nè-->
-                    <div class="history d-sm-none" ng-repeat="o in orderwaitforconfirmation">
-                        <div class="col mt-3" ng-if="o[0].orderStatus.statusId === 2">
-                            <div class="mb-0 card">
-                                <div class="card-header d-flex align-items-center justify-content-between">
-
-                                    <div class="d-flex">
-                                        <span id="shopname"
-                                            style="margin-left: 12px; font-weight: bold; color: #393e41;">{{o[0].customer.username}}</span>
-                                        <span id="button-top">
-                                            <a href="#!/message/{{o[0].customer.userId}}">
-                                                <span style="margin-left: 12px;"><button class="btn btn-danger btn-sm"
-                                                        type="button" style="background-color: #ff3f40;"> <i
-                                                            class="fa-regular fa-message fa-xs ic"></i>
-                                                    </button></span></a>
-                                        </span>
-                                    </div>
-
-                                    <span id="statusName" class="text-end">
-                                        {{getFormattedTimeAgo(o[0].orderDate)}}</span>
-                                </div>
-
-                                <div class="d-flex justify-content-between align-items-center p-3">
-                                    <div class="col-2 col-sm-2 col-md-3 col-lg-1 col-xl-1 text-center">
-                                        <img class="img-thumbnail" ng-src="{{o[1].media[0].mediaUrl}}">
-                                    </div>
-                                    <div class="col-4 col-sm-6 col-lg-3 col-xl-3 card-body">
-
-                                        <p class="card-title fw-bold" style="font-size: small;">{{o[1].productName}}</p>
-                                        <div class="card-text" style="font-size: x-small;">Đơn giá: {{o[1].originalPrice
-                                            | currencyFormat}}
-                                        </div>
-                                        <div class="card-text" style="font-size: x-small;">Số lượng: {{o[2].quantity}}
-                                        </div>
-                                        <div class="card-text" style="font-size: x-small;">Màu:
-                                            {{o[1].productColors[0].color.colorName}}</div>
-                                    </div>
-                                    <div class="col-5 col-sm-4 col-lg-4 col-xl-4" style="text-align: center;">
-                                        <div class="totalAmount"
-                                            style="float: right; font-size: 2vh; margin-right: 2vh; margin-top: 3vh; color: #393e41;">
-                                            <div class="d-flex">
-                                                <span class="mb-0 text-danger fs-9"> Thành tiền {{o[0].totalAmount |
-                                                    currencyFormat}}
-
-                                                </span>
-                                            </div>
-                                            <!-- <div class="mt-3">
-                                                <span class="me-6">
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        style="outline-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-star"></i></button>
-                                                </span>
-                                                <span>
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        ng-click="addapproveorders(o[0].orderId)"
-                                                        style="background-color: #ff3f40;">
-                                                        <i class="fa-sharp fa-solid fa-check"></i></button>
-                                                </span>
-                                            </div> -->
                                         </div>
 
                                     </div>
@@ -465,4 +487,23 @@
         </main>
 
     </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script>
+        // var myTab = new bootstrap.Tab(document.getElementById('home-tab'));
+        // myTab.show();
+
+        // // Bắt sự kiện click trên các tab link và hiển thị nội dung tương ứng
+        // var tabLinks = document.querySelectorAll('.nav-link');
+        // tabLinks.forEach(function (tabLink) {
+        //     tabLink.addEventListener('click', function (event) {
+        //         event.preventDefault();
+        //         var target = document.querySelector(this.getAttribute('data-bs-target'));
+        //         var tab = new bootstrap.Tab(target);
+        //         tab.show();
+        //     });
+        // });
+    </script>
 </div>

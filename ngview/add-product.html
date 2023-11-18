@@ -168,9 +168,9 @@
                     </div>
                     <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
                                      position: fixed; bottom: 0;">
-                        <button type="submit" class="btn btn-info m-1"
-                            style="color: white; background-color: #0059BF; border: none;">Thêm </button>
-                        <button ng-click="updateProduct()" class="btn btn-light m-1"
+                        <button ng-show="addAndUpdate===1" type="submit" class="btn btn-info m-1"
+                            style="color: white; background-color: #0059BF; border: none;">Thêm</button>
+                        <button ng-show="addAndUpdate===2" ng-click="updateProduct()" class="btn btn-light m-1"
                             style=" background-color: #3B998B; border: none; color: white;">Cập
                             nhật</button>
                     </div>

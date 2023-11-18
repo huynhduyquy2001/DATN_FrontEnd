@@ -191,10 +191,10 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     window.onresize = function () {
         window.resizeTo(originalWidth, originalHeight);
     };
-
     window.addEventListener('beforeunload', function (e) {
         // Gọi hàm "endCall" của bạn ở đây.
         $scope.endCall();
+        $scope.rejectCall();
         return true;
     });
 
