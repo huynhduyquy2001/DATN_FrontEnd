@@ -1,76 +1,115 @@
-
-var app = angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
-	.filter('currencyFormat', function () {
+var app = angular
+	.module("myApp", ["pascalprecht.translate", "ngRoute"])
+	.filter("currencyFormat", function () {
 		return function (number) {
-			return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+			return number.toLocaleString("vi-VN", {
+				style: "currency",
+				currency: "VND",
+			});
 		};
 	});
 
 // Tạo một directive để theo dõi URL hiện tại
-app.directive('activeLink', ['$location', function ($location) {
-	return {
-		restrict: 'A',
-		link: function (scope, element, attrs) {
-			scope.$on('$routeChangeSuccess', function () {
-				var path = $location.path();
-				var href = attrs.href.replace('#!', ''); // Loại bỏ tiền tố '#!'
+app.directive("activeLink", [
+	"$location",
+	function ($location) {
+		return {
+			restrict: "A",
+			link: function (scope, element, attrs) {
+				scope.$on("$routeChangeSuccess", function () {
+					var path = $location.path();
+					var href = attrs.href.replace("#!", ""); // Loại bỏ tiền tố '#!'
 
-				// So sánh URL hiện tại với href của liên kết
-				if (path === href) {
-					element.css('background-color', 'rgba(93, 135, 255)');
-					element.css('color', 'white');
-				} else {
-					element.css('background-color', ''); // Xóa CSS nền
-					element.css('color', '#313131');
-				}
-			});
-		}
-	};
-}]);
+					// So sánh URL hiện tại với href của liên kết
+					if (path === href) {
+						element.css("background-color", "rgba(93, 135, 255)");
+						element.css("color", "white");
+					} else {
+						element.css("background-color", ""); // Xóa CSS nền
+						element.css("color", "#313131");
+					}
+				});
+			},
+		};
+	},
+]);
 
 app.config(function ($httpProvider) {
-	$httpProvider.interceptors.push('AuthInterceptor');
-})
-app.factory('AuthInterceptor', function ($q, $window) {
+	$httpProvider.interceptors.push("AuthInterceptor");
+});
+
+app.run(function ($rootScope, $window, apiService) {
+	// Nghe sự kiện thay đổi đường dẫn
+	$rootScope.$on("$locationChangeSuccess", function () {
+		// Kiểm tra token khi đường dẫn thay đổi
+		apiService.setAuthorizationHeader();
+
+	});
+});
+
+app.factory("AuthInterceptor", function ($q, $window) {
 	return {
 		responseError: function (rejection) {
 			if (rejection.status === 403) {
 				// Redirect to the login page
-
-				$window.location.href = 'Login.html';
+				$window.location.href = "Login.html";
 			}
-
+			if (rejection.status === 401) {
+				// Redirect to the login page
+				$window.location.href = "Login.html";
+			}
 			return $q.reject(rejection);
-		}
-	}
+		},
+	};
 });
 
-app.factory('apiService', function ($http, $q, $window) {
+app.factory("apiService", function ($http, $q, $window) {
 	var apiService = {};
 
 	// Function to set the JWT token in the HTTP headers of the API request
 	apiService.setAuthorizationHeader = function () {
 		var jwtToken = apiService.getJwtToken();
 		if (jwtToken) {
-			$http.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
-			$http.defaults.headers.common['isRefreshToken'] = 'true';
-		}
-		else {
-			$window.location.href = 'Login.html';
+			$http.defaults.headers.common["Authorization"] = "Bearer " + jwtToken;
+			// Check if the token is expired
+			if (apiService.isTokenExpired(jwtToken)) {
+				Swal.fire({
+					title: "Thông báo!",
+					text: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!",
+					icon: "warning",
+					showCancelButton: false,
+					confirmButtonText: "OK",
+				}).then((result) => {
+					// Check if the user clicked the "OK" button
+					if (result.isConfirmed) {
+						apiService.removeAuthorizationHeader();
+						localStorage.removeItem("jwtToken");
+						$window.location.href = "Login.html";
+					}
+				});
+			}
+
 		}
 	};
-
 
 	// Function to remove the JWT token from the HTTP headers
 	apiService.removeAuthorizationHeader = function () {
-		delete $http.defaults.headers.common['Authorization'];
+		delete $http.defaults.headers.common["Authorization"];
 	};
 
-
-
-
 	apiService.getJwtToken = function () {
-		return localStorage.getItem('jwtToken');
+		return localStorage.getItem("jwtToken");
+	};
+
+	// Function to check if the JWT token is expired
+	apiService.isTokenExpired = function (token) {
+		// Decode the token to get information
+		var base64Url = token.split(".")[1];
+		var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+		var decodedToken = JSON.parse($window.atob(base64));
+
+		// Check if the token is expired
+		return decodedToken.exp < Date.now() / 1000;
 	};
 
 	return apiService;

@@ -35,7 +35,7 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
                 });
                 Toast.fire({
                     icon: 'warning',
-                    title: 'Đối phương đã từ chối cuộc gọi, cửa sổ sẽ đóng sau 3 giây...'
+                    title: 'Đối phương đã kết thúc cuộc gọi, cửa sổ sẽ đóng sau 3 giây...'
                 });
                 setTimeout(function () {
                     window.close();
@@ -125,6 +125,13 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
     //hàm thông báo người ta gọi
     $rootScope.client.on('incomingcall', function (incomingcall) {
         //$('#incoming-call-notice').show();
+        if (incomingcall.isVideoCall) {
+            $scope.checkVideo = true;
+            // Thực hiện các bước cần thiết cho cuộc gọi video
+        } else {
+            $scope.checkVideo = false;
+            // Thực hiện các bước cần thiết cho cuộc gọi thoại
+        }
         console.log("incomingcall", incomingcall)
         $rootScope.currentCall = incomingcall;
         sound = new Howl({
@@ -146,7 +153,6 @@ app.controller("VideoCallController", function ($scope, $http, $translate, $root
             });
         }
         $rootScope.checkCall = 2;
-        $scope.checkVideo = true;
         $scope.onMic = true;
         $scope.$apply();
     };
