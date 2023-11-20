@@ -113,9 +113,10 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$rootScope.checkMenuLeft = true;
 	$rootScope.key = "";
 	$rootScope.keyS = "";
-
-	//
-
+	// trang duyệt đơn hàng
+	$rootScope.checkMyOrder = 1;
+	//trang sản phẩm iu thích
+	$rootScope.currentPagefavoriteProducts = 0;
 	//Phân trang myStore
 	$rootScope.currentPageMyStore = 0;
 	$rootScope.currentPagePending = 0;

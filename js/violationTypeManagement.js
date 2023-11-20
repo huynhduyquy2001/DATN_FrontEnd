@@ -29,7 +29,7 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
 
     $scope.searchByDescription = function () {
         var description = $scope.searchText;
-        
+
         if (!description) {
             // Nếu ô tìm kiếm rỗng, gán lại bản sao của danh sách gốc cho $scope.listViolationType
             $scope.listViolationType = angular.copy(originalList);
@@ -45,15 +45,15 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
             });
     };
 
-    $scope.addViolationModal = function() {
+    $scope.addViolationModal = function () {
         // Show the modal
         $('#addViolationModal').modal('show');
     };
 
-    $scope.addViolation = function() {	        
+    $scope.addViolation = function () {
         var violationDescription = $scope.violationDescription;
 
-        var data = {	           
+        var data = {
             violationDescription: violationDescription
         };
 
@@ -63,37 +63,37 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
             data: data,
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(function(response) {
-            // Handle success response here
-            // For example, show a success message
-            Swal.fire({
-                title: 'Thành công!',
-                text: 'Thêm vi phạm thành công!',
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then(function(result) {
-                if (result.isConfirmed) {
-                    // Reload the page to update the table
-                    window.location.reload();
-                }
+            .then(function (response) {
+                // Handle success response here
+                // For example, show a success message
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Thêm vi phạm thành công!',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        // Reload the page to update the table
+                        window.location.reload();
+                    }
+                });
+            })
+            .catch(function (error) {
+                // Handle error response here
+                // For example, show an error message
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Đã xảy ra lỗi khi thêm vi phạm!',
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                });
             });
-        })
-        .catch(function(error) {
-            // Handle error response here
-            // For example, show an error message
-            Swal.fire({
-                title: 'Lỗi!',
-                text: 'Đã xảy ra lỗi khi thêm vi phạm!',
-                icon: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            });
-        });
     };
 
 
- 
+
     // Hàm xem chi tiết bài viết
     $scope.detailViolation = function (violationTypeId) {
         // Gọi API để lấy thông tin chi tiết bài viết dựa vào postId
@@ -114,9 +114,9 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
             });
     };
 
-    
 
-    $scope.submitForm = function(violationTypeId) {
+
+    $scope.submitForm = function (violationTypeId) {
         var violationDescription = $scope.violationDescription;
 
         var data = {
@@ -129,29 +129,29 @@ app.controller('VtmCtrl', function ($scope, $http, $translate, $rootScope, $loca
             data: JSON.stringify(data), // Chuyển đổi data thành chuỗi JSON
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(function(response) {
-            var result = response.data;
-            if (result.message) {
-                $scope.errorMessage = result.message;
-            } else {
-                Swal.fire({
-                    title: 'Thành công!',
-                    text: 'Cập nhật thành công!',
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    // Check if the user clicked the "OK" button
-                    if (result.isConfirmed) {
-                        // Reload the page to update the table
-                        window.location.reload();
-                    }
-                });
-            }
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
+            .then(function (response) {
+                var result = response.data;
+                if (result.message) {
+                    $scope.errorMessage = result.message;
+                } else {
+                    Swal.fire({
+                        title: 'Thành công!',
+                        text: 'Cập nhật thành công!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        // Check if the user clicked the "OK" button
+                        if (result.isConfirmed) {
+                            // Reload the page to update the table
+                            window.location.reload();
+                        }
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
 

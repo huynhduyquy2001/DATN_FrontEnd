@@ -29,7 +29,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			.then(function (res) {
 				$scope.listReject = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
 				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi		
-				console.log($scope.listReject);		
+				console.log($scope.listReject);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -189,13 +189,13 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 	$scope.reject = function (productId) {
 		// Lấy lý do từ chối từ input field. Giả sử input field có id là 'reason'
 		var reason = $scope.reasonRejection;
-		if(!reason){
+		if (!reason) {
 			Swal.fire(
 				'Lỗi!',
 				'Vui lòng nhập vào lí do từ chối!',
 				'error'
 			)
-		}else{
+		} else {
 			$http({
 				method: 'POST',
 				url: url + '/staff/rejectproduct/reject/' + productId,
@@ -204,7 +204,7 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 					productId: productId
 				}
 			}).then(function (response) {
-				if(response.status === 400){
+				if (response.status === 400) {
 					Swal.fire(
 						'Không được bỏ trống lý do!',
 						response.data,
@@ -228,8 +228,8 @@ app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScop
 			});
 		}
 	}
-	
-	
+
+
 	$scope.reloadPage = function () {
 		location.reload();
 	}

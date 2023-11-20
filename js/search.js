@@ -1,6 +1,5 @@
 
 app.controller('SearchController', function ($scope, $http, $translate, $rootScope, $location) {
-	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
 	var Url = "http://localhost:8080";
 	$scope.Posts = [];
 	$scope.likedPosts = [];
@@ -372,10 +371,16 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		}
 	};
 	$scope.chontimkiem = function () {
-		$scope.showDropdown = false;
+		if ($scope.users.length != 0) {
+			$scope.showDropdown = false;
+		}
+
 	}
 	$scope.chontimkiem1 = function () {
-		$scope.showDropdown = true;
+		if ($scope.users.length != 0) {
+			$scope.showDropdown = true;
+		}
+
 	}
 	$scope.searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || {};
 	$scope.currentUserId = $rootScope.myAccount.user.userId;
@@ -413,12 +418,10 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		}
 	};
 
-
 	$scope.chonten = function (searchTerm) {
 		// Gán tên đã chọn vào $scope.selectedSearchTerm và ẩn dropdown
 		$scope.username = searchTerm;
 		$scope.findProduct(searchTerm);
 		$scope.showDropdown = false;
 	};
-	console.log("user ID người dùng" + $rootScope.myAccount.user.userId)
 });

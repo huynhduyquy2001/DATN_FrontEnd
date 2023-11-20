@@ -4,20 +4,28 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 	$scope.totalPagesF = 0;
 	$scope.favoriteProducts = [];
 	var originalFavoriteProducts = [];
-
-
+	$scope.color = "";
 	$scope.spiuthich = function (currentPage) {
 		$http.get(Url + "/get-favoriteProducts/" + currentPage) // Sử dụng biến Url
 			.then(function (res) {
 				originalFavoriteProducts = res.data.content;
 				$scope.favoriteProducts = originalFavoriteProducts;
 				$scope.totalPagesF = res.data.totalPages;
+				if ($scope.favoriteProducts.length === 0) {
+					$scope.searchnull = "Bạn chưa có sản phẩm yêu thích";
+					$scope.isHidden = true;
+
+				}
+				if ($scope.totalPagesF <= 1) {
+					$scope.isHidden = true;
+				}
 			})
 			.catch(function (error) {
 				console.error("Lỗi: " + error);
 			});
 	}
-	$scope.spiuthich($rootScope.currentPage);
+	$scope.spiuthich($rootScope.currentPagefavoriteProducts);
+	//lấy sản phẩm 
 	$scope.getProduct = function (productId) {
 		$http.get(Url + "/get-product/" + productId)
 			.then(function (res) {
@@ -26,6 +34,7 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 				$scope.product = res.data;
 				$scope.total = -1;
 				$scope.quantity = 1;
+
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -132,7 +141,47 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 
 
 	$rootScope.addShoppingCart = function (productId) {
+		if ($scope.color === "") {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn màu sắc sản phẩm'
+			})
+			return;
+		}
+		if ($scope.quantity === 0) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Hãy chọn số lượng cần mua'
+			})
+			return;
+		}
+
 		var formData = new FormData();
+
 		formData.append("productId", productId);
 		formData.append("quantity", $scope.quantity);
 		formData.append("color", $scope.color);
@@ -140,42 +189,42 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		$http.post(Url + "/add-to-cart", formData, {
 			transformRequest: angular.identity,
 			headers: { 'Content-Type': undefined }
-		})
-			.then(function (res) {
-				alert("ok")
+		}).then(function (res) {
+			//Load thông tin giỏ hàng
+			$http.get(Url + '/get-product-shoppingcart').then(function (response) {
+				$rootScope.listProduct = response.data;
+			}).catch(function (error) {
+				console.error('Lỗi khi lấy dữ liệu:', error);
 			});
+		});
+
 	}
+	//Thêm - xóa sản phẩm iu thích
 	$scope.togglerFavorite = function (productId) {
 		$http.post(Url + "/addfavoriteproduct/" + productId)
 			.then(function (response) {
 				$scope.favorite = !$scope.favorite;
-				$http.get(Url + "/get-favoriteProducts") // Sử dụng biến Url
-					.then(function (response) {
-						$scope.favoriteProducts = response.data;
-					})
-					.catch(function (error) {
-						console.error("Lỗi: " + error.data);
-					});
+				$scope.spiuthich($rootScope.currentPagefavoriteProducts);
 			});
 	}
 	$scope.Previous = function () {
-		if ($rootScope.currentPage === 0) {
+		if ($rootScope.currentPagefavoriteProducts === 0) {
 			return;
 		} else {
 			$anchorScroll();
-			$rootScope.currentPage = $rootScope.currentPage - 1; // Cập nhật trang hiện tại
-			$scope.spiuthich($rootScope.currentPage);
+			$rootScope.currentPagefavoriteProducts = $rootScope.currentPagefavoriteProducts - 1; // Cập nhật trang hiện tại
+			$scope.spiuthich($rootScope.currentPagefavoriteProducts);
 
 		}
 	}
 
 	$scope.Next = function () {
-		if ($rootScope.currentPage === $scope.totalPagesF - 1) {
+		if ($rootScope.currentPagefavoriteProducts === $scope.totalPagesF - 1) {
 			return;
 		} else {
 			$anchorScroll();
-			$rootScope.currentPage = $rootScope.currentPage + 1; // Cập nhật trang hiện tại
-			$scope.spiuthich($rootScope.currentPage);
+			$rootScope.currentPagefavoriteProducts = $rootScope.currentPagefavoriteProducts + 1; // Cập nhật trang hiện tại
+			$scope.spiuthich($rootScope.currentPagefavoriteProducts);
 		}
 	}
 
@@ -210,14 +259,11 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 
 	const handleVoice = (text) => {
 		console.log('text', text);
-
 		$scope.productNameF = text.toLowerCase();
-
-
 		searchInputF.value = $scope.productNameF;
-
 		// searchInputF.dispatchEvent(changeEvent);
 		$rootScope.keyF = $scope.productNameF;
+
 		$scope.searchFavoriteProducts($scope.productNameF);
 		//searchInputF.dispatchEvent($scope.findProductF($scope.productNameF));
 		console.log("Nói ra nè " + $scope.productNameF);
@@ -225,6 +271,7 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 	}
 
 	microphone.addEventListener('click', (e) => {
+		$scope.showDropdown = true;
 		e.preventDefault();
 
 		recognition.start();
@@ -246,4 +293,5 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 		const text = e.results[0][0].transcript;
 		handleVoice(text);
 	}
+
 });

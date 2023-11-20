@@ -13,7 +13,7 @@ angular.module('myApp').controller('loginController', function ($scope, $http) {
                 localStorage.setItem('jwtToken', response.data.accessToken);
                 $scope.error = "Đăng nhập thành công, đang chuyển đến trang chủ";
                 setTimeout(function () {
-                    window.location.href = "Index.html"
+                    window.location.href = "index.html"
                 }, 1000)
             })
             .catch(function (error) {

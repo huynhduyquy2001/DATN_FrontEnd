@@ -442,10 +442,10 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     $http.get(url + "/get-address")
       .then(function (response) {
         $scope.deliveryAddress = response.data;
-        if(response.data.length == 0){
-            //Hiện tab địa chỉ trước  
-            $('#profile-tab').tab('show');
-        }else{
+        if (response.data.length == 0) {
+          //Hiện tab địa chỉ trước  
+          $('#profile-tab').tab('show');
+        } else {
           //Hiện tab địa chỉ trước  
           $('#home-tab').tab('show');
         }
@@ -477,7 +477,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
         // In ra nội dung đối tượng lỗi
         console.log("Error Object:", error);
       });
-    
+
     //Clear form thêm địa chỉ
     $scope.clearForm();
   };
@@ -840,7 +840,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope) {
     return Object.values(userIdMap);
   };
 
-  $scope.clearForm = function(){
+  $scope.clearForm = function () {
     var inputElement = document.getElementById("phone");
     $scope.selectedDistrict = null;
     $scope.selectedProvince = null;

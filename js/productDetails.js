@@ -14,7 +14,7 @@ app.controller('ProductDetailsController', function ($scope, $http, $translate, 
 
     // Biến để lưu trạng thái hiện tại ("Tất cả", "Tích cực", "Tiêu cực")
     $scope.filterStatus = "Tất cả";
- 
+
     // Hàm để thay đổi trạng thái lọc
     $scope.changeFilterStatus = function (status) {
         $scope.filterStatus = status;
