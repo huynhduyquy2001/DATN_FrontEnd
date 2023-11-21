@@ -56,7 +56,7 @@ app.factory("AuthInterceptor", function ($q, $window) {
 			}
 			if (rejection.status === 401) {
 				// Redirect to the login page
-				$window.location.href = "Login.html";
+				//$window.location.href = "Login.html";
 			}
 			return $q.reject(rejection);
 		},
@@ -130,12 +130,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.playNotificationSound = function () {
 		sound.play();
 	};
-	var url = "http://localhost:8080";
-	var findMyAccount = "http://localhost:8080/findmyaccount";
-	var getUnseenMess = "http://localhost:8080/getunseenmessage";
-	var getChatlistwithothers = "http://localhost:8080/chatlistwithothers";
-	var loadnotification = "http://localhost:8080/loadnotification";
-	var loadallnotification = "http://localhost:8080/loadallnotification";
+	var url = "https://viesonetapi4.azurewebsites.net";
+	var findMyAccount = "https://viesonetapi4.azurewebsites.net/findmyaccount";
+	var getUnseenMess = "https://viesonetapi4.azurewebsites.net/getunseenmessage";
+	var getChatlistwithothers = "https://viesonetapi4.azurewebsites.net/chatlistwithothers";
+	var loadnotification = "https://viesonetapi4.azurewebsites.net/loadnotification";
+	var loadallnotification = "https://viesonetapi4.azurewebsites.net/loadallnotification";
 
 	$scope.myAccount = {};
 	$rootScope.unseenmess = 0;
@@ -201,14 +201,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	if (!firebase.apps.length) {
 		firebase.initializeApp(config);
 	}
-	//lấy danh sách người đã từng nhắn tin
-	$http.get(getChatlistwithothers)
-		.then(function (response) {
-			$scope.ListUsersMess = response.data;
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
+
 
 
 	//xem chi tiết bài viết
@@ -268,106 +261,120 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	};
 
 	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
-	var socket = new SockJS("http://localhost:8080/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
+	var socket = new SockJS("https://viesonetapi4.azurewebsites.net/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
 
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
 	stompClient.debug = false;
-	//tìm acc bản thân
-	$http.get(findMyAccount)
-		.then(function (response) {
-			$scope.myAccount = response.data;
-			$rootScope.myAccount = response.data;
-			stompClient.connect({}, function (frame) {
-				// Lắng nghe các tin nhắn được gửi về cho người dùng
-				//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
-				stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
-					try {
-						var newMess = JSON.parse(message.body);
+	$scope.findMyAccount = function () {
+		//tìm acc bản thân
+		$http.get(findMyAccount)
+			.then(function (response) {
+				$scope.myAccount = response.data;
+				$rootScope.myAccount = response.data;
 
-						var checkMess = $scope.ListMessMini.find(function (obj) {
-							return obj.messId === newMess.messId;
-						});
+				stompClient.connect({}, function (frame) {
 
+					// Lắng nghe các tin nhắn được gửi về cho người dùng
+					//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
+					stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
+						try {
+							var newMess = JSON.parse(message.body);
 
-						// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
-						//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của mình
-						if (($scope.receiver.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-							$scope.ListMessMini.push(newMess);
-						}
-						if (($rootScope.userMess.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
-							$rootScope.ListMess.push(newMess);
-						}
-						//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
-						if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
-							$scope.ListMessMini.push(newMess);
+							var checkMess = $scope.ListMessMini.find(function (obj) {
+								return obj.messId === newMess.messId;
+							});
 
 
-						}
-						if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
-							$rootScope.ListMess.push(newMess);
-						}
+							// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
+							//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của mình
+							if (($scope.receiver.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+								$scope.ListMessMini.push(newMess);
+							}
+							if (($rootScope.userMess.userId === newMess.receiver.userId && $scope.myAccount.user.userId === newMess.sender.userId) && !checkMess) {
+								$rootScope.ListMess.push(newMess);
+							}
+							//nếu người gửi là mình, muốn hiện tin nhắn lên giao diện của người khác
+							if ($scope.receiver.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) {
+								$scope.ListMessMini.push(newMess);
 
-						if ($scope.myAccount.user.userId !== newMess.sender.userId) {
-							// Lấy số lượng tin nhắn nào chưa đọc
-							$http.get(getUnseenMess)
+
+							}
+							if (($rootScope.userMess.userId === newMess.sender.userId && $scope.myAccount.user.userId === newMess.receiver.userId) && !checkMess) {
+								$rootScope.ListMess.push(newMess);
+							}
+
+							if ($scope.myAccount.user.userId !== newMess.sender.userId) {
+								// Lấy số lượng tin nhắn nào chưa đọc
+								$http.get(getUnseenMess)
+									.then(function (response) {
+										$rootScope.check = response.data > 0;
+										$rootScope.unseenmess = response.data;
+									})
+									.catch(function (error) {
+										console.log(error);
+									});
+								//hiện popup thôg báo
+								if ("Notification" in window) {
+									console.log("Notification")
+									Notification.requestPermission().then(function (permission) {
+										if (permission === "granted") {
+											// Tạo một đối tượng hình ảnh cho thông báo
+											var img = new Image();
+											img.src = newMess.sender.avatar; // Thay đổi đường dẫn đến ảnh thực tế
+
+											// Hiển thị thông báo với ảnh
+											var notification = new Notification("Thông báo", {
+												body: newMess.sender.username + " vừa gửi tin nhắn đến bạn",
+												icon: img.src // Sử dụng đường dẫn hình ảnh cho biểu tượng thông báo
+											});
+
+											// Đặt hành động khi thông báo được nhấn
+											notification.onclick = function () {
+												// Xử lý hành động khi thông báo được nhấn
+												window.focus(); // Tập trung vào tab chính
+											};
+										}
+									});
+								}
+								//$scope.playNotificationSound();
+							}
+							//cập nhật lại danh sách người đang nhắn tin với mình
+							$http.get(url + '/chatlistwithothers')
 								.then(function (response) {
-									$rootScope.check = response.data > 0;
-									$rootScope.unseenmess = response.data;
+									$scope.ListUsersMess = response.data;
+									//$scope.playNotificationSound();
 								})
 								.catch(function (error) {
 									console.log(error);
 								});
-							//hiện popup thôg báo
-							if ("Notification" in window) {
-								Notification.requestPermission().then(function (permission) {
-									if (permission === "granted") {
-										// Tạo một đối tượng hình ảnh cho thông báo
-										var img = new Image();
-										img.src = newMess.sender.avatar; // Thay đổi đường dẫn đến ảnh thực tế
 
-										// Hiển thị thông báo với ảnh
-										var notification = new Notification("Thông báo", {
-											body: newMess.sender.username + " vừa gửi tin nhắn đến bạn",
-											icon: img.src // Sử dụng đường dẫn hình ảnh cho biểu tượng thông báo
-										});
+							$timeout(function () {
+								$scope.scrollToBottom();
+							}, 10);
 
-										// Đặt hành động khi thông báo được nhấn
-										notification.onclick = function () {
-											// Xử lý hành động khi thông báo được nhấn
-											window.focus(); // Tập trung vào tab chính
-										};
-									}
-								});
-							}
-							//$scope.playNotificationSound();
+							$scope.$apply();
+						} catch (error) {
+							alert('Error handling received message:', error);
 						}
-						//cập nhật lại danh sách người đang nhắn tin với mình
-						$http.get(url + '/chatlistwithothers')
-							.then(function (response) {
-								$scope.ListUsersMess = response.data;
-								//$scope.playNotificationSound();
-							})
-							.catch(function (error) {
-								console.log(error);
-							});
-
-						$timeout(function () {
-							$scope.scrollToBottom();
-						}, 10);
-
-						$scope.$apply();
-					} catch (error) {
-						alert('Error handling received message:', error);
-					}
+					});
+				}, function (error) {
+					console.error('Lỗi kết nối WebSocket:', error);
 				});
-			}, function (error) {
-				console.error('Lỗi kết nối WebSocket:', error);
+				//lấy danh sách người đã từng nhắn tin
+				$http.get(getChatlistwithothers)
+					.then(function (response) {
+						$scope.ListUsersMess = response.data;
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+			})
+			.catch(function (error) {
+				console.log(error);
 			});
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
+	}
+	$scope.findMyAccount();
 	//Đa ngôn ngữ	
 	$scope.changeLanguage = function (langKey) {
 		$translate.use(langKey);
@@ -825,7 +832,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	// =================================================================================
 
 	$rootScope.client = new StringeeClient();
-	var generateToken = "http://localhost:8080/generateToken";
+	var generateToken = "https://viesonetapi4.azurewebsites.net/generateToken";
 	$rootScope.getToken = function () {
 		$http.get(generateToken)
 			.then(function (response) {
