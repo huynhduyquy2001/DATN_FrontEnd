@@ -134,6 +134,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 console.log(error);
             });
     }
+
     $scope.addProduct = function () {
         if ($scope.ticketCount === 0) {
             const Toast = Swal.mixin({
@@ -154,6 +155,29 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
             })
             return;
         }
+
+        var fileInput = document.getElementById('inputGroupFile01');
+        // Check if no files are selected
+        if (fileInput.files.length === 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'warning',
+                title: 'Vui lòng chọn ít nhất 1 ảnh!!!'
+            })
+            return;
+        }
+
         if ($scope.selectedColors.length === 0) {
             const Toast = Swal.mixin({
                 toast: true,
@@ -204,9 +228,16 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                     'userName': response.data.user.userName
                 };
 
+
                 $http.post(Url + '/add-product-temp', productTemp)
                     .then(function (response) {
-
+                        $http.get(Url + '/update-ticket')
+                            .then(function (response) {
+                                $scope.ticketCount = response.data;
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -283,6 +314,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
             }
             return;
         }
+
         var storage = firebase.storage();
         var storageRef = storage.ref();
 

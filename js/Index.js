@@ -262,7 +262,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
 	var socket = new SockJS("https://viesonetapi4.azurewebsites.net/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
-
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
 	stompClient.debug = false;
@@ -274,7 +273,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 				$rootScope.myAccount = response.data;
 
 				stompClient.connect({}, function (frame) {
-
 					// Lắng nghe các tin nhắn được gửi về cho người dùng
 					//stompClient.send('/app/authenticate', {}, JSON.stringify({ token: yourToken }));
 					stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
@@ -546,7 +544,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 			.then(function (response) {
 				// Hàm gửi tin nhắn qua websocket
 				stompClient.send('/app/sendnewmess', {}, JSON.stringify(response.data));
-
 				$http.post(url + '/seen/' + receiver)
 					.then(function (response) {
 						$http.get(getChatlistwithothers)

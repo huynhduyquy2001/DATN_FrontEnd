@@ -44,7 +44,7 @@ app.controller('OrdersController', function ($scope, $http, $window, $rootScope)
                     .then(function (response) {
                         // Dữ liệu trả về từ API sẽ nằm trong response.data
                         console.log(response)
-                        var grouped = {};
+                        var grouped = [];
 
                         angular.forEach(response.data, function (order) {
                             if (order && order[0] && order[0].orderDate && order[3] && order[3].userId && order[0].orderStatus.statusId) {
@@ -83,7 +83,7 @@ app.controller('OrdersController', function ($scope, $http, $window, $rootScope)
                     .then(function (response) {
                         // Dữ liệu trả về từ API sẽ nằm trong response.data
                         console.log(response)
-                        var grouped = {};
+                        var grouped = [];
 
                         angular.forEach(response.data, function (order) {
                             if (order && order[0] && order[0].orderDate && order[3] && order[3].userId && order[0].orderStatus.statusId) {
