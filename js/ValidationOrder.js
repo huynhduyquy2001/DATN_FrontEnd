@@ -1,6 +1,7 @@
 app.controller('ValidationOrderController', function ($scope, $http, $translate, $rootScope, $location) {
 	var Url = "http://localhost:8080/pending-confirmation";
 	var Url2 = "http://localhost:8080/approveorders/";
+	$scope.orders = [];
 	$scope.sumPrice = 0;
 	// Hiện những đơn hàng cần duyệt 
 	$http.get(Url)
@@ -14,7 +15,6 @@ app.controller('ValidationOrderController', function ($scope, $http, $translate,
 					var orderDate = order[0].orderDate;
 					var statusId = order[0].orderStatus.statusId;
 					var key = userId + '-' + orderDate + '-' + statusId;
-
 					if (!grouped[key]) {
 						grouped[key] = [];
 					}
@@ -38,6 +38,7 @@ app.controller('ValidationOrderController', function ($scope, $http, $translate,
 					.then(function (response) {
 						// Dữ liệu trả về từ API sẽ nằm trong response.data
 						console.log(response)
+						alert(response.data.length)
 						var grouped = {};
 						angular.forEach(response.data, function (order) {
 							if (order && order[0] && order[0].orderDate && order[3] && order[3].userId && order[0].orderStatus.statusId) {
