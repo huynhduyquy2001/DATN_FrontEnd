@@ -162,7 +162,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 	//Phân trang order
 	$rootScope.checkOrderPage = 1;
-
+	// trang duyệt đơn hàng
+	$rootScope.checkMyOrder = 1;
 	//Phân trang myStore
 	$rootScope.currentPageMyStore = 0;
 	$rootScope.currentPagePending = 0;
