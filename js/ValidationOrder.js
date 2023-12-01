@@ -1,6 +1,7 @@
 app.controller('ValidationOrderController', function ($scope, $http, $translate, $rootScope, $location) {
 	var Url = "http://localhost:8080/pending-confirmation";
 	var Url2 = "http://localhost:8080/approveorders/";
+	$scope.orders = [];
 	$scope.sumPrice = 0;
 	$scope.pageSize = 10; // Số lượng đơn hàng hiển thị mỗi lần
 	$scope.currentPage = 0; // Trang hiện tại

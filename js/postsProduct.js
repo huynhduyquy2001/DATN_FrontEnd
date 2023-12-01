@@ -122,8 +122,8 @@ app.controller(
 		}
 
 		// Gọi hàm để cập nhật dữ liệu từ API khi controller khởi tạo
-		loadData($scope.currentPage);
-		loadRejectData($scope.currentRejectPage);
+		// loadData($scope.currentPage);
+		// loadRejectData($scope.currentRejectPage);
 
 		// Hàm để tạo mảng các trang cụ thể
 		$scope.getPagesArray = function () {
