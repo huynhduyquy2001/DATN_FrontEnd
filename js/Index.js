@@ -55,6 +55,7 @@ app.factory("AuthInterceptor", function ($q, $window) {
 				$window.location.href = "Login.html";
 			}
 			if (rejection.status === 401) {
+				alert("ok")
 				// Redirect to the login page
 				//$window.location.href = "Login.html";
 			}
@@ -130,12 +131,12 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	$scope.playNotificationSound = function () {
 		sound.play();
 	};
-	var url = "https://viesonetapi4.azurewebsites.net";
-	var findMyAccount = "https://viesonetapi4.azurewebsites.net/findmyaccount";
-	var getUnseenMess = "https://viesonetapi4.azurewebsites.net/getunseenmessage";
-	var getChatlistwithothers = "https://viesonetapi4.azurewebsites.net/chatlistwithothers";
-	var loadnotification = "https://viesonetapi4.azurewebsites.net/loadnotification";
-	var loadallnotification = "https://viesonetapi4.azurewebsites.net/loadallnotification";
+	var url = "http://localhost:8080";
+	var findMyAccount = "http://localhost:8080/findmyaccount";
+	var getUnseenMess = "http://localhost:8080/getunseenmessage";
+	var getChatlistwithothers = "http://localhost:8080/chatlistwithothers";
+	var loadnotification = "http://localhost:8080/loadnotification";
+	var loadallnotification = "http://localhost:8080/loadallnotification";
 
 	$scope.myAccount = {};
 	$rootScope.unseenmess = 0;
@@ -261,7 +262,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	};
 
 	// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
-	var socket = new SockJS("https://viesonetapi4.azurewebsites.net/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
+	var socket = new SockJS("http://localhost:8080/chat"); // Thay thế bằng đúng địa chỉ của máy chủ WebSocket
 	// Tạo một kết nối thông qua Stomp over SockJS
 	var stompClient = Stomp.over(socket);
 	stompClient.debug = false;
@@ -829,7 +830,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	// =================================================================================
 
 	$rootScope.client = new StringeeClient();
-	var generateToken = "https://viesonetapi4.azurewebsites.net/generateToken";
+	var generateToken = "http://localhost:8080/generateToken";
 	$rootScope.getToken = function () {
 		$http.get(generateToken)
 			.then(function (response) {

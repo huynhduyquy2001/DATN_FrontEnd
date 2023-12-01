@@ -1,266 +1,283 @@
-app.controller('productPostCtrl', function ($scope, $http, $translate, $rootScope, $location) {
-	$scope.listPosts = [];
-	$scope.listReject = [];
-	$scope.Product = {};
-	$scope.currentPage = 0;
-	$scope.totalPages = 0;
-	$scope.pageSize = 9;
-	$scope.selectedCountText = 0; // Số lượng mục đã chọn
+app.controller(
+	"productPostCtrl",
+	function ($scope, $http, $translate, $rootScope, $location) {
+		$scope.listPosts = [];
+		$scope.listReject = [];
+		$scope.Product = {};
+		$scope.currentPage = 0;
+		$scope.totalPages = 0;
+		$scope.pageSize = 9;
+		$scope.currentRejectPage = 0;
+		$scope.totalRejectPages = 0;
+		$scope.pageRejectSize = 9;
+		var url = "http://localhost:8080";
 
-	var url = "http://localhost:8080";
+		$scope.getproductList = function (currentPage) {
+			$http
+				.get(url + "/staff/postsproduct/" + currentPage)
+				.then(function (res) {
+					$scope.listPosts = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
+					$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		};
 
+		$scope.getRejectProducts = function (currentPage) {
+			$http
+				.get(url + "/staff/rejectproducts/" + currentPage)
+				.then(function (res) {
+					$scope.listReject = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
+					$scope.totalRejectPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi
+					console.log($scope.listReject);
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		};
 
+		$scope.getproductList($scope.currentPage);
+		$scope.getRejectProducts($scope.currentRejectPage);
 
-	$scope.getproductList = function (currentPage) {
-
-		$http.get(url + "/staff/postsproduct/" + currentPage)
-			.then(function (res) {
-				$scope.listPosts = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi				
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}
-
-	$scope.getRejectProducts = function (currentPage) {
-
-		$http.get(url + "/staff/rejectproducts/" + currentPage)
-			.then(function (res) {
-				$scope.listReject = res.data.content; // Lưu danh sách sản phẩm từ phản hồi
-				$scope.totalPages = res.data.totalPages; // Lấy tổng số trang từ phản hồi		
-				console.log($scope.listReject);
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}
-
-	$scope.getproductList($scope.currentPage);
-	$scope.getRejectProducts($scope.currentPage);
-
-	// $http.get(url + '/staff/postsproduct').then(function (response) {
-	// 	// Gán dữ liệu từ API vào biến $scope.listViolations
-	// 	$scope.listPosts = response.data;
-	// 	console.log($scope.listPosts.content);
-	// }).catch(function (error) {
-	// 	console.error('Lỗi khi lấy dữ liệu bài đăng sản phẩm:', error);
-	// });
-
-
-	//Hàm để cập nhật dữ liệu từ API và số trang khi chuyển đến trang mới
-	function loadViolationsData(page) {
-		$http.get(url + '/staff/postsproduct', { params: { page: page, size: $scope.pageSize } })
-			.then(function (response) {
-				$scope.listPosts = response.data;
-				updatePagination();
-			})
-			.catch(function (error) {
-				console.error('Lỗi khi lấy dữ liệu bài viết vi phạm:', error);
-			});
-	}
-
-	// Hàm để cập nhật số trang dựa vào số lượng bài viết vi phạm
-	function calculateTotalPages() {
-		$scope.totalPages = $scope.listPosts.totalPages;
-	}
-
-
-	// Hàm để chuyển đến trang trước
-	$scope.prevPage = function () {
-		if ($scope.currentPage > 0) {
-			$scope.currentPage--;
-			loadViolationsData($scope.currentPage);
-		}
-	};
-
-	// Hàm để chuyển đến trang kế tiếp
-	$scope.nextPage = function () {
-		if ($scope.currentPage < $scope.totalPages - 1) {
-			$scope.currentPage++;
-			loadViolationsData($scope.currentPage);
-		}
-	};
-
-	// Hàm để cập nhật số trang khi dữ liệu thay đổi
-	function updatePagination() {
-		calculateTotalPages();
-		// Đảm bảo rằng trang hiện tại không vượt quá tổng số trang
-		$scope.currentPage = Math.min($scope.currentPage, $scope.totalPages - 1);
-	}
-
-	// Gọi hàm để cập nhật dữ liệu từ API khi controller khởi tạo
-	loadViolationsData($scope.currentPage);
-
-	// Hàm để tạo mảng các trang cụ thể
-	$scope.getPagesArray = function () {
-		return Array.from({ length: $scope.totalPages }, (_, i) => i);
-	};
-
-	$scope.searchProduct = function () {
-		var name = $scope.searchText;
-		name = name.trim();
-		if (!name) {
-			// Nếu ô tìm kiếm rỗng, gán lại giá trị ban đầu cho biến $scope.listViolations.content
-			$scope.listPosts.content;
-			return;
-		}
-		$http.get(url + '/staff/searchProduct', { params: { name: name } })
-			.then(function (response) {
-				// Xử lý kết quả tìm kiếm ở đây
-				console.log(response.data);
-				$scope.listPosts.content = response.data;
-			})
-			.catch(function (error) {
-				console.error('Lỗi khi tìm kiếm bài viết:', error);
-			});
-	};
-
-	$scope.detailProduct = function (productId) {
-		// Gọi API để lấy thông tin chi tiết bài viết dựa vào postId
-		$http.get(url + '/staff/postsproduct/detailProduct/' + productId)
-			.then(function (response) {
-				$scope.product = response.data;
-				console.log($scope.product);
-				$('#exampleModal').modal('show'); // Hiển thị modal khi có dữ liệu bài viết
-			})
-			.catch(function (error) {
-				console.error('Lỗi khi lấy thông tin chi tiết bài viết:', error);
-			});
-	};
-
-
-
-
-	$scope.getSalePrice = function (originalPrice, promotion) {
-		if (promotion === 0) {
-			return originalPrice;
-		} else {
-			//tính tổng số lượng các đánh giá
-			var SalePrice = originalPrice - (originalPrice * promotion / 100);
-			return SalePrice;
-		}
-	}
-
-	$scope.accept = function (productId) {
-
-		Swal.fire({
-			text: 'Bạn có chắc muốn chấp nhận sản phẩm này không?',
-			icon: 'warning',
-			confirmButtonText: 'Có, chắc chắn',
-			showCancelButton: true,
-			confirmButtonColor: '#159b59',
-			cancelButtonColor: '#d33'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				$http({
-					method: 'POST',
-					url: url + '/staff/postsproduct/accept/' + productId
-				}).then(function (response) {
-					// Cập nhật dữ liệu mới nhận được từ server
+		//Hàm để cập nhật dữ liệu từ API và số trang khi chuyển đến trang mới
+		function loadData(page) {
+			$http
+				.get(url + "/staff/postsproduct", {
+					params: { page: page, size: $scope.pageSize },
+				})
+				.then(function (response) {
 					$scope.listPosts = response.data;
-					$scope.reloadPage();
-				}).catch(function (error) {
-					console.error('Lỗi khi chấp nhận yêu cầu các bài viết:', error);
+					updatePagination();
+				})
+				.catch(function (error) {
+					console.error("Lỗi khi lấy dữ liệu bài viết vi phạm:", error);
+				});
+		}
 
-					Swal.fire({
-						position: 'top',
-						icon: 'error',
-						text: 'Không chấp nhận yêu cầu được!',
-						showConfirmButton: false,
-						timer: 1800
-					});
+		function loadRejectData(page) {
+			$http
+				.get(url + "/staff/rejectproducts/", {
+					params: { page: page, size: $scope.pageRejectSize },
+				})
+				.then(function (response) {
+					$scope.listReject = response.data;
+					updateRejectPagination();
+				})
+				.catch(function (error) {
+					console.error("Lỗi khi lấy dữ liệu bài viết vi phạm:", error);
+				});
+		}
+
+		// Hàm để cập nhật số trang dựa vào số lượng bài viết vi phạm
+		function calculateTotalPages() {
+			$scope.totalPages = $scope.listPosts.totalPages;
+		}
+
+		function calculateTotalRejectPages() {
+			$scope.totalRejectPages = $scope.listReject.totalPages;
+		}
+
+		// Hàm để chuyển đến trang trước
+		$scope.prevPage = function () {
+			if ($scope.currentPage > 0) {
+				$scope.currentPage--;
+				loadData($scope.currentPage);
+			}
+		};
+
+		$scope.prevRejectPage = function () {
+			if ($scope.currentRejectPage > 0) {
+				$scope.currentRejectPage--;
+				loadData($scope.currentRejectPage);
+			}
+		};
+
+		// Hàm để chuyển đến trang kế tiếp
+		$scope.nextPage = function () {
+			if ($scope.currentPage < $scope.totalPages - 1) {
+				$scope.currentPage++;
+				loadData($scope.currentPage);
+			}
+		};
+
+		$scope.nextRejectPage = function () {
+			if ($scope.currentRejectPage < $scope.totalRejectPages - 1) {
+				$scope.currentRejectPage++;
+				loadData($scope.currentRejectPage);
+			}
+		};
+
+		// Hàm để cập nhật số trang khi dữ liệu thay đổi
+		function updatePagination() {
+			calculateTotalPages();
+			// Đảm bảo rằng trang hiện tại không vượt quá tổng số trang
+			$scope.currentPage = Math.min($scope.currentPage, $scope.totalPages - 1);
+		}
+
+		function updateRejectPagination() {
+			calculateTotalRejectPages();
+			// Đảm bảo rằng trang hiện tại không vượt quá tổng số trang
+			$scope.currentPage = Math.min($scope.currentPage, $scope.totalPages - 1);
+		}
+
+		// Gọi hàm để cập nhật dữ liệu từ API khi controller khởi tạo
+		loadData($scope.currentPage);
+		loadRejectData($scope.currentRejectPage);
+
+		// Hàm để tạo mảng các trang cụ thể
+		$scope.getPagesArray = function () {
+			return Array.from({ length: $scope.totalPages }, (_, i) => i);
+		};
+
+		$scope.getRejectPagesArray = function () {
+			return Array.from({ length: $scope.totalRejectPages }, (_, i) => i);
+		};
+
+		$scope.searchProduct = function () {
+			var name = $scope.searchText;
+			name = name.trim();
+			if (!name) {
+				// Nếu ô tìm kiếm rỗng, gán lại giá trị ban đầu cho biến $scope.listViolations.content
+				$scope.listPosts.content;
+				return;
+			}
+			$http
+				.get(url + "/staff/searchProduct", { params: { name: name } })
+				.then(function (response) {
+					// Xử lý kết quả tìm kiếm ở đây
+					console.log(response.data);
+					$scope.listPosts.content = response.data;
+				})
+				.catch(function (error) {
+					console.error("Lỗi khi tìm kiếm bài viết:", error);
+				});
+		};
+
+		$scope.searchRejectProduct = function () {
+			var name = $scope.searchRejectText;
+			name = name.trim();
+			if (!name) {
+				// Nếu ô tìm kiếm rỗng, gán lại giá trị ban đầu cho biến $scope.listViolations.content
+				$scope.listReject.content;
+				return;
+			}
+			$http
+				.get(url + "/staff/searchRejectProduct", { params: { name: name } })
+				.then(function (response) {
+					// Xử lý kết quả tìm kiếm ở đây
+					console.log(response.data);
+					$scope.listReject.content = response.data;
+				})
+				.catch(function (error) {
+					console.error("Lỗi khi tìm kiếm bài viết:", error);
+				});
+		};
+
+		$scope.detailProduct = function (productId) {
+			// Gọi API để lấy thông tin chi tiết bài viết dựa vào postId
+			$http
+				.get(url + "/staff/postsproduct/detailProduct/" + productId)
+				.then(function (response) {
+					$scope.product = response.data;
+					console.log($scope.product);
+					$("#exampleModal").modal("show"); // Hiển thị modal khi có dữ liệu bài viết
+				})
+				.catch(function (error) {
+					console.error("Lỗi khi lấy thông tin chi tiết bài viết:", error);
+				});
+		};
+
+		$scope.getSalePrice = function (originalPrice, promotion) {
+			if (promotion === 0) {
+				return originalPrice;
+			} else {
+				//tính tổng số lượng các đánh giá
+				var SalePrice = originalPrice - (originalPrice * promotion) / 100;
+				return SalePrice;
+			}
+		};
+
+		$scope.accept = function (productId) {
+			Swal.fire({
+				text: "Bạn có chắc muốn chấp nhận sản phẩm này không?",
+				icon: "warning",
+				confirmButtonText: "Có, chắc chắn",
+				showCancelButton: true,
+				confirmButtonColor: "#159b59",
+				cancelButtonColor: "#d33",
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$http({
+						method: "POST",
+						url: url + "/staff/postsproduct/accept/" + productId,
+					})
+						.then(function (response) {
+							// Cập nhật dữ liệu mới nhận được từ server
+							$scope.listPosts = response.data;
+							$scope.reloadPage();
+						})
+						.catch(function (error) {
+							console.error("Lỗi khi chấp nhận yêu cầu các bài viết:", error);
+
+							Swal.fire({
+								position: "top",
+								icon: "error",
+								text: "Không chấp nhận yêu cầu được!",
+								showConfirmButton: false,
+								timer: 1800,
+							});
+						});
+				}
+			});
+		};
+
+		$scope.rejectPage = function () {
+			$("#reasonModal").modal("show");
+			$("#exampleModal").modal("hide");
+
+			$("#reasonModal").on("hidden.bs.modal", function () {
+				$("#exampleModal").modal("show");
+			});
+		};
+
+		$scope.reject = function (productId) {
+			// Lấy lý do từ chối từ input field. Giả sử input field có id là 'reason'
+			var reason = $scope.reasonRejection;
+			if (!reason) {
+				Swal.fire("Lỗi!", "Vui lòng nhập vào lí do từ chối!", "error");
+			} else {
+				$http({
+					method: "POST",
+					url: url + "/staff/rejectproduct/reject/" + productId,
+					data: {
+						reason: reason,
+						productId: productId,
+					},
+				}).then(function (response) {
+					if (response.status === 400) {
+						Swal.fire("Không được bỏ trống lý do!", response.data, "error");
+					} else {
+						$scope.Product = response.data;
+						Swal.fire({
+							title: "Thành công!",
+							text: "Đã từ chối bài đăng sản phẩm này!",
+							icon: "success",
+							showCancelButton: false,
+							confirmButtonText: "OK",
+						}).then((result) => {
+							// Check if the user clicked the "OK" button
+							if (result.isConfirmed) {
+								$scope.reloadPage();
+							}
+						});
+					}
 				});
 			}
-		});
-	};
+		};
 
-	$scope.rejectPage = function () {
-		$('#reasonModal').modal('show');
-		$('#exampleModal').modal('hide');
-
-
-
-		$('#reasonModal').on('hidden.bs.modal', function () {
-			$('#exampleModal').modal('show');
-		});
+		$scope.reloadPage = function () {
+			location.reload();
+		};
 	}
-
-	$scope.reject = function (productId) {
-		// Lấy lý do từ chối từ input field. Giả sử input field có id là 'reason'
-		var reason = $scope.reasonRejection;
-		if (!reason) {
-			Swal.fire(
-				'Lỗi!',
-				'Vui lòng nhập vào lí do từ chối!',
-				'error'
-			)
-		} else {
-			$http({
-				method: 'POST',
-				url: url + '/staff/rejectproduct/reject/' + productId,
-				data: {
-					reason: reason,
-					productId: productId
-				}
-			}).then(function (response) {
-				if (response.status === 400) {
-					Swal.fire(
-						'Không được bỏ trống lý do!',
-						response.data,
-						'error'
-					)
-				} else {
-					$scope.Product = response.data;
-					Swal.fire({
-						title: 'Thành công!',
-						text: 'Đã từ chối bài đăng sản phẩm này!',
-						icon: 'success',
-						showCancelButton: false,
-						confirmButtonText: 'OK'
-					}).then((result) => {
-						// Check if the user clicked the "OK" button
-						if (result.isConfirmed) {
-							$scope.reloadPage();
-						}
-					});
-				}
-			});
-		}
-	}
-
-
-	$scope.reloadPage = function () {
-		location.reload();
-	}
-	function checkScreenWidth() {
-		var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
-		var asideLeft = document.getElementById('asideLeft');
-		var view = document.getElementById('view');
-		if (screenWidth <= 1080) {
-			asideLeft.style.left = '-280px';
-
-			asideLeft.style.opacity = '0';
-			view.classList.remove('col-lg-9', 'offset-lg-3');
-			view.classList.add('col-lg-11', 'offset-lg-1');
-
-		} else {
-			if (view) {
-				view.classList.remove('col-lg-11', 'offset-lg-1');
-				view.classList.add('col-lg-9', 'offset-lg-3');
-				asideLeft.style.opacity = '1';
-				asideLeft.style.left = '0'; // Hoặc thay đổi thành 'block' nếu cần hiển thị lại
-				$rootScope.checkMenuLeft = true;
-				$scope.$apply(); // Kích hoạt digest cycle để cập nhật giao diện
-			}
-
-
-
-		}
-	}
-	setTimeout(function () {
-		checkScreenWidth();
-	  }, 100);
-
-})
+);

@@ -155,7 +155,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $rootSc
 			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
 		};
 
-	
+
 
 		$http.get(url + '/findusers')
 			.then(function (response) {

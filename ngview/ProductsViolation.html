@@ -2,54 +2,60 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="card-title fw-semibold mb-2">
-
 				<nav class="navbar navbar-expand-lg navbar-light">
-
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
 							<button ng-class="{ 'nav-link': true, 'active': checkShopping }"
 								ng-click="getproductList(currentPage)" id="profile-tab" data-bs-toggle="tab"
 								data-bs-target="#processing" type="button" role="tab" aria-controls="profile"
-								aria-selected="false">Đang chờ duyệt</button>
+								aria-selected="false">
+								Đang chờ duyệt
+							</button>
 						</li>
 						<li class="nav-item" role="presentation">
 							<button ng-class="{ 'nav-link': true, 'active': !checkShopping }"
 								ng-click="getproductDecline(currentPage)" id="home-tab" data-bs-toggle="tab"
 								data-bs-target="#declined" type="button" role="tab" aria-controls="home"
-								aria-selected="true">Đã bị vi phạm</button>
+								aria-selected="true">
+								Đã bị vi phạm
+							</button>
 						</li>
 					</ul>
-
-					<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-						<!-- Nút chuyển đến trang trước -->
-						<a class="me-2" ng-click="prevPage()"> <i class="fa-solid fa-chevron-left fa-xs"></i>
-						</a>
-
-						<!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
-						<small class="me-2">{{currentPage + 1}} /
-							{{totalPages}}</small>
-
-						<!-- Nút chuyển đến trang kế tiếp -->
-						<a class="me-3" ng-click="nextPage()"> <i class="fa-solid fa-chevron-right fa-xs"></i>
-						</a>
-
-						
-					</ul>
-
-
 				</nav>
 			</div>
 
 			<div class="tab-content">
 				<div class="tab-pane active" id="processing" role="tabpanel" aria-labelledby="home-tab">
+					<div class="row">
+						<div class="col-md-6">
+							<!-- Chia thành 6 phần của 12 phần theo hệ thống lưới Bootstrap -->
+							<form class="position-relative">
+								<input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+									placeholder="Nhập tên người đăng" ng-change="searchProduct()" ng-model="searchText"
+									style="border: 1px solid #ccc; width: 100%" />
+								<i
+									class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+							</form>
+						</div>
+						<div class="col-md-6" style="padding-top: 10px">
+							<!-- Chia thành 6 phần của 12 phần theo hệ thống lưới Bootstrap -->
+							<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+								<!-- Nút chuyển đến trang trước -->
+								<a class="me-2" ng-click="prevPage()">
+									<i class="fa-solid fa-chevron-left fa-xs"></i>
+								</a>
 
-					<form class="position-relative">
-						<input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-							placeholder="Nhập tên sản phẩm" ng-change="searchProduct()" ng-model="searchText"
-							style="border: 1px solid #ccc;"> <i
-							class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-					</form>
+								<!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
+								<small class="me-2">{{currentPage + 1}} / {{totalPages}}</small>
 
+								<!-- Nút chuyển đến trang kế tiếp -->
+								<a class="me-3" ng-click="nextPage()">
+									<i class="fa-solid fa-chevron-right fa-xs"></i>
+								</a>
+							</ul>
+						</div>
+					</div>
+					<br />
 					<div class="table-responsive sidebar-scrollable">
 						<table class="table text-nowrap mb-0 align-middle">
 							<thead class="text-dark fs-4">
@@ -70,37 +76,73 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="list in listProducts" id="row-{{list.violationId}}">
-									<td class="border-bottom-0"
-										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.product.productName}}</td>
-									<td class="border-bottom-0"
-										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+									<td class="border-bottom-0" style="
+						max-width: 250px;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					  ">
+										{{list.product.productName}}
+									</td>
+									<td class="border-bottom-0" style="
+						max-width: 200px;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					  ">
 										{{list.product.user.username}}
 									</td>
-									<td class="border-bottom-0"
-										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.product.datePost | date: 'dd/MM/yyyy'}}</td>
-									<td class="border-bottom-0 text-center"><a style="cursor: pointer;"
-											data-bs-placement="top" title="Xem chi tiết bài viết"
-											ng-click="detailProduct(list.violationId)"> <i class="fa-light fa-eye"
-												style="color: #336cce;"></i>
-										</a></td>
+									<td class="border-bottom-0" style="
+						max-width: 200px;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					  ">
+										{{list.product.datePost | date: 'dd/MM/yyyy'}}
+									</td>
+									<td class="border-bottom-0 text-center">
+										<a style="cursor: pointer" data-bs-placement="top" title="Xem chi tiết bài viết"
+											ng-click="detailProduct(list.violationId)">
+											<i class="fa-light fa-eye" style="color: #336cce"></i>
+										</a>
+									</td>
 								</tr>
 							</tbody>
 						</table>
-
 					</div>
 				</div>
 
 				<div class="tab-pane" id="declined" role="tabpanel" aria-labelledby="home-tab">
+					<div class="row">
+						<div class="col-md-6">
+							<!-- Chia thành 6 phần của 12 phần theo hệ thống lưới Bootstrap -->
+							<form class="position-relative">
+								<input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+									placeholder="Nhập tên người đăng" ng-change="searchProductViolation()"
+									ng-model="searchText" style="border: 1px solid #ccc; width: 100%" />
+								<i
+									class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+							</form>
+						</div>
+						<div class="col-md-6" style="padding-top: 10px">
+							<!-- Chia thành 6 phần của 12 phần theo hệ thống lưới Bootstrap -->
+							<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+								<!-- Nút chuyển đến trang trước -->
+								<a class="me-2" ng-click="prevPage()">
+									<i class="fa-solid fa-chevron-left fa-xs"></i>
+								</a>
 
-					<form class="position-relative">
-						<input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-							placeholder="Nhập tên sản phẩm" ng-change="searchProductViolation()" ng-model="searchViolationText"
-							style="border: 1px solid #ccc; width: 400px;"> <i
-							class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-					</form>
+								<!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
+								<small class="me-2">{{currentPage + 1}} / {{totalPages}}</small>
 
+								<!-- Nút chuyển đến trang kế tiếp -->
+								<a class="me-3" ng-click="nextPage()">
+									<i class="fa-solid fa-chevron-right fa-xs"></i>
+								</a>
+							</ul>
+						</div>
+					</div>
+					<br />
 					<div class="table-responsive sidebar-scrollable">
 						<table class="table text-nowrap mb-0 align-middle">
 							<thead class="text-dark fs-4">
@@ -121,108 +163,160 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="list in listViolationProducts" id="row-{{list.violationId}}">
-									<td class="border-bottom-0"
-										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.product.productName}}</td>
-									<td class="border-bottom-0"
-										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.product.user.username}}</td>
-									<td class="border-bottom-0">
-										<p class="mb-0 fw-normal">{{list.product.datePost | date: 'dd/MM/yyyy'}}</p>
+									<td class="border-bottom-0" style="
+						max-width: 250px;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					  ">
+										{{list.product.productName}}
 									</td>
-									<td class="border-bottom-0"><a style="cursor: pointer;"
-										data-bs-placement="top" title="Xem chi tiết bài viết"
-										ng-click="detailViolation(list.violationId)"> <i class="fa-light fa-eye"
-											style="color: #336cce;"></i>
-									</a></td>
+									<td class="border-bottom-0" style="
+						max-width: 200px;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					  ">
+										{{list.product.user.username}}
+									</td>
+									<td class="border-bottom-0">
+										<p class="mb-0 fw-normal">
+											{{list.product.datePost | date: 'dd/MM/yyyy'}}
+										</p>
+									</td>
+									<td class="border-bottom-0">
+										<a style="cursor: pointer" data-bs-placement="top" title="Xem chi tiết bài viết"
+											ng-click="detailViolation(list.violationId)">
+											<i class="fa-light fa-eye" style="color: #336cce"></i>
+										</a>
+									</td>
 								</tr>
 							</tbody>
 						</table>
-
 					</div>
 				</div>
-
 			</div>
-
 		</div>
 	</div>
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-			<div class="modal-content" style="height: 100%;">
+			<div class="modal-content" style="height: 100%">
 				<div class="modal-header">
 					<h4>Chi tiết</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-lg-10" style="z-index: 10; margin-bottom: 2rem; border-radius: 5px;">
-							<div class="row frameProduct ">
-								<div class="col-md-6 "
-									style="display: flex; justify-content: center; align-items: center;">
-									<img width="100%" ng-src="{{product.product.media[0].mediaUrl}}">
+						<div class="col-lg-10" style="z-index: 10; margin-bottom: 2rem; border-radius: 5px">
+							<div class="row frameProduct">
+								<div id="carouselExampleFade"
+									class="carousel slide carousel-fade carousel-dark col-md-6" style="
+					  display: flex;
+					  justify-content: center;
+					  align-items: center;
+					" ng-if="product.product.media && product.product.media.length > 0">
+									<div class="carousel-inner" style="width: 75%">
+										<div class="carousel-item" ng-class="{active: $index === 0}"
+											ng-repeat="imageUrl in product.product.media">
+											<img width="100%" ng-src="/images/{{imageUrl.mediaUrl}}"
+												class="d-block w-100" alt="" />
+										</div>
+									</div>
+									<button class="carousel-control-prev" type="button"
+										data-bs-target="#carouselExampleFade" data-bs-slide="prev"
+										ng-if="product.product.media.length > 1">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									</button>
+									<button class="carousel-control-next" type="button"
+										data-bs-target="#carouselExampleFade" data-bs-slide="next"
+										ng-if="product.product.media.length > 1">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									</button>
 								</div>
-								<div class="col-md-6 ">
+
+								<div class="col-md-6">
 									<div class="product__info">
-										<div class="user-profile ">
-											<img ng-src="{{product.product.user.avatar}}" style="border-radius: 100%;" alt="">
+										<div class="user-profile">
+											<img ng-src="{{product.product.user.avatar}}" style="border-radius: 100%"
+												alt="" />
 											<div>
-												<span
-													style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-													class="ng-binding">Vân Anh</span> &nbsp;&nbsp; <span><small
-														style="font-size: 12px; color: #65676b" class="ng-binding">
+												<span style="
+							  font-weight: 600 !important;
+							  font-size: 1rem !important;
+							  margin: 0;
+							  color: #2a3547;
+							" class="ng-binding">Vân Anh</span>
+												&nbsp;&nbsp;
+												<span><small style="font-size: 12px; color: #65676b" class="ng-binding">
 														{{getFormattedTimeAgo(product.product.datePost)}}
 													</small></span>
 											</div>
 										</div>
-										<hr>
+										<hr />
 										<div class="title">
-											<b style="font-size: 1.2rem; white-space: nowrap;
-									text-overflow: ellipsis;display: block; width: 100%; overflow: hidden;">{{product.product.productName}}</b>
+											<b style="
+							font-size: 1.2rem;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+							display: block;
+							width: 100%;
+							overflow: hidden;
+						  ">{{product.product.productName}}</b>
 										</div>
-										<br>
+										<br />
 										<div>
-											<b>Giá:</b> <small ng-show="!product.promotion==0"><span
-													style="text-decoration: line-through; color: gray;">{{product.product.originalPrice
+											<b>Giá:</b>
+											<small ng-show="!product.promotion==0"><span
+													style="text-decoration: line-through; color: gray">{{product.product.originalPrice
 													| currencyFormat}}
-												</span> &nbsp; |&nbsp;</small>
-											<span> {{getSalePrice(product.product.originalPrice, product.product.promotion) |
-												currencyFormat}}</span>
+												</span>
+												&nbsp; |&nbsp;</small>
+											<span>
+												{{getSalePrice(product.product.originalPrice,
+												product.product.promotion) | currencyFormat}}</span>
 										</div>
-										<br>
+										<br />
 										<div>
-											<b>Chất liệu:</b> <span>{{product.product.material}}
-											</span>
+											<b>Chất liệu:</b>
+											<span>{{product.product.material}} </span>
 										</div>
-										<br>
+										<br />
 										<div>
-											<b>Màu:</b> <span
+											<b>Màu:</b>
+											<span
 												ng-repeat="obj in product.product.productColors">{{obj.color.colorName}}{{$last
 												? '.' : ','}}
 											</span>
 										</div>
-										<br>
+										<br />
 										<div>
-											<b>Lí do:</b> <div style="height: 10vh; overflow: scroll; margin-left: 20px;"> <span ng-repeat="des in listDescription">{{des}} <br>
-											</span> 
-										</div>	
+											<b>Lí do:</b>
+											<div style="
+							height: 10vh;
+							overflow: scroll;
+							margin-left: 20px;
+						  ">
+												<span ng-repeat="des in listDescription">{{des}} <br />
+												</span>
+											</div>
 										</div>
 										<div>
-											<b>Số lượt người báo cáo:</b> <span>{{violation}}
-											</span>
+											<b>Số lượt người báo cáo:</b> <span>{{violation}} </span>
 										</div>
-										
-										<button ng-click="accept(product.violationId)" class="accept--btn"
-											style="margin-top: 1.5rem;">Chấp nhận</button>
-										<button ng-click="reject(product.violationId)" class="decline--btn" style="margin-top: 1.5rem;">Từ
-											chối</button>
-									</div>
 
+										<button ng-click="accept(product.violationId)" class="accept--btn"
+											style="margin-top: 1.5rem">
+											Chấp nhận
+										</button>
+										<button ng-click="reject(product.violationId)" class="decline--btn"
+											style="margin-top: 1.5rem">
+											Từ chối
+										</button>
+									</div>
 								</div>
 							</div>
-
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -232,20 +326,22 @@
 	<!-- Modal2 -->
 	<div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-			<div class="modal-content" style="height: 40%;">
+			<div class="modal-content" style="height: 40%">
 				<div class="modal-header">
 					<h4>Lí do vi phạm</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<b>Lí do:</b> <div style="height: 10vh; overflow: scroll; margin-left: 20px;"> <span ng-repeat="des in listDescription">{{des}} <br>
-					</span> 
+					<b>Lí do:</b>
+					<div style="height: 10vh; overflow: scroll; margin-left: 20px">
+						<span ng-repeat="des in listDescription">{{des}} <br /> </span>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<!-- Cancel button -->
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Hủy</button>
-
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+						Hủy
+					</button>
 				</div>
 			</div>
 		</div>
