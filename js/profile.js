@@ -223,6 +223,10 @@ app.controller('ProfileController', function ($scope, $http, $translate, $rootSc
 					console.error('Error while updating user info:', error);
 				});
 			}
+			$http.post(url + '/getOtherUserId/' + $routeParams.userId)
+				.then(function (response) {
+
+				});
 		};
 
 
@@ -279,6 +283,7 @@ app.controller('ProfileController', function ($scope, $http, $translate, $rootSc
 					console.error('Error while updating account info:', error);
 				}
 			});
+
 		};
 
 
