@@ -8,8 +8,7 @@ app.controller('OrdersController', function ($scope, $http, $window, $rootScope)
         $http.get(orderUrl)
             .then(function (response) {
                 // Dữ liệu trả về từ API sẽ nằm trong response.data
-                console.log(response)
-                var grouped = {};
+                var grouped = [];
 
                 angular.forEach(response.data, function (order) {
                     if (order && order[0] && order[0].orderDate && order[3] && order[3].userId && order[0].orderStatus.statusId) {
@@ -18,17 +17,20 @@ app.controller('OrdersController', function ($scope, $http, $window, $rootScope)
                         var statusId = order[0].orderStatus.statusId;
                         var key = userId + '-' + orderDate + '-' + statusId;
 
-                        if (!grouped[key]) {
-                            grouped[key] = [];
+                        // Tìm vị trí để chèn mới vào mảng
+                        var insertIndex = 0;
+                        while (insertIndex < grouped.length && new Date(orderDate) < new Date(grouped[insertIndex][0].orderDate)) {
+                            insertIndex++;
                         }
 
-                        grouped[key].push(order);
+                        // Chèn mới vào mảng tại vị trí đã tìm được
+                        grouped.splice(insertIndex, 0, [order]);
                     }
                 });
 
+
                 $scope.orders = grouped;
-
-
+                console.log($scope.orders)
             })
             .catch(function (error) {
                 console.log(error);

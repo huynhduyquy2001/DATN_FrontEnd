@@ -7,7 +7,7 @@ app.controller(
     $scope.listCountAcc = [];
     $scope.topPostsLikes = [];
     $scope.topTicket = {};
-    $scope.ticketByMonth = {};
+    $scope.ticketByMonth = 0;
     $scope.ticketCountByMonth = {};
     $scope.totalPosts = [];
     $scope.ticketCountUser = {};
@@ -28,7 +28,7 @@ app.controller(
     $http
       .get(url + "/admin/reportTotalTicket")
       .then(function (response) {
-        $scope.ticketByMonth = response.data;
+        $scope.ticketByMonth = response.data; 
       })
       .catch(function (error) {
         console.log(error);

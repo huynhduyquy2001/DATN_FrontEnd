@@ -332,7 +332,7 @@ app.controller(
           .then(function (response) { });
 
         $http
-          .put(url + "/admin/usermanager/userRole/" + phoneNumber + "/" + 4)
+          .put(url + "/myStore/userRole/" + phoneNumber + "/" + 4)
           .then(function (response) {
             Swal.fire({
               position: "top",
