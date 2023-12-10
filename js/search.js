@@ -9,6 +9,8 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	$scope.listFollow = [];
 	$scope.usernameS = $rootScope.keyS;
 	$scope.showDropdown = true;
+	// $rootScope.myAccount.user.userId = $scope.userIdSearch;
+	// alert($rootScope.myAccount.user.userId)
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get(Url + '/getunseenmessage')
 		.then(function (response) {
@@ -424,4 +426,5 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 		$scope.findProduct(searchTerm);
 		$scope.showDropdown = false;
 	};
+
 });
