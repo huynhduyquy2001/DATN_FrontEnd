@@ -22,8 +22,6 @@ app.controller('ProfileController', function ($scope, $http, $translate, $rootSc
 	$scope.UserInfo = {};
 	$scope.myUser = {};
 	$scope.myUserId = '';
-	$scope.notification = [];
-	$scope.allNotification = [];
 	$scope.AccInfo = {};
 	$scope.check = false;
 

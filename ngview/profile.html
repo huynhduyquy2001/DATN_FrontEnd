@@ -418,17 +418,17 @@
 								</div>
 								<div class="col-lg-4 mt-n3 order-lg-2 order-1">
 									<div class="mt-n5">
-										<div class="d-flex align-items-center justify-content-center mb-2">
-											<div class="d-flex align-items-center justify-content-center rounded-circle"
-												style="width: 155px; height: 155px; background-color: gray;">
-												<a data-bs-toggle="modal"
-													ng-if=" myAccount.user.userId == UserInfo.userId"
-													data-bs-target="#ChinhSuaAnhDaiDien"
-													class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
-													style="width: 150px; height: 150px;position: relative;">
-													<img ng-src="{{UserInfo.avatar}}" alt="" class="w-100 h-100"
-														style="object-fit: cover;">
-												</a>
+										<div class="d-flex align-items-center justify-content-center rounded-circle"
+											style="width: 155px; height: 155px; background-color: gray;">
+											<div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
+												style="width: 150px; height: 150px;position: relative;">
+												<a ng-if="myAccount.user.userId == UserInfo.userId"
+													data-bs-toggle="modal" data-bs-target="#ChinhSuaAnhDaiDien"><img
+														ng-src="{{UserInfo.avatar}}" alt="" class="w-100 h-100"
+														style="object-fit: cover;"></a>
+												<img ng-if="myAccount.user.userId != UserInfo.userId"
+													ng-src="{{UserInfo.avatar}}" alt="" class="w-100 h-100"
+													style="object-fit: cover;">
 											</div>
 										</div>
 										<div class="text-center">

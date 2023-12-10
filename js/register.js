@@ -91,7 +91,6 @@ app.controller("registerCtrl", function ($scope, $http) {
         var modal = document.getElementById("myModal");
         modal.style.display = "block";
     };
-
     $scope.closeModal = function () {
         var modal = document.getElementById("myModal");
         modal.style.display = "none";

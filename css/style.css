@@ -1628,10 +1628,10 @@ img {
 }
 
 #dropArea {
-	height: 200px;
+	height: 100px;
 	border: 2px dashed #ccc;
 	text-align: center;
-	line-height: 200px;
+	line-height: 120px;
 	font-size: 16px;
 	color: #666;
 	margin: 20px auto;
@@ -1662,6 +1662,8 @@ img {
 	padding: 0.1rem;
 	border-radius: 6px;
 	border: 1px solid gray;
+	height: 100%;
+	object-fit: contain;
 }
 
 #mediaList video {
@@ -1677,7 +1679,7 @@ img {
 }
 
 .previewMediaContainer {
-	width: 30%;
+	width: 20%;
 	height: auto;
 	margin: 5px;
 	border-radius: 5px;
@@ -1903,10 +1905,10 @@ h3 {
 	font-size: 0.8em;
 	font-weight: 700;
 	letter-spacing: 1.3px;
-	color: #007ACC;
+	color: white;
 	transition: 0.3s ease-in-out;
 	cursor: pointer;
-	background-color: #fff;
+	background-color: #007ACC;
 
 	&:active {
 		transform: scale(0.97);
@@ -1948,7 +1950,8 @@ h3 {
 	color: #c0c0c0;
 	transition: 0.3s ease-in-out;
 	cursor: pointer;
-	background-color: white;
+	background-color: #c0c0c0;
+	color: white;
 
 	&:active {
 		transform: scale(0.97);
@@ -1998,6 +2001,23 @@ h3 {
 	font-weight: 700;
 	letter-spacing: 1.3px;
 	color: #ff3f40;
+	transition: 0.3s ease-in-out;
+	cursor: pointer;
+	background-color: #fff;
+
+	&:active {
+		transform: scale(0.97);
+	}
+}
+
+.like--btn {
+	padding: 0.8em 1em;
+	border: 1px solid #007ACC;
+	border-radius: 7px;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 1.3px;
+	color: #007ACC;
 	transition: 0.3s ease-in-out;
 	cursor: pointer;
 	background-color: #fff;

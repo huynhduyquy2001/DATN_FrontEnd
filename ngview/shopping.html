@@ -15,10 +15,13 @@
                         <b>{{product.productName}}</b>
                         <hr>
                         <b> Chọn màu:</b>
-                        <div style="display: flex;" class="m-1">
-                            <button ng-repeat="color in product.productColors" ng-click="getTotal(color.color.colorId)"
-                                ng-class="{'dislike--btn': color.quantity > 0, 'btn-disable': color.quantity === 0}"
-                                style="display: block; margin-right: 0.2rem; padding: 0.2rem;">{{color.color.colorName}}</button>
+                        <div class=" row">
+                            <div class="col-6 mt-1 " ng-repeat="color in product.productColors">
+                                <button class="col-12 mt-1 " ng-click="getTotal(color.color.colorId)"
+                                    ng-class="{'like--btn': color.quantity > 0, 'btn-disable': color.quantity <= 0}"
+                                    style="display: block; padding: 0.2rem;">{{color.color.colorName}}</button>
+                            </div>
+
                         </div>
                         <span ng-show="total>0"><b>Số lượng còn lại:</b> {{total}}</span>
                         <span ng-show="total===0"><b>Số lượng còn lại:</b> Hết hàng</span>
