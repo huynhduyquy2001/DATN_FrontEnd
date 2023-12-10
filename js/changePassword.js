@@ -25,7 +25,7 @@ app.controller('ChangePassController', function ($scope, $http) {
                     // Check if the user clicked the "OK" button
                     if (result.isConfirmed) {
                         // Redirect to another page
-                        window.location.href = 'Index.html'; // Replace '/another-page' with the desired URL
+                        window.location.href = '/#!/'; // Replace '/another-page' with the desired URL
                     }
                 });
 

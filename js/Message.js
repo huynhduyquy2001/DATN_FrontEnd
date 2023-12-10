@@ -141,6 +141,7 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 				var check = $scope.ListUsersMess.find(function (obj) {
 					return obj[2] === $routeParams.otherId;
 				});
+				console.log("check", check);
 				check[11] = 0;
 				//$scope.$apply();
 			});
@@ -227,10 +228,13 @@ app.controller('MessController', function ($scope, $rootScope, $window, $http, $
 		//lưu tin nhắn vào cơ sở dữ liệu
 		$http.post(url + '/savemess', message)
 			.then(function (response) {
+				$rootScope.check = response.data > 0;
+				$rootScope.unseenmess = response.data;
 				//hàm gửi tin nhắn qua websocket
 				stompClient.send('/app/sendnewmess', {}, JSON.stringify(response.data));
 				$http.post(url + '/seen/' + $routeParams.otherId)
 					.then(function (response) {
+
 					});
 
 			})

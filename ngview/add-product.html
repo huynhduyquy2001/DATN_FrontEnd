@@ -5,56 +5,55 @@
         }
     </style>
     <!--Tabs-->
+
     <div>
+        <button style="background-color: #0059BF; border: none;padding: 0.5rem 1rem;
+        border-radius: 5px"><b style="color: white;">Lượt
+                đăng bài:
+                {{ticketCount}}</b></button>
+        <hr>
         <!-- Danh sách mua hàng -->
         <div class="tab-content">
+
             <div style="margin-bottom: 5.5rem;">
+
                 <form method="post" enctype="multipart/form-data" ng-submit="addProduct()">
+
                     <div class="ml-auto">
                         <div class="basic-infomation-product card">
-                            <div class="p-2"
-                                style="display: flex; justify-content: center; background-color: #0086DA; color: white;">
-                                <strong style="color: white;">Lượt đăng bài: {{ticketCount}}</strong>
-                            </div>
-
                             <div class="card-body row">
-                                <div class="title-div">Thông tin sản phẩm</div>
+                                <div class="title-div" style="color: #0059BF;">Thông tin chung</div>
                                 <div class="col-md-2">
-                                    <div class="title-element" style="font-weight: 600;">Tên sản phẩm</div>
+                                    <div class="title-element" style="font-weight: 600;"><span style="color: red;">*
+                                        </span>Tên sản phẩm</div>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <div class="form-group form-group-alt ">
-                                        <input ng-model="product.productName" placeholder="Vd: gấu bông đan len"
+                                        <input ng-model="product.productName" placeholder="Nhập tên sản phẩm"
                                             type="text" class="form-control input " required>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="title-element">Chất liệu</div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Chất liệu</div>
                                 </div>
                                 <div class="col-md-3 mt-3">
                                     <div class="form-group form-group-alt ">
                                         <input ng-model="product.material" required type="text"
-                                            placeholder="vải, len, giấy..." class="form-control input ">
+                                            placeholder="Nhập chất liệu sản phẩm" class="form-control input ">
                                     </div>
                                 </div>
+
                                 <div class="col-md-2">
-                                    <div class="title-element">Mô tả</div>
-                                </div>
-                                <div class="col-md-9 mt-3">
-                                    <div class="form-group">
-                                        <textarea ng-model="product.description" name="description" id="description"
-                                            class="form-control" style="height: 100px;" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="title-element">Hình ảnh/Video sản phẩm</div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Hình ảnh</div>
                                 </div>
                                 <div class="col-md-9 mt-3">
                                     <div id="dropArea" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);"
                                         ondragleave="dragLeaveHandler(event);">
                                         <i class="fa-light fa-download" style="font-size: 4rem;"></i>
                                     </div>
-                                    <small>Hình ảnh/video sản phẩm cần thêm :</small>
+                                    <small ng-show="addAndUpdate===2">Hình ảnh/video sản phẩm cần thêm :</small>
                                     <div id="mediaList"></div>
                                     <hr>
                                     <small ng-show="product.media.length>0">Hình ảnh/video sản phẩm hiện
@@ -79,10 +78,21 @@
 
 
                                 </div>
-                                <hr>
-                                <div class="title-div">Chi tiết</div>
                                 <div class="col-md-2">
-                                    <div class="title-element">Giá gốc</div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Mô tả</div>
+                                </div>
+                                <div class="col-md-9 mt-3">
+                                    <div class="form-group">
+                                        <textarea ng-model="product.description" name="description" id="description"
+                                            class="form-control" style="height: 100px;" required></textarea>
+                                    </div>
+                                </div>
+                                <hr style="margin-top: 1rem;">
+                                <div class="title-div" style="color: #0059BF;"> Chi tiết</div>
+                                <div class="col-md-2">
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Giá gốc</div>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <input type="number" class="form-control input" placeholder="VND"
@@ -92,14 +102,16 @@
                                         currencyFormat }}</small>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="title-element">Giảm giá </div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Giảm giá </div>
                                 </div>
                                 <div class="col-md-3 mt-3">
                                     <input type="number" class="form-control input" placeholder="%" min="0"
                                         ng-model="product.promotion" required>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="title-element">Danh sách màu</div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Danh sách màu</div>
                                 </div>
                                 <div class="col-md-9 mt-3 d-flex justify-content-between" style="flex-wrap: wrap;">
                                     <span ng-repeat="color in colors" style="margin-right: 3px;">
@@ -134,9 +146,10 @@
                                 </div>
 
                                 <hr>
-                                <div class="title-div">Vận chuyển</div>
+                                <div class="title-div" style="color: #0059BF;">Vận chuyển</div>
                                 <div class="col-md-2">
-                                    <div class="title-element">Cân nặng</div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Cân nặng</div>
                                 </div>
                                 <div class="col-md-2 mt-3">
                                     <input type="number" class="form-control input" placeholder="gram" value="1"
@@ -144,13 +157,14 @@
 
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="title-element">Kích thước (cm)</div>
+                                    <div class="title-element"><span style="color: red;">*
+                                        </span>Kích thước (cm)</div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group mb-3">
                                         <div class="col-md-3" style="margin: 10px;">
 
-                                            <input type="number" class="form-control input" placeholder="chiều cao"
+                                            <input type="number" class="form-control input" placeholder="chiều rộng"
                                                 aria-describedby="Width" ng-model="product.width" required step="0.01">
                                         </div>
                                         <div class="col-md-3" style="margin: 10px;">
@@ -255,6 +269,7 @@
         var deleteButton = document.createElement('button');
         deleteButton.innerHTML = 'X';
         deleteButton.classList.add('deleteButton');
+        deleteButton.style.background = 'gray';
         deleteButton
             .addEventListener(
                 'click',

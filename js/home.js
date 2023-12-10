@@ -339,6 +339,7 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	};
 
 	$scope.getFormattedTimeAgo = function (date) {
+
 		var currentTime = new Date();
 		var activityTime = new Date(date);
 		var timeDiff = currentTime.getTime() - activityTime.getTime();

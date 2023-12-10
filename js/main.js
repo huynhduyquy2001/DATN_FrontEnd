@@ -22,7 +22,7 @@ app.config(function ($translateProvider, $routeProvider) {
 		templateUrl: "ngview/profile.html",
 		controller: 'ProfileController'
 	}).when('/productdetails/:productId', {
-		templateUrl: "ngview/productDetails.html",
+		templateUrl: "ngview/ProductDetails.html",
 		controller: 'ProductDetailsController'
 	}).when('/favouriteProduct', {
 		templateUrl: "ngview/favouriteProducts.html",
@@ -78,7 +78,7 @@ app.config(function ($translateProvider, $routeProvider) {
 	}).when('/personalStatistics', {
 		templateUrl: "ngview/personalStatistics.html",
 		controller: 'personalStatisticsController'
-	}).when('/changePassword',{
+	}).when('/changePassword', {
 		templateUrl: "ChangePassword.html",
 		controller: 'ChangePassController'
 	});

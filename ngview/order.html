@@ -12,7 +12,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         display: none;
         padding: 10px;
-        margin-left: 100px;
+
     }
 
     .card-title:hover .dropdown-menu {
@@ -43,7 +43,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="pill" href="#tab-cho-giao-hang"
-                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 3 }" ng-click="currentOrderPage(3)">Chờ
+                    ng-class="{ 'nav-link': true, 'active': checkOrderPage === 3 }" ng-click="currentOrderPage(3)">Đang
                     giao hàng</a>
             </li>
             <li class="nav-item">
@@ -1507,7 +1507,7 @@
                                             <span>
                                                 <a href="#!/productdetails/{{groupedOrders[0][2].productId}}"><button
                                                         type="button" class="btn btn-danger btn-sm"
-                                                         style="background-color: #ff3f40;">
+                                                        style="background-color: #ff3f40;">
                                                         <i class="fa-sharp fa-solid fa-rotate-right"></i></button></a>
                                             </span>
                                         </div>
