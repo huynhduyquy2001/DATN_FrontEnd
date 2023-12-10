@@ -185,28 +185,28 @@ app.controller('SearchController', function ($scope, $http, $translate, $rootSco
 	}
 
 
-	//đây là code hiện lên lịch sử người dùng
-	const databaseURL = 'https://search-history-453d4-default-rtdb.firebaseio.com/history.json';
-	$scope.hienthi = [];
-	// var Url = `${host}/history.json`;
-	$http.get(databaseURL).
-		then(resp => {
-			$scope.items = resp.data;
-			$scope.hienthi = $scope.items;
-			console.log("Load list lích su", $scope.hienthi);
-		}).catch(function (error) {
-			console.log("Load Error", error);
-		});
-	//đây là code xóa lịch sử tìm kiếm
-	$scope.deleteLS = function (key) {
-		var Url = `${host}/history/${key}.json`;
-		$http.delete(Url).then(resp => {
-			delete $scope.items[key];
-			console.log("Xóa OK", resp);
-		}).catch(function (error) {
-			console.log("Xóa Error", error);
-		});
-	}
+	// //đây là code hiện lên lịch sử người dùng
+	// const databaseURL = 'https://search-history-453d4-default-rtdb.firebaseio.com/history.json';
+	// $scope.hienthi = [];
+	// // var Url = `${host}/history.json`;
+	// $http.get(databaseURL).
+	// 	then(resp => {
+	// 		$scope.items = resp.data;
+	// 		$scope.hienthi = $scope.items;
+	// 		console.log("Load list lích su", $scope.hienthi);
+	// 	}).catch(function (error) {
+	// 		console.log("Load Error", error);
+	// 	});
+	// //đây là code xóa lịch sử tìm kiếm
+	// $scope.deleteLS = function (key) {
+	// 	var Url = `${host}/history/${key}.json`;
+	// 	$http.delete(Url).then(resp => {
+	// 		delete $scope.items[key];
+	// 		console.log("Xóa OK", resp);
+	// 	}).catch(function (error) {
+	// 		console.log("Xóa Error", error);
+	// 	});
+	// }
 
 	//đây là code shownames
 	$scope.showName = function (key) {
