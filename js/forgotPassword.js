@@ -3,9 +3,9 @@ app.controller("forgotPassCtrl", function ($scope, $http) {
     var url = "http://localhost:8080";
 
     $scope.guiMa = function () {
-        var phone = $scope.phone;
+        var email = $scope.email;
         var data = {
-            phone: phone,
+            email: email,
         };
 
         $http

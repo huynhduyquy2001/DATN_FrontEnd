@@ -38,7 +38,8 @@
 			<center><b ng-if="searchnull">{{ searchnull }}</b></center>
 			<!-- Hiển thị người dùng -->
 			<div class="user-container" style="justify-content: space-evenly;">
-				<div class="user-card col-md-6" style="background: transparent; margin: 0" ng-repeat="user in users">
+				<div class="user-card col-md-6" style="background: transparent; margin: 0" ng-repeat="user in users"
+					ng-if="user.userId !== $root.myAccount.user.userId">
 					<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
 						<div class="user-profile" style="display: block;">
 							<div class="username-dt dpbg-1"

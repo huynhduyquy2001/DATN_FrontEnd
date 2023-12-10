@@ -4,7 +4,8 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
     $scope.colors = [];
     $scope.selectedColors = [];
     $scope.productId = "";
-
+    $scope.addAndUpdate = 1;
+    $scope.ticketCount = 0;
     $scope.deleteMedia = function (mediaId) {
         Swal.fire({
             text: 'Bạn muốn xóa ảnh khỏi sản phẩm? Dữ liệu sẽ không được phục hồi',
@@ -53,6 +54,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
         });
     };
     if ($routeParams.productId) {
+        $scope.addAndUpdate = 2;
         $http.get(Url + '/get-product/' + $routeParams.productId)
             .then(function (response) {
                 $scope.product = response.data;
@@ -62,6 +64,16 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 console.log(error);
             });
     }
+    $scope.getSticket = function () {
+        $http.get(Url + '/get-ticket')
+            .then(function (response) {
+                $scope.ticketCount = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    $scope.getSticket();
     var config = {
         apiKey: "AIzaSyA6tygoN_hLUV6iBajf0sP3rU9wPboucZ0",
         authDomain: "viesonet-datn.firebaseapp.com",
@@ -122,7 +134,50 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                 console.log(error);
             });
     }
+
     $scope.addProduct = function () {
+        if ($scope.ticketCount === 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'warning',
+                title: 'Đã hết lượt đăng bài, vui lòng mua thêm'
+            })
+            return;
+        }
+
+        var fileInput = document.getElementById('inputGroupFile01');
+        // Check if no files are selected
+        if (fileInput.files.length === 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'warning',
+                title: 'Vui lòng chọn ít nhất 1 ảnh!!!'
+            })
+            return;
+        }
+
         if ($scope.selectedColors.length === 0) {
             const Toast = Swal.mixin({
                 toast: true,
@@ -173,9 +228,16 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
                     'userName': response.data.user.userName
                 };
 
+
                 $http.post(Url + '/add-product-temp', productTemp)
                     .then(function (response) {
-
+                        $http.get(Url + '/update-ticket')
+                            .then(function (response) {
+                                $scope.ticketCount = response.data;
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -252,6 +314,7 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
             }
             return;
         }
+
         var storage = firebase.storage();
         var storageRef = storage.ref();
 
@@ -470,5 +533,5 @@ app.controller('AddProductsController', function ($scope, $http, $translate, $ro
     }
     setTimeout(function () {
         checkScreenWidth();
-      }, 100);
+    }, 100);
 });

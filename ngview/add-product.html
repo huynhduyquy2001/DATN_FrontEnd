@@ -1,4 +1,9 @@
 <div class="row col-md-11">
+    <style>
+        .input {
+            border-radius: 20px;
+        }
+    </style>
     <!--Tabs-->
     <div>
         <!-- Danh sách mua hàng -->
@@ -8,9 +13,8 @@
                     <div class="ml-auto">
                         <div class="basic-infomation-product card">
                             <div class="p-2"
-                                style="display: flex; justify-content: space-evenly; font-size: 1.3rem; font-weight: 600;">
-                                <span style="color: #0059BF;"><i class="fa-solid fa-shop"></i> Thêm sản phẩm</span>
-                                <span style="color: #F27323;">Lượt đăng bài: 3</span>
+                                style="display: flex; justify-content: center; background-color: #0086DA; color: white;">
+                                <strong style="color: white;">Lượt đăng bài: {{ticketCount}}</strong>
                             </div>
 
                             <div class="card-body row">
@@ -81,7 +85,7 @@
                                     <div class="title-element">Giá gốc</div>
                                 </div>
                                 <div class="col-md-4 mt-3">
-                                    <input type="number" class="form-control" placeholder="VND"
+                                    <input type="number" class="form-control input" placeholder="VND"
                                         ng-model="product.originalPrice" required min="10000">
                                     <small id="helpId" ng-if="product.originalPrice!=null"
                                         class="form-text text-muted">{{ product.originalPrice |
@@ -91,7 +95,7 @@
                                     <div class="title-element">Giảm giá </div>
                                 </div>
                                 <div class="col-md-3 mt-3">
-                                    <input type="number" class="form-control" placeholder="%" min="0"
+                                    <input type="number" class="form-control input" placeholder="%" min="0"
                                         ng-model="product.promotion" required>
                                 </div>
                                 <div class="col-md-2">
@@ -135,7 +139,7 @@
                                     <div class="title-element">Cân nặng</div>
                                 </div>
                                 <div class="col-md-2 mt-3">
-                                    <input type="number" class="form-control" placeholder="gram" value="1"
+                                    <input type="number" class="form-control input" placeholder="gram" value="1"
                                         ng-model="product.weight" required min="0.1" step="0.01">
 
                                 </div>
@@ -145,19 +149,19 @@
                                 <div class="col-md-6">
                                     <div class="input-group mb-3">
                                         <div class="col-md-3" style="margin: 10px;">
-                                            <span class="input-group-text" id="Width">Chiều rộng</span>
-                                            <input type="number" class="form-control" placeholder="cm"
+
+                                            <input type="number" class="form-control input" placeholder="chiều cao"
                                                 aria-describedby="Width" ng-model="product.width" required step="0.01">
                                         </div>
                                         <div class="col-md-3" style="margin: 10px;">
-                                            <span class="input-group-text" id="Height">Chiều dài</span>
-                                            <input type="number" class="form-control" placeholder="cm"
+
+                                            <input type="number" class="form-control input" placeholder="chiều dài"
                                                 aria-describedby="Height" ng-model="product.length" required
                                                 step="0.01">
                                         </div>
                                         <div class="col-md-3" style="margin: 10px;">
-                                            <span class="input-group-text" id="Height">Chiều cao</span>
-                                            <input type="number" class="form-control" placeholder="cm"
+
+                                            <input type="number" class="form-control input" placeholder="chiều cao"
                                                 aria-describedby="Height" ng-model="product.height" required
                                                 step="0.01">
                                         </div>
@@ -168,9 +172,9 @@
                     </div>
                     <div class=" justify-content-center" style="background-color: transparent; border-radius: 100px; 
                                      position: fixed; bottom: 0;">
-                        <button type="submit" class="btn btn-info m-1"
-                            style="color: white; background-color: #0059BF; border: none;">Thêm </button>
-                        <button ng-click="updateProduct()" class="btn btn-light m-1"
+                        <button ng-show="addAndUpdate===1" type="submit" class="btn btn-info m-1"
+                            style="color: white; background-color: #0059BF; border: none;">Thêm</button>
+                        <button ng-show="addAndUpdate===2" ng-click="updateProduct()" class="btn btn-light m-1"
                             style=" background-color: #3B998B; border: none; color: white;">Cập
                             nhật</button>
                     </div>
