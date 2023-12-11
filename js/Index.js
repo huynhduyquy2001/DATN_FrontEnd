@@ -56,7 +56,7 @@ app.factory("AuthInterceptor", function ($q, $window) {
 			}
 			else if (rejection.status === 401) {
 				// Redirect to the login page
-				//$window.location.href = "Login.html";
+				$window.location.href = "Login.html";
 			}
 			return $q.reject(rejection);
 		},
