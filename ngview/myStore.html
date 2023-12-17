@@ -201,7 +201,11 @@
                         </div>
                     </div>
                 </div>
-                <nav class="d-flex justify-content-center" aria-label="Page navigation">
+                <center class="mt-5" ng-if="listProductMyStore.length == 0">
+                    <h5><i class="fa-solid fa-triangle-exclamation" style="color: #e14023;"></i>Chưa có sản phẩm nào
+                        trong cửa hàng</h5>
+                </center>
+                <nav ng-if="totalPages > 1" class="d-flex justify-content-center" aria-label="Page navigation">
                     <ul class="pagination">
                         <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
                             <a class="page-link" style="color: #313131;" aria-label="Previous">
@@ -267,7 +271,11 @@
                         </div>
                     </div>
                 </div>
-                <nav class="d-flex justify-content-center" aria-label="Page navigation">
+                <center class="mt-5" ng-if="listProductPending.length == 0">
+                    <h5><i class="fa-solid fa-triangle-exclamation" style="color: #e14023;"></i>Chưa có sản phẩm nào
+                        đang chờ duyệt</h5>
+                </center>
+                <nav ng-if="totalPages > 1" class="d-flex justify-content-center" aria-label="Page navigation">
                     <ul class="pagination">
                         <li class="page-item" ng-click="PreviousPending()" style="cursor: pointer;">
                             <a class="page-link" style="color: #313131;" aria-label="Previous">
@@ -431,27 +439,6 @@
                         </div>
                     </div>
                 </div>
-                <nav class="d-flex justify-content-center" aria-label="Page navigation">
-                    <ul class="pagination">
-                        <li class="page-item" ng-click="Previous()" style="cursor: pointer;">
-                            <a class="page-link" style="color: #313131;" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-
-                        <li class="page-item" aria-current="page"><a
-                                style="font-weight: 600; color: #313131 !important; "
-                                class="page-link">{{currentPageMyStore+1}} /
-                                {{totalPages}}</a>
-                        </li>
-                        <li class="page-item" ng-click="Next()" style="cursor: pointer;">
-                            <a class="page-link" style="color: #313131;" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
             </div>
         </div>
     </div>
@@ -486,10 +473,14 @@
                     <b>{{product.productName}}</b>
                     <hr>
                     <b> Chọn màu:</b>
-                    <div style="display: flex;" class="m-1">
-                        <button ng-repeat="color in product.productColors" ng-click="getTotal(color.color.colorId)"
-                            ng-class="{'dislike--btn': color.quantity > 0, 'btn-disable': color.quantity === 0}"
-                            style="display: block; margin-right: 0.2rem; padding: 0.2rem;">{{color.color.colorName}}</button>
+                    <div style="display: flex;">
+                        <div ng-repeat="obj in product.productColors">
+                            <label class="btn">
+                                <input type="radio" class="me-2" ng-model="selectedColor" ng-value="obj.color.colorId"
+                                    name="color" ng-click="getTotal(obj.color.colorId)">
+                                {{obj.color.colorName}}
+                            </label>
+                        </div>
                     </div>
                     <span ng-show="total>0"><b>Số lượng còn lại:</b> {{total}}</span>
                     <span ng-show="total===0"><b>Số lượng còn lại:</b> Hết hàng</span>
@@ -498,7 +489,7 @@
                             type="button" id="button-addon1" data-mdb-ripple-color="dark">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <input type="text" class="form-control text-center border border-secondary" value="{{quantity}}"
+                        <input type="text" class="form-control text-center border border-secondary" ng-model="quantity"
                             aria-label="Example text with button addon" aria-describedby="button-addon1" />
                         <button ng-click="increaseQuantity()" class="btn btn-white border border-secondary px-3"
                             type="button" id="button-addon2" data-mdb-ripple-color="dark">
@@ -506,16 +497,16 @@
                         </button>
 
                     </div>
-                    <button ng-click="addShoppingCart(product.productId)" data-bs-toggle="modal"
+                    <button ng-click="addToShoppingCart(product.productId)" data-bs-toggle="modal"
                         data-bs-target="#modalId" class="buy--btn animate__animated animate__fadeInDown"
                         style="margin-top: 1.5rem; display: block;width:100% ;">Thêm vào
                         giỏ hàng</button>
                 </div>
             </div>
             <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div> -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div> -->
         </div>
     </div>
 </div>

@@ -49,22 +49,25 @@
 				</div>
 			</main>
 			<form class="msger-inputarea" style="background: transparent; border-top: 1px solid #ebf1f6;">
-				<input id="text-srh" ng-model="newMess" style="padding: 0;" type="text" class=" form-control"
+				<input id="text-srh" ng-model="newMess" type="text" class=" form-control"
 					placeholder="Nhập tin nhắn của bạn...">
-				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
-					href="#exampleModalToggle"><i style="margin: 0; padding: 0;padding-right: 1rem;"
-						class="fa-regular fa-camera-retro"></i></span>
-				<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" class="microphone">
-					<i style="margin: 0; padding: 0;padding-right: 1rem;" class="fas fa-microphone"></i>
-					<span class="recording-icon"></span>
-				</span>
-				<a style="margin: 0; padding: 0; height: 0; cursor: pointer; " ng-click="openLink(userMess.userId)"><i
-						style="padding: 0;" class="fa-regular fa-phone"></i></a>
-				<button type="submit" class="msger-send-btn"
-					style="background: transparent; padding: 0; border-radius: 10px; border: none; color: #3a57e8; height: 0;"
-					ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">
-					<i class="fa-regular fa-paper-plane" style="padding-top: 0; padding-bottom: 0;"></i>
-				</button>
+
+				<div style="display: flex;">
+					<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" data-bs-toggle="modal"
+						href="#exampleModalToggle"><i style="margin: 0; padding: 0;padding-right: 1rem;"
+							class="fa-regular fa-camera-retro"></i></span>
+					<span style="margin: 0; padding: 0; height: 0; cursor: pointer;" class="microphone">
+						<i style="margin: 0; padding: 0;padding-right: 1rem;" class="fas fa-microphone"></i>
+						<span class="recording-icon"></span>
+					</span>
+					<a style="margin: 0; padding: 0; height: 0; cursor: pointer; "
+						ng-click="openLink(userMess.userId)"><i style="padding: 0;" class="fa-regular fa-phone"></i></a>
+					<button type="submit" class="msger-send-btn"
+						style="background: transparent; padding: 0; border-radius: 10px; border: none; color: #3a57e8; height: 0;"
+						ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">
+						<i class="fa-regular fa-paper-plane" style="padding-top: 0; padding-bottom: 0;"></i>
+					</button>
+				</div>
 			</form>
 		</div>
 	</div>

@@ -736,7 +736,7 @@ a {
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus {
-	border: 1px solid #5d87ff;
+	border: 1px solid gray;
 }
 
 .dropdown-item:focus,
@@ -885,9 +885,8 @@ label:hover {
 	border-bottom: 1px solid #ccc;
 	box-sizing: border-box;
 	background: transparent;
-	border-radius: 0;
+	border-radius: 3px;
 	transition: 0.5s;
-	padding-left: 0;
 }
 
 .ip:focus {
@@ -1847,7 +1846,7 @@ h3 {
 
 	span {
 		padding-left: 0.15em;
-		font-size: 2.9em;
+		font-size: 1.5em;
 	}
 }
 

@@ -214,7 +214,6 @@ app.controller(
 					})
 						.then(function (response) {
 							// Cập nhật dữ liệu mới nhận được từ server
-							$scope.listPosts = response.data;
 							$scope.reloadPage();
 						})
 						.catch(function (error) {

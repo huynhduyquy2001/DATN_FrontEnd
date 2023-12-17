@@ -235,7 +235,7 @@
 							{{user.username}}</h5>
 						<div class=" d-flex  ng-binding"
 							style="font-size: .75rem !important; overflow: hidden; white-space: nowrap;text-overflow: ellipsis">
-							<b>Hoạt động:</b> &nbsp; {{getFormattedTimeAgo(user.acessTime)}}
+							<b>Hoạt động:</b> &nbsp; {{getFormattedTimeAgo(user.accessTime)}}
 						</div>
 					</div>
 
@@ -380,12 +380,14 @@
 							</div>
 
 						</div>
+						<hr>
 						<div class="col-12">
 							<div>
+								<hr>
 								<form>
 									<div style="display: flex;">
 										<input ng-model="myComment" type="text" class="ip form-control"
-											style="width: 80%; border: 1px solid #ced4da; border-radius: 20px;"
+											style=" border: 1px solid #ced4da; border-radius: 20px;"
 											placeholder="{{ 'BLCB' | translate }}">
 										<button class="btn01 buy--btn" type="submit"
 											style=" height: 60%; transform: translateY(30%); border-radius: 20px; margin-left: 5px; padding: 6px; display: block; padding-left: 20px; padding-right: 20px;"

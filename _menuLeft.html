@@ -42,8 +42,7 @@
 														<span>Mua sắm</span>
 													</a>
 												</li>
-												<li class="sidebar-item"
-													ng-if="myAccount.user.account.role.roleId == 4 || myAccount.user.account.role.roleId == 3">
+												<li class="sidebar-item">
 													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
 														href="#!/search" active-link>
 														<i class="fas fa-magnifying-glass"></i>
@@ -168,15 +167,14 @@
 												</li>
 												<li class="sidebar-item">
 													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
-														ng-click="handleLinkClick('')" href="#!/staff/productpost">
+														active-link active-link href="#!/staff/productpost">
 														<i class="fa-solid fa-list"></i>
 														<span>Bài đăng sản phẩm</span>
 													</a>
 												</li>
 												<li class="sidebar-item">
 													<a class="sidebar-link" style="transition: 0.5s ease-in-out;"
-														ng-click="handleLinkClick('')"
-														href="#!/staff/productsviolation">
+														active-link href="#!/staff/productsviolation">
 														<i class="fa fa-flag"></i>
 														<span>Sản phẩm vi phạm</span>
 													</a>

@@ -202,9 +202,6 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 	if (!firebase.apps.length) {
 		firebase.initializeApp(config);
 	}
-
-
-
 	//xem chi tiết bài viết
 	$scope.getPostDetails = function (postId) {
 		$http.get(url + '/findpostcomments/' + postId)
@@ -317,6 +314,7 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 								if ("Notification" in window) {
 									console.log("Notification")
 									Notification.requestPermission().then(function (permission) {
+										console.log("permission", permission)
 										if (permission === "granted") {
 											// Tạo một đối tượng hình ảnh cho thông báo
 											var img = new Image();
@@ -324,8 +322,8 @@ app.controller('myCtrl', function ($scope, $http, $translate, $window, $rootScop
 
 											// Hiển thị thông báo với ảnh
 											var notification = new Notification("Thông báo", {
-												body: newMess.sender.username + " vừa gửi tin nhắn đến bạn",
-												icon: img.src // Sử dụng đường dẫn hình ảnh cho biểu tượng thông báo
+												body: " vừa gửi tin nhắn đến bạn",
+												// Sử dụng đường dẫn hình ảnh cho biểu tượng thông báo
 											});
 
 											// Đặt hành động khi thông báo được nhấn

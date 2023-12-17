@@ -22,15 +22,17 @@
 
 					<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 						<!-- Nút chuyển đến trang trước -->
-						<a class="me-2" ng-click="prevPage()"> <i class="fa-solid fa-chevron-left fa-xs"></i>
+						<a ng-if="totalPages > 1" class="me-2" ng-click="prevPage()"> <i
+								class="fa-solid fa-chevron-left fa-xs"></i>
 						</a>
 
 						<!-- Hiển thị thông tin trang hiện tại và tổng số trang -->
-						<small class="me-2">{{currentPage + 1}} /
+						<small ng-if="totalPages > 1" class="me-2">{{currentPage + 1}} /
 							{{totalPages}}</small>
 
 						<!-- Nút chuyển đến trang kế tiếp -->
-						<a class="me-3" ng-click="nextPage()"> <i class="fa-solid fa-chevron-right fa-xs"></i>
+						<a ng-if="totalPages > 1" class="me-3" ng-click="nextPage()"> <i
+								class="fa-solid fa-chevron-right fa-xs"></i>
 						</a>
 
 						<form class="position-relative">
@@ -49,7 +51,7 @@
 
 				<div class="tab-pane active" id="processing" role="tabpanel" aria-labelledby="home-tab">
 					<div class="table-responsive sidebar-scrollable">
-						<table class="table text-nowrap mb-0 align-middle">
+						<table ng-if="listPosts.length > 0" class="table text-nowrap mb-0 align-middle">
 							<thead class="text-dark fs-4">
 								<tr>
 									<th class="border-bottom-0">
@@ -57,9 +59,6 @@
 									</th>
 									<th class="border-bottom-0">
 										<h6 class="fw-semibold mb-0">Giá</h6>
-									</th>
-									<th class="border-bottom-0">
-										<h6 class="fw-semibold mb-0">Người đăng</h6>
 									</th>
 									<th class="border-bottom-0">
 										<h6 class="fw-semibold mb-0">Ngày đăng</h6>
@@ -78,9 +77,6 @@
 										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
 										{{list.originalPrice.toLocaleString('vi-VN')}}
 										vnd </td>
-									<td class="border-bottom-0"
-										style="max-width: 200px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-										{{list.userName}}</td>
 									<td class="border-bottom-0">
 										<p class="mb-0 fw-normal">{{list.datePost | date: 'dd/MM/yyyy'}}</p>
 									</td>
@@ -92,13 +88,17 @@
 								</tr>
 							</tbody>
 						</table>
-
+						<center class="mt-5" ng-if="listPosts.length == 0">
+							<h5><i class="fa-solid fa-triangle-exclamation" style="color: #e14023;"></i> Chưa có
+								sản phẩm nào
+								cần duyệt</h5>
+						</center>
 					</div>
 				</div>
 
 				<div class="tab-pane" id="declined" role="tabpanel" aria-labelledby="home-tab">
 					<div class="table-responsive sidebar-scrollable">
-						<table class="table text-nowrap mb-0 align-middle">
+						<table ng-if="listReject.length > 0" class="table text-nowrap mb-0 align-middle">
 							<thead class="text-dark fs-4">
 								<tr>
 									<th class="border-bottom-0">
@@ -133,14 +133,18 @@
 									<td class="border-bottom-0">
 										<p class="mb-0 fw-normal">{{list.date | date: 'dd/MM/yyyy'}}</p>
 									</td>
-									<td class="border-bottom-0 " 
+									<td class="border-bottom-0 "
 										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
 										{{list.reason}}
 									</td>
 								</tr>
 							</tbody>
 						</table>
-
+						<center class="mt-5" ng-if="listReject.length == 0">
+							<h5><i class="fa-solid fa-triangle-exclamation" style="color: #e14023;"></i> Chưa có
+								sản phẩm nào
+								cần duyệt</h5>
+						</center>
 					</div>
 				</div>
 
@@ -171,8 +175,8 @@
 											<div>
 												<span
 													style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547"
-													class="ng-binding">Vân Anh</span> &nbsp;&nbsp; <span><small
-														style="font-size: 12px; color: #65676b" class="ng-binding">
+													class="ng-binding">{{product.user.username}}</span> &nbsp;&nbsp;
+												<span><small style="font-size: 12px; color: #65676b" class="ng-binding">
 														{{getFormattedTimeAgo(product.datePost)}}
 													</small></span>
 											</div>
@@ -210,7 +214,8 @@
 										</div>
 										<button ng-click="accept(product.productId)" class="accept--btn"
 											style="margin-top: 1.5rem;">Chấp nhận</button>
-										<button ng-click="rejectPage()" class="decline--btn" style="margin-top: 1.5rem;">Từ
+										<button ng-click="rejectPage()" class="decline--btn"
+											style="margin-top: 1.5rem;">Từ
 											chối</button>
 									</div>
 
@@ -234,14 +239,13 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<label for="reasonRejection" class="form-label">Nhập lí do từ chối: </label> 
-					<input type="text" class="form-control" id="reasonRejection"
-						ng-model="reasonRejection">
+					<label for="reasonRejection" class="form-label">Nhập lí do từ chối: </label>
+					<input type="text" class="form-control" id="reasonRejection" ng-model="reasonRejection">
 
 				</div>
 				<div class="modal-footer">
 					<!-- Cancel button -->
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Hủy</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
 					<!-- Add button -->
 					<button type="button" ng-click="reject(product.productId)" class="btn btn-primary">Xác nhận</button>
 				</div>

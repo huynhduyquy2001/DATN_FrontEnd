@@ -66,7 +66,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
   $scope.recalculatePrice = function (product) {
     $http.get(url + "/checkQuantity/" + product.product.productId + "/" + product.color + "/" + product.quantity)
       .then(function (response) {
-        if(response.data == false){
+        if (response.data == false) {
           Swal.fire({
             position: "top",
             icon: "warning",
@@ -75,7 +75,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
             timer: 1000,
           });
           $scope.reloadPageAfterDelay(1);
-        }else{
+        } else {
           product.totalPrice = $scope.calculateSubtotal(product);
           //sửa số lượng trong giỏ hàng
           $scope.setQuantity(product, product.quantity);
@@ -101,7 +101,7 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     var totalQuantity = product.quantity + 1;
     $http.get(url + "/checkQuantity/" + product.product.productId + "/" + product.color + "/" + totalQuantity)
       .then(function (response) {
-        if(response.data == false){
+        if (response.data == false) {
           Swal.fire({
             position: "top",
             icon: "warning",
@@ -109,12 +109,12 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
             showConfirmButton: false,
             timer: 1000,
           });
-          
-        }else{
-            product.quantity++;
-            $scope.recalculatePrice(product);
-            //tăng số lượng trong giỏ hàng
-            $scope.addQuantity(product, 1);
+
+        } else {
+          product.quantity++;
+          $scope.recalculatePrice(product);
+          //tăng số lượng trong giỏ hàng
+          $scope.addQuantity(product, 1);
         }
       })
       .catch(function (error) {
@@ -887,8 +887,8 @@ app.controller("ShoppingCartController", function ($scope, $http, $rootScope, $w
     $scope.checkPay = status;
   }
 
-  $scope.clickStatusPay = function(status){
-      $scope.checkPay = status;
+  $scope.clickStatusPay = function (status) {
+    $scope.checkPay = status;
   }
 
   $scope.paymentVNPay = function (pay) {

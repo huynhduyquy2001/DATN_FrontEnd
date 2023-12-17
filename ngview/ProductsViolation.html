@@ -39,7 +39,8 @@
 						</div>
 						<div class="col-md-6" style="padding-top: 10px">
 							<!-- Chia thành 6 phần của 12 phần theo hệ thống lưới Bootstrap -->
-							<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+							<ul ng-if="totalPages > 1"
+								class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 								<!-- Nút chuyển đến trang trước -->
 								<a class="me-2" ng-click="prevPage()">
 									<i class="fa-solid fa-chevron-left fa-xs"></i>
@@ -57,7 +58,7 @@
 					</div>
 					<br />
 					<div class="table-responsive sidebar-scrollable">
-						<table class="table text-nowrap mb-0 align-middle">
+						<table ng-if="listProducts.length > 0" class="table text-nowrap mb-0 align-middle">
 							<thead class="text-dark fs-4">
 								<tr>
 									<th class="border-bottom-0">
@@ -109,6 +110,11 @@
 								</tr>
 							</tbody>
 						</table>
+						<center class="mt-5" ng-if="listProducts.length == 0">
+							<h5><i class="fa-solid fa-triangle-exclamation" style="color: #e14023;"></i> Chưa có
+								sản phẩm nào
+								vi phạm</h5>
+						</center>
 					</div>
 				</div>
 
@@ -126,7 +132,8 @@
 						</div>
 						<div class="col-md-6" style="padding-top: 10px">
 							<!-- Chia thành 6 phần của 12 phần theo hệ thống lưới Bootstrap -->
-							<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+							<ul ng-if="totalPages > 1"
+								class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 								<!-- Nút chuyển đến trang trước -->
 								<a class="me-2" ng-click="prevPage()">
 									<i class="fa-solid fa-chevron-left fa-xs"></i>
@@ -144,7 +151,7 @@
 					</div>
 					<br />
 					<div class="table-responsive sidebar-scrollable">
-						<table class="table text-nowrap mb-0 align-middle">
+						<table ng-if="listViolationProducts.length > 0" class="table text-nowrap mb-0 align-middle">
 							<thead class="text-dark fs-4">
 								<tr>
 									<th class="border-bottom-0">
@@ -193,6 +200,11 @@
 								</tr>
 							</tbody>
 						</table>
+						<center class="mt-5" ng-if="listViolationProducts.length == 0">
+							<h5><i class="fa-solid fa-triangle-exclamation" style="color: #e14023;"></i> Chưa có
+								sản phẩm nào
+								vi phạm</h5>
+						</center>
 					</div>
 				</div>
 			</div>
@@ -246,7 +258,7 @@
 							  font-size: 1rem !important;
 							  margin: 0;
 							  color: #2a3547;
-							" class="ng-binding">Vân Anh</span>
+							" class="ng-binding">{{product.product.user.username}}</span>
 												&nbsp;&nbsp;
 												<span><small style="font-size: 12px; color: #65676b" class="ng-binding">
 														{{getFormattedTimeAgo(product.product.datePost)}}

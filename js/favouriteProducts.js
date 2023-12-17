@@ -11,7 +11,13 @@ app.controller('FavouriteProductsController', function ($scope, $http, $translat
 				originalFavoriteProducts = res.data.content;
 				$scope.favoriteProducts = originalFavoriteProducts;
 				$scope.totalPagesF = res.data.totalPages;
+				if ($scope.favoriteProducts.length === 0) {
+					$scope.searchnull = "Bạn chưa có sản phẩm yêu thích";
+					$scope.isHidden = true;
+
+				}
 			})
+
 			.catch(function (error) {
 				console.error("Lỗi: " + error);
 			});

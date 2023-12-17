@@ -404,6 +404,88 @@ app.controller(
 
     };
 
+    //lấy số lượng tồn kho
+    $scope.getTotal = function (id) {
+      var color = $scope.product.productColors.find(function (obj) {
+        if (obj.color.colorId === id) {
+          $scope.total = obj.quantity;
+          $scope.color = obj.color.colorName;
+        }
+        return 0;
+      });
+    };
+
+    //Tăng giảm số lượng
+    $scope.reduceQuantity = function () {
+      if ($scope.quantity > 0) {
+        $scope.quantity--;
+      }
+
+    }
+    $scope.increaseQuantity = function () {
+      $scope.quantity++;
+    }
+
+    $scope.addToShoppingCart = function (productId) {
+      if ($scope.color === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+
+        Toast.fire({
+          icon: 'warning',
+          title: 'Hãy chọn màu sắc sản phẩm'
+        })
+        return;
+      }
+      if ($scope.quantity === 0) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+
+        Toast.fire({
+          icon: 'warning',
+          title: 'Hãy chọn số lượng cần mua'
+        })
+        return;
+      }
+
+      var formData = new FormData();
+
+      formData.append("productId", productId);
+      formData.append("quantity", $scope.quantity);
+      formData.append("color", $scope.color);
+
+      $http.post(url + "/add-to-cart", formData, {
+        transformRequest: angular.identity,
+        headers: { 'Content-Type': undefined }
+      }).then(function (res) {
+        //Load thông tin giỏ hàng
+        $http.get(url + '/get-product-shoppingcart').then(function (response) {
+          $rootScope.listProduct = response.data;
+        }).catch(function (error) {
+          console.error('Lỗi khi lấy dữ liệu:', error);
+        });
+      });
+
+    }
+
     //Viết tất cả code thống kê trong đây, đừng viết ngoài hàm này. Viết ngoài hàm này bị lỗi MyStore thì chịu trách nhiệm nhá :))
     $scope.tabsReport = function () {
 

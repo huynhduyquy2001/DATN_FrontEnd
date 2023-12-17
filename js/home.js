@@ -18,19 +18,6 @@ app.controller('HomeController', function ($scope, $http, $window, $rootScope, $
 	var url = "http://localhost:8080";
 	var getUnseenMess = "http://localhost:8080/getunseenmessage";
 
-
-
-	// var img = new Image();
-	// img.src = '/images/beach.jpg';
-
-	// img.onload = function () {
-	// 	var colorThief = new ColorThief();
-	// 	var color = colorThief.getColor(img);
-	// 	alert('Màu chủ đạo:' + color);
-	// };
-
-
-
 	// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 	$scope.showMoreComments = function () {
 		$scope.numOfCommentsToShow += $scope.commentsToShowMore;
